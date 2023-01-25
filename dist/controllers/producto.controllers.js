@@ -13,7 +13,7 @@ exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exp
 const BEProducto_1 = require("../models/BEProducto");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Productos = yield BEProducto_1.producto.find();
+        const Productos = yield BEProducto_1.BEProducto.find({ relations: ['categoria'] });
         res.json(Productos);
     }
     catch (error) {
@@ -24,7 +24,7 @@ exports.ListarProductos = ListarProductos;
 const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Producto = yield BEProducto_1.producto.findOneBy({ id: Id });
+        const Producto = yield BEProducto_1.BEProducto.findOneBy({ id: Id });
         res.json(Producto);
     }
     catch (error) {
@@ -39,12 +39,12 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!nombre || !descripcion || !categoria || !color)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
-            const newProducto = new BEProducto_1.producto();
+            const newProducto = new BEProducto_1.BEProducto();
             newProducto.nombre = nombre;
             newProducto.descripcion = descripcion;
-            newProducto.categoria = categoria;
             newProducto.detalles = detalles;
             newProducto.color = color;
+            newProducto.categoria = categoria;
             yield newProducto.save();
             res.json(newProducto);
         }
@@ -57,7 +57,7 @@ exports.CrearProducto = CrearProducto;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        yield BEProducto_1.producto.delete({ id: Id });
+        yield BEProducto_1.BEProducto.delete({ id: Id });
         res.json(`Producto ${Id} Borrado satisfactoriamente`);
     }
     catch (error) {

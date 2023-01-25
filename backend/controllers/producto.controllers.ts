@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
-import { producto as BEProducto } from "../models/BEProducto";
-import { detalle as BEDetalle } from "../models/BEDetalle";
-import { categoria } from '../models/BECategoria';
+import { BEProducto } from "../models/BEProducto";
+import { BEDetalle } from "../models/BEDetalle";
+import { BECategoria } from '../models/BECategoria';
 
 
 
 export const ListarProductos = async (req: Request, res: Response) => {
     try {
-        const Productos = await BEProducto.find();
+        const Productos = await BEProducto.find({ relations: ['categoria'] });
         res.json(Productos);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
@@ -30,12 +30,13 @@ export const CrearProducto = async (req: Request, res: Response) => {
         if (!nombre || !descripcion || !categoria || !color)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
+
             const newProducto = new BEProducto()
             newProducto.nombre = nombre
             newProducto.descripcion = descripcion
-            newProducto.categoria = categoria
             newProducto.detalles = detalles
             newProducto.color = color
+            newProducto.categoria = categoria
             await newProducto.save()
             res.json(newProducto)
         }

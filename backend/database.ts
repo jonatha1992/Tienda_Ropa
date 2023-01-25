@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
-import { categoria } from './models/BECategoria';
-import { producto } from './models/BEProducto';
-import { detalle } from './models/BEDetalle';
-import { talle } from './models/BETalle';
+import { BECategoria } from './models/BECategoria';
+import { BEProducto } from './models/BEProducto';
+import { BEDetalle } from './models/BEDetalle';
+import { BETalle } from './models/BETalle';
 
 
 export const AppDataSource = new DataSource({
@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
     password: '1234',
     database: 'Typeorm',
     port: 5432,
-    entities: [categoria, producto, detalle, talle],
+    entities: [BECategoria, BEProducto, BEDetalle, BETalle],
     logging: true,
-    synchronize: true
+    synchronize: false
 });

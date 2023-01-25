@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { talle as BETalle } from "../models/BETalle";
+import { BETalle } from "../models/BETalle";
 
 
 

@@ -13,7 +13,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     password: '1234',
     database: 'Typeorm',
     port: 5432,
-    entities: [BECategoria_1.categoria, BEProducto_1.producto, BEDetalle_1.detalle, BETalle_1.talle],
+    entities: [BECategoria_1.BECategoria, BEProducto_1.BEProducto, BEDetalle_1.BEDetalle, BETalle_1.BETalle],
     logging: true,
-    synchronize: true
+    synchronize: false
 });

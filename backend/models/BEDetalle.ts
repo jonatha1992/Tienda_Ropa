@@ -1,20 +1,20 @@
-import { talle } from './BETalle';
 import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn, OneToMany, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm'
-import { producto } from './BEProducto';
+import { BEProducto } from './BEProducto';
+import { BETalle } from './BETalle';
 
 
 
-@Entity()
-export class detalle extends BaseEntity {
+@Entity({ name: 'detalle' })
+export class BEDetalle extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   public id: number
 
-  @ManyToOne(() => producto, (producto) => producto.detalles)
-  public producto: producto
+  @ManyToOne(() => BEProducto, (producto) => producto.detalles)
+  public producto: BEProducto
 
-  @OneToOne(() => talle) @JoinColumn()
-  public talle: talle;
+  @ManyToOne(() => BETalle, { cascade: false }) @JoinColumn()
+  public talle: BETalle;
 
   @Column()
   public stock: number

@@ -9,19 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.categoria = void 0;
+exports.BECategoria = void 0;
 const typeorm_1 = require("typeorm");
-let categoria = class categoria extends typeorm_1.BaseEntity {
+let BECategoria = class BECategoria extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], categoria.prototype, "id", void 0);
+], BECategoria.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], categoria.prototype, "nombre", void 0);
-categoria = __decorate([
-    (0, typeorm_1.Entity)()
-], categoria);
-exports.categoria = categoria;
+], BECategoria.prototype, "nombre", void 0);
+BECategoria = __decorate([
+    (0, typeorm_1.Entity)({ name: 'categoria' })
+], BECategoria);
+exports.BECategoria = BECategoria;

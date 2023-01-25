@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { categoria as BECategoria } from "../models/BECategoria";
+import { BECategoria } from "../models/BECategoria";
 
 
 

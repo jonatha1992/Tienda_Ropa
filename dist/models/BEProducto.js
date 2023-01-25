@@ -9,38 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.producto = void 0;
+exports.BEProducto = void 0;
 const BEDetalle_1 = require("./BEDetalle");
 const BECategoria_1 = require("./BECategoria");
 const typeorm_1 = require("typeorm");
-let producto = class producto extends typeorm_1.BaseEntity {
+let BEProducto = class BEProducto extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], producto.prototype, "id", void 0);
+], BEProducto.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], producto.prototype, "nombre", void 0);
+], BEProducto.prototype, "nombre", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(type => BECategoria_1.categoria),
+    (0, typeorm_1.ManyToOne)(type => BECategoria_1.BECategoria, { cascade: false }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", BECategoria_1.categoria)
-], producto.prototype, "categoria", void 0);
+    __metadata("design:type", BECategoria_1.BECategoria)
+], BEProducto.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(type => BEDetalle_1.detalle, detalle => detalle.producto),
+    (0, typeorm_1.OneToMany)(type => BEDetalle_1.BEDetalle, detalle => detalle.producto, { cascade: true }),
     __metadata("design:type", Array)
-], producto.prototype, "detalles", void 0);
+], BEProducto.prototype, "detalles", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], producto.prototype, "descripcion", void 0);
+], BEProducto.prototype, "descripcion", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], producto.prototype, "color", void 0);
-producto = __decorate([
-    (0, typeorm_1.Entity)()
-], producto);
-exports.producto = producto;
+], BEProducto.prototype, "color", void 0);
+BEProducto = __decorate([
+    (0, typeorm_1.Entity)({ name: 'producto' })
+], BEProducto);
+exports.BEProducto = BEProducto;

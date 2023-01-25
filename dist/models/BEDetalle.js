@@ -9,30 +9,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.detalle = void 0;
-const BETalle_1 = require("./BETalle");
+exports.BEDetalle = void 0;
 const typeorm_1 = require("typeorm");
 const BEProducto_1 = require("./BEProducto");
-let detalle = class detalle extends typeorm_1.BaseEntity {
+const BETalle_1 = require("./BETalle");
+let BEDetalle = class BEDetalle extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], detalle.prototype, "id", void 0);
+], BEDetalle.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => BEProducto_1.producto, (producto) => producto.detalles),
-    __metadata("design:type", BEProducto_1.producto)
-], detalle.prototype, "producto", void 0);
+    (0, typeorm_1.ManyToOne)(() => BEProducto_1.BEProducto, (producto) => producto.detalles),
+    __metadata("design:type", BEProducto_1.BEProducto)
+], BEDetalle.prototype, "producto", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => BETalle_1.talle),
+    (0, typeorm_1.ManyToOne)(() => BETalle_1.BETalle, { cascade: false }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", BETalle_1.talle)
-], detalle.prototype, "talle", void 0);
+    __metadata("design:type", BETalle_1.BETalle)
+], BEDetalle.prototype, "talle", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], detalle.prototype, "stock", void 0);
-detalle = __decorate([
-    (0, typeorm_1.Entity)()
-], detalle);
-exports.detalle = detalle;
+], BEDetalle.prototype, "stock", void 0);
+BEDetalle = __decorate([
+    (0, typeorm_1.Entity)({ name: 'detalle' })
+], BEDetalle);
+exports.BEDetalle = BEDetalle;

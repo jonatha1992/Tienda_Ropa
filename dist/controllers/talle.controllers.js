@@ -13,7 +13,7 @@ exports.ActualizarTalle = exports.EliminarTalle = exports.CrearTalle = exports.O
 const BETalle_1 = require("../models/BETalle");
 const ListarTalles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const BETalles = yield BETalle_1.talle.find();
+        const BETalles = yield BETalle_1.BETalle.find();
         res.json(BETalles);
     }
     catch (error) {
@@ -24,7 +24,7 @@ exports.ListarTalles = ListarTalles;
 const ObtenerTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Talle = yield BETalle_1.talle.findOneBy({ id: Id });
+        const Talle = yield BETalle_1.BETalle.findOneBy({ id: Id });
         res.status(200).json(Talle);
     }
     catch (error) {
@@ -35,7 +35,7 @@ exports.ObtenerTalle = ObtenerTalle;
 const CrearTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre } = req.body;
-        const NewBETalle = new BETalle_1.talle();
+        const NewBETalle = new BETalle_1.BETalle();
         NewBETalle.nombre = nombre;
         yield NewBETalle.save();
         return res.status(200).json(NewBETalle);
@@ -48,7 +48,7 @@ exports.CrearTalle = CrearTalle;
 const EliminarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const result = yield BETalle_1.talle.delete({ id: Id });
+        const result = yield BETalle_1.BETalle.delete({ id: Id });
         if (result.affected === 0)
             return res.status(404).json({ message: "Talle no encontrada" });
         else
@@ -62,10 +62,10 @@ exports.EliminarTalle = EliminarTalle;
 const ActualizarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = yield BETalle_1.talle.findOneBy({ id: Id });
+        const Talle = yield BETalle_1.BETalle.findOneBy({ id: Id });
         if (!Talle)
             return res.status(404).json({ message: "Not user found" });
-        yield BETalle_1.talle.update({ id: Id }, req.body);
+        yield BETalle_1.BETalle.update({ id: Id }, req.body);
         return res.sendStatus(204);
     }
     catch (error) {
