@@ -43,7 +43,6 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             newProducto.nombre = nombre;
             newProducto.descripcion = descripcion;
             newProducto.detalles = detalles;
-            newProducto.color = color;
             newProducto.categoria = categoria;
             yield newProducto.save();
             res.json(newProducto);

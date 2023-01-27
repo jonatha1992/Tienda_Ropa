@@ -4,7 +4,8 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm'
 export class BETalle extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    public id: number;
+    public id: number
+    
     @Column({ unique: true, length: 3 })
     public nombre: string;
 

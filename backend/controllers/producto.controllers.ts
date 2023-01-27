@@ -35,7 +35,6 @@ export const CrearProducto = async (req: Request, res: Response) => {
             newProducto.nombre = nombre
             newProducto.descripcion = descripcion
             newProducto.detalles = detalles
-            newProducto.color = color
             newProducto.categoria = categoria
             await newProducto.save()
             res.json(newProducto)
