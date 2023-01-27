@@ -13,6 +13,7 @@ exports.BEDetalle = void 0;
 const typeorm_1 = require("typeorm");
 const BEProducto_1 = require("./BEProducto");
 const BETalle_1 = require("./BETalle");
+const BEColor_1 = require("./BEColor");
 let BEDetalle = class BEDetalle extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -28,6 +29,11 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", BETalle_1.BETalle)
 ], BEDetalle.prototype, "talle", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => BEColor_1.BEColor, { cascade: false }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", BEColor_1.BEColor)
+], BEDetalle.prototype, "color", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)

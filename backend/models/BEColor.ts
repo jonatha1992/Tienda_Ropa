@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, Index, Unique, OneToMany, ManyToMany, ManyToOne, OneToOne } from 'typeorm'
 import { BEProducto } from './BEProducto';
 
-@Entity({ name: 'categoria' })
-export class BECategoria extends BaseEntity {
+@Entity({ name: 'color' })
+export class BEColor extends BaseEntity {
 
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn()
   public id: number;
 
   @Column()

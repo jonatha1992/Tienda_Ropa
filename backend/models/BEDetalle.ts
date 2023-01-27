@@ -1,6 +1,7 @@
 import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn, OneToMany, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm'
 import { BEProducto } from './BEProducto';
 import { BETalle } from './BETalle';
+import { BEColor } from './BEColor';
 
 
 
@@ -16,6 +17,8 @@ export class BEDetalle extends BaseEntity {
   @ManyToOne(() => BETalle, { cascade: false }) @JoinColumn()
   public talle: BETalle;
 
+  @ManyToOne(() => BEColor, { cascade: false }) @JoinColumn()
+  public color: BEColor;
   @Column()
   public stock: number
 
