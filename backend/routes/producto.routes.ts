@@ -3,7 +3,7 @@ import {
     CrearProducto,
     EliminarProducto,
     ListarProductos,
-    //   ActualizarProducto,
+    ActualizarProducto,
     ObtenerProducto
 } from "../controllers";
 

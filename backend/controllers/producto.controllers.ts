@@ -97,9 +97,6 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
             }
         })
 
-
-
-
         res.json(producto);
 
     } catch (error: any) {
