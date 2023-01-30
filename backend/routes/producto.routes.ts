@@ -5,7 +5,7 @@ import {
     ListarProductos,
     //   ActualizarProducto,
     ObtenerProducto
-} from "../controllers/producto.controllers";
+} from "../controllers";
 
 const router = Router();
 
@@ -17,6 +17,6 @@ router.post("/producto", CrearProducto);
 
 router.delete("/producto/:id", EliminarProducto);
 
-// router.put("/producto/:id", ActualizarProducto);
+router.put("/producto/:id", ActualizarProducto);
 
 export default router

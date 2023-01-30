@@ -1,4 +1,4 @@
-import { BECategoria, BEDetalle } from './index';
+import { BECategoria, BEDetalle } from '.';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne } from 'typeorm'
 
 

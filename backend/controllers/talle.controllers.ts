@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { BETalle } from "../models/index";
+import { BETalle } from "../models";
 
 
 

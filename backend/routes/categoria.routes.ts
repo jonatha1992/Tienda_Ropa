@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
     CrearCategoria, ListarCategorias, ObtenerCategoria, EliminarCategoria, ActualizarCategoria,
-} from "../controllers/categoria.controllers";
+} from "../controllers";
 
 const router = Router();
 

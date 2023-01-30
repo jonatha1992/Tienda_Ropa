@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { BEDetalle } from "../models/index";
+import { BEDetalle } from "../models";
 
 
 

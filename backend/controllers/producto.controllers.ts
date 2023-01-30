@@ -1,5 +1,5 @@
 import { json, Request, Response } from 'express'
-import { BEProducto, BEDetalle } from "../models/index";
+import { BEProducto, BEDetalle } from "../models";
 
 
 export const ListarProductos = async (req: Request, res: Response) => {
@@ -82,17 +82,27 @@ export const EliminarProducto = async (req: Request, res: Response) => {
     }
 }
 
-// export const ActualizarProducto = async (req: Request, res: Response) => {
-//     try {
-//         const Id = parseInt(req.params.id);
-//         const { nombre, descripcion, talle, color, stock } = req.body;
-//         await pool.query(`UPDATE producto SET nombre = ${nombre} , descripcion = ${descripcion} , talle = ${talle} , color =
-//              ${color} , stock = ${stock} WHERE id = ${Id}`)
+export const ActualizarProducto = async (req: Request, res: Response) => {
+    try {
+        const Id = parseInt(req.params.id);
+        const { nombre, descripcion, detalles, categoria } = req.body;
 
-//         const newProducto = new producto(Id, nombre, descripcion, color)
-//         res.json(newProducto);
+        let producto = await BEProducto.findOne({
+            where: { id: Id }, relations: {
+                categoria: true,
+                detalles: {
+                    talle: true,
+                    color: true
+                }
+            }
+        })
 
-//     } catch (error: any) {
-//         return res.status(500).json({ message: error.message });
-//     }
-//}
+
+
+
+        res.json(producto);
+
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
+    }
+}

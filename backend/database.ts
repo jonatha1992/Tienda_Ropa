@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { BECategoria, BEProducto, BEColor, BEDetalle, BETalle } from './models/index';
+import { BECategoria, BEProducto, BEColor, BEDetalle, BETalle } from './models';
 
 
 export const AppDataSource = new DataSource({

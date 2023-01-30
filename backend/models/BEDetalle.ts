@@ -1,5 +1,5 @@
 import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn, OneToMany, PrimaryGeneratedColumn, ManyToOne, BaseEntity, Index } from 'typeorm'
-import { BEProducto, BEColor, BETalle } from './index';
+import { BEProducto, BEColor, BETalle } from '.';
 
 
 
