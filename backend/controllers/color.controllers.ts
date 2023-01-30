@@ -1,43 +1,43 @@
 import { Request, Response } from 'express'
-import { BETalle } from "../models/index";
+import { BEColor } from "../models";
 
 
 
-export const ListarTalles = async (req: Request, res: Response) => {
+export const ListarColores = async (req: Request, res: Response) => {
     try {
-        const BETalles = await BETalle.find();
+        const BETalles = await BEColor.find();
         res.json(BETalles);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
 }
-export const ObtenerTalle = async (req: Request, res: Response) => {
+export const Obtenercolor = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
-        const Talle = await BETalle.findOneBy({ id: Id })
-        res.status(200).json(Talle);
+        const Color = await BEColor.findOneBy({ id: Id })
+        res.status(200).json(Color);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
 }
 
-export const CrearTalle = async (req: Request, res: Response) => {
+export const CrearColor = async (req: Request, res: Response) => {
     try {
         const { nombre } = req.body
-        const NewBETalle = new BETalle();
-        NewBETalle.nombre = nombre
-        await NewBETalle.save()
-        return res.status(200).json(NewBETalle)
+        const NewColor = new BEColor();
+        NewColor.nombre = nombre
+        await NewColor.save()
+        return res.status(200).json(NewColor)
 
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
 }
 
-export const EliminarTalle = async (req: Request, res: Response) => {
+export const EliminarColor = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
-        const result = await BETalle.delete({ id: Id });
+        const result = await BEColor.delete({ id: Id });
         if (result.affected === 0)
             return res.status(404).json({ message: "Talle no encontrada" });
         else
@@ -47,13 +47,13 @@ export const EliminarTalle = async (req: Request, res: Response) => {
     }
 }
 
-export const ActualizarTalle = async (req: Request, res: Response) => {
+export const ActualizarColor = async (req: Request, res: Response) => {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = await BETalle.findOneBy({ id: Id });
+        const Talle = await BEColor.findOneBy({ id: Id });
         if (!Talle) return res.status(404).json({ message: "Not user found" });
 
-        await BETalle.update({ id: Id }, req.body);
+        await BEColor.update({ id: Id }, req.body);
         return res.sendStatus(204);
 
     } catch (error) {

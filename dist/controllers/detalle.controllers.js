@@ -9,46 +9,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActualizarTalle = exports.EliminarTalle = exports.CrearTalle = exports.ObtenerTalle = exports.ListarTalles = void 0;
+exports.Actualizardetalle = exports.EliminarDetalle = exports.CrearDetalle = exports.ObtenerDetalle = exports.ListarDetalles = void 0;
 const index_1 = require("../models/index");
-const ListarTalles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const ListarDetalles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const BETalles = yield index_1.BETalle.find();
-        res.json(BETalles);
+        const BEDetalles = yield index_1.BEDetalle.find();
+        res.json(BEDetalles);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.ListarTalles = ListarTalles;
-const ObtenerTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.ListarDetalles = ListarDetalles;
+const ObtenerDetalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Talle = yield index_1.BETalle.findOneBy({ id: Id });
-        res.status(200).json(Talle);
+        const detalle = yield index_1.BEDetalle.findOneBy({ id: Id });
+        res.status(200).json(detalle);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.ObtenerTalle = ObtenerTalle;
-const CrearTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.ObtenerDetalle = ObtenerDetalle;
+const CrearDetalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre } = req.body;
-        const NewBETalle = new index_1.BETalle();
-        NewBETalle.nombre = nombre;
-        yield NewBETalle.save();
-        return res.status(200).json(NewBETalle);
+        const { producto, talle, color, stock } = req.body;
+        const NewBEdetalle = new index_1.BEDetalle();
+        if (!producto || !talle || !color || stock) {
+            return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
+        }
+        else {
+            NewBEdetalle.talle = talle;
+            NewBEdetalle.color = color;
+            NewBEdetalle.stock = stock;
+            yield NewBEdetalle.save();
+            return res.status(200).json(NewBEdetalle);
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.CrearTalle = CrearTalle;
-const EliminarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.CrearDetalle = CrearDetalle;
+const EliminarDetalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const result = yield index_1.BETalle.delete({ id: Id });
+        const result = yield index_1.BEDetalle.delete({ id: Id });
         if (result.affected === 0)
             return res.status(404).json({ message: "Talle no encontrada" });
         else
@@ -58,14 +65,14 @@ const EliminarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({ message: error.message });
     }
 });
-exports.EliminarTalle = EliminarTalle;
-const ActualizarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.EliminarDetalle = EliminarDetalle;
+const Actualizardetalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = yield index_1.BETalle.findOneBy({ id: Id });
+        const Talle = yield index_1.BEDetalle.findOneBy({ id: Id });
         if (!Talle)
             return res.status(404).json({ message: "Not user found" });
-        yield index_1.BETalle.update({ id: Id }, req.body);
+        yield index_1.BEDetalle.update({ id: Id }, req.body);
         return res.sendStatus(204);
     }
     catch (error) {
@@ -74,4 +81,4 @@ const ActualizarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
 });
-exports.ActualizarTalle = ActualizarTalle;
+exports.Actualizardetalle = Actualizardetalle;

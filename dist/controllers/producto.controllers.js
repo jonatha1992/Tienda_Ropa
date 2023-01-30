@@ -10,10 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
-const BEProducto_1 = require("../models/BEProducto");
+const index_1 = require("../models/index");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Productos = yield BEProducto_1.BEProducto.find({ relations: ['categoria'] });
+        const Productos = yield index_1.BEProducto.find({
+            relations: {
+                categoria: true,
+                detalles: {
+                    talle: true,
+                    color: true
+                }
+            }
+        });
+        console.log(Productos);
         res.json(Productos);
     }
     catch (error) {
@@ -24,7 +33,15 @@ exports.ListarProductos = ListarProductos;
 const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Producto = yield BEProducto_1.BEProducto.findOneBy({ id: Id });
+        const Producto = yield index_1.BEProducto.findOne({
+            where: { id: Id }, relations: {
+                categoria: true,
+                detalles: {
+                    talle: true,
+                    color: true
+                }
+            }
+        });
         res.json(Producto);
     }
     catch (error) {
@@ -34,17 +51,27 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.ObtenerProducto = ObtenerProducto;
 const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre, descripcion, color, detalles, categoria } = req.body;
+        const { nombre, descripcion, detalles, categoria } = req.body;
         console.log(req.body);
-        if (!nombre || !descripcion || !categoria || !color)
+        if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
-            const newProducto = new BEProducto_1.BEProducto();
+            let newProducto = new index_1.BEProducto();
             newProducto.nombre = nombre;
             newProducto.descripcion = descripcion;
-            newProducto.detalles = detalles;
             newProducto.categoria = categoria;
             yield newProducto.save();
+            newProducto.detalles = detalles.map((detalle) => {
+                let newDetalle = new index_1.BEDetalle();
+                newDetalle.id = parseInt(String(newProducto.id) + String(detalle.color.id) + String(detalle.talle.id));
+                newDetalle.color = detalle.color;
+                newDetalle.producto = new index_1.BEProducto;
+                newDetalle.producto.id = newProducto.id;
+                newDetalle.talle = detalle.talle;
+                newDetalle.stock = detalle.stock;
+                newDetalle.save();
+                return newDetalle;
+            });
             res.json(newProducto);
         }
     }
@@ -56,7 +83,7 @@ exports.CrearProducto = CrearProducto;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        yield BEProducto_1.BEProducto.delete({ id: Id });
+        yield index_1.BEProducto.delete({ id: Id });
         res.json(`Producto ${Id} Borrado satisfactoriamente`);
     }
     catch (error) {
@@ -75,4 +102,4 @@ exports.EliminarProducto = EliminarProducto;
 //     } catch (error: any) {
 //         return res.status(500).json({ message: error.message });
 //     }
-// }
+//}

@@ -9,63 +9,63 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActualizarCategoria = exports.EliminarCategoria = exports.CrearCategoria = exports.ObtenerCategoria = exports.ListarCategorias = void 0;
-const BECategoria_1 = require("../models/BECategoria");
-const ListarCategorias = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.ActualizarTalle = exports.EliminarTalle = exports.CrearTalle = exports.ObtenerTalle = exports.ListarTalles = void 0;
+const BETalle_1 = require("../models/BETalle");
+const ListarTalles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const BEcategorias = yield BECategoria_1.categoria.find();
-        res.json(BEcategorias);
+        const BETalles = yield BETalle_1.BETalle.find();
+        res.json(BETalles);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.ListarCategorias = ListarCategorias;
-const ObtenerCategoria = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.ListarTalles = ListarTalles;
+const ObtenerTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Categoria = yield BECategoria_1.categoria.findOneBy({ id: Id });
-        res.status(200).json(Categoria);
+        const Talle = yield BETalle_1.BETalle.findOneBy({ id: Id });
+        res.status(200).json(Talle);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.ObtenerCategoria = ObtenerCategoria;
-const CrearCategoria = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.ObtenerTalle = ObtenerTalle;
+const CrearTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre } = req.body;
-        const NewBECategoria = new BECategoria_1.categoria();
-        NewBECategoria.nombre = nombre;
-        yield NewBECategoria.save();
-        return res.status(200).json(NewBECategoria);
+        const NewBETalle = new BETalle_1.BETalle();
+        NewBETalle.nombre = nombre;
+        yield NewBETalle.save();
+        return res.status(200).json(NewBETalle);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.CrearCategoria = CrearCategoria;
-const EliminarCategoria = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.CrearTalle = CrearTalle;
+const EliminarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const result = yield BECategoria_1.categoria.delete({ id: Id });
+        const result = yield BETalle_1.BETalle.delete({ id: Id });
         if (result.affected === 0)
-            return res.status(404).json({ message: "Categoria no encontrada" });
+            return res.status(404).json({ message: "Talle no encontrada" });
         else
-            res.status(204).json(`Categoria ${Id} Borrado satisfactoriamente`);
+            res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
-exports.EliminarCategoria = EliminarCategoria;
-const ActualizarCategoria = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.EliminarTalle = EliminarTalle;
+const ActualizarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Id = parseInt(req.params.id);
     try {
-        const categoria = yield BECategoria_1.categoria.findOneBy({ id: Id });
-        if (!categoria)
+        const Talle = yield BETalle_1.BETalle.findOneBy({ id: Id });
+        if (!Talle)
             return res.status(404).json({ message: "Not user found" });
-        yield BECategoria_1.categoria.update({ id: Id }, req.body);
+        yield BETalle_1.BETalle.update({ id: Id }, req.body);
         return res.sendStatus(204);
     }
     catch (error) {
@@ -74,4 +74,4 @@ const ActualizarCategoria = (req, res) => __awaiter(void 0, void 0, void 0, func
         }
     }
 });
-exports.ActualizarCategoria = ActualizarCategoria;
+exports.ActualizarTalle = ActualizarTalle;

@@ -1,9 +1,5 @@
 import { DataSource } from 'typeorm';
-import { BECategoria } from './models/BECategoria';
-import { BEProducto } from './models/BEProducto';
-import { BEDetalle } from './models/BEDetalle';
-import { BETalle } from './models/BETalle';
-import { BEColor } from './models/BEColor';
+import { BECategoria, BEProducto, BEColor, BEDetalle, BETalle } from './models/index';
 
 
 export const AppDataSource = new DataSource({
@@ -11,7 +7,7 @@ export const AppDataSource = new DataSource({
     host: 'localhost',
     username: 'postgres',
     password: '1234',
-    database: 'Typeorm',
+    database: 'TiendaRopa',
     port: 5432,
     entities: [BECategoria, BEProducto, BEDetalle, BETalle, BEColor],
     logging: true,

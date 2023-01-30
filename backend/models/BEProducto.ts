@@ -1,5 +1,4 @@
-import { BEDetalle } from './BEDetalle';
-import { BECategoria } from './BECategoria';
+import { BECategoria, BEDetalle } from './index';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne } from 'typeorm'
 
 
@@ -7,14 +6,20 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColu
 export class BEProducto extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
+
   @Column()
   public nombre: string;
+
   @ManyToOne(type => BECategoria, categoria => categoria.id, { cascade: false }) @JoinColumn()
   public categoria: BECategoria;
-  @OneToMany(type => BEDetalle, detalle => detalle.producto, { cascade: true })
+
+  @OneToMany(type => BEDetalle, detalle => detalle.producto, { cascade: false })
+  // @JoinColumn()
   public detalles: BEDetalle[];
+
   @Column()
   public descripcion: string;
+
 
 }
 
