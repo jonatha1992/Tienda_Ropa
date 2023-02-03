@@ -11,7 +11,7 @@ export class BEDetalle extends BaseEntity {
   public id: number
 
 
-  @ManyToOne(() => BEProducto, (producto) => producto.detalles, { nullable: false })
+  @ManyToOne(() => BEProducto, (producto) => producto.detalles, { nullable: false, onDelete: 'CASCADE', })
   @JoinColumn({ name: "productoId" })
   public producto: BEProducto
 

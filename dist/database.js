@@ -12,5 +12,5 @@ exports.AppDataSource = new typeorm_1.DataSource({
     port: 5432,
     entities: [models_1.BECategoria, models_1.BEProducto, models_1.BEDetalle, models_1.BETalle, models_1.BEColor],
     logging: true,
-    synchronize: false
+    synchronize: true
 });

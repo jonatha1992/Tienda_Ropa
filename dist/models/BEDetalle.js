@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", Number)
 ], BEDetalle.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => _1.BEProducto, (producto) => producto.detalles, { nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => _1.BEProducto, (producto) => producto.detalles, { nullable: false, onDelete: 'CASCADE', }),
     (0, typeorm_1.JoinColumn)({ name: "productoId" }),
     __metadata("design:type", _1.BEProducto)
 ], BEDetalle.prototype, "producto", void 0);
