@@ -6,7 +6,7 @@ import { BETalle } from "../models";
 export const ListarTalles = async (req: Request, res: Response) => {
     try {
         const BETalles = await BETalle.find();
-        res.json(BETalles);
+         return res.json(BETalles);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -15,7 +15,7 @@ export const ObtenerTalle = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
         const Talle = await BETalle.findOneBy({ id: Id })
-        res.status(200).json(Talle);
+        return res.status(200).json(Talle);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -38,10 +38,13 @@ export const EliminarTalle = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
         const result = await BETalle.delete({ id: Id });
-        if (result.affected === 0)
+        if (result.affected === 0) {
             return res.status(404).json({ message: "Talle no encontrada" });
-        else
-            res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`)
+        }
+        else {
+
+         return   res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`)
+        }
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -56,9 +59,7 @@ export const ActualizarTalle = async (req: Request, res: Response) => {
         await BETalle.update({ id: Id }, req.body);
         return res.sendStatus(204);
 
-    } catch (error) {
-        if (error instanceof Error) {
-            return res.status(500).json({ message: error.message });
-        }
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
     }
 };

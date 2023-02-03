@@ -7,21 +7,19 @@ import { BEProducto, BEColor, BETalle } from '.';
 // @Index(["productoId", "talleId", "colorId"], { unique: true })
 export class BEDetalle extends BaseEntity {
 
-  @PrimaryColumn({ type: "integer" })
+  @PrimaryColumn({ type: "int" })
   public id: number
 
 
   @ManyToOne(() => BEProducto, (producto) => producto.detalles, { nullable: false })
-  @JoinColumn({
-    name: "productoId"
-  })
+  @JoinColumn({ name: "productoId" })
   public producto: BEProducto
 
-  @ManyToOne(() => BETalle, { cascade: false, nullable: false })
+  @ManyToOne(() => BETalle, { cascade: false, nullable: false, eager: true })
   @JoinColumn({ name: "talleId" })
   public talle: BETalle;
 
-  @ManyToOne(() => BEColor, { cascade: false, nullable: false })
+  @ManyToOne(() => BEColor, { cascade: false, nullable: false, eager: true })
   @JoinColumn({ name: "colorId" })
   public color: BEColor;
 

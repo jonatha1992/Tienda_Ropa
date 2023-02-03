@@ -14,7 +14,7 @@ const typeorm_1 = require("typeorm");
 let BETalle = class BETalle extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int' }),
     __metadata("design:type", Number)
 ], BETalle.prototype, "id", void 0);
 __decorate([

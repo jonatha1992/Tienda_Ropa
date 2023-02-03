@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActualizarTalle = exports.EliminarTalle = exports.CrearTalle = exports.ObtenerTalle = exports.ListarTalles = void 0;
-const index_1 = require("../models/index");
+const models_1 = require("../models");
 const ListarTalles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const BETalles = yield index_1.BETalle.find();
-        res.json(BETalles);
+        const BETalles = yield models_1.BETalle.find();
+        return res.json(BETalles);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -24,8 +24,8 @@ exports.ListarTalles = ListarTalles;
 const ObtenerTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Talle = yield index_1.BETalle.findOneBy({ id: Id });
-        res.status(200).json(Talle);
+        const Talle = yield models_1.BETalle.findOneBy({ id: Id });
+        return res.status(200).json(Talle);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -35,7 +35,7 @@ exports.ObtenerTalle = ObtenerTalle;
 const CrearTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre } = req.body;
-        const NewBETalle = new index_1.BETalle();
+        const NewBETalle = new models_1.BETalle();
         NewBETalle.nombre = nombre;
         yield NewBETalle.save();
         return res.status(200).json(NewBETalle);
@@ -48,11 +48,13 @@ exports.CrearTalle = CrearTalle;
 const EliminarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const result = yield index_1.BETalle.delete({ id: Id });
-        if (result.affected === 0)
+        const result = yield models_1.BETalle.delete({ id: Id });
+        if (result.affected === 0) {
             return res.status(404).json({ message: "Talle no encontrada" });
-        else
-            res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`);
+        }
+        else {
+            return res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`);
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -62,16 +64,14 @@ exports.EliminarTalle = EliminarTalle;
 const ActualizarTalle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = yield index_1.BETalle.findOneBy({ id: Id });
+        const Talle = yield models_1.BETalle.findOneBy({ id: Id });
         if (!Talle)
             return res.status(404).json({ message: "Not user found" });
-        yield index_1.BETalle.update({ id: Id }, req.body);
+        yield models_1.BETalle.update({ id: Id }, req.body);
         return res.sendStatus(204);
     }
     catch (error) {
-        if (error instanceof Error) {
-            return res.status(500).json({ message: error.message });
-        }
+        return res.status(500).json({ message: error.message });
     }
 });
 exports.ActualizarTalle = ActualizarTalle;

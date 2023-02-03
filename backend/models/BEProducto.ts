@@ -10,11 +10,11 @@ export class BEProducto extends BaseEntity {
   @Column()
   public nombre: string;
 
-  @ManyToOne(type => BECategoria, categoria => categoria.id, { cascade: false }) @JoinColumn()
+  @ManyToOne(type => BECategoria, categoria => categoria.id, { cascade: false, eager: true }) @JoinColumn()
   public categoria: BECategoria;
 
-  @OneToMany(type => BEDetalle, detalle => detalle.producto, { cascade: false })
-  // @JoinColumn()
+  @OneToMany(type => BEDetalle, detalle => detalle.producto, { cascade: true, eager: true })
+  @JoinColumn()
   public detalles: BEDetalle[];
 
   @Column()

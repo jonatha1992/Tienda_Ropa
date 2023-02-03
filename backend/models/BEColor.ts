@@ -1,15 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, Index, Unique, OneToMany, ManyToMany, ManyToOne, OneToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm'
 
 @Entity({ name: 'color' })
 export class BEColor extends BaseEntity {
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int' })
   public id: number;
 
   @Column()
   public nombre: string;
-
-  // @OneToOne(() => BEProducto, { cascade: false })
-  // producto: BEProducto
 
 }

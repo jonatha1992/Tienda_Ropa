@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BEProducto = void 0;
-const index_1 = require("./index");
+const _1 = require(".");
 const typeorm_1 = require("typeorm");
 let BEProducto = class BEProducto extends typeorm_1.BaseEntity {
 };
@@ -23,14 +23,13 @@ __decorate([
     __metadata("design:type", String)
 ], BEProducto.prototype, "nombre", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(type => index_1.BECategoria, categoria => categoria.id, { cascade: false }),
+    (0, typeorm_1.ManyToOne)(type => _1.BECategoria, categoria => categoria.id, { cascade: false, eager: true }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", index_1.BECategoria)
+    __metadata("design:type", _1.BECategoria)
 ], BEProducto.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(type => index_1.BEDetalle, detalle => detalle.producto, { cascade: false })
-    // @JoinColumn()
-    ,
+    (0, typeorm_1.OneToMany)(type => _1.BEDetalle, detalle => detalle.producto, { cascade: true, eager: true }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], BEProducto.prototype, "detalles", void 0);
 __decorate([

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { BEColor } from "../models";
+import { BEColor } from "../models/BEColor";
 
 
 
 export const ListarColores = async (req: Request, res: Response) => {
     try {
-        const BETalles = await BEColor.find();
-        res.json(BETalles);
+        const BEColores = await BEColor.find();
+        return res.json(BEColores);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -15,7 +15,7 @@ export const Obtenercolor = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
         const Color = await BEColor.findOneBy({ id: Id })
-        res.status(200).json(Color);
+        return res.status(200).json(Color);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -41,7 +41,7 @@ export const EliminarColor = async (req: Request, res: Response) => {
         if (result.affected === 0)
             return res.status(404).json({ message: "Talle no encontrada" });
         else
-            res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`)
+            return res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`)
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -50,15 +50,15 @@ export const EliminarColor = async (req: Request, res: Response) => {
 export const ActualizarColor = async (req: Request, res: Response) => {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = await BEColor.findOneBy({ id: Id });
-        if (!Talle) return res.status(404).json({ message: "Not user found" });
-
-        await BEColor.update({ id: Id }, req.body);
-        return res.sendStatus(204);
-
-    } catch (error) {
-        if (error instanceof Error) {
-            return res.status(500).json({ message: error.message });
+        const Color = await BEColor.findOneBy({ id: Id });
+        if (!Color) {
+            return res.status(404).json({ message: "Not user found" });
+        } else {
+            await BEColor.update({ id: Id }, req.body);
+            return res.sendStatus(204).json(Color);
         }
+
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
     }
 };

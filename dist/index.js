@@ -17,6 +17,9 @@ const app_1 = __importDefault(require("./app"));
 const database_1 = require("./database");
 const categoria_routes_1 = __importDefault(require("./routes/categoria.routes"));
 const producto_routes_1 = __importDefault(require("./routes/producto.routes"));
+const color_routes_1 = __importDefault(require("./routes/color.routes"));
+const talle_routes_1 = __importDefault(require("./routes/talle.routes"));
+const detalle_routes_1 = __importDefault(require("./routes/detalle.routes"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield database_1.AppDataSource.initialize();
@@ -25,6 +28,9 @@ function main() {
         });
     });
 }
-app_1.default.use(categoria_routes_1.default);
 app_1.default.use(producto_routes_1.default);
+app_1.default.use(categoria_routes_1.default);
+app_1.default.use(color_routes_1.default);
+app_1.default.use(talle_routes_1.default);
+app_1.default.use(detalle_routes_1.default);
 main();

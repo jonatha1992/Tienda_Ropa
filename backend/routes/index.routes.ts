@@ -1,5 +1,0 @@
-export * from "./categoria.routes"
-export * from "./producto.routes"
-export * from "./talle.routes"
-export * from "./color.routes"
-export * from "./detalle.routes" 

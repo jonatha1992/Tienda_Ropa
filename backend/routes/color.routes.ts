@@ -5,7 +5,7 @@ import {
 
 const router = Router();
 
-router.get("/colors", ListarColores);
+router.get("/colores", ListarColores);
 
 router.get("/color/:id", Obtenercolor);
 

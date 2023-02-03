@@ -13,8 +13,7 @@ export const ListarProductos = async (req: Request, res: Response) => {
                 }
             }
         });
-        console.log(Productos)
-        res.json(Productos);
+        return res.json(Productos);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -31,7 +30,7 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
                 }
             }
         })
-        res.json(Producto);
+        return res.json(Producto);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -64,7 +63,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
                 return newDetalle
             })
 
-            res.json(newProducto);
+            return res.json(newProducto);
         }
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
@@ -74,9 +73,10 @@ export const CrearProducto = async (req: Request, res: Response) => {
 export const EliminarProducto = async (req: Request, res: Response) => {
     try {
         const Id = parseInt(req.params.id);
+        console.log(Id)
         await BEProducto.delete({ id: Id });
 
-        res.json(`Producto ${Id} Borrado satisfactoriamente`)
+        return res.json(`Producto ${Id} Borrado satisfactoriamente`)
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -97,7 +97,7 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
             }
         })
 
-        res.json(producto);
+        return res.json(producto);
 
     } catch (error: any) {
         return res.status(500).json({ message: error.message });

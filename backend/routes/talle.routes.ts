@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-    CrearCategoria, ListarCategorias, ObtenerCategoria, EliminarCategoria, ActualizarCategoria, ListarTalles, ObtenerTalle, CrearTalle, EliminarTalle, ActualizarTalle,
+    ListarTalles, ObtenerTalle, CrearTalle, EliminarTalle, ActualizarTalle,
 } from "../controllers";
 
 const router = Router();

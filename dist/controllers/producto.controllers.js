@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
-const index_1 = require("../models/index");
+exports.ActualizarProducto = exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
+const models_1 = require("../models");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Productos = yield index_1.BEProducto.find({
+        const Productos = yield models_1.BEProducto.find({
             relations: {
                 categoria: true,
                 detalles: {
@@ -22,8 +22,7 @@ const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function
                 }
             }
         });
-        console.log(Productos);
-        res.json(Productos);
+        return res.json(Productos);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -33,7 +32,7 @@ exports.ListarProductos = ListarProductos;
 const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Producto = yield index_1.BEProducto.findOne({
+        const Producto = yield models_1.BEProducto.findOne({
             where: { id: Id }, relations: {
                 categoria: true,
                 detalles: {
@@ -42,7 +41,7 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
                 }
             }
         });
-        res.json(Producto);
+        return res.json(Producto);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -56,23 +55,23 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
-            let newProducto = new index_1.BEProducto();
+            let newProducto = new models_1.BEProducto();
             newProducto.nombre = nombre;
             newProducto.descripcion = descripcion;
             newProducto.categoria = categoria;
             yield newProducto.save();
             newProducto.detalles = detalles.map((detalle) => {
-                let newDetalle = new index_1.BEDetalle();
+                let newDetalle = new models_1.BEDetalle();
                 newDetalle.id = parseInt(String(newProducto.id) + String(detalle.color.id) + String(detalle.talle.id));
                 newDetalle.color = detalle.color;
-                newDetalle.producto = new index_1.BEProducto;
+                newDetalle.producto = new models_1.BEProducto;
                 newDetalle.producto.id = newProducto.id;
                 newDetalle.talle = detalle.talle;
                 newDetalle.stock = detalle.stock;
                 newDetalle.save();
                 return newDetalle;
             });
-            res.json(newProducto);
+            return res.json(newProducto);
         }
     }
     catch (error) {
@@ -83,23 +82,32 @@ exports.CrearProducto = CrearProducto;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        yield index_1.BEProducto.delete({ id: Id });
-        res.json(`Producto ${Id} Borrado satisfactoriamente`);
+        console.log(Id);
+        yield models_1.BEProducto.delete({ id: Id });
+        return res.json(`Producto ${Id} Borrado satisfactoriamente`);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
 exports.EliminarProducto = EliminarProducto;
-// export const ActualizarProducto = async (req: Request, res: Response) => {
-//     try {
-//         const Id = parseInt(req.params.id);
-//         const { nombre, descripcion, talle, color, stock } = req.body;
-//         await pool.query(`UPDATE producto SET nombre = ${nombre} , descripcion = ${descripcion} , talle = ${talle} , color =
-//              ${color} , stock = ${stock} WHERE id = ${Id}`)
-//         const newProducto = new producto(Id, nombre, descripcion, color)
-//         res.json(newProducto);
-//     } catch (error: any) {
-//         return res.status(500).json({ message: error.message });
-//     }
-//}
+const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const Id = parseInt(req.params.id);
+        const { nombre, descripcion, detalles, categoria } = req.body;
+        let producto = yield models_1.BEProducto.findOne({
+            where: { id: Id }, relations: {
+                categoria: true,
+                detalles: {
+                    talle: true,
+                    color: true
+                }
+            }
+        });
+        return res.json(producto);
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+exports.ActualizarProducto = ActualizarProducto;

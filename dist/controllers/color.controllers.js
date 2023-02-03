@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActualizarColor = exports.EliminarColor = exports.CrearColor = exports.Obtenercolor = exports.ListarColores = void 0;
-const models_1 = require("../models");
+const BEColor_1 = require("../models/BEColor");
 const ListarColores = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const BETalles = yield models_1.BEColor.find();
-        res.json(BETalles);
+        const BEColores = yield BEColor_1.BEColor.find();
+        return res.json(BEColores);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -24,8 +24,8 @@ exports.ListarColores = ListarColores;
 const Obtenercolor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Color = yield models_1.BEColor.findOneBy({ id: Id });
-        res.status(200).json(Color);
+        const Color = yield BEColor_1.BEColor.findOneBy({ id: Id });
+        return res.status(200).json(Color);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -35,7 +35,7 @@ exports.Obtenercolor = Obtenercolor;
 const CrearColor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre } = req.body;
-        const NewColor = new models_1.BEColor();
+        const NewColor = new BEColor_1.BEColor();
         NewColor.nombre = nombre;
         yield NewColor.save();
         return res.status(200).json(NewColor);
@@ -48,11 +48,11 @@ exports.CrearColor = CrearColor;
 const EliminarColor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const result = yield models_1.BEColor.delete({ id: Id });
+        const result = yield BEColor_1.BEColor.delete({ id: Id });
         if (result.affected === 0)
             return res.status(404).json({ message: "Talle no encontrada" });
         else
-            res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`);
+            return res.status(204).json(`Talle ${Id} Borrado satisfactoriamente`);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -62,16 +62,17 @@ exports.EliminarColor = EliminarColor;
 const ActualizarColor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Id = parseInt(req.params.id);
     try {
-        const Talle = yield models_1.BEColor.findOneBy({ id: Id });
-        if (!Talle)
+        const Color = yield BEColor_1.BEColor.findOneBy({ id: Id });
+        if (!Color) {
             return res.status(404).json({ message: "Not user found" });
-        yield models_1.BEColor.update({ id: Id }, req.body);
-        return res.sendStatus(204);
+        }
+        else {
+            yield BEColor_1.BEColor.update({ id: Id }, req.body);
+            return res.sendStatus(204).json(Color);
+        }
     }
     catch (error) {
-        if (error instanceof Error) {
-            return res.status(500).json({ message: error.message });
-        }
+        return res.status(500).json({ message: error.message });
     }
 });
 exports.ActualizarColor = ActualizarColor;

@@ -11,29 +11,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BEDetalle = void 0;
 const typeorm_1 = require("typeorm");
-const index_1 = require("./index");
+const _1 = require(".");
 let BEDetalle = class BEDetalle extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({ type: "integer" }),
+    (0, typeorm_1.PrimaryColumn)({ type: "int" }),
     __metadata("design:type", Number)
 ], BEDetalle.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => index_1.BEProducto, (producto) => producto.detalles, { nullable: false }),
-    (0, typeorm_1.JoinColumn)({
-        name: "productoId"
-    }),
-    __metadata("design:type", index_1.BEProducto)
+    (0, typeorm_1.ManyToOne)(() => _1.BEProducto, (producto) => producto.detalles, { nullable: false }),
+    (0, typeorm_1.JoinColumn)({ name: "productoId" }),
+    __metadata("design:type", _1.BEProducto)
 ], BEDetalle.prototype, "producto", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => index_1.BETalle, { cascade: false, nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => _1.BETalle, { cascade: false, nullable: false, eager: true }),
     (0, typeorm_1.JoinColumn)({ name: "talleId" }),
-    __metadata("design:type", index_1.BETalle)
+    __metadata("design:type", _1.BETalle)
 ], BEDetalle.prototype, "talle", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => index_1.BEColor, { cascade: false, nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => _1.BEColor, { cascade: false, nullable: false, eager: true }),
     (0, typeorm_1.JoinColumn)({ name: "colorId" }),
-    __metadata("design:type", index_1.BEColor)
+    __metadata("design:type", _1.BEColor)
 ], BEDetalle.prototype, "color", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
