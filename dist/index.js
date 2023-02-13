@@ -26,6 +26,9 @@ function main() {
         app_1.default.listen(3000, () => {
             console.log('server on port', 3000);
         });
+        app_1.default.get("/", function (req, res) {
+            res.status(200).sendFile('./index.html');
+        });
     });
 }
 app_1.default.use(producto_routes_1.default);
@@ -33,4 +36,7 @@ app_1.default.use(categoria_routes_1.default);
 app_1.default.use(color_routes_1.default);
 app_1.default.use(talle_routes_1.default);
 app_1.default.use(detalle_routes_1.default);
+app_1.default.get("/prueba", function (req, res) {
+    res.status(200).sendFile('./pruebita.html');
+});
 main();

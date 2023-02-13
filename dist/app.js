@@ -11,4 +11,5 @@ app.use(express_1.default.json());
 app.use((0, morgan_1.default)('dev'));
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: false }));
+app.use(express_1.default.static("frontend"));
 exports.default = app;

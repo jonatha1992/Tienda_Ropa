@@ -13,12 +13,19 @@ async function main() {
     app.listen(3000, () => {
         console.log('server on port', 3000)
     })
+    app.get("/", function (req, res) {
+        res.status(200).sendFile('./index.html');
+    });
 }
 app.use(indexRoutesProducto)
 app.use(indexRoutesCategorias)
 app.use(indexRoutesColor)
 app.use(indexRoutesTalle)
 app.use(indexRoutesDetalle)
+
+app.get("/prueba", function (req, res) {
+    res.status(200).sendFile('./pruebita.html');
+});
 
 main();
 

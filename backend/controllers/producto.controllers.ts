@@ -13,7 +13,7 @@ export const ListarProductos = async (req: Request, res: Response) => {
                 }
             }
         });
-        return res.json(Productos);
+        return res.json(Productos) ;
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
