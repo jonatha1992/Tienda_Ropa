@@ -9,17 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActualizarProducto = exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
+exports.ActualizarProducto = exports.EliminarProducto = exports.SubirImagen = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
 const models_1 = require("../models");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Productos = yield models_1.BEProducto.find({
             relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         });
         return res.json(Productos);
@@ -35,10 +33,8 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
         const Producto = yield models_1.BEProducto.findOne({
             where: { id: Id }, relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         });
         return res.json(Producto);
@@ -50,27 +46,28 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.ObtenerProducto = ObtenerProducto;
 const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre, descripcion, detalles, categoria } = req.body;
-        console.log(req.body);
+        const { nombre, descripcion, stock, categoria, image, color } = req.body;
+        const producto = req.body;
+        // console.log(req.body)
+        console.log(producto);
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
+            let newStock = new models_1.BEStock();
+            newStock.S = stock.S;
+            newStock.L = stock.L;
+            newStock.M = stock.M;
+            newStock.XL = stock.XL;
+            yield newStock.save();
             let newProducto = new models_1.BEProducto();
             newProducto.nombre = nombre;
             newProducto.descripcion = descripcion;
             newProducto.categoria = categoria;
+            newProducto.color = color;
+            newProducto.image = image;
+            newProducto.color = color;
+            newProducto.stock = newStock;
             yield newProducto.save();
-            newProducto.detalles = detalles.map((detalle) => {
-                let newDetalle = new models_1.BEDetalle();
-                newDetalle.id = parseInt(String(newProducto.id) + String(detalle.color.id) + String(detalle.talle.id));
-                newDetalle.color = detalle.color;
-                newDetalle.producto = new models_1.BEProducto;
-                newDetalle.producto.id = newProducto.id;
-                newDetalle.talle = detalle.talle;
-                newDetalle.stock = detalle.stock;
-                newDetalle.save();
-                return newDetalle;
-            });
             return res.json(newProducto);
         }
     }
@@ -79,6 +76,16 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.CrearProducto = CrearProducto;
+const SubirImagen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log(req.files);
+        return res.send("Subiendo imagen");
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+exports.SubirImagen = SubirImagen;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
@@ -98,10 +105,8 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
         let producto = yield models_1.BEProducto.findOne({
             where: { id: Id }, relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         });
         return res.json(producto);

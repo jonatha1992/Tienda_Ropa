@@ -1,5 +1,6 @@
 import { json, Request, Response } from 'express'
-import { BEProducto, BEDetalle } from "../models";
+
+import { BEProducto, BEStock } from "../models";
 
 
 export const ListarProductos = async (req: Request, res: Response) => {
@@ -7,13 +8,11 @@ export const ListarProductos = async (req: Request, res: Response) => {
         const Productos = await BEProducto.find({
             relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         });
-        return res.json(Productos) ;
+        return res.json(Productos);
     } catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
@@ -24,10 +23,8 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
         const Producto = await BEProducto.findOne({
             where: { id: Id }, relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         })
         return res.json(Producto);
@@ -38,34 +35,51 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
 
 export const CrearProducto = async (req: Request, res: Response) => {
     try {
-        const { nombre, descripcion, detalles, categoria } = req.body;
-        console.log(req.body)
+        const { nombre, descripcion, stock, categoria, image, color } = req.body;
+        const producto = req.body as BEProducto;
+        // console.log(req.body)
+        console.log(producto)
+
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {
+
+
+            let newStock = new BEStock()
+            newStock.S = stock.S
+            newStock.L = stock.L
+            newStock.M = stock.M
+            newStock.XL = stock.XL
+            await newStock.save()
 
             let newProducto = new BEProducto()
             newProducto.nombre = nombre
             newProducto.descripcion = descripcion
             newProducto.categoria = categoria
+            newProducto.color = color
+            newProducto.image = image
+            newProducto.color = color
+            newProducto.stock = newStock
             await newProducto.save()
 
-            newProducto.detalles = detalles.map((detalle: BEDetalle) => {
-
-                let newDetalle = new BEDetalle()
-                newDetalle.id = parseInt(String(newProducto.id) + String(detalle.color.id) + String(detalle.talle.id))
-                newDetalle.color = detalle.color
-                newDetalle.producto = new BEProducto
-                newDetalle.producto.id = newProducto.id
-                newDetalle.talle = detalle.talle
-                newDetalle.stock = detalle.stock
-                newDetalle.save()
-                return newDetalle
-            })
 
             return res.json(newProducto);
+
         }
-    } catch (error: any) {
+
+
+    }
+    catch (error: any) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export const SubirImagen = async (req: Request, res: Response) => {
+    try {
+        console.log(req.files)
+        return res.send("Subiendo imagen")
+    }
+    catch (error: any) {
         return res.status(500).json({ message: error.message });
     }
 }
@@ -90,10 +104,8 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
         let producto = await BEProducto.findOne({
             where: { id: Id }, relations: {
                 categoria: true,
-                detalles: {
-                    talle: true,
-                    color: true
-                }
+                color: true,
+                stock: true
             }
         })
 

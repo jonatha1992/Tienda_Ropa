@@ -1,13 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BETalle = exports.BEProducto = exports.BEColor = exports.BEDetalle = exports.BECategoria = void 0;
+exports.BEProducto = exports.BEColor = exports.BEStock = exports.BECategoria = void 0;
 var BECategoria_1 = require("./BECategoria");
 Object.defineProperty(exports, "BECategoria", { enumerable: true, get: function () { return BECategoria_1.BECategoria; } });
-var BEDetalle_1 = require("./BEDetalle");
-Object.defineProperty(exports, "BEDetalle", { enumerable: true, get: function () { return BEDetalle_1.BEDetalle; } });
+var BEStock_1 = require("./BEStock");
+Object.defineProperty(exports, "BEStock", { enumerable: true, get: function () { return BEStock_1.BEStock; } });
 var BEColor_1 = require("./BEColor");
 Object.defineProperty(exports, "BEColor", { enumerable: true, get: function () { return BEColor_1.BEColor; } });
 var BEProducto_1 = require("./BEProducto");
 Object.defineProperty(exports, "BEProducto", { enumerable: true, get: function () { return BEProducto_1.BEProducto; } });
-var BETalle_1 = require("./BETalle");
-Object.defineProperty(exports, "BETalle", { enumerable: true, get: function () { return BETalle_1.BETalle; } });
