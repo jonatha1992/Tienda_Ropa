@@ -9,7 +9,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-
         push,
         } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js"; */
 
-import { getStorage,uploadBytes,ref,getDownloadURL} from "https://www.gstatic.com/firebasejs/9.8.0/firebase-storage.js"
+import { getStorage, uploadBytes, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-storage.js"
 
 const firebaseConfig = {
   apiKey: "AIzaSyAiUV_8h-5DXq243Xzv8pKIPM4fgN7faa0",
@@ -21,18 +21,18 @@ const firebaseConfig = {
   appId: "1:246474988151:web:aac0cb380619df75610472",
   measurementId: "G-7PCH118VJ7"
 };
-  // Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage= getStorage(app)
+const storage = getStorage(app)
 
 /* const db = getDatabase(); */
 
-async function  uploadFiles(file){
-  const storageRef=ref(storage,crypto.randomUUID())
-  await uploadBytes(storageRef,file)
-  const url=await getDownloadURL(storageRef)
+async function uploadFiles(file) {
+  const storageRef = ref(storage, crypto.randomUUID())
+  await uploadBytes(storageRef, file)
+  const url = await getDownloadURL(storageRef)
   return url
 }
-  
 
-export{uploadFiles}
+
+export { uploadFiles }
