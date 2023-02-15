@@ -28,14 +28,23 @@ __decorate([
     __metadata("design:type", _1.BECategoria)
 ], BEProducto.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(type => _1.BEDetalle, detalle => detalle.producto, { cascade: true, eager: true }),
+    (0, typeorm_1.ManyToOne)(type => _1.BEColor, color => color.id, { cascade: false, eager: true }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Array)
-], BEProducto.prototype, "detalles", void 0);
+    __metadata("design:type", _1.BEColor)
+], BEProducto.prototype, "color", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(type => _1.BEStock, stock => stock.producto, { cascade: true, eager: true }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", _1.BEStock)
+], BEProducto.prototype, "stock", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], BEProducto.prototype, "descripcion", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", String)
+], BEProducto.prototype, "image", void 0);
 BEProducto = __decorate([
     (0, typeorm_1.Entity)({ name: 'producto' })
 ], BEProducto);

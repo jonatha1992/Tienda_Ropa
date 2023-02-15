@@ -9,38 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.producto = void 0;
-const BEDetalle_1 = require("./BEDetalle");
-const BECategoria_1 = require("./BECategoria");
+exports.BEStock = void 0;
 const typeorm_1 = require("typeorm");
-let producto = class producto extends typeorm_1.BaseEntity {
+const _1 = require(".");
+let BEStock = class BEStock extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: "int" }),
     __metadata("design:type", Number)
-], producto.prototype, "id", void 0);
+], BEStock.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => _1.BEProducto, (producto) => producto.stock, { nullable: true, onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinColumn)({ name: "productoId" }),
+    __metadata("design:type", _1.BEProducto
+    // @Column()
+    // public XXS: number
+    // @Column()
+    // public XS: number
+    )
+], BEStock.prototype, "producto", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], producto.prototype, "nombre", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(type => BECategoria_1.categoria),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", BECategoria_1.categoria)
-], producto.prototype, "categoria", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(type => BEDetalle_1.detalle, detalle => detalle.producto),
-    __metadata("design:type", Array)
-], producto.prototype, "detalles", void 0);
+    __metadata("design:type", Number)
+], BEStock.prototype, "S", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], producto.prototype, "descripcion", void 0);
+    __metadata("design:type", Number)
+], BEStock.prototype, "M", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], producto.prototype, "color", void 0);
-producto = __decorate([
-    (0, typeorm_1.Entity)()
-], producto);
-exports.producto = producto;
+    __metadata("design:type", Number)
+], BEStock.prototype, "L", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], BEStock.prototype, "XL", void 0);
+BEStock = __decorate([
+    (0, typeorm_1.Entity)({ name: 'stock' })
+], BEStock);
+exports.BEStock = BEStock;

@@ -1,5 +1,3 @@
 export * from "./categoria.controllers"
-export * from "./detalle.controllers"
 export * from "./producto.controllers"
 export * from "./color.controllers"
-export * from "./talle.controllers"

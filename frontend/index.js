@@ -1,11 +1,11 @@
-function traerProductos(){
+function traerProductos() {
     fetch('/productos')
-    .then(data => {
-    return data.json();
-    })
-    .then(post => {
-    console.log(post);
-    });
+        .then(data => {
+            return data.json();
+        })
+        .then(post => {
+            console.log(post);
+        });
 }
 
 traerProductos()
