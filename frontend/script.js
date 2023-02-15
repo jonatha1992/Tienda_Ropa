@@ -17,7 +17,7 @@ const grabar=document.getElementById("agregar-editar")
 
 grabar.addEventListener("click",agregar)
 
-async function agregar(){
+async function agregar(){ 
     console.log(resultado)
     imagen.classList.remove('is-invalid');
     descripcion.classList.remove('is-invalid');

@@ -26,6 +26,9 @@ export class BEProducto extends BaseEntity {
   @Column()
   public descripcion: string;
 
+  @Column({ type: "decimal", nullable: true })
+  public precio: number;
+
   @Column({ type: 'varchar', nullable: true })
   public image: string;
 

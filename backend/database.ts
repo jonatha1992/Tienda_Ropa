@@ -6,10 +6,10 @@ export const AppDataSource = new DataSource({
     type: 'postgres',
     host: 'localhost',
     username: 'postgres',
-    password: 'Pentagono123',
+    password: '1234',
     database: 'TiendaRopa',
     port: 5432,
     entities: [BECategoria, BEProducto, BEStock, BEColor],
     logging: true,
-    synchronize: true
+    synchronize: false
 });

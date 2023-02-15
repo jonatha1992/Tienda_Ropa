@@ -46,7 +46,7 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.ObtenerProducto = ObtenerProducto;
 const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre, descripcion, stock, categoria, image, color } = req.body;
+        const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body;
         // console.log(req.body)
         console.log(producto);
@@ -65,7 +65,7 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             newProducto.categoria = categoria;
             newProducto.color = color;
             newProducto.image = image;
-            newProducto.color = color;
+            newProducto.precio = precio;
             newProducto.stock = newStock;
             yield newProducto.save();
             return res.json(newProducto);

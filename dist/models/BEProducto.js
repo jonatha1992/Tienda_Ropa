@@ -42,6 +42,10 @@ __decorate([
     __metadata("design:type", String)
 ], BEProducto.prototype, "descripcion", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
+    __metadata("design:type", Number)
+], BEProducto.prototype, "precio", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
 ], BEProducto.prototype, "image", void 0);

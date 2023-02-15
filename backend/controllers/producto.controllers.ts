@@ -35,7 +35,7 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
 
 export const CrearProducto = async (req: Request, res: Response) => {
     try {
-        const { nombre, descripcion, stock, categoria, image, color } = req.body;
+        const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body as BEProducto;
         // console.log(req.body)
         console.log(producto)
@@ -58,7 +58,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
             newProducto.categoria = categoria
             newProducto.color = color
             newProducto.image = image
-            newProducto.color = color
+            newProducto.precio = precio
             newProducto.stock = newStock
             await newProducto.save()
 
