@@ -1,4 +1,5 @@
 import { Router } from "express";
+import path from "path";
 import {
     CrearProducto,
     EliminarProducto,
@@ -18,5 +19,8 @@ router.post("/producto", CrearProducto);
 router.delete("/producto/:id", EliminarProducto);
 
 router.put("/producto/:id", ActualizarProducto);
+
+
+
 
 export default router

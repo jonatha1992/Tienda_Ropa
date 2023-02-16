@@ -12,5 +12,11 @@ app.use(express_1.default.json());
 app.use((0, morgan_1.default)('dev'));
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use('/api', express_1.default.static(path_1.default.join(__dirname, '/views')));
+app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+app.get("/alta", function (req, res) {
+    res.status(200).sendFile(path_1.default.join(__dirname, 'public/altaProducto.html'));
+});
+// console.log(path.resolve(__dirname, 'public'))
+// app.use(express.static('dist/views'));
+// app.use(express.static('frontend'));
 exports.default = app;
