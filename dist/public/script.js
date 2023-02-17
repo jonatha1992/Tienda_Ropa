@@ -7,6 +7,7 @@ const titulo = document.getElementById("titulo")
 const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
 const imagen = document.getElementById("imagen")
+const categoria=document.getElementById("categoria")
 let resultado = ''
 const s = document.getElementById("s")
 const m = document.getElementById("m")
@@ -18,7 +19,6 @@ const grabar = document.getElementById("agregar-editar")
 grabar.addEventListener("click", agregar)
 
 async function agregar() {
-    console.log(resultado)
     imagen.classList.remove('is-invalid');
     descripcion.classList.remove('is-invalid');
     precio.classList.remove('is-invalid');
@@ -32,15 +32,20 @@ async function agregar() {
             descripcion.classList.add('is-invalid');
         if (imagen.value == "")
             imagen.classList.add('is-invalid');
+        if(sku.value=="")
+            sku.classList.add('is-invalid');
+        if(categoria.value=="")
+            categoria.classList.add('is-invalid');
     } else {
         let url_img = await uploadFiles(resultado)
         console.log(url_img)
         let producto = {
             "sku": sku.value,
-            "titulo": titulo.value,
+            "nombre": titulo.value,
             "precio": precio.value,
-            "imagen": url_img,
+            "image": url_img,
             "descripcion": descripcion.value,
+            "categoria":categoria.value,
             "stock": {
                 "s": parseInt(s.value),
                 "m": parseInt(m.value),
@@ -48,16 +53,18 @@ async function agregar() {
                 "xl": parseInt(xl.value),
             }
         }
-        uploadFiles(resultado)
+        
         /* const refProduct= ref(db, "Productos/");
         push(refProduct,producto) */
-        fetch("/productos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(producto),
-        })
+        fetch('/producto', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(producto), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }
+            }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', response));
         console.log("seagrego", producto)
         sku.value = ""
         titulo.value = ""

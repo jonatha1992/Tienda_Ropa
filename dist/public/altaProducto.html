@@ -22,9 +22,18 @@
                     <h6>SKU: <span id="id-sku"></span></h6>
                 </div>
                 <div class="row">
-                    <div class="form-floating">
-                        <input class="form-control" id="titulo">
+                    <div class="form-floating col-6">
+                        <input class="form-control" id="titulo"  >
                         <label for="titulo">Titulo</label>
+                    </div>
+                    <div class="form-floating col-6" >
+                        <select class="form-select" id="categoria" aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value="1">Remeras</option>
+                            <option value="2">Pantalones</option>
+                            <option value="3">Buzos</option>
+                        </select>
+                        <label for="floatingSelect">Selecciona categoria</label>
                     </div>
                 </div>
                 <div class="row">

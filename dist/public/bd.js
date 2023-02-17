@@ -12,14 +12,13 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-
 import { getStorage, uploadBytes, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-storage.js"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAiUV_8h-5DXq243Xzv8pKIPM4fgN7faa0",
-  authDomain: "unmillenceria.firebaseapp.com",
-  databaseURL: "https://unmillenceria-default-rtdb.firebaseio.com",
-  projectId: "unmillenceria",
-  storageBucket: "unmillenceria.appspot.com",
-  messagingSenderId: "246474988151",
-  appId: "1:246474988151:web:aac0cb380619df75610472",
-  measurementId: "G-7PCH118VJ7"
+  apiKey: "AIzaSyD16cBwNmCcxcLOdJg-MT68NVjJMp_TPN8",
+  authDomain: "unmil-f0fee.firebaseapp.com",
+  projectId: "unmil-f0fee",
+  storageBucket: "unmil-f0fee.appspot.com",
+  messagingSenderId: "365850853178",
+  appId: "1:365850853178:web:30eddb1839d3b3310d1a03",
+  measurementId: "G-036BPBNNXS"
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
