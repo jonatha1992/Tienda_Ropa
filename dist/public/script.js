@@ -47,10 +47,10 @@ async function agregar() {
             "descripcion": descripcion.value,
             "categoria":categoria.value,
             "stock": {
-                "s": parseInt(s.value),
-                "m": parseInt(m.value),
-                "l": parseInt(l.value),
-                "xl": parseInt(xl.value),
+                "S": parseInt(s.value),
+                "M": parseInt(m.value),
+                "L": parseInt(l.value),
+                "XL": parseInt(xl.value),
             }
         }
         
