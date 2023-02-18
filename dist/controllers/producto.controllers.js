@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActualizarProducto = exports.EliminarProducto = exports.SubirImagen = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
+exports.ActualizarProducto = exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
 const models_1 = require("../models");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -46,7 +46,7 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.ObtenerProducto = ObtenerProducto;
 const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre, descripcion, stock, categoria, image, precio } = req.body;
+        const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body;
         // console.log(req.body)
         console.log(producto);
@@ -76,16 +76,6 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.CrearProducto = CrearProducto;
-const SubirImagen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        console.log(req.files);
-        return res.send("Subiendo imagen");
-    }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-});
-exports.SubirImagen = SubirImagen;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);

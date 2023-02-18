@@ -74,15 +74,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
     }
 }
 
-export const SubirImagen = async (req: Request, res: Response) => {
-    try {
-        console.log(req.files)
-        return res.send("Subiendo imagen")
-    }
-    catch (error: any) {
-        return res.status(500).json({ message: error.message });
-    }
-}
+
 
 export const EliminarProducto = async (req: Request, res: Response) => {
     try {
