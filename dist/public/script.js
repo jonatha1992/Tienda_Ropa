@@ -7,7 +7,7 @@ const titulo = document.getElementById("titulo")
 const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
 const imagen = document.getElementById("imagen")
-const categoria=document.getElementById("categoria")
+const categoria = document.getElementById("categoria")
 let resultado = ''
 const s = document.getElementById("s")
 const m = document.getElementById("m")
@@ -32,9 +32,9 @@ async function agregar() {
             descripcion.classList.add('is-invalid');
         if (imagen.value == "")
             imagen.classList.add('is-invalid');
-        if(sku.value=="")
+        if (sku.value == "")
             sku.classList.add('is-invalid');
-        if(categoria.value=="")
+        if (categoria.value == "")
             categoria.classList.add('is-invalid');
     } else {
         let url_img = await uploadFiles(resultado)
@@ -45,7 +45,7 @@ async function agregar() {
             "precio": precio.value,
             "image": url_img,
             "descripcion": descripcion.value,
-            "categoria":categoria.value,
+            "categoria": categoria.value,
             "stock": {
                 "S": parseInt(s.value),
                 "M": parseInt(m.value),
@@ -53,16 +53,16 @@ async function agregar() {
                 "XL": parseInt(xl.value),
             }
         }
-        
+
         /* const refProduct= ref(db, "Productos/");
         push(refProduct,producto) */
         fetch('/producto', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(producto), // data can be `string` or {object}!
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             }
-            }).then(res => res.json())
+        }).then(res => res.json())
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response));
         console.log("seagrego", producto)

@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./categoria.controllers"), exports);
 __exportStar(require("./producto.controllers"), exports);
 __exportStar(require("./color.controllers"), exports);
+__exportStar(require("./usuario.controllers"), exports);

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BEProducto = exports.BEColor = exports.BEStock = exports.BECategoria = void 0;
+exports.BEProducto = exports.BEColor = exports.BEStock = exports.BECategoria = exports.BEUsuario = void 0;
+var BEUsuario_1 = require("./BEUsuario");
+Object.defineProperty(exports, "BEUsuario", { enumerable: true, get: function () { return BEUsuario_1.BEUsuario; } });
 var BECategoria_1 = require("./BECategoria");
 Object.defineProperty(exports, "BECategoria", { enumerable: true, get: function () { return BECategoria_1.BECategoria; } });
 var BEStock_1 = require("./BEStock");
