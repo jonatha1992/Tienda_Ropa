@@ -5,7 +5,7 @@ import {
 
 const router = Router();
 
-router.get("/usuario", VerificarUsuario);
+router.post("/usuario", VerificarUsuario);
 
 
 export default router

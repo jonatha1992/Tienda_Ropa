@@ -14,14 +14,16 @@ const models_1 = require("../models");
 const VerificarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let posibleUsuario = req.body;
+        console.log('consulta ', posibleUsuario);
         const usuario = yield models_1.BEUsuario.findOne({
             where: {
                 email: posibleUsuario.email,
                 password: posibleUsuario.password
             }
         });
+        console.log('respuesta', usuario);
         if (!usuario) {
-            return res.status(400).json({ message: "Usuario No verificado" });
+            return res.status(400).json({ verificado: false });
         }
         else {
             return res.status(200).json({ verificado: true });

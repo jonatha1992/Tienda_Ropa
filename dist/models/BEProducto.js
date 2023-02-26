@@ -49,6 +49,14 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
 ], BEProducto.prototype, "image", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], BEProducto.prototype, "createtAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], BEProducto.prototype, "updateAt", void 0);
 BEProducto = __decorate([
     (0, typeorm_1.Entity)({ name: 'producto' })
 ], BEProducto);
