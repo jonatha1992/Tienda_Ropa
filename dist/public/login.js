@@ -1,12 +1,13 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const modo = 'login' | 'registro'
+    let Registro = false
 
     const inputEmail = document.querySelector("#email")
     const inputPassword = document.querySelector("#password")
+    const CopPassword = document.querySelector("#CopPassword")
+    const DivCopiPassword = document.querySelector("#conteiner-CopyPassword")
     const btnIngresar = document.querySelector('#btn-ingresar');
-    const conteinerButon = document.querySelector('#conteiner-buton');
     const conteinerRegister = document.querySelector('#conteiner-register');
     const formulario = document.querySelector('form');
     const enlaceRegistro = document.querySelector('#enlace-register');
@@ -27,17 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function RegistrarUsuario() {
 
-        modo = 'register'
-        conteinerRegister.classList.add('visually-hidden')
-        btnIngresar.textContent = 'Registrar'
-
-        // let CopiaPassword = inputPassword.cloneNode(true)
-        // CopiaPassword.id = 'CopiaPassword'
-        // CopiaPassword.querySelector('input').id ='CopiaPassword'
-        // CopiaPassword.querySelector('label').for ='CopiaPassword'
-        // formulario.insertBefore(CopiaPassword, conteinerButon)
-
-
+        Registro = true
+        conteinerRegister.classList.add('visually-hidden') // oculto el enlace
+        DivCopiPassword.classList.remove('visually-hidden') // muestro el div
+        btnIngresar.textContent = 'Registrar' // cambio el texto de boton 
 
     }
 
