@@ -99,8 +99,6 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body;
-        // console.log(req.body)
-        console.log(producto);
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {

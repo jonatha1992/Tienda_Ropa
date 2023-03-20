@@ -1,14 +1,36 @@
-import { uploadFiles } from './bd.js'
+import { uploadFiles } from '../bd.js'
 
-const sku = document.getElementById("sku")
+let prewiew = document.getElementById('preview');
+
+input_img.addEventListener('change', (event) => {
+    let file = event.target.files[0]
+
+    if (file) {
+        let img = URL.createObjectURL(file)
+        prewiew.src = img
+        prewiew.classList.remove('visually-hidden')
+    } else {
+        prewiew.classList.add('visually-hidden')
+    }
+
+});
 
 
+
+//constantes 
+
+
+
+const id = document.getElementById("id")
 const titulo = document.getElementById("titulo")
+const categoria = document.getElementById("categoria")
+const color = document.getElementById("color")
 const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
 const imagen = document.getElementById("imagen")
-const categoria = document.getElementById("categoria")
 let resultado = ''
+
+
 const s = document.getElementById("s")
 const m = document.getElementById("m")
 const l = document.getElementById("l")
@@ -23,7 +45,7 @@ async function agregar() {
     descripcion.classList.remove('is-invalid');
     precio.classList.remove('is-invalid');
     titulo.classList.remove('is-invalid');
-    if (titulo.value == "" || precio.value == "" || descripcion.value == "" || imagen.value == "" || sku.value == "") {
+    if (titulo.value == "" || precio.value == "" || descripcion.value == "" || imagen.value == "" || id.value == "") {
         if (titulo.value == "")
             titulo.classList.add('is-invalid');
         if (precio.value == "")
@@ -32,15 +54,15 @@ async function agregar() {
             descripcion.classList.add('is-invalid');
         if (imagen.value == "")
             imagen.classList.add('is-invalid');
-        if (sku.value == "")
-            sku.classList.add('is-invalid');
+        if (id.value == "")
+            id.classList.add('is-invalid');
         if (categoria.value == "")
             categoria.classList.add('is-invalid');
     } else {
         let url_img = await uploadFiles(resultado)
         console.log(url_img)
         let producto = {
-            "sku": sku.value,
+            "sku": id.value,
             "nombre": titulo.value,
             "precio": precio.value,
             "image": url_img,
@@ -66,7 +88,7 @@ async function agregar() {
             .catch(error => console.error('Error:', error))
             .then(response => console.log('Success:', response));
         console.log("seagrego", producto)
-        sku.value = ""
+        id.value = ""
         titulo.value = ""
         precio.value = ""
         imagen.value = ""
@@ -273,8 +295,8 @@ function editar() {
 
 btn_buscar.addEventListener("click", editar)
 
-let input_img = document.getElementById('imagen')
-input_img.addEventListener('change', (event) => {
-    resultado = event.target.files[0]
-    /* uploadFiles(resultado) */
-});
+// let input_img = document.getElementById('imagen')
+// input_img.addEventListener('change', (event) => {
+//     resultado = event.target.files[0]
+//     /* uploadFiles(resultado) */
+// });

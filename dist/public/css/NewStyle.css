@@ -1,0 +1,21 @@
+.body {
+    margin: 0px;
+    font-family: new-font;
+    display: grid;  
+    height: 100%;
+    background-color: #2980B9;  
+    background: -webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);  
+    background: linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);
+    margin: 5rem 5rem ;
+}
+
+.form-floating{
+    padding: 1rem .75rem;
+}
+.flotingselect{
+    padding: 1rem .75rem;
+}
+.img-thumbnail{
+    height: 150px;
+    width: 150px;
+}
