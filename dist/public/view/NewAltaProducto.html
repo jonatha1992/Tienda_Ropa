@@ -12,10 +12,10 @@
 </head>
 
 <body class="body text-white">
-    <section class="main p-5 m-2 bg-secondary ">
+    <section class="main p-5 m-2 bg-secondary">
         <h3 class="h2 text-center">Formulario de Alta de Productos</h3>
-        <div class="conteiner d-flex">
-            <form class="container mb-3 ">
+        <div class="d-flex flex-wrap flex-row ">
+            <form class="container mb-3 col-8 ">
                 <div class=" row ">
                     <label for="id" class="form-label">Nro. Identificador</label>
                     <div class="container d-flex justify-content-start ">
@@ -34,73 +34,76 @@
                                     d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                             </svg></button>
 
+                    </div>
                 </div>
-            </div>
-            <!-- <h5 class="h4">Caracteristicas</h3> -->
-            <div class="row">
-                <div class="form-floating  col-6">
-                    <label class="floatingInputValue text-secondary" for="titulo">Titulo</label>
-                    <input class="form-control" id="titulo">
+                <!-- <h5 class="h4">Caracteristicas</h3> -->
+                <div class="row">
+                    <div class="form-floating  col-6">
+                        <label class="floatingInputValue text-secondary" for="titulo">Titulo</label>
+                        <input class="form-control" id="titulo">
+                    </div>
+                    <div class="form-floating col-3">
+                        <label class="floatingInputValue text-secondary" for="categoria">Categoria</label>
+                        <select class="form-select" id="categoria" aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value="1">Remeras</option>
+                            <option value="2">Pantalones</option>
+                            <option value="3">Buzos</option>
+                        </select>
+                    </div>
+                    <div class="form-floating col-3">
+                        <label class="floatingInputValue text-secondary" for="color">Color</label>
+                        <select class="form-select" id="color" aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value="1">Blanco</option>
+                            <option value="2">Negro</option>
+                            <option value="3">Azul</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-floating col-3">
-                    <label class="floatingInputValue text-secondary" for="categoria">Categoria</label>
-                    <select class="form-select" id="categoria" aria-label="Floating label select example">
-                        <option selected></option>
-                        <option value="1">Remeras</option>
-                        <option value="2">Pantalones</option>
-                        <option value="3">Buzos</option>
-                    </select>
+                <div class="row">
+                    <div class="form-floating col-2">
+                        <label for="precio" class="floatingInputValue text-secondary">Precio</label>
+                        <input type="number" class="form-control" id="precio"></input>
+                    </div>
+                    <div class="form-floating col-10">
+                        <label for="coments" class="floatingInputValue text-secondary">Descripción</label>
+                        <textarea class="form-control" id="coments" rows="3"></textarea>
+                    </div>
+
                 </div>
-                <div class="form-floating col-3">
-                    <label class="floatingInputValue text-secondary" for="color">Color</label>
-                    <select class="form-select" id="color" aria-label="Floating label select example">
-                        <option selected></option>
-                        <option value="1">Blanco</option>
-                        <option value="2">Negro</option>
-                        <option value="3">Azul</option>
-                    </select>
+                <h3>Stock</h3>
+                <div class="row">
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="s" value="0">
+                        <label for="s" class="centrado">S</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="m" value="0">
+                        <label for="m" class="centrado">M</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="l" value="0">
+                        <label for="l" cla ss="centrado">L</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="xl" value="0">
+                        <label for="xl" class="centrado">XL</label>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-floating col-2">
-                    <label for="precio" class="floatingInputValue text-secondary">Precio</label>
-                    <input type="number" class="form-control" id="precio"></input>
+                <div class="row">
+                    <div class="form-floating col-3">
+                        <label for="imagen" class="floatingInputValue text-secondary">Imagen</label>
+                        <input type="file" class=" form-control" id="imagen" accept="image/jpeg, image/png"></input>
+                    </div>
+                    <img src="" class="img-thumbnail visually-hidden" id="preview" />
                 </div>
-                <div class="form-floating col-10">
-                    <label for="coments" class="floatingInputValue text-secondary">Descripción</label>
-                    <textarea class="form-control" id="coments" rows="3"></textarea>
-                </div>
+                <script type="module" src="../js/NewAlta.js"></script>
+
+            </form>
+            <div class=" card col-4" style="background-color: aqua;">
 
             </div>
-            <h3>Stock</h3>
-            <div class="row">
-                <div class="col-3">
-                    <input type="number" class="form-control centrado" id="s" value="0">
-                    <label for="s" class="centrado">S</label>
-                </div>
-                <div class="col-3">
-                    <input type="number" class="form-control centrado" id="m" value="0">
-                    <label for="m" class="centrado">M</label>
-                </div>
-                <div class="col-3">
-                    <input type="number" class="form-control centrado" id="l" value="0">
-                    <label for="l" cla ss="centrado">L</label>
-                </div>
-                <div class="col-3">
-                    <input type="number" class="form-control centrado" id="xl" value="0">
-                    <label for="xl" class="centrado">XL</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-floating col-3">
-                    <label for="imagen" class="floatingInputValue text-secondary">Imagen</label>
-                    <input type="file" class=" form-control" id="imagen" accept="image/jpeg, image/png"></input>
-                </div>
-                <img src="" class="img-thumbnail visually-hidden" id="preview" />
-            </div>
-            <script type="module" src="../js/NewAlta.js"></script>
-
-        </form>
+        </div>
     </section>
 </body>
-S

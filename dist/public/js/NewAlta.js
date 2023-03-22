@@ -1,9 +1,8 @@
 import { uploadFiles } from "./bd.js";
 
-const prewiew = document.getElementById("preview");
-
 //constantes
 
+const prewiew = document.getElementById("preview");
 const input_img = document.getElementById("imagen");
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -23,18 +22,6 @@ const grabar = document.getElementById("agregar-editar");
 const btn_agregar = document.getElementById("agregar-editar");
 const btn_buscar = document.getElementById("buscar");
 
-// input_img.addEventListener("change", (event) => {
-//   let file = event.target.files[0];
-
-//   if (file) {
-//     let img = URL.createObjectURL(file);
-//     prewiew.src = img;
-//     prewiew.classList.remove("visually-hidden");
-//   } else {
-//     prewiew.classList.add("visually-hidden");
-//   }
-// });
-
 input_img.addEventListener("change", MostrarImagen);
 grabar.addEventListener("click", agregar);
 btn_buscar.addEventListener("click", editar);
@@ -42,13 +29,48 @@ btn_buscar.addEventListener("click", editar);
 //variables
 window.getItemAt = getItemAt;
 let productos = [];
-var countries = [];
+var categorias = [];
+var colors = [];
 var inputElem = null;
 var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
-//funciones
+const producto = {
+  id: "",
+  titulo: "",
+  precio: "",
+  image: "",
+  descripcion: "",
+};
+
+document.addEventListener("load", IniciarAPP);
+
+//funciones()
+
+function IniciarAPP() {
+  try {
+    let url = "/categorias";
+    fetch(url)
+      .then((response) => response.json())
+      .then((datos) => (categorias = datos));
+    console.log(categorias);
+    mostrarCategorias(categorias);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function mostrarCategorias(categorias = []) {
+  categorias.forEach((categoria) => {
+    const { id, nombre } = categoria;
+    const option = document.createElement("OPTION");
+    option.value = id;
+    option.textContent = nombre;
+    categoria.appendChild(option);
+  });
+}
+
 function MostrarImagen(event) {
   {
     let file = event.target.files[0];

@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         limpiarAlerta(e.target.parentElement);// le paso el elemento padre
-        Usuario[e.target.id] = e.target.value.trim().toLowerCase();
+        Usuario[e.target.id] = e.target.value.trim().toLowerCase(); // asignacion el elemento
         comprobarUsuario()
 
     }
