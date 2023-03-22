@@ -27,298 +27,318 @@ grabar.addEventListener("click", agregar);
 btn_buscar.addEventListener("click", editar);
 
 //variables
-window.getItemAt = getItemAt;
+// window.getItemAt = getItemAt;
 let productos = [];
-var categorias = [];
-var colors = [];
+let categorias = [];
+var colores = [];
 var inputElem = null;
 var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
 const producto = {
-  id: "",
-  titulo: "",
-  precio: "",
-  image: "",
-  descripcion: "",
+    id: "",
+    titulo: "",
+    precio: "",
+    image: "",
+    descripcion: "",
 };
 
-document.addEventListener("load", IniciarAPP);
+window.addEventListener('load', IniciarAPP);
 
 //funciones()
 
 function IniciarAPP() {
-  try {
-    let url = "/categorias";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => (categorias = datos));
-    console.log(categorias);
-    mostrarCategorias(categorias);
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        let url = "/categorias";
+        fetch(url)
+            .then((response) => response.json())
+            .then((datos) => {
+                categorias = datos
+                mostrarCategorias()
+            });
+
+        url = "/colores";
+        fetch(url)
+            .then((response) => response.json())
+            .then((datos) => {
+                colores = datos
+                mostrarColores(datos);
+            });
+
+
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-function mostrarCategorias(categorias = []) {
-  categorias.forEach((categoria) => {
-    const { id, nombre } = categoria;
-    const option = document.createElement("OPTION");
-    option.value = id;
-    option.textContent = nombre;
-    categoria.appendChild(option);
-  });
+function mostrarCategorias() {
+    categorias.forEach((cat) => {
+        const { id, nombre } = cat;
+        const option = document.createElement("OPTION");
+        option.value = id;
+        option.textContent = nombre;
+        categoria.appendChild(option);
+    });
+}
+
+function mostrarColores() {
+    colores.forEach((col) => {
+        const { id, nombre } = col;
+        const option = document.createElement("OPTION");
+        option.value = id;
+        option.textContent = nombre;
+        color.appendChild(option);
+    });
 }
 
 function MostrarImagen(event) {
-  {
-    let file = event.target.files[0];
+    {
+        let file = event.target.files[0];
 
-    if (file) {
-      let img = URL.createObjectURL(file);
-      prewiew.src = img;
-      prewiew.classList.remove("visually-hidden");
-    } else {
-      prewiew.classList.add("visually-hidden");
+        if (file) {
+            let img = URL.createObjectURL(file);
+            prewiew.src = img;
+            prewiew.classList.remove("visually-hidden");
+        } else {
+            prewiew.classList.add("visually-hidden");
+        }
     }
-  }
 }
 
 async function agregar() {
-  imagen.classList.remove("is-invalid");
-  descripcion.classList.remove("is-invalid");
-  precio.classList.remove("is-invalid");
-  titulo.classList.remove("is-invalid");
-  if (
-    titulo.value == "" ||
-    precio.value == "" ||
-    descripcion.value == "" ||
-    imagen.value == "" ||
-    id.value == ""
-  ) {
-    if (titulo.value == "") titulo.classList.add("is-invalid");
-    if (precio.value == "") precio.classList.add("is-invalid");
-    if (descripcion.value == "") descripcion.classList.add("is-invalid");
-    if (imagen.value == "") imagen.classList.add("is-invalid");
-    if (id.value == "") id.classList.add("is-invalid");
-    if (categoria.value == "") categoria.classList.add("is-invalid");
-  } else {
-    let url_img = await uploadFiles(resultado);
-    console.log(url_img);
-    let producto = {
-      sku: id.value,
-      nombre: titulo.value,
-      precio: precio.value,
-      image: url_img,
-      descripcion: descripcion.value,
-      categoria: categoria.value,
-      stock: {
-        S: parseInt(s.value),
-        M: parseInt(m.value),
-        L: parseInt(l.value),
-        XL: parseInt(xl.value),
-      },
-    };
+    imagen.classList.remove("is-invalid");
+    descripcion.classList.remove("is-invalid");
+    precio.classList.remove("is-invalid");
+    titulo.classList.remove("is-invalid");
+    if (
+        titulo.value == "" ||
+        precio.value == "" ||
+        descripcion.value == "" ||
+        imagen.value == "" ||
+        id.value == ""
+    ) {
+        if (titulo.value == "") titulo.classList.add("is-invalid");
+        if (precio.value == "") precio.classList.add("is-invalid");
+        if (descripcion.value == "") descripcion.classList.add("is-invalid");
+        if (imagen.value == "") imagen.classList.add("is-invalid");
+        if (id.value == "") id.classList.add("is-invalid");
+        if (categoria.value == "") categoria.classList.add("is-invalid");
+    } else {
+        let url_img = await uploadFiles(resultado);
+        console.log(url_img);
+        let producto = {
+            sku: id.value,
+            nombre: titulo.value,
+            precio: precio.value,
+            image: url_img,
+            descripcion: descripcion.value,
+            categoria: categoria.value,
+            stock: {
+                S: parseInt(s.value),
+                M: parseInt(m.value),
+                L: parseInt(l.value),
+                XL: parseInt(xl.value),
+            },
+        };
 
-    /* const refProduct= ref(db, "Productos/");
-        push(refProduct,producto) */
-    fetch("/producto", {
-      method: "POST", // or 'PUT'
-      body: JSON.stringify(producto), // data can be `string` or {object}!
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .catch((error) => console.error("Error:", error))
-      .then((response) => console.log("Success:", response));
-    console.log("seagrego", producto);
-    id.value = "";
-    titulo.value = "";
-    precio.value = "";
-    imagen.value = "";
-    descripcion.value = "";
-    s.value = 0;
-    m.value = 0;
-    l.value = 0;
-    xl.value = 0;
-  }
-}
-function init() {
-  /* const refcategoria= ref(db, "Productos/");
-    onChildAdded(refcategoria,(snap)=>{
-        let data=snap.val();
-        productos.push(data)
-        }) */
-
-  resultsElem = document.querySelector("ul");
-  inputElem = document.getElementById("sku");
-
-  resultsElem.addEventListener("click", (event) => {
-    console.log("me diste click");
-    handleResultClick(event);
-  });
-  inputElem.addEventListener("input", (event) => {
-    autocomplete(event);
-  });
-  /* inputElem.addEventListener("keyup", (event) => {
-        handleResultKeyDown(event);
-    }); */
-}
-
-function autocomplete(event) {
-  console.log("products", productos);
-  const value = inputElem.value;
-  if (!value) {
-    console.log("entre");
-    hideResults();
-    inputElem.value = "";
-    return;
-  }
-  filteredResults = productos.filter((country) => {
-    return country.sku.toLowerCase().startsWith(value.toLowerCase());
-  });
-  console.log("filtro:", filteredResults);
-  if (filteredResults.length > 0) {
-    btn_agregar.disabled = true;
-    btn_buscar.disabled = false;
-    resultsElem.innerHTML = filteredResults
-      .map((result, index) => {
-        const isSelected = index === 0;
-        return `
-                        <li
-                        id='autocomplete-result-${index}'
-                        class='autocomplete-result${
-                          isSelected ? " selected" : ""
-                        }'
-                        role='option'
-                        ${isSelected ? "aria-selected='true'" : ""}
-                        >
-                        ${result.sku}
-                        </li>
-                    `;
-      })
-      .join("");
-    resultsElem.classList.remove("hidden");
-  } else {
-    btn_agregar.disabled = false;
-    btn_buscar.disabled = true;
-  }
-}
-
-function handleResultClick(event) {
-  if (event.target && event.target.nodeName === "LI") {
-    selectItem(event.target);
-  }
-}
-
-function handleResultKeyDown(event) {
-  console.log(event);
-  const { key } = event;
-  const activeItem = this.getItemAt(activeIndex);
-  if (activeItem) {
-    activeItem.classList.remove("selected");
-    activeItem.setAttribute("aria-selected", "false");
-  }
-  switch (key) {
-    case "Backspace":
-      return;
-    case "Escape":
-      hideResults();
-      inputElem.value = "";
-      return;
-    case "ArrowUp": {
-      if (activeIndex === 0) {
-        activeIndex = filteredResults.length - 1;
-      }
-      activeIndex--;
-      break;
+        /* const refProduct= ref(db, "Productos/");
+            push(refProduct,producto) */
+        fetch("/producto", {
+            method: "POST", // or 'PUT'
+            body: JSON.stringify(producto), // data can be `string` or {object}!
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .catch((error) => console.error("Error:", error))
+            .then((response) => console.log("Success:", response));
+        console.log("seagrego", producto);
+        id.value = "";
+        titulo.value = "";
+        precio.value = "";
+        imagen.value = "";
+        descripcion.value = "";
+        s.value = 0;
+        m.value = 0;
+        l.value = 0;
+        xl.value = 0;
     }
-    case "ArrowDown": {
-      if (activeIndex === filteredResults.length - 1) {
-        activeIndex = 0;
-      }
-      activeIndex++;
-      break;
-    }
-    default:
-      selectFirstResult();
-  }
-  console.log(activeIndex);
-  selectResult();
 }
+// function init() {
+//   /* const refcategoria= ref(db, "Productos/");
+//     onChildAdded(refcategoria,(snap)=>{
+//         let data=snap.val();
+//         productos.push(data)
+//         }) */
 
-function selectFirstResult() {
-  activeIndex = 0;
-}
+//   resultsElem = document.querySelector("ul");
+//   inputElem = document.getElementById("sku");
 
-function selectResult() {
-  const value = inputElem.value;
-  const autocompleteValue = filteredResults[activeIndex].nombre;
-  const activeItem = this.getItemAt(activeIndex);
-  if (activeItem) {
-    activeItem.classList.add("selected");
-    activeItem.setAttribute("aria-selected", "true");
-  }
-  if (!value || !autocompleteValue) {
-    return;
-  }
-  if (value !== autocompleteValue) {
-    inputElem.value = autocompleteValue;
-    inputElem.setSelectionRange(value.length, autocompleteValue.length);
-  }
-}
-function selectItem(node) {
-  if (node) {
-    btn_agregar.disabled = true;
-    btn_buscar.disabled = false;
-    inputElem.value = node.innerText;
-    console.log("viene el hide");
-    hideResults();
-    editar();
-  }
-}
+//   resultsElem.addEventListener("click", (event) => {
+//     console.log("me diste click");
+//     handleResultClick(event);
+//   });
+//   inputElem.addEventListener("input", (event) => {
+//     autocomplete(event);
+//   });
+//   /* inputElem.addEventListener("keyup", (event) => {
+//         handleResultKeyDown(event);
+//     }); */
+// }
 
-function hideResults() {
-  resultsElem.innerHTML = "";
-  resultsElem.classList.add("hidden");
-}
+// function autocomplete(event) {
+//   console.log("products", productos);
+//   const value = inputElem.value;
+//   if (!value) {
+//     console.log("entre");
+//     hideResults();
+//     inputElem.value = "";
+//     return;
+//   }
+//   filteredResults = productos.filter((country) => {
+//     return country.sku.toLowerCase().startsWith(value.toLowerCase());
+//   });
+//   console.log("filtro:", filteredResults);
+//   if (filteredResults.length > 0) {
+//     btn_agregar.disabled = true;
+//     btn_buscar.disabled = false;
+//     resultsElem.innerHTML = filteredResults
+//       .map((result, index) => {
+//         const isSelected = index === 0;
+//         return `
+//                         <li
+//                         id='autocomplete-result-${index}'
+//                         class='autocomplete-result${isSelected ? " selected" : ""
+//           }'
+//                         role='option'
+//                         ${isSelected ? "aria-selected='true'" : ""}
+//                         >
+//                         ${result.sku}
+//                         </li>
+//                     `;
+//       })
+//       .join("");
+//     resultsElem.classList.remove("hidden");
+//   } else {
+//     btn_agregar.disabled = false;
+//     btn_buscar.disabled = true;
+//   }
+// }
 
-function getItemAt(index) {
-  return this.resultsElem.querySelector(`#autocomplete-result-${index}`);
-}
+// function handleResultClick(event) {
+//   if (event.target && event.target.nodeName === "LI") {
+//     selectItem(event.target);
+//   }
+// }
 
-init();
+// function handleResultKeyDown(event) {
+//   console.log(event);
+//   const { key } = event;
+//   const activeItem = this.getItemAt(activeIndex);
+//   if (activeItem) {
+//     activeItem.classList.remove("selected");
+//     activeItem.setAttribute("aria-selected", "false");
+//   }
+//   switch (key) {
+//     case "Backspace":
+//       return;
+//     case "Escape":
+//       hideResults();
+//       inputElem.value = "";
+//       return;
+//     case "ArrowUp": {
+//       if (activeIndex === 0) {
+//         activeIndex = filteredResults.length - 1;
+//       }
+//       activeIndex--;
+//       break;
+//     }
+//     case "ArrowDown": {
+//       if (activeIndex === filteredResults.length - 1) {
+//         activeIndex = 0;
+//       }
+//       activeIndex++;
+//       break;
+//     }
+//     default:
+//       selectFirstResult();
+//   }
+//   console.log(activeIndex);
+//   selectResult();
+// }
+
+// function selectFirstResult() {
+//   activeIndex = 0;
+// }
+
+// function selectResult() {
+//   const value = inputElem.value;
+//   const autocompleteValue = filteredResults[activeIndex].nombre;
+//   const activeItem = this.getItemAt(activeIndex);
+//   if (activeItem) {
+//     activeItem.classList.add("selected");
+//     activeItem.setAttribute("aria-selected", "true");
+//   }
+//   if (!value || !autocompleteValue) {
+//     return;
+//   }
+//   if (value !== autocompleteValue) {
+//     inputElem.value = autocompleteValue;
+//     inputElem.setSelectionRange(value.length, autocompleteValue.length);
+//   }
+// }
+// function selectItem(node) {
+//   if (node) {
+//     btn_agregar.disabled = true;
+//     btn_buscar.disabled = false;
+//     inputElem.value = node.innerText;
+//     console.log("viene el hide");
+//     hideResults();
+//     editar();
+//   }
+// }
+
+// function hideResults() {
+//   resultsElem.innerHTML = "";
+//   resultsElem.classList.add("hidden");
+// }
+
+// function getItemAt(index) {
+//   return this.resultsElem.querySelector(`#autocomplete-result-${index}`);
+// }
+
+// init();
 
 function editar() {
-  const sku = inputElem.value;
+    const sku = inputElem.value;
 
-  console.log(sku);
-  productos.map((result, index) => {
-    if (result.titulo == sku || result.sku == sku) {
-      console.log(result);
-      let input_sku = document.getElementById("id-sku");
-      let input_titulo = document.getElementById("titulo");
-      let input_precio = document.getElementById("precio");
-      let input_imagen = document.getElementById("imagen");
-      let input_descripcion = document.getElementById("descripcion");
+    console.log(sku);
+    productos.map((result, index) => {
+        if (result.titulo == sku || result.sku == sku) {
+            console.log(result);
+            let input_sku = document.getElementById("id-sku");
+            let input_titulo = document.getElementById("titulo");
+            let input_precio = document.getElementById("precio");
+            let input_imagen = document.getElementById("imagen");
+            let input_descripcion = document.getElementById("descripcion");
 
-      let input_s = document.getElementById("s");
-      let input_m = document.getElementById("m");
-      let input_l = document.getElementById("l");
-      let input_xl = document.getElementById("xl");
+            let input_s = document.getElementById("s");
+            let input_m = document.getElementById("m");
+            let input_l = document.getElementById("l");
+            let input_xl = document.getElementById("xl");
 
-      input_titulo.value = result.titulo;
-      input_precio.value = result.precio;
-      /* input_imagen.value=result.imagen */
-      console.log(input_descripcion.value);
-      input_descripcion.value = result.descripcion;
-      input_s.value = result.stock.s;
-      input_m.value = result.stock.m;
-      input_l.value = result.stock.l;
-      input_xl.value = result.stock.xl;
-      input_sku.innerHTML = result.sku;
-    }
-  });
+            input_titulo.value = result.titulo;
+            input_precio.value = result.precio;
+            /* input_imagen.value=result.imagen */
+            console.log(input_descripcion.value);
+            input_descripcion.value = result.descripcion;
+            input_s.value = result.stock.s;
+            input_m.value = result.stock.m;
+            input_l.value = result.stock.l;
+            input_xl.value = result.stock.xl;
+            input_sku.innerHTML = result.sku;
+        }
+    });
 }
