@@ -1,6 +1,6 @@
 .body {
     margin: 0px;
-    font-family: new-font;
+    font-family: 'Poppins', sans-serif;
     display: grid;  
     height: 100%;
     background-color: #2980B9;  
@@ -18,4 +18,9 @@
 .img-thumbnail{
     height: 150px;
     width: 150px;
+}
+.centrado{
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
