@@ -250,15 +250,15 @@
     </div>
     <div class="categorias-contain container-fluid text-center">
         <div class="row" style="justify-content: space-evenly;">
-            <div class="col-sm-3 category remeras">
+            <div class="col-sm-3 category remeras" onclick="filtrarListas('remeras')">
                 <h1>REMERAS</h1>
                 <button type="button" class="btn btn-secondary">ver más</button>
             </div>
-            <div class="col-sm-3 category camperas">
+            <div class="col-sm-3 category camperas" onclick="filtrarListas('camperas')">
                 <h1>CAMPERAS</h1>
                 <button type="button" class="btn btn-secondary">ver más</button>
             </div>
-            <div class="col-sm-3 category pantalones">
+            <div class="col-sm-3 category pantalones" onclick="filtrarListas('pantalones')">
                 <h1>PANTALONES</h1>
                 <button type="button" class="btn btn-secondary">ver más</button>
             </div>
@@ -436,7 +436,15 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="module" src="index.js"></script>
     <script>
-        
+        function filtrarListas(categoria){
+    let container_categoria=document.querySelector('.categorias-contain').style.display='none'
+    let container_pagos=document.querySelector('.medios-pago').style.display='none'
+    let container_glider=document.querySelector('.glider-contain').style.display='none'
+    let container_banner=document.querySelector('.banner-2').style.display='none'
+    $('body, html').animate({
+			scrollTop: '0px'
+		}, 300);
+}
     $('.slick-categorias').slick({
         arrows:false,
     infinite: true,

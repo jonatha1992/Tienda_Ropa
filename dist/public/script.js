@@ -276,5 +276,7 @@ btn_buscar.addEventListener("click", editar)
 let input_img = document.getElementById('imagen')
 input_img.addEventListener('change', (event) => {
     resultado = event.target.files[0]
+    let output = document.getElementById('preview');
+    output.src = resultado
     /* uploadFiles(resultado) */
 });
