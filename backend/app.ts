@@ -9,11 +9,20 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/')));
 
+//rutas paginas
 app.get("/alta", function (req, res) {
-    res.status(200).sendFile(path.join(__dirname, 'public/altaProducto.html'))
+    res.status(200).sendFile(path.join(__dirname, 'public/view/NewAltaProducto.html'))
 });
+
+app.get("/login", function (req, res) {
+    res.status(200).sendFile(path.join(__dirname, 'public/view/login.html'))
+});
+app.get("/", function (req, res) {
+    res.status(200).sendFile(path.join(__dirname, 'public/view/index.html'))
+});
+
 
 
 

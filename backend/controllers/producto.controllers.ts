@@ -1,9 +1,68 @@
 import { json, Request, Response } from 'express'
+import { parse } from 'express-form-data';
+import { Any } from 'typeorm';
 
 import { BEProducto, BEStock } from "../models";
 
 
 export const ListarProductos = async (req: Request, res: Response) => {
+    try {
+
+        const { Destacado, Categoria, IdCategoria } = req.query
+
+        let Productos
+
+        if (Destacado === 'true') {
+            Productos = await BEProducto.find({
+                order: {
+                    updateAt: "DESC"
+                },
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                }, take: 20
+            });
+        } else if (Categoria === 'true') {
+
+            let idcategoria: number = parseInt(IdCategoria as string)
+
+            Productos = await BEProducto.find({
+                order: {
+                    updateAt: "DESC"
+                },
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                },
+                where:
+                {
+                    categoria: {
+                        id: idcategoria
+                    }
+                }
+            });
+
+        } else {
+            Productos = await BEProducto.find({
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                }
+            });
+        }
+
+        console.log(Productos)
+        return res.json(Productos);
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+
+export const MostrarNovedades = async (req: Request, res: Response) => {
     try {
         const Productos = await BEProducto.find({
             relations: {
@@ -37,8 +96,6 @@ export const CrearProducto = async (req: Request, res: Response) => {
     try {
         const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body as BEProducto;
-        // console.log(req.body)
-        console.log(producto)
 
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });

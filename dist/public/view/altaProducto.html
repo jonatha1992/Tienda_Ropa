@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Alta de Producto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body id="body" class="body responsive shadow ng-scope" style=" margin: auto;" )>
+<body id="body" class="form-check m-auto">
     <div class="main">
+<<<<<<< HEAD:dist/public/altaProducto.html
         <div class="producto ">
             <div class="descripcion">
                 <div class="row" style="
@@ -83,10 +84,13 @@
                 <button type="button" class="btn btn-success" id="grabar">Grabar</button> -->
             </div>
         </div>
+=======
+        <h4 class="formfija-label m-2">Formulario de Alta de Productos <span id="id-sku"></span></h4>
+>>>>>>> d33b2714ce28d012e5f5b319742a7d6f16afc1e5:dist/public/view/altaProducto.html
         <div class="buscador">
             <div class="input-group">
-                <input id="sku" placeholder="Buscar o agregar SKU" aria-label='buscar o agregar SKU'
-                    aria-autocomplete='both' aria-controls='autocomplete-results' autofocus>
+                <input id="sku" placeholder="Buscar por ID" aria-label='buscar o agregar SKU' aria-autocomplete='both'
+                    aria-controls='autocomplete-results' autofocus>
                 <button class="btn btn-outline-secondary" type="button" id="buscar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-search" viewBox="0 0 16 16">
@@ -104,6 +108,73 @@
                 </button>
                 <ul class="hidden" role='listbox' aria-label='buscar o agregar SKU'>
                 </ul>
+            </div>
+        </div>
+        <div class="producto ">
+            <div class="descripcion">
+                <div class="row" style="
+                margin-top: 0px; ">
+                    <h3>Descripcion</h3>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-6">
+                        <input class="form-control" id="titulo">
+                        <label for="titulo">Titulo</label>
+                    </div>
+                    <div class="form-floating col-6">
+                        <select class="form-select" id="categoria" aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value="1">Remeras</option>
+                            <option value="2">Pantalones</option>
+                            <option value="3">Buzos</option>
+                        </select>
+                        <label for="floatingSelect">Selecciona categoria</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-4">
+                        <input type="number" class="form-control" id="precio" require>
+                        <label for="precio">Precio</label>
+                    </div>
+                    <div class="form-floating col-8">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="descripcion"></textarea>
+                        <label for="descripcion">Comments</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating">
+                        <input type="file" class="form-control" placeholder="Imagen" id="imagen">
+                        <label for="imagen">Imagen</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stock">
+                <div class="row">
+                    <h3>Stock</h3>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="s" value="0">
+                        <label for="s" class="centrado">S</label>
+                    </div><
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="m" value="0">
+                        <label for="m" class="centrado">M</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="l" value="0">
+                        <label for="l" cla ss="centrado">L</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="xl" value="0">
+                        <label for="xl" class="centrado">XL</label>
+                    </div>
+                </div>
+            </div>
+            <div class="botonera">
+                <!--  <button type="button" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-success" id="grabar">Grabar</button> -->
             </div>
         </div>
     </div>

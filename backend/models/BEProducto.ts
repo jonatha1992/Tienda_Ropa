@@ -1,5 +1,5 @@
 import { BECategoria, BEColor, BEStock } from '.';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 
 
 @Entity({ name: 'producto' })
@@ -31,6 +31,12 @@ export class BEProducto extends BaseEntity {
 
   @Column({ type: 'varchar', nullable: true })
   public image: string;
+
+  @CreateDateColumn()
+  public createtAt: Date;
+
+  @UpdateDateColumn()
+  public updateAt: Date;
 
 }
 

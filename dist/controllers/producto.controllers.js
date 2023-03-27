@@ -9,9 +9,60 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActualizarProducto = exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.ListarProductos = void 0;
+exports.ActualizarProducto = exports.EliminarProducto = exports.CrearProducto = exports.ObtenerProducto = exports.MostrarNovedades = exports.ListarProductos = void 0;
 const models_1 = require("../models");
 const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { Destacado, Categoria, IdCategoria } = req.query;
+        let Productos;
+        if (Destacado === 'true') {
+            Productos = yield models_1.BEProducto.find({
+                order: {
+                    updateAt: "DESC"
+                },
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                }, take: 20
+            });
+        }
+        else if (Categoria === 'true') {
+            let idcategoria = parseInt(IdCategoria);
+            Productos = yield models_1.BEProducto.find({
+                order: {
+                    updateAt: "DESC"
+                },
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                },
+                where: {
+                    categoria: {
+                        id: idcategoria
+                    }
+                }
+            });
+        }
+        else {
+            Productos = yield models_1.BEProducto.find({
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true
+                }
+            });
+        }
+        console.log(Productos);
+        return res.json(Productos);
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+exports.ListarProductos = ListarProductos;
+const MostrarNovedades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Productos = yield models_1.BEProducto.find({
             relations: {
@@ -26,7 +77,7 @@ const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(500).json({ message: error.message });
     }
 });
-exports.ListarProductos = ListarProductos;
+exports.MostrarNovedades = MostrarNovedades;
 const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
@@ -48,8 +99,6 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { nombre, descripcion, stock, categoria, image, color, precio } = req.body;
         const producto = req.body;
-        // console.log(req.body)
-        console.log(producto);
         if (!nombre || !descripcion || !categoria)
             return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
         else {

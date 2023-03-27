@@ -6,6 +6,7 @@ import {
     ListarProductos,
     ActualizarProducto,
     ObtenerProducto,
+    MostrarNovedades
 } from "../controllers";
 
 const router = Router();

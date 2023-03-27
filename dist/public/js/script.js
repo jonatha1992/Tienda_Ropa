@@ -1,4 +1,4 @@
-import { uploadFiles } from './bd.js'
+import { uploadFiles } from '../bd.js'
 
 const sku = document.getElementById("sku")
 
