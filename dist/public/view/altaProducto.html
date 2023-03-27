@@ -13,7 +13,80 @@
 
 <body id="body" class="form-check m-auto">
     <div class="main">
+<<<<<<< HEAD:dist/public/altaProducto.html
+        <div class="producto ">
+            <div class="descripcion">
+                <div class="row" style="
+                margin-top: 0px; ">
+                    <h3>Descripcion</h3>
+                    <h6>SKU: <span id="id-sku"></span></h6>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-6">
+                        <input class="form-control" id="titulo"  >
+                        <label for="titulo">Titulo</label>
+                    </div>
+                    <div class="form-floating col-6" >
+                        <select class="form-select" id="categoria" aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value="1">Remeras</option>
+                            <option value="2">Pantalones</option>
+                            <option value="3">Buzos</option>
+                        </select>
+                        <label for="floatingSelect">Selecciona categoria</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-4">
+                        <input type="number" class="form-control" id="precio" require>
+                        <label for="precio">Precio</label>
+                    </div>
+                    <div class="form-floating col-8">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="descripcion"></textarea>
+                        <label for="descripcion">Comments</label>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating">
+                        <input type="file" class="form-control" placeholder="Imagen" id="imagen">
+                        <label for="imagen">Imagen</label>
+                        <img src="" id="preview" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="stock">
+                <div class="row">
+                    <h3>Stock</h3>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="s" value="0">
+                        <label for="s" class="centrado">S</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="m" value="0">
+                        <label for="m" class="centrado">M</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="l" value="0">
+                        <label for="l" class="centrado">L</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control centrado" id="xl" value="0">
+                        <label for="xl" class="centrado">XL</label>
+                    </div>
+                </div>
+            </div>
+            <div class="botonera">
+                <!--  <button type="button" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-success" id="grabar">Grabar</button> -->
+            </div>
+        </div>
+=======
         <h4 class="formfija-label m-2">Formulario de Alta de Productos <span id="id-sku"></span></h4>
+>>>>>>> d33b2714ce28d012e5f5b319742a7d6f16afc1e5:dist/public/view/altaProducto.html
         <div class="buscador">
             <div class="input-group">
                 <input id="sku" placeholder="Buscar por ID" aria-label='buscar o agregar SKU' aria-autocomplete='both'
