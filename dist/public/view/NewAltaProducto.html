@@ -13,17 +13,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:wght@300&display=swap"
         rel="stylesheet">
+    <link rel="shortcut icon" href="#">
 </head>
 
 <body class="body text-white">
-    <section class="main p-5 m-2 bg-secondary">
-        <h3 class="h2 text-center">Formulario de Alta de Productos</h3>
+    <section class="container p-4 bg-secondary">
         <div class="container row flex-wrap">
-            <form class="mb-3 col-sm-12 col-lg-8">
-                <div class=" row ">
+            <h3 class="h2 mb-5 text-center">Formulario de Alta de Productos</h3>
+            <form class="container  mb-2 col-sm-12 col-md-12  col-lg-8">
+                <div class="row mb-3">
                     <label for="id" class="form-label">Nro. Identificador</label>
                     <div class="container d-flex justify-content-start ">
-                        <input type="id" class="w-auto col-sm-5 form-control me-2 " id="id"
+                        <input type="id" class="w-50 col-sm-5 form-control me-2 " id="id"
                             placeholder="Ingrese el ID ">
                         <button class=" btn btn-primary me-2" type="button" id="buscar"> <svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -63,11 +64,11 @@
                 <div class="row">
                     <div class="form-floating col-sm-3 col-lg-2">
                         <label for="precio" class="floatingInputValue text-secondary">Precio</label>
-                        <input type="number" class="form-control" id="precio"></input>
+                        <input type="number" class="form-control" id="precio" min="0"></input>
                     </div>
                     <div class="form-floating col-sm-9 col-lg-10">
                         <label for="coments" class="floatingInputValue text-secondary">Descripción</label>
-                        <textarea class="form-control" id="coments" rows="3"></textarea>
+                        <textarea class="form-control" id="descripcion" rows="3"></textarea>
                     </div>
 
                 </div>
@@ -91,27 +92,36 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-floating col-sm-12 col-3">
+                    <div class="form-floating  col-12">
                         <label for="imagen" class="floatingInputValue text-secondary">Imagen</label>
                         <input type="file" class=" form-control" id="imagen" accept="image/jpeg, image/png"></input>
                     </div>
                 </div>
                 <script type="module" src="../js/NewAlta.js"></script>
-
             </form>
-            <div class="p-5 card col-12 col-lg-4" style="background-color: rgb(28, 48, 48);">
-                <img src="" class="card-img-top img-thumbnail w-auto m-2" alt="imagen" id="preview" />
-                <div class="card-body">
-                    <h3 class="card-title mb-3">Titulo</h3>
-                    <p class="card-text">esta va a ser la descripcion</p>
-                    <div class="container d-flex justify-content-between">
-                        <p>S</p>
-                        <p>M</p>
-                        <p>L</p>
-                        <p>XL</p>
+            <div class="conteiner d-flex justify-content-center   col-sm-12 col-md-12 col-lg-4">
+                <div class=" card pt-2 px-2  text-body flex-column">
+                    <img src="" class="card-img img-thumbnail mb-1" alt="Imagen" id="card_imagen" />
+                    <div class="card-body p-1 d-flex flex-column justify-content-around">
+                        <h3 class="card-title  fst-italic" id="card_titulo">Titulo</h3>
+                        <P class="text-black fw-bold opacity-100 mb-1" id="card_precio">
+                            $0000</P>
+                        <p class="card-text mb-0" id="card_descripcion">Aqui va la descripcion
+                        </p>
+                        <div class="container d-flex justify-content-between">
+                            <p class="talla"">S</p>
+                            <p class=" talla" ">M</p>
+                            <p class=" talla" ">L</p>
+                            <p class=" talla" ">XL</p>
+                        </div>
+                        <div class=" container">
+                                <li class=" text-muted">Solo hay <span id="card_stock">0</span> disponibles</li>
+                        </div>
+                        <p class="mt-1 mb-0" style=" font-size: 12px ;">Codigo de refencia: <span class=" fw-bold"
+                                id="card_id"></span></p>
                     </div>
-
                 </div>
             </div>
+        </div>
     </section>
 </body>

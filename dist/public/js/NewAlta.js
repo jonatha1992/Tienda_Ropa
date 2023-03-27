@@ -1,8 +1,8 @@
 import { uploadFiles } from "./bd.js";
-
+// require.resolve("../../models/index");
+// const pro = new BEProducto();
 //constantes
 
-const prewiew = document.getElementById("preview");
 const input_img = document.getElementById("imagen");
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -11,20 +11,24 @@ const color = document.getElementById("color");
 const precio = document.getElementById("precio");
 const descripcion = document.getElementById("descripcion");
 const imagen = document.getElementById("imagen");
-let resultado = "";
+
+const formulario = document.querySelector('form');
+
+
+const card_id = document.getElementById("card_id");
+const card_titulo = document.getElementById("card_titulo");
+const card_precio = document.getElementById("card_precio");
+const card_descripcion = document.getElementById("card_descripcion");
+const card_imagen = document.getElementById("card_imagen");
+
+
 
 const s = document.getElementById("s");
 const m = document.getElementById("m");
 const l = document.getElementById("l");
 const xl = document.getElementById("xl");
 
-const grabar = document.getElementById("agregar-editar");
-const btn_agregar = document.getElementById("agregar-editar");
-const btn_buscar = document.getElementById("buscar");
 
-input_img.addEventListener("change", MostrarImagen);
-grabar.addEventListener("click", agregar);
-btn_buscar.addEventListener("click", editar);
 
 //variables
 // window.getItemAt = getItemAt;
@@ -36,17 +40,74 @@ var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
+
 const producto = {
-    id: "",
+    id: 0,
     titulo: "",
     precio: "",
     image: "",
     descripcion: "",
+    categoria: {
+        id: 0,
+        nombre: ''
+    },
+    color: {
+        id: .0,
+        nombre: ''
+    },
+    stock: {
+        id: 0,
+        s: 0,
+        m: 0,
+        l: 0,
+        xl: 0
+    }
 };
 
-window.addEventListener('load', IniciarAPP);
 
-//funciones()
+
+
+
+const grabar = document.getElementById("agregar-editar");
+const btn_agregar = document.getElementById("agregar-editar");
+const btn_buscar = document.getElementById("buscar");
+
+//EVENTOS
+
+// window.addEventListener('load', IniciarAPP);
+
+// funciones de agregar datos a card
+grabar.addEventListener("click", agregar);
+btn_buscar.addEventListener("click", editar);
+
+id.addEventListener("input", AgregarCard);
+titulo.addEventListener("input", AgregarCard);
+precio.addEventListener("input", AgregarCard);
+descripcion.addEventListener("input", AgregarCard);
+input_img.addEventListener("change", AgregarImagen);
+
+
+
+function AgregarCard(event) {
+
+    producto[event.target.id] = event.target.value.trim();
+    if (event.target.id == 'id') {
+        card_id.textContent = producto.id;
+    }
+    if (event.target.id == 'titulo') {
+        card_titulo.textContent = producto.titulo;
+    }
+    if (event.target.id == 'precio') {
+        card_precio.textContent = '$' + producto.precio;
+    }
+    if (event.target.id == 'descripcion') {
+        card_descripcion.textContent = producto.descripcion;
+    }
+}
+
+
+
+//funciones
 
 function IniciarAPP() {
     try {
@@ -54,15 +115,15 @@ function IniciarAPP() {
         fetch(url)
             .then((response) => response.json())
             .then((datos) => {
-                categorias = datos
-                mostrarCategorias()
+                categorias = datos;
+                mostrarCategorias();
             });
 
         url = "/colores";
         fetch(url)
             .then((response) => response.json())
             .then((datos) => {
-                colores = datos
+                colores = datos;
                 mostrarColores(datos);
             });
 
@@ -92,31 +153,50 @@ function mostrarColores() {
     });
 }
 
-function MostrarImagen(event) {
+function AgregarImagen(event) {
     {
         let file = event.target.files[0];
 
         if (file) {
             let img = URL.createObjectURL(file);
-            prewiew.src = img;
-            prewiew.classList.remove("visually-hidden");
+            img.withd;
+            card_imagen.src = img;
+            producto.image = img;
+            card_imagen.classList.remove("visually-hidden");
         } else {
-            prewiew.classList.add("visually-hidden");
+            card_imagen.classList.add("visually-hidden");
         }
     }
 }
 
+
+function LimpiarErrores() {
+
+
+    var nodosHijos2 = document.querySelectorAll('input', 'textarea');
+
+    nodosHijos2.forEach(elemento => {
+        if (elemento.classList.contains('is-invalid')) {
+            elemento.classList.remove('is-invalid');
+        }
+    });
+}
+
+
+
 async function agregar() {
-    imagen.classList.remove("is-invalid");
-    descripcion.classList.remove("is-invalid");
-    precio.classList.remove("is-invalid");
-    titulo.classList.remove("is-invalid");
+    // imagen.classList.remove("is-invalid");
+    // descripcion.classList.remove("is-invalid");
+    // precio.classList.remove("is-invalid");
+    // titulo.classList.remove("is-invalid");
+    LimpiarErrores();
+
     if (
+        id.value == "" ||
         titulo.value == "" ||
         precio.value == "" ||
         descripcion.value == "" ||
-        imagen.value == "" ||
-        id.value == ""
+        imagen.value == ""
     ) {
         if (titulo.value == "") titulo.classList.add("is-invalid");
         if (precio.value == "") precio.classList.add("is-invalid");
@@ -154,7 +234,8 @@ async function agregar() {
             .then((res) => res.json())
             .catch((error) => console.error("Error:", error))
             .then((response) => console.log("Success:", response));
-        console.log("seagrego", producto);
+
+
         id.value = "";
         titulo.value = "";
         precio.value = "";

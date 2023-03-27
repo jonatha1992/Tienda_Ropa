@@ -1,11 +1,11 @@
 .body {
     margin: 0px;
     font-family: new-font;
-    display: grid;  
+    display: grid;
     height: 100%;
     width: 100%;
-    background: #2980B9;  
-    background: -webkit-linear-gradient (to right, #FFFFFF, #6DD5FA, #2980B9);  
+    background: #2980B9;
+    background: -webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);
     background: linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);
     margin-top: 5rem;
 
@@ -15,7 +15,7 @@
     width: 100% !important;
 }
 
-.main {                                                                           
+.main {
     /* width: 100%; */
     display: flex;
     background-color: #faf098;
@@ -26,7 +26,7 @@
     margin: 2rem;
 }
 
-.buscador{
+.buscador {
     /* width: 100%;
     height: 40vh; */
     /* background-color: aquamarine; */
@@ -40,7 +40,7 @@
     margin-bottom: 2rem;
 }
 
-.producto{
+.producto {
     width: 100%;
     height: 60vh;
     /* background-color: #faf098; */
@@ -51,19 +51,21 @@
     flex-direction: column;
 }
 
-.descripcion{
+.descripcion {
     width: 100%;
 }
 
-.descripcion .row{
+.descripcion .row {
     margin-top: 20px;
 }
-.centrado{
+
+.centrado {
     display: flex;
     justify-content: center;
     text-align: center;
 }
-.botonera{
+
+.botonera {
     display: flex;
     justify-content: flex-end;
 }
@@ -81,34 +83,40 @@ ul {
     padding: 0;
     border: 1px solid #bfc8c9;
 }
+
 ul li {
     padding: 6px 12px;
     transition: 0.2s background;
     cursor: pointer;
 }
+
 ul li.selected {
     background: rgba(0, 0, 0, 0.08);
 }
+
 ul li:hover {
     background: #e6f0f2;
 }
-ul li + li {
+
+ul li+li {
     border-top: 1px solid #bfc8c9;
 }
+
 .hidden {
     display: none;
 }
 
-@media only screen and (min-width: 800px){
+@media only screen and (min-width: 800px) {
     .shadow {
         box-shadow: 0px 0px 5px var(--shadow-color);
     }
 }
 
-@media only screen and (min-width: 800px){
+@media only screen and (min-width: 800px) {
     .responsive {
         width: 50% !important;
     }
+
     /* .main{
         flex-flow: row wrap-reverse;
     } */
