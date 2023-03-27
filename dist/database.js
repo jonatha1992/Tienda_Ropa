@@ -16,12 +16,12 @@ const models_1 = require("./models");
 // });
 exports.AppDataSource = new typeorm_1.DataSource({
     type: 'postgres',
-    host: 'tiendaropa.internal',
+    host: 'containers-us-west-168.railway.app',
     username: 'postgres',
-    password: 'ujxRNhmNI9DeXfk',
-    database: 'TiendaRopa',
-    port: 5432,
+    password: 'skeq68otyuRGni92ux5A',
+    database: 'railway',
+    port: 6263,
     entities: [models_1.BECategoria, models_1.BEProducto, models_1.BEStock, models_1.BEColor, models_1.BEUsuario],
     logging: true,
-    synchronize: false,
+    synchronize: true,
 });

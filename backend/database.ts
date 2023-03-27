@@ -14,14 +14,15 @@ import { BECategoria, BEProducto, BEColor, BEStock, BEUsuario } from './models';
 //     synchronize: false,
 // });
 
+
 export const AppDataSource = new DataSource({
     type: 'postgres',
-    host: 'tiendaropa.internal',
+    host: 'containers-us-west-168.railway.app',
     username: 'postgres',
-    password: 'ujxRNhmNI9DeXfk',
-    database: 'TiendaRopa',
-    port: 5432,
+    password: 'skeq68otyuRGni92ux5A',
+    database: 'railway',
+    port: 6263,
     entities: [BECategoria, BEProducto, BEStock, BEColor, BEUsuario],
     logging: true,
-    synchronize: false,
+    synchronize: true,
 });
