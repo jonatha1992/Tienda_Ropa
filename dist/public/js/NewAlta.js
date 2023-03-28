@@ -74,7 +74,7 @@ const btn_buscar = document.getElementById("buscar");
 
 //EVENTOS
 
-// window.addEventListener('load', IniciarAPP);
+window.addEventListener('load', IniciarAPP);
 
 // funciones de agregar datos a card
 grabar.addEventListener("click", agregar);
@@ -185,10 +185,7 @@ function LimpiarErrores() {
 
 
 async function agregar() {
-    // imagen.classList.remove("is-invalid");
-    // descripcion.classList.remove("is-invalid");
-    // precio.classList.remove("is-invalid");
-    // titulo.classList.remove("is-invalid");
+  
     LimpiarErrores();
 
     if (

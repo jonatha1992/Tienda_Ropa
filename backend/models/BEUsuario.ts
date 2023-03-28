@@ -3,9 +3,9 @@ import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm'
 @Entity({ name: 'usuario' })
 export class BEUsuario extends BaseEntity {
 
-    @PrimaryColumn({ type: 'varchar' })
+    @PrimaryColumn({ type: 'varchar' }) 
     public email: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar'  }) 
     public password: string;
 }
