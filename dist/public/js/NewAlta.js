@@ -1,5 +1,5 @@
 import { uploadFiles } from "./bd.js";
-// require.resolve("../../models/index");
+import { Producto } from "../models/index.js";
 // const pro = new BEProducto();
 //constantes
 
@@ -35,11 +35,12 @@ var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
+
 const producto = {
   id: 0,
   titulo: "",
   precio: "",
-  image: "",
+  imagen: "",
   descripcion: "",
   categoria: {
     id: 0,
@@ -57,6 +58,8 @@ const producto = {
     xl: 0,
   },
 };
+
+
 
 const grabar = document.getElementById("agregar-editar");
 const btn_agregar = document.getElementById("agregar-editar");
@@ -86,28 +89,34 @@ categoria.addEventListener("change", AgregarCard);
 input_img.addEventListener("change", AgregarImagen);
 
 function AgregarCard(event) {
-  let id = event.target.id;
-  console.log(id);
-  if (id == "s" || id == "m" || id == "l" || id == "xl") {
+  try {
+    LimpiarErrores();
+    let id = event.target.id;
+    if (id == "s" || id == "m" || id == "l" || id == "xl") {
+      producto.stock[event.target.id] = event.target.value.trim();
+    } else if (id == "categoria" || id == "color") {
 
-    producto.stock[event.target.id] = event.target.value.Drim();
+      var combo = document.getElementById(id)
+      producto[event.target.id].id = event.target.value.trim();
+      producto[event.target.id].nombre = combo.options[combo.selectedIndex].text;
+    } else {
+      producto[event.target.id] = event.target.value.trim();
+      if (event.target.id == "id") {
+        card_id.textContent = producto.id;
+      }
+      if (event.target.id == "titulo") {
+        card_titulo.textContent = producto.titulo;
+      }
+      if (event.target.id == "precio") {
+        card_precio.textContent = "$" + producto.precio;
+      }
+      if (event.target.id == "descripcion") {
+        card_descripcion.textContent = producto.descripcion;
+      }
+    }
   }
-   else if (id == "categoria" || id == "color") {
-    producto[event.target.id].id = event.target.value.trim();
-  } else {
-    producto[event.target.id] = event.target.value.trim();
-    if (event.target.id == "id") {
-      card_id.textContent = producto.id;
-    }
-    if (event.target.id == "titulo") {
-      card_titulo.textContent = producto.titulo;
-    }
-    if (event.target.id == "precio") {
-      card_precio.textContent = "$" + producto.precio;
-    }
-    if (event.target.id == "descripcion") {
-      card_descripcion.textContent = producto.descripcion;
-    }
+  catch (error) {
+    console.log(error);
   }
 }
 
@@ -158,12 +167,11 @@ function mostrarColores() {
 function AgregarImagen(event) {
   {
     let file = event.target.files[0];
-
     if (file) {
       let img = URL.createObjectURL(file);
       img.withd;
       card_imagen.src = img;
-      producto.image = img;
+      producto.imagen = img;
       card_imagen.classList.remove("visually-hidden");
     } else {
       card_imagen.classList.add("visually-hidden");
@@ -184,59 +192,71 @@ function LimpiarErrores() {
 async function agregar() {
   LimpiarErrores();
 
-  if (
-    id.value == "" ||
-    titulo.value == "" ||
-    precio.value == "" ||
-    descripcion.value == "" ||
-    imagen.value == ""
-  ) {
-    if (titulo.value == "") titulo.classList.add("is-invalid");
-    if (precio.value == "") precio.classList.add("is-invalid");
-    if (descripcion.value == "") descripcion.classList.add("is-invalid");
-    if (imagen.value == "") imagen.classList.add("is-invalid");
-    if (id.value == "") id.classList.add("is-invalid");
-    if (categoria.value == "") categoria.classList.add("is-invalid");
-  } else {
-    let url_img = await uploadFiles(resultado);
-    console.log(url_img);
-    let producto = {
-      sku: id.value,
-      nombre: titulo.value,
-      precio: precio.value,
-      image: url_img,
-      descripcion: descripcion.value,
-      categoria: categoria.value,
-      stock: {
-        S: parseInt(s.value),
-        M: parseInt(m.value),
-        L: parseInt(l.value),
-        XL: parseInt(xl.value),
-      },
-    };
+  try {
+    if (
+      id.value == "" ||
+      titulo.value == "" ||
+      precio.value == "" ||
+      descripcion.value == "" ||
+      imagen.value == ""
+    ) {
+      if (id.value == "") id.classList.add("is-invalid");
+      if (titulo.value == "") titulo.classList.add("is-invalid");
+      if (precio.value == "") precio.classList.add("is-invalid");
+      if (descripcion.value == "") descripcion.classList.add("is-invalid");
+      if (imagen.value == "") imagen.classList.add("is-invalid");
+      if (categoria.value == "") categoria.classList.add("is-invalid");
+    } else {
+      console.log(producto);
+      console.log(producto.imagen);
+      let url_img = await uploadFiles(producto.imagen);
+      producto.imagen = url_img
+      console.log(url_img);
 
-    /* const refProduct= ref(db, "Productos/");
-            push(refProduct,producto) */
-    fetch("/producto", {
-      method: "POST", // or 'PUT'
-      body: JSON.stringify(producto), // data can be `string` or {object}!
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .catch((error) => console.error("Error:", error))
-      .then((response) => console.log("Success:", response));
+      // let producto = {
+      //   sku: id.value,
+      //   nombre: titulo.value,
+      //   precio: precio.value,
+      //   image: url_img,
+      //   descripcion: descripcion.value,
+      //   categoria: categoria.value,
+      //   stock: {
+      //     S: parseInt(s.value),
+      //     M: parseInt(m.value),
+      //     L: parseInt(l.value),
+      //     XL: parseInt(xl.value),
+      //   },
+      // };
 
-    id.value = "";
-    titulo.value = "";
-    precio.value = "";
-    imagen.value = "";
-    descripcion.value = "";
-    s.value = 0;
-    m.value = 0;
-    l.value = 0;
-    xl.value = 0;
+      /* const refProduct= ref(db, "Productos/");
+        push(refProduct,producto) */
+      fetch("/producto", {
+        method: "POST", // or 'PUT'
+        body: JSON.stringify(producto), // data can be `string` or {object}!
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .catch((error) => console.error("Error:", error))
+        .then((response) => console.log("Success:", response));
+
+      producto = new Producto();
+      console.log(producto);
+
+      // producto.id.value = "";
+      // titulo.value = "";
+      // precio.value = "";
+      // imagen.value = "";
+      // descripcion.value = "";
+      // s.value = 0;
+      // m.value = 0;
+      // l.value = 0;
+      // xl.value = 0;
+    }
+  } catch (error) {
+
+    console.log(error);
   }
 }
 // function init() {

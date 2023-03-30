@@ -119,9 +119,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
             newProducto.stock = newStock
             await newProducto.save()
 
-
             return res.json(newProducto);
-
         }
 
 
