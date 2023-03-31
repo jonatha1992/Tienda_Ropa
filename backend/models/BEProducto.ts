@@ -8,7 +8,7 @@ export class BEProducto extends BaseEntity {
   public id: number;
 
   @Column()
-  public nombre: string;
+  public titulo: string;
 
   @ManyToOne(type => BECategoria, categoria => categoria.id, { cascade: false, eager: true })
   @JoinColumn()
@@ -30,7 +30,7 @@ export class BEProducto extends BaseEntity {
   public precio: number;
 
   @Column({ type: 'varchar', nullable: true })
-  public image: string;
+  public imagen: string;
 
   @CreateDateColumn()
   public createtAt: Date;

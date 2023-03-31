@@ -21,7 +21,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], BEProducto.prototype, "nombre", void 0);
+], BEProducto.prototype, "titulo", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(type => _1.BECategoria, categoria => categoria.id, { cascade: false, eager: true }),
     (0, typeorm_1.JoinColumn)(),
@@ -48,7 +48,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
-], BEProducto.prototype, "image", void 0);
+], BEProducto.prototype, "imagen", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

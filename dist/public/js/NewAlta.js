@@ -239,9 +239,9 @@ async function agregar() {
       })
         .then((res) => res.json())
         .catch((error) => console.error("Error:", error))
-        .then((response) => console.log("Success:", response));
+        .then((response) => console.log("Respueta:", response));
 
-      producto = new Producto();
+      // producto = new Producto();
       console.log(producto);
 
       // producto.id.value = "";
