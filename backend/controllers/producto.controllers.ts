@@ -100,7 +100,6 @@ export const CrearProducto = async (req: Request, res: Response) => {
                precio,
           } = req.body;
           const producto = req.body as BEProducto;
-          console.log(producto);
 
           if (!titulo || !descripcion || !categoria)
                return res
@@ -146,7 +145,8 @@ export const EliminarProducto = async (req: Request, res: Response) => {
 export const ActualizarProducto = async (req: Request, res: Response) => {
      try {
           const Id = parseInt(req.params.id);
-          const { titulo, descripcion, detalles, categoria } = req.body;
+          const { titulo, descripcion, stock, categoria, color } = req.body;
+          const newProducto = req.body as BEProducto;
 
           let producto = await BEProducto.findOne({
                where: { id: Id },
@@ -157,7 +157,22 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
                },
           });
 
-          return res.json(producto);
+          if (producto != null) {
+               producto.titulo = newProducto.titulo;
+               producto.descripcion = newProducto.descripcion;
+               producto.categoria = newProducto.categoria;
+               producto.color = newProducto.color;
+               producto.imagen = newProducto.imagen;
+               producto.precio = newProducto.precio;
+               producto.stock = newProducto.stock;
+               await producto.save();
+               return res.json(producto);
+          }else{
+               return res.status(400)
+               .json({ message: "el producto no se pudo encontrar" });
+          } 
+               
+          
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
      }

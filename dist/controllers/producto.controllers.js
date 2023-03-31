@@ -101,7 +101,6 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { titulo, descripcion, stock, categoria, imagen, color, precio, } = req.body;
         const producto = req.body;
-        console.log(producto);
         if (!titulo || !descripcion || !categoria)
             return res
                 .status(400)
@@ -145,7 +144,8 @@ exports.EliminarProducto = EliminarProducto;
 const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const { titulo, descripcion, detalles, categoria } = req.body;
+        const { titulo, descripcion, stock, categoria, color } = req.body;
+        const newProducto = req.body;
         let producto = yield models_1.BEProducto.findOne({
             where: { id: Id },
             relations: {
@@ -154,7 +154,21 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 stock: true,
             },
         });
-        return res.json(producto);
+        if (producto != null) {
+            producto.titulo = newProducto.titulo;
+            producto.descripcion = newProducto.descripcion;
+            producto.categoria = newProducto.categoria;
+            producto.color = newProducto.color;
+            producto.imagen = newProducto.imagen;
+            producto.precio = newProducto.precio;
+            producto.stock = newProducto.stock;
+            yield producto.save();
+            return res.json(producto);
+        }
+        else {
+            return res.status(400)
+                .json({ message: "el producto no se pudo encontrar" });
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
