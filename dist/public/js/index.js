@@ -19,13 +19,14 @@ if (response.ok) {
     let html=``
     let container_list_product=document.getElementById('lista-productos')
     for (let i=0; i < json.length;i++){
+        console.log(json[i])
         html +=`
         <div class="col">
                 <div class="card h-100">
-                    <img src="${json[i].image}"
+                    <img src="${json[i].imagen}"
                         class="card-img-top" alt="...">
                     <div class="card-body" style="text-align: center;">
-                        <h5 class="card-title card-titulo">${json[i].nombre}</h5>
+                        <h5 class="card-title card-titulo">${json[i].titulo}</h5>
                         <p class="card-text card-precio">${json[i].precio}</p>
                         <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
                     </div>

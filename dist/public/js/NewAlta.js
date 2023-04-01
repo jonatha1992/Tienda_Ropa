@@ -171,7 +171,7 @@ function AgregarImagen(event) {
       let img = URL.createObjectURL(file);
       img.withd;
       card_imagen.src = img;
-      producto.imagen = img;
+      producto.imagen = file;
       card_imagen.classList.remove("visually-hidden");
     } else {
       card_imagen.classList.add("visually-hidden");
@@ -207,8 +207,6 @@ async function agregar() {
       if (imagen.value == "") imagen.classList.add("is-invalid");
       if (categoria.value == "") categoria.classList.add("is-invalid");
     } else {
-      console.log(producto);
-      console.log(producto.imagen);
       let url_img = await uploadFiles(producto.imagen);
       producto.imagen = url_img
       console.log(url_img);
