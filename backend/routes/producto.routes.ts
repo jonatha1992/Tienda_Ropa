@@ -1,11 +1,13 @@
 import { Router } from "express";
+import path from "path";
 import {
     CrearProducto,
     EliminarProducto,
     ListarProductos,
-    //   ActualizarProducto,
-    ObtenerProducto
-} from "../controllers/producto.controllers";
+    ActualizarProducto,
+    ObtenerProducto,
+    MostrarNovedades
+} from "../controllers";
 
 const router = Router();
 
@@ -17,6 +19,9 @@ router.post("/producto", CrearProducto);
 
 router.delete("/producto/:id", EliminarProducto);
 
-// router.put("/producto/:id", ActualizarProducto);
+router.put("/producto/:id", ActualizarProducto);
+
+
+
 
 export default router

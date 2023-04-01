@@ -1,0 +1,54 @@
+.body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #dc8e9f, #b86b79, #944a54, #712932, #4e0713);
+    margin: 5rem;
+}
+
+.form-floating {
+    padding: 1rem .75rem;
+}
+
+.flotingselect {
+    padding: 1rem .75rem;
+}
+
+.img-thumbnail {
+    height: 150px;
+    width: 150px;
+}
+
+.centrado {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.talla {
+    width: calc(25% - 7.5px);
+    height: 35px;
+    line-height: 35px;
+    font-size: 10.2pt;
+    font-size: 0.85rem;
+    border: 1px solid #e5e5e5;
+    margin: 5px 10px 5px 0;
+    text-align: center;
+    color: #00174f;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+
+
+
+.card-img {
+    text-align: center;
+    width: 100%;
+    height: 250px;
+}
+
+.card {
+    width: 300px;
+    height: 500px;
+}
+

@@ -1,18 +1,28 @@
 import { DataSource } from 'typeorm';
-import { BECategoria } from './models/BECategoria';
-import { BEProducto } from './models/BEProducto';
-import { BEDetalle } from './models/BEDetalle';
-import { BETalle } from './models/BETalle';
+import { BECategoria, BEProducto, BEColor, BEStock, BEUsuario } from './models';
+
+
+// export const AppDataSource = new DataSource({
+//     type: 'postgres',
+//     host: 'localhost',
+//     username: 'postgres',
+//     password: '1234',
+//     database: 'TiendaRopa',
+//     port: 5432,
+//     entities: [BECategoria, BEProducto, BEStock, BEColor, BEUsuario],
+//     logging: true,
+//     synchronize: false,
+// });
 
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
-    host: 'localhost',
+    host: 'containers-us-west-168.railway.app',
     username: 'postgres',
-    password: '1234',
-    database: 'Typeorm',
-    port: 5432,
-    entities: [BECategoria, BEProducto, BEDetalle, BETalle],
+    password: 'skeq68otyuRGni92ux5A',
+    database: 'railway',
+    port: 6263,
+    entities: [BECategoria, BEProducto, BEStock, BEColor, BEUsuario],
     logging: true,
-    synchronize: false
+    synchronize: false,
 });

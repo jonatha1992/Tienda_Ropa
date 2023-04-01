@@ -1,33 +1,42 @@
-import { BEDetalle } from './BEDetalle';
-import { BECategoria } from './BECategoria';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne } from 'typeorm'
+import { BECategoria, BEColor, BEStock } from '.';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 
 
 @Entity({ name: 'producto' })
 export class BEProducto extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
+
   @Column()
-  public nombre: string;
-  @ManyToOne(type => BECategoria, { cascade: false }) @JoinColumn()
+  public titulo: string;
+
+  @ManyToOne(type => BECategoria, categoria => categoria.id, { cascade: false, eager: true })
+  @JoinColumn()
   public categoria: BECategoria;
-  @OneToMany(type => BEDetalle, detalle => detalle.producto, { cascade: true })
-  public detalles: BEDetalle[];
+
+
+  @ManyToOne(type => BEColor, color => color.id, { cascade: false, eager: true })
+  @JoinColumn()
+  public color: BEColor;
+
+  @ManyToOne(type => BEStock, stock => stock.producto, { cascade: true, eager: true })
+  @JoinColumn()
+  public stock: BEStock;
+
   @Column()
   public descripcion: string;
-  @Column()
-  public color: string;
 
-  // constructor(){
-  //   super();
-  // }
-  // constructor(pnombre: string, pdescripcion: string, pcolor: string, pcategoria: categoria) {
-  //   super();
-  //   this.nombre = pnombre;
-  //   this.descripcion = pdescripcion;
-  //   this.color = pcolor;
-  //   this.categoria = pcategoria;
-  // }
+  @Column({ type: "decimal", nullable: true })
+  public precio: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  public imagen: string;
+
+  @CreateDateColumn()
+  public createtAt: Date;
+
+  @UpdateDateColumn()
+  public updateAt: Date;
+
 }
-
 

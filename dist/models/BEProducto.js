@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BEProducto = void 0;
-const BEDetalle_1 = require("./BEDetalle");
-const BECategoria_1 = require("./BECategoria");
+const _1 = require(".");
 const typeorm_1 = require("typeorm");
 let BEProducto = class BEProducto extends typeorm_1.BaseEntity {
 };
@@ -22,24 +21,42 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], BEProducto.prototype, "nombre", void 0);
+], BEProducto.prototype, "titulo", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(type => BECategoria_1.BECategoria, { cascade: false }),
+    (0, typeorm_1.ManyToOne)(type => _1.BECategoria, categoria => categoria.id, { cascade: false, eager: true }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", BECategoria_1.BECategoria)
+    __metadata("design:type", _1.BECategoria)
 ], BEProducto.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(type => BEDetalle_1.BEDetalle, detalle => detalle.producto, { cascade: true }),
-    __metadata("design:type", Array)
-], BEProducto.prototype, "detalles", void 0);
+    (0, typeorm_1.ManyToOne)(type => _1.BEColor, color => color.id, { cascade: false, eager: true }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", _1.BEColor)
+], BEProducto.prototype, "color", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(type => _1.BEStock, stock => stock.producto, { cascade: true, eager: true }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", _1.BEStock)
+], BEProducto.prototype, "stock", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], BEProducto.prototype, "descripcion", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
+    __metadata("design:type", Number)
+], BEProducto.prototype, "precio", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
-], BEProducto.prototype, "color", void 0);
+], BEProducto.prototype, "imagen", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], BEProducto.prototype, "createtAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], BEProducto.prototype, "updateAt", void 0);
 BEProducto = __decorate([
     (0, typeorm_1.Entity)({ name: 'producto' })
 ], BEProducto);

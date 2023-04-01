@@ -1,72 +1,179 @@
-import { Request, Response } from 'express'
-import { BEProducto } from "../models/BEProducto";
-import { BEDetalle } from "../models/BEDetalle";
-import { BECategoria } from '../models/BECategoria';
+import { json, Request, Response } from "express";
+import { parse } from "express-form-data";
+import { Any } from "typeorm";
 
-
+import { BEProducto, BEStock } from "../models";
 
 export const ListarProductos = async (req: Request, res: Response) => {
-    try {
-        const Productos = await BEProducto.find({ relations: ['categoria'] });
-        res.json(Productos);
-    } catch (error: any) {
-        return res.status(500).json({ message: error.message });
-    }
-}
+     try {
+          const { Destacado, Categoria, IdCategoria } = req.query;
+
+          let Productos;
+
+          if (Destacado === "true") {
+               Productos = await BEProducto.find({
+                    order: {
+                         updateAt: "DESC",
+                    },
+                    relations: {
+                         categoria: true,
+                         color: true,
+                         stock: true,
+                    },
+                    take: 20,
+               });
+          } else if (Categoria === "true") {
+               let idcategoria: number = parseInt(IdCategoria as string);
+
+               Productos = await BEProducto.find({
+                    order: {
+                         updateAt: "DESC",
+                    },
+                    relations: {
+                         categoria: true,
+                         color: true,
+                         stock: true,
+                    },
+                    where: {
+                         categoria: {
+                              id: idcategoria,
+                         },
+                    },
+               });
+          } else {
+               Productos = await BEProducto.find({
+                    relations: {
+                         categoria: true,
+                         color: true,
+                         stock: true,
+                    },
+               });
+          }
+
+          console.log(Productos);
+          return res.json(Productos);
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
+
+export const MostrarNovedades = async (req: Request, res: Response) => {
+     try {
+          const Productos = await BEProducto.find({
+               relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true,
+               },
+          });
+          return res.json(Productos);
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
 export const ObtenerProducto = async (req: Request, res: Response) => {
-    try {
-        const Id = parseInt(req.params.id);
-        const Producto = await BEProducto.findOneBy({ id: Id })
-        res.json(Producto);
-    } catch (error: any) {
-        return res.status(500).json({ message: error.message });
-    }
-}
+     try {
+          const Id = parseInt(req.params.id);
+          const Producto = await BEProducto.findOne({
+               where: { id: Id },
+               relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true,
+               },
+          });
+          return res.json(Producto);
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
 
 export const CrearProducto = async (req: Request, res: Response) => {
-    try {
-        const { nombre, descripcion, color, detalles, categoria } = req.body;
-        console.log(req.body)
-        if (!nombre || !descripcion || !categoria || !color)
-            return res.status(400).json({ message: "Por favor ,  llene todos los campos " });
-        else {
+     try {
+          const {
+               titulo,
+               descripcion,
+               stock,
+               categoria,
+               imagen,
+               color,
+               precio,
+          } = req.body;
+          const producto = req.body as BEProducto;
 
-            const newProducto = new BEProducto()
-            newProducto.nombre = nombre
-            newProducto.descripcion = descripcion
-            newProducto.detalles = detalles
-            newProducto.color = color
-            newProducto.categoria = categoria
-            await newProducto.save()
-            res.json(newProducto)
-        }
-    } catch (error: any) {
-        return res.status(500).json({ message: error.message });
-    }
-}
+          if (!titulo || !descripcion || !categoria)
+               return res
+                    .status(400)
+                    .json({ message: "Por favor ,  llene todos los campos " });
+          else {
+               let newStock = new BEStock();
+               newStock.S = parseInt(stock.s);
+               newStock.L = parseInt(stock.l);
+               newStock.M = parseInt(stock.m);
+               newStock.XL = parseInt(stock.xl);
+               await newStock.save();
+
+               let newProducto = new BEProducto();
+               newProducto.titulo = titulo;
+               newProducto.descripcion = descripcion;
+               newProducto.categoria = categoria;
+               newProducto.color = color;
+               newProducto.imagen = imagen;
+               newProducto.precio = precio;
+               newProducto.stock = newStock;
+               await newProducto.save();
+
+               return res.json(newProducto);
+          }
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
 
 export const EliminarProducto = async (req: Request, res: Response) => {
-    try {
-        const Id = parseInt(req.params.id);
-        await BEProducto.delete({ id: Id });
+     try {
+          const Id = parseInt(req.params.id);
+          console.log(Id);
+          await BEProducto.delete({ id: Id });
 
-        res.json(`Producto ${Id} Borrado satisfactoriamente`)
-    } catch (error: any) {
-        return res.status(500).json({ message: error.message });
-    }
-}
+          return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
 
-// export const ActualizarProducto = async (req: Request, res: Response) => {
-//     try {
-//         const Id = parseInt(req.params.id);
-//         const { nombre, descripcion, talle, color, stock } = req.body;
-//         await pool.query(`UPDATE producto SET nombre = ${nombre} , descripcion = ${descripcion} , talle = ${talle} , color =
-//              ${color} , stock = ${stock} WHERE id = ${Id}`)
+export const ActualizarProducto = async (req: Request, res: Response) => {
+     try {
+          const Id = parseInt(req.params.id);
+          const { titulo, descripcion, stock, categoria, color } = req.body;
+          const newProducto = req.body as BEProducto;
 
-//         const newProducto = new producto(Id, nombre, descripcion, color)
-//         res.json(newProducto);
+          let producto = await BEProducto.findOne({
+               where: { id: Id },
+               relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true,
+               },
+          });
 
-//     } catch (error: any) {
-//         return res.status(500).json({ message: error.message });
-//     }
-// }
+          if (producto != null) {
+               producto.titulo = newProducto.titulo;
+               producto.descripcion = newProducto.descripcion;
+               producto.categoria = newProducto.categoria;
+               producto.color = newProducto.color;
+               producto.imagen = newProducto.imagen;
+               producto.precio = newProducto.precio;
+               producto.stock = newProducto.stock;
+               await producto.save();
+               return res.json(producto);
+          }else{
+               return res.status(400)
+               .json({ message: "el producto no se pudo encontrar" });
+          } 
+               
+          
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
