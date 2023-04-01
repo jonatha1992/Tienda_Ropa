@@ -35,8 +35,7 @@ var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
-
-const producto = {
+let producto = {
   id: 0,
   titulo: "",
   precio: "",
@@ -71,7 +70,7 @@ window.addEventListener("load", IniciarAPP);
 
 // funciones de agregar datos a card
 grabar.addEventListener("click", agregar);
-btn_buscar.addEventListener("click", editar);
+// btn_buscar.addEventListener("click", editar);
 
 id.addEventListener("input", AgregarCard);
 titulo.addEventListener("input", AgregarCard);
@@ -88,6 +87,8 @@ categoria.addEventListener("change", AgregarCard);
 
 input_img.addEventListener("change", AgregarImagen);
 
+
+//funciones
 function AgregarCard(event) {
   try {
     LimpiarErrores();
@@ -120,7 +121,27 @@ function AgregarCard(event) {
   }
 }
 
-//funciones
+
+
+function mostrarMensaje() {
+
+  const alerta = document.createElement('P');
+  alerta.classList.add('alert', 'alert-success')
+  alerta.textContent = '¡La carga ha sido exitosa!';
+  formulario.appendChild(alerta)
+  setTimeout(() => {
+    alerta.remove()
+  }, 1500);
+}
+
+function limpiarformulario(){
+  id.value = "";
+  titulo.value = "";
+  precio.value = "";
+  descripcion.value = "";
+  input_img.value = "";
+  color.value = "";
+}
 
 function IniciarAPP() {
   try {
@@ -171,7 +192,7 @@ function AgregarImagen(event) {
       let img = URL.createObjectURL(file);
       img.withd;
       card_imagen.src = img;
-      producto.imagen = img;
+      producto.imagen = file;
       card_imagen.classList.remove("visually-hidden");
     } else {
       card_imagen.classList.add("visually-hidden");
@@ -207,8 +228,6 @@ async function agregar() {
       if (imagen.value == "") imagen.classList.add("is-invalid");
       if (categoria.value == "") categoria.classList.add("is-invalid");
     } else {
-      console.log(producto);
-      console.log(producto.imagen);
       let url_img = await uploadFiles(producto.imagen);
       producto.imagen = url_img
       console.log(url_img);
@@ -241,9 +260,12 @@ async function agregar() {
         .catch((error) => console.error("Error:", error))
         .then((response) => console.log("Respueta:", response));
 
+
+      mostrarMensaje()
       // producto = new Producto();
       console.log(producto);
-
+      let producto2 = new Producto();
+      console.log(producto2)
       // producto.id.value = "";
       // titulo.value = "";
       // precio.value = "";

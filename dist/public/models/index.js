@@ -3,7 +3,7 @@ export class Producto {
 	id = 0;
 	titulo = ''
 	precio = '';
-	image = '';
+	imagen = '';
 	descripcion = '';
 	categoria = {
 		id: 0,
