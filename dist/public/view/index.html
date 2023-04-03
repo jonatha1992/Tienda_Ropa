@@ -158,10 +158,22 @@
             }
         } */
         .container-slick-categoria{
-            margin-bottom: 30px;
+            padding-top: 35px;
+            padding-bottom: 20px;
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            background-color: white;
             }
         
-
+        .info-orden{
+            padding-bottom: 20px;
+            display: flex;
+            /* width: 100%; */
+            justify-content: space-between;
+            align-items: baseline;
+        }
         @media only screen and (min-width: 600px) {
             .container-slick-categoria{
                 display: none;
@@ -174,15 +186,17 @@
     <header>
         <div class="row">
             <div class="col-4 header-section">
-                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
                         class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                         <path
                             d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                     </svg>
+                </button>
+                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    
                 </button> -->
-
             </div>
             <div class="col-4 header-section">
                 <img src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/066/457/themes/common/logo-843527497-1605017244-9ff4de315ff144d246a4d8bfca0204351605017244-480-0.png?0"
@@ -196,26 +210,34 @@
                 </svg>
             </div>
         </div>
-        <nav class="navbar navbar-expand-sm bg-body-tertiary">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Disabled</a>
-                        </li>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                
+                <div class="collapse navbar-collapse" id="navbarNavDropdown" style="justify-content: center;">
+                    <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown link
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
+                    </li>
+                    </ul>
                 </div>
-            </div>
-        </nav>
+                </div>
+            </nav>
         
     </header>
     <div class="glider-contain">
@@ -274,60 +296,30 @@
         <div class="slick-categorias"  
                 style="display: flex;
                 flex-direction: row;" id="slick-categorias">
-                        <div class="slick-item-categoria">Remeras</div>
+                        <!-- <div class="slick-item-categoria">Remeras</div>
                         <div class="slick-item-categoria">Pantalones</div>
                         <div class="slick-item-categoria">Camperas</div>
                         <div class="slick-item-categoria">Buzos</div>
                         <div class="slick-item-categoria">Accesorios</div>
-                        <div class="slick-item-categoria">Vestidos</div>
+                        <div class="slick-item-categoria">Vestidos</div> -->
         </div>
+        
     </div>
     <div class="lista-contain container">
+        <div class="container info-orden">
+            <div class="d-flex">
+                <p >Inicio/</p><p class="ruta"></p>
+            </div>
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelectCategoria" aria-label="Floating label select example">
+                    <option selected>Open this select menu</option>
+                    
+                </select>
+                <label for="floatingSelect">Works with selects</label>
+            </div>
+        </div>
         <div class="row row-cols-2 row-cols-md-4 g-4" id="lista-productos">
-            <!-- <div class="col">
-                <div class="card h-100">
-                    <img src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/053/068/products/mujer-afro-11-da492bf8650e3e52e116645715620104-1024-1024.webp"
-                        class="card-img-top" alt="...">
-                    <div class="card-body" style="text-align: center;">
-                        <h5 class="card-title card-titulo">Remera lyly</h5>
-                        <p class="card-text card-precio">$1500</p>
-                        <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://http2.mlstatic.com/D_NQ_NP_968916-MLA50431223822_062022-O.jpg"
-                        class="card-img-top" alt="...">
-                    <div class="card-body" style="text-align: center;">
-                        <h5 class="card-title card-titulo">parca mili</h5>
-                        <p class="card-text card-precio">$10000</p>
-                        <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://i.pinimg.com/236x/ff/06/65/ff066577fa0d6228fdfcf5e89fbb8ddb.jpg"
-                        class="card-img-top" alt="...">
-                    <div class="card-body" style="text-align: center;">
-                        <h5 class="card-title card-titulo">Pantalon Beige</h5>
-                        <p class="card-text card-precio">$5000</p>
-                        <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://http2.mlstatic.com/D_NQ_NP_657415-MLA42257201977_062020-O.webp"
-                        class="card-img-top" alt="...">
-                    <div class="card-body" style="text-align: center;">
-                        <h5 class="card-title card-titulo">Buzo black</h5>
-                        <p class="card-text card-precio">$4000</p>
-                        <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
-                    </div>
-                </div>
-            </div> -->
+            
         </div>
     </div>
     <footer>
@@ -436,52 +428,7 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="module" src="../js/index.js"></script>
     <script>
-        function filtrarListas(categoria){
-    let container_categoria=document.querySelector('.categorias-contain').style.display='none'
-    let container_pagos=document.querySelector('.medios-pago').style.display='none'
-    let container_glider=document.querySelector('.glider-contain').style.display='none'
-    let container_banner=document.querySelector('.banner-2').style.display='none'
-    $('body, html').animate({
-			scrollTop: '0px'
-		}, 300);
-}
-    $('.slick-categorias').slick({
-        arrows:false,
-    infinite: true,
-    speed: 300,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    responsive: [
-        {
-        breakpoint: 1024,
-        settings: {
-            slidesToShow: 4,
-            slidesToScroll: 3,
-            infinite: true,
-            dots: false
-        }
-        },
-        {
-        breakpoint: 600,
-        settings: {
-            slidesToShow: 3,
-            slidesToScroll: 2
-        }
-        },
-        {
-        breakpoint: 480,
-        settings: {
-
-            slidesToShow: 2,
-            slidesToScroll: 2,
-            variableWidth: true
-        }
-        }
-        // You can unslick at a given breakpoint now by adding:
-        // settings: "unslick"
-        // instead of a settings object
-    ]
-    });
+        
     </script>
     <script type="module" src="./js/index.js"></script>
 </body>
