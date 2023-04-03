@@ -23,7 +23,7 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield database_1.AppDataSource.initialize();
         app_1.default.listen(3000, () => {
-            /* eslint-disable */ console.log(...oo_oo(`161bd9ca_0`, 'server on port', 3000));
+            console.log('server on port', 3000);
         });
     });
 }

@@ -14,7 +14,7 @@ const models_1 = require("../models");
 const VerificarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let posibleUsuario = req.body;
-        /* eslint-disable */ console.log(...oo_oo(`8ef98ca5_0`, 'consulta ', posibleUsuario));
+        console.log('consulta ', posibleUsuario);
         const usuario = yield models_1.BEUsuario.findOne({
             where: {
                 email: posibleUsuario.email,
@@ -36,7 +36,7 @@ exports.VerificarUsuario = VerificarUsuario;
 const RegistrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let { email, password } = req.body;
-        /* eslint-disable */ console.log(...oo_oo(`8ef98ca5_1`, 'consulta ', req.body));
+        console.log('consulta ', req.body);
         const usuario = yield models_1.BEUsuario.findOne({
             where: {
                 email: email
