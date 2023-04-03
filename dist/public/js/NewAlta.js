@@ -19,6 +19,7 @@ const card_titulo = document.getElementById("card_titulo");
 const card_precio = document.getElementById("card_precio");
 const card_descripcion = document.getElementById("card_descripcion");
 const card_imagen = document.getElementById("card_imagen");
+const card_stock = document.getElementById("card_stock");
 
 const s = document.getElementById("s");
 const m = document.getElementById("m");
@@ -35,30 +36,7 @@ var resultsElem = null;
 var activeIndex = 0;
 var filteredResults = [];
 
-let producto = {
-  id: 0,
-  titulo: "",
-  precio: "",
-  imagen: "",
-  descripcion: "",
-  categoria: {
-    id: 0,
-    nombre: "",
-  },
-  color: {
-    id: 0.0,
-    nombre: "",
-  },
-  stock: {
-    id: 0,
-    s: 0,
-    m: 0,
-    l: 0,
-    xl: 0,
-  },
-};
-
-
+let producto = new Producto();
 
 const grabar = document.getElementById("agregar-editar");
 const btn_agregar = document.getElementById("agregar-editar");
@@ -121,27 +99,47 @@ function AgregarCard(event) {
   }
 }
 
-
-
-function mostrarMensaje() {
-
-  const alerta = document.createElement('P');
-  alerta.classList.add('alert', 'alert-success')
-  alerta.textContent = '¡La carga ha sido exitosa!';
-  formulario.appendChild(alerta)
-  setTimeout(() => {
-    alerta.remove()
-  }, 1500);
+function mostrarToast(mensaje, clase) {
+  const toastDiv = document.querySelector('#toast');
+  const toastBody = document.querySelector('.toast-body');
+  const toastHeader = document.querySelector('.toast-header');
+  const toast = new bootstrap.Toast(toastDiv);
+  toastBody.textContent = mensaje;
+  toastHeader.classList.add(clase)
+  toast.show();
 }
 
-function limpiarformulario(){
-  id.value = "";
-  titulo.value = "";
-  precio.value = "";
-  descripcion.value = "";
-  input_img.value = "";
-  color.value = "";
+
+function limpiarformulario() {
+  formulario.reset();
+  card_id.textContent = ''
+  s.textContent = ''
+  card_titulo.textContent = '';
+  card_precio.textContent = '';
+  card_descripcion = '';
+  card_stock = '0';
+  card_imagen.src = "../static/prototipo.png";
 }
+
+function LimpiarHtml(div) {
+  const children = div.children;
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    // obtener el valor original del elemento
+    const originalValue = child.innerHTML;
+    // aquí puedes realizar alguna operación con el elemento hijo
+    // por ejemplo, imprimir su valor original en la consola
+    console.log(originalValue);
+    // si el hijo es otro elemento div, puedes llamar a la función recursivamente
+    if (child.tagName === 'DIV') {
+      traverseDivChildrenAndGrandchildren(child);
+    } else {
+      // si el hijo no es un div, también puedes recorrer sus hijos recursivamente
+      traverseDivChildrenAndGrandchildren(child);
+    }
+  }
+}
+
 
 function IniciarAPP() {
   try {
@@ -185,7 +183,7 @@ function mostrarColores() {
   });
 }
 
-function AgregarImagen(event) {
+async function AgregarImagen(event) {
   {
     let file = event.target.files[0];
     if (file) {
@@ -193,6 +191,7 @@ function AgregarImagen(event) {
       img.withd;
       card_imagen.src = img;
       producto.imagen = file;
+      console.log(producto.imagen);
       card_imagen.classList.remove("visually-hidden");
     } else {
       card_imagen.classList.add("visually-hidden");
@@ -230,22 +229,6 @@ async function agregar() {
     } else {
       let url_img = await uploadFiles(producto.imagen);
       producto.imagen = url_img
-      console.log(url_img);
-
-      // let producto = {
-      //   sku: id.value,
-      //   nombre: titulo.value,
-      //   precio: precio.value,
-      //   image: url_img,
-      //   descripcion: descripcion.value,
-      //   categoria: categoria.value,
-      //   stock: {
-      //     S: parseInt(s.value),
-      //     M: parseInt(m.value),
-      //     L: parseInt(l.value),
-      //     XL: parseInt(xl.value),
-      //   },
-      // };
 
       /* const refProduct= ref(db, "Productos/");
         push(refProduct,producto) */
@@ -256,25 +239,22 @@ async function agregar() {
           "Content-Type": "application/json",
         },
       })
-        .then((res) => res.json())
+        .then(res => {
+          if (res.ok) {
+            // La respuesta fue exitosa
+            mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+            return res.json(); // devuelve los datos en formato JSON
+          } else {
+            // La respuesta no fue exitosa
+            mostrarToast('La respuesta de la solicitud Fetch no fue exitosa', 'bg-danger');
+          }
+        })
         .catch((error) => console.error("Error:", error))
-        .then((response) => console.log("Respueta:", response));
+        .then((response) => console.log("Respuesta:", response));
 
+      limpiarformulario()
+      producto = new Producto();
 
-      mostrarMensaje()
-      // producto = new Producto();
-      console.log(producto);
-      let producto2 = new Producto();
-      console.log(producto2)
-      // producto.id.value = "";
-      // titulo.value = "";
-      // precio.value = "";
-      // imagen.value = "";
-      // descripcion.value = "";
-      // s.value = 0;
-      // m.value = 0;
-      // l.value = 0;
-      // xl.value = 0;
     }
   } catch (error) {
 

@@ -101,12 +101,12 @@
             </form>
             <div class="conteiner d-flex justify-content-center   col-sm-12 col-md-12 col-lg-4">
                 <div class=" card pt-2 px-2  text-body flex-column">
-                    <img src="" class="card-img img-thumbnail mb-1" alt="Imagen" id="card_imagen" />
+                    <img src="../static/prototipo.png" class="card-img img-thumbnail mb-1" alt="Imagen" id="card_imagen" />
                     <div class="card-body p-1 d-flex flex-column justify-content-around">
-                        <h3 class="card-title  fst-italic" id="card_titulo">Titulo</h3>
+                        <h3 class="card-title  fst-italic" id="card_titulo"></h3>
                         <P class="text-black fw-bold opacity-100 mb-1" id="card_precio">
-                            $0000</P>
-                        <p class="card-text mb-0" id="card_descripcion">Aqui va la descripcion
+                            </P>
+                        <p class="card-text mb-0" id="card_descripcion">
                         </p>
                         <div class="container d-flex justify-content-between">
                             <p class="talla"">S</p>
@@ -124,4 +124,15 @@
             </div>
         </div>
     </section>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-white">
+                <strong class="me-auto text-white">Notificación</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-black"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>
