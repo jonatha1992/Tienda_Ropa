@@ -117,7 +117,7 @@ function limpiarformulario() {
   card_titulo.textContent = '';
   card_precio.textContent = '';
   card_descripcion = '';
-  card_stock = '0';
+  card_stock = '';
   card_imagen.src = "../static/prototipo.png";
 }
 
@@ -197,6 +197,38 @@ async function AgregarImagen(event) {
       card_imagen.classList.add("visually-hidden");
     }
   }
+}
+
+// Selecciona el contenedor
+
+// Selecciona todos los párrafos dentro del contenedor
+var parrafos = document.querySelectorAll('.talla');
+
+// Agrega el evento click a cada párrafo
+parrafos.forEach(function(parrafo) {
+  parrafo.addEventListener('click', MostrarStockCard);
+});
+
+
+function MostrarStockCard(event){
+  
+  var talle = event.target.textContent;
+  var spam = card_stock.querySelector('span')
+
+  if(talle=== 'XL' ){
+    spam.textContent = producto.stock.xl
+  }else if(talle=== 'L'){
+    spam.textContent = producto.stock.l
+  }else if(talle=== 'M'){
+    spam.textContent = producto.stock.m
+  }else if(talle=== 'S'){
+    spam.textContent = producto.stock.s
+  }
+  card_stock.classList.remove('visually-hidden');
+
+  setTimeout(function(){
+    card_stock.classList.add('visually-hidden')
+  },1500)
 }
 
 function LimpiarErrores() {
