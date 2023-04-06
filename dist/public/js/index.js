@@ -235,6 +235,7 @@ function mostrarId() {
 
     function verProducto(titulo,precio,imagen,descripcion){
         filtrarListas()
+        document.getElementById('container-slick-categoria').style.display='none'
         document.getElementById('Pantalla-product').style.display='block'
         document.getElementById('lista-contain').style.display='none'
     }
@@ -243,3 +244,4 @@ function agregarCarrito(){
     document.getElementById('Pantalla-product').style.display='none'
     document.getElementById('lista-contain').style.display='block'
 }
+

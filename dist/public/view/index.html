@@ -219,8 +219,21 @@
                 margin-right: 15px;
                 margin-left: 15px;
         }
+        
 
         }
+
+        @media only screen and (max-width: 767px) {
+  /* Estilos para dispositivos móviles */
+    #container-info{
+        flex-direction: column;
+        align-items: center;
+        align-content: space-around;
+    }
+    .width-mobile{
+        width: 100%;
+    }
+}
 
         .input-box{
             padding-bottom: 20px;
@@ -247,6 +260,7 @@
     .card-body button{
         --bs-btn-font-size: 12px;
     }
+    
     </style>
 </head>
 
@@ -366,7 +380,7 @@
         <p>Los precios ya incluyen IVA - Los artículos adquiridos en promociones no tienen cambio.</p>
     </div>
 
-    <div class="container-slick-categoria">
+    <div class="container-slick-categoria" id="container-slick-categoria">
         <div class="slick-categorias"  
                 style="display: flex;
                 flex-direction: row;" id="slick-categorias">
@@ -399,8 +413,8 @@
     </div>
     
     <div class="container-fluid" id="Pantalla-product">
-        <div class="row">
-            <div class="col-6" style="display: flex; justify-content: space-around;">
+        <div class="row" id="container-info">
+            <div class="col-6 width-mobile" style="display: flex; justify-content: space-around;">
                 <div class="contenedor-preview">
                     <img src="../view/prueba.jpg" alt="">
                     <img src="../view/prueba.jpg" alt="">
@@ -411,8 +425,8 @@
                     <img src="../view/prueba.jpg" alt="">
                 </div>
             </div>
-            <div class="col-6" style="display: flex;flex-direction: column;justify-content: space-evenly;">
-                <div class="contenedor-info-product">
+            <div class="col-6 width-mobile" style="display: flex;flex-direction: column;justify-content: space-evenly;   ">
+                <div class="contenedor-info-product ">
                     <h1 style="color: #6c757d;">ART - 6035 TRICOT</h1>
                     <h1 style="    font-weight: bold;">$3.500</h1>
                     <!-- <div class="contenedor-descripcion"> -->
