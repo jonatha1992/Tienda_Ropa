@@ -1,4 +1,6 @@
 window.filtrarListas=filtrarListas
+window.verProducto=verProducto
+window.agregarCarrito=agregarCarrito
 /* async function traerProductos() {
     let productos=[]
     fetch('/productos')
@@ -85,7 +87,8 @@ async function mostrarProductos(){
         let html=``
         
         for (let i=0; i < productos.length;i++){
-            console.log(productos[i])
+            let data=[productos[i]]
+            console.log(data)
             html +=`
             <div class="col">
                     <div class="card h-100">
@@ -94,8 +97,12 @@ async function mostrarProductos(){
                         <div class="card-body" style="text-align: center;">
                             <h5 class="card-title card-titulo">${productos[i].titulo}</h5>
                             <p class="card-text card-precio">${productos[i].precio}</p>
-                            <p class="card-text card-precio">${productos[i].categoria.nombre}</p>
-                            <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
+                            <button type="button" class="btn btn-secondary" onclick="verProducto(
+                                '${productos[i].titulo}',
+                                '${productos[i].precio}',
+                                '${productos[i].imagen}',
+                                '${productos[i].descripcion}'
+                                )">AGREGAR AL CARRITO</button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +153,7 @@ document.querySelector(`.slick-categorias`).addEventListener("click", e => {
     filtrarListas()
         for (let i=0; i < productos.length;i++){
             if(e.target.id==productos[i].categoria.id){
-                
+                let data=[productos[i]]
                 html+=`
                 <div class="col">
                     <div class="card h-100">
@@ -154,8 +161,12 @@ document.querySelector(`.slick-categorias`).addEventListener("click", e => {
                         <div class="card-body" style="text-align: center;">
                             <h5 class="card-title card-titulo">${productos[i].titulo}</h5>
                             <p class="card-text card-precio">${productos[i].precio}</p>
-                            <p class="card-text card-precio">${productos[i].categoria.nombre}</p>
-                            <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
+                            <button type="button" class="btn btn-secondary" onclick="verProducto(
+                                '${productos[i].titulo}',
+                                '${productos[i].precio}',
+                                '${productos[i].imagen}',
+                                '${productos[i].descripcion}'
+                                )">AGREGAR AL CARRITO</button>
                         </div>
                     </div>
                 </div>
@@ -188,7 +199,7 @@ function mostrarId() {
     document.querySelector(`#floatingSelectCategoria`).addEventListener("change", e => {
         let html=''
         let ruta_cat=document.querySelector('.ruta')
-        ruta_cat.innerHTML=e.target.firstChild.nodeValue
+        ruta_cat.innerHTML=e.target.value
         /* let input_preview=document.getElementsByName(`${e.target.id}`) */
         /* console.log(document.querySelectorAll('slick-item-categoria')) */
         
@@ -196,6 +207,7 @@ function mostrarId() {
         filtrarListas()
             for (let i=0; i < productos.length;i++){
                 if(id_option==productos[i].categoria.id){
+                    let data=[productos[i]]
                     
                     html+=`
                     <div class="col">
@@ -204,8 +216,12 @@ function mostrarId() {
                             <div class="card-body" style="text-align: center;">
                                 <h5 class="card-title card-titulo">${productos[i].titulo}</h5>
                                 <p class="card-text card-precio">${productos[i].precio}</p>
-                                <p class="card-text card-precio">${productos[i].categoria.nombre}</p>
-                                <button type="button" class="btn btn-secondary">AGREGAR AL CARRITO</button>
+                                <button type="button" class="btn btn-secondary" onclick="verProducto(
+                                    '${productos[i].titulo}',
+                                    '${productos[i].precio}',
+                                    '${productos[i].imagen}',
+                                    '${productos[i].descripcion}'
+                                    )">AGREGAR AL CARRITO</button>
                             </div>
                         </div>
                     </div>
@@ -216,3 +232,16 @@ function mostrarId() {
         
     });
     
+
+    function verProducto(titulo,precio,imagen,descripcion){
+        filtrarListas()
+        document.getElementById('container-slick-categoria').style.display='none'
+        document.getElementById('Pantalla-product').style.display='block'
+        document.getElementById('lista-contain').style.display='none'
+    }
+
+function agregarCarrito(){
+    document.getElementById('Pantalla-product').style.display='none'
+    document.getElementById('lista-contain').style.display='block'
+}
+
