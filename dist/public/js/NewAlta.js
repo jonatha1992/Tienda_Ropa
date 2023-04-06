@@ -121,7 +121,7 @@ function limpiarformulario() {
   card_imagen.src = "../static/prototipo.png";
 }
 
-function LimpiarHtml(div) {
+function LimpiarHtml(div) { // funcion para eliminar todos el contenido de los nodos hijos
   const children = div.children;
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
@@ -204,31 +204,31 @@ async function AgregarImagen(event) {
 // Selecciona todos los párrafos dentro del contenedor
 var parrafos = document.querySelectorAll('.talla');
 
-// Agrega el evento click a cada párrafo
-parrafos.forEach(function(parrafo) {
+//Agrega el evento click a cada párrafo
+parrafos.forEach(function (parrafo) {
   parrafo.addEventListener('click', MostrarStockCard);
 });
 
 
-function MostrarStockCard(event){
-  
+function MostrarStockCard(event) {
+
   var talle = event.target.textContent;
   var spam = card_stock.querySelector('span')
 
-  if(talle=== 'XL' ){
+  if (talle === 'XL') {
     spam.textContent = producto.stock.xl
-  }else if(talle=== 'L'){
+  } else if (talle === 'L') {
     spam.textContent = producto.stock.l
-  }else if(talle=== 'M'){
+  } else if (talle === 'M') {
     spam.textContent = producto.stock.m
-  }else if(talle=== 'S'){
+  } else if (talle === 'S') {
     spam.textContent = producto.stock.s
   }
   card_stock.classList.remove('visually-hidden');
+  setTimeout(function () {
+    card_stock.classList.add('visually-hidden');
 
-  setTimeout(function(){
-    card_stock.classList.add('visually-hidden')
-  },1500)
+  }, 1500)
 }
 
 function LimpiarErrores() {
@@ -246,7 +246,6 @@ async function agregar() {
 
   try {
     if (
-      id.value == "" ||
       titulo.value == "" ||
       precio.value == "" ||
       descripcion.value == "" ||
@@ -442,6 +441,51 @@ function editar() {
   const sku = inputElem.value;
 
   console.log(sku);
+  productos.map((result, index) => {
+    if (result.titulo == sku || result.sku == sku) {
+      console.log(result);
+      let input_sku = document.getElementById("id-sku");
+      let input_titulo = document.getElementById("titulo");
+      let input_precio = document.getElementById("precio");
+      let input_imagen = document.getElementById("imagen");
+      let input_descripcion = document.getElementById("descripcion");
+
+      let input_s = document.getElementById("s");
+      let input_m = document.getElementById("m");
+      let input_l = document.getElementById("l");
+      let input_xl = document.getElementById("xl");
+
+      input_titulo.value = result.titulo;
+      input_precio.value = result.precio;
+      /* input_imagen.value=result.imagen */
+      console.log(input_descripcion.value);
+      input_descripcion.value = result.descripcion;
+      input_s.value = result.stock.s;
+      input_m.value = result.stock.m;
+      input_l.value = result.stock.l;
+      input_xl.value = result.stock.xl;
+      input_sku.innerHTML = result.sku;
+    }
+  });
+}
+
+
+function buscar() {
+let result 
+  try {
+      fetch(`/producto/:{producto.id}`).
+        then(response => response.json()).then(datos => {
+        result= datos
+        }).
+        catch(err => console.log(err));
+
+
+
+  } catch (e) {
+    console.log(e.mensaje)
+  }
+
+
   productos.map((result, index) => {
     if (result.titulo == sku || result.sku == sku) {
       console.log(result);

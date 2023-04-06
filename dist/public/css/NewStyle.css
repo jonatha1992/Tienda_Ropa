@@ -58,6 +58,9 @@
 }
 .visually-hidden {
   opacity: 0;
-  transition: opacity 0.5s ease-out; /* Cambia la duración y el tipo de transición según tus necesidades */
+  transition: opacity 1s ease-out; /* Cambia la duración y el tipo de transición según tus necesidades */
 }
 
+.fade {
+     opacity: 1;
+   }
