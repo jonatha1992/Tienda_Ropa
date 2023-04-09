@@ -61,3 +61,4 @@ BEProducto = __decorate([
     (0, typeorm_1.Entity)({ name: 'producto' })
 ], BEProducto);
 exports.BEProducto = BEProducto;
+//# sourceMappingURL=BEProducto.js.map

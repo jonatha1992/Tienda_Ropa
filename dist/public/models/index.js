@@ -10,15 +10,15 @@ export class Producto {
 		nombre: "",
 	};
 	color = {
-		id: 0.0,
+		id: 0,
 		nombre: "",
 	};
 	stock = {
 		id: 0,
-		s: 0,
-		m: 0,
-		l: 0,
-		xl: 0,
+		S: 0,
+		M: 0,
+		L: 0,
+		XL: 0,
 	};
 
 }

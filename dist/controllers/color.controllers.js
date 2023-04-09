@@ -76,3 +76,4 @@ const ActualizarColor = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.ActualizarColor = ActualizarColor;
+//# sourceMappingURL=color.controllers.js.map

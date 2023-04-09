@@ -25,3 +25,4 @@ BECategoria = __decorate([
     (0, typeorm_1.Entity)({ name: 'categoria' })
 ], BECategoria);
 exports.BECategoria = BECategoria;
+//# sourceMappingURL=BECategoria.js.map

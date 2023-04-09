@@ -82,15 +82,20 @@ exports.MostrarNovedades = MostrarNovedades;
 const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        const Producto = yield models_1.BEProducto.findOne({
-            where: { id: Id },
-            relations: {
-                categoria: true,
-                color: true,
-                stock: true,
-            },
-        });
-        return res.json(Producto);
+        if (Id === 0) {
+            return res.status(404).json({ message: 'No se encontro el codigo buscacdo' });
+        }
+        else {
+            const Producto = yield models_1.BEProducto.findOne({
+                where: { id: Id },
+                relations: {
+                    categoria: true,
+                    color: true,
+                    stock: true,
+                },
+            });
+            return res.json(Producto);
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -175,3 +180,4 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.ActualizarProducto = ActualizarProducto;
+//# sourceMappingURL=producto.controllers.js.map

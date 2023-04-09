@@ -25,3 +25,4 @@ BEUsuario = __decorate([
     (0, typeorm_1.Entity)({ name: 'usuario' })
 ], BEUsuario);
 exports.BEUsuario = BEUsuario;
+//# sourceMappingURL=BEUsuario.js.map

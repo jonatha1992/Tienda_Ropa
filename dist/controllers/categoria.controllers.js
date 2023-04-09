@@ -76,3 +76,4 @@ const ActualizarCategoria = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.ActualizarCategoria = ActualizarCategoria;
+//# sourceMappingURL=categoria.controllers.js.map

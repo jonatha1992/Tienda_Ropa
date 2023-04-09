@@ -9,3 +9,4 @@ router.post("/color", controllers_1.CrearColor);
 router.delete("/color/:id", controllers_1.EliminarColor);
 router.put("/color/:id", controllers_1.ActualizarColor);
 exports.default = router;
+//# sourceMappingURL=color.routes.js.map

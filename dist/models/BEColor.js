@@ -25,3 +25,4 @@ BEColor = __decorate([
     (0, typeorm_1.Entity)({ name: 'color' })
 ], BEColor);
 exports.BEColor = BEColor;
+//# sourceMappingURL=BEColor.js.map

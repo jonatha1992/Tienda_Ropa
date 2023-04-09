@@ -11,3 +11,4 @@ var BEColor_1 = require("./BEColor");
 Object.defineProperty(exports, "BEColor", { enumerable: true, get: function () { return BEColor_1.BEColor; } });
 var BEProducto_1 = require("./BEProducto");
 Object.defineProperty(exports, "BEProducto", { enumerable: true, get: function () { return BEProducto_1.BEProducto; } });
+//# sourceMappingURL=index.js.map

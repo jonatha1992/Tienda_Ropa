@@ -32,3 +32,4 @@ app_1.default.use(categoria_routes_1.default);
 app_1.default.use(color_routes_1.default);
 app_1.default.use(usuario_ruotes_1.default);
 main();
+//# sourceMappingURL=index.js.map

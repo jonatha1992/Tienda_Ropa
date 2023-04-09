@@ -73,16 +73,21 @@ export const MostrarNovedades = async (req: Request, res: Response) => {
 };
 export const ObtenerProducto = async (req: Request, res: Response) => {
      try {
-          const Id = parseInt(req.params.id);
-          const Producto = await BEProducto.findOne({
-               where: { id: Id },
-               relations: {
-                    categoria: true,
-                    color: true,
-                    stock: true,
-               },
-          });
-          return res.json(Producto);
+          const Id = parseInt(req.params.id)
+          if  (Id === 0){
+               return res.status(404).json({ message: 'No se encontro el codigo buscacdo' })
+          }else{
+               const Producto = await BEProducto.findOne({
+                    where: { id: Id },
+                    relations: {
+                         categoria: true,
+                         color: true,
+                         stock: true,
+                    },
+               });
+               return res.json(Producto);
+
+          }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
      }

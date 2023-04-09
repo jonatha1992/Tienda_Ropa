@@ -48,3 +48,4 @@ BEStock = __decorate([
     (0, typeorm_1.Entity)({ name: 'stock' })
 ], BEStock);
 exports.BEStock = BEStock;
+//# sourceMappingURL=BEStock.js.map

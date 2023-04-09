@@ -9,3 +9,4 @@ router.post("/producto", controllers_1.CrearProducto);
 router.delete("/producto/:id", controllers_1.EliminarProducto);
 router.put("/producto/:id", controllers_1.ActualizarProducto);
 exports.default = router;
+//# sourceMappingURL=producto.routes.js.map

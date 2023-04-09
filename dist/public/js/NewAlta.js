@@ -21,34 +21,30 @@ const card_descripcion = document.getElementById("card_descripcion");
 const card_imagen = document.getElementById("card_imagen");
 const card_stock = document.getElementById("card_stock");
 
-const s = document.getElementById("s");
-const m = document.getElementById("m");
-const l = document.getElementById("l");
-const xl = document.getElementById("xl");
+const s = document.getElementById("S");
+const m = document.getElementById("M");
+const l = document.getElementById("L");
+const xl = document.getElementById("XL");
 
 //variables
 // window.getItemAt = getItemAt;
 let productos = [];
 let categorias = [];
-var colores = [];
-var inputElem = null;
-var resultsElem = null;
-var activeIndex = 0;
-var filteredResults = [];
+let colores = [];
 
 let producto = new Producto();
 
-const grabar = document.getElementById("agregar-editar");
-const btn_agregar = document.getElementById("agregar-editar");
-const btn_buscar = document.getElementById("buscar");
+const BtnGrabar = document.getElementById("agregar-editar");
+// const btn_agregar = document.getElementById("agregar-editar");
+const BtnBuscar = document.getElementById("buscar");
 
 //EVENTOS
 
 window.addEventListener("load", IniciarAPP);
 
 // funciones de agregar datos a card
-grabar.addEventListener("click", agregar);
-// btn_buscar.addEventListener("click", editar);
+BtnGrabar.addEventListener("click", Agregar);
+BtnBuscar.addEventListener("click", Buscar);
 
 id.addEventListener("input", AgregarCard);
 titulo.addEventListener("input", AgregarCard);
@@ -71,7 +67,7 @@ function AgregarCard(event) {
   try {
     LimpiarErrores();
     let id = event.target.id;
-    if (id == "s" || id == "m" || id == "l" || id == "xl") {
+    if (id == "S" || id == "M" || id == "L" || id == "XL") {
       producto.stock[event.target.id] = event.target.value.trim();
     } else if (id == "categoria" || id == "color") {
 
@@ -105,6 +101,7 @@ function mostrarToast(mensaje, clase) {
   const toastHeader = document.querySelector('.toast-header');
   const toast = new bootstrap.Toast(toastDiv);
   toastBody.textContent = mensaje;
+  toastHeader.classList.remove('bg-success','bg-err')
   toastHeader.classList.add(clase)
   toast.show();
 }
@@ -113,12 +110,12 @@ function mostrarToast(mensaje, clase) {
 function limpiarformulario() {
   formulario.reset();
   card_id.textContent = ''
-  s.textContent = ''
   card_titulo.textContent = '';
   card_precio.textContent = '';
-  card_descripcion = '';
-  card_stock = '';
+  card_descripcion.textContent = '';
+  card_stock.textContent = '';
   card_imagen.src = "../static/prototipo.png";
+  producto = new Producto();
 }
 
 function LimpiarHtml(div) { // funcion para eliminar todos el contenido de los nodos hijos
@@ -191,7 +188,6 @@ async function AgregarImagen(event) {
       img.withd;
       card_imagen.src = img;
       producto.imagen = file;
-      console.log(producto.imagen);
       card_imagen.classList.remove("visually-hidden");
     } else {
       card_imagen.classList.add("visually-hidden");
@@ -199,7 +195,35 @@ async function AgregarImagen(event) {
   }
 }
 
-// Selecciona el contenedor
+async function CargarFormulario() {
+  if(producto != null){
+    id.value = producto.id;
+    card_id.textContent = producto.id
+
+    titulo.value = producto.titulo;
+    card_titulo.textContent = producto.titulo;
+
+    categoria.value = producto.categoria.id;
+    color.value = producto.color.id;;
+
+    precio.value = producto.precio;
+    card_precio.textContent= producto.precio
+
+
+    descripcion.value = producto.descripcion;
+    card_descripcion.textContent = producto.descripcion;
+
+    s.value = producto.stock.S;
+    m.value = producto.stock.M;
+    l.value = producto.stock.L;
+    xl.value = producto.stock.XL;
+    
+    input_img.src = producto.imagen
+    input_img.text = producto.imagen
+    card_imagen.src= producto.imagen
+    console.log(input_img);
+  }
+}
 
 // Selecciona todos los párrafos dentro del contenedor
 var parrafos = document.querySelectorAll('.talla');
@@ -216,17 +240,17 @@ function MostrarStockCard(event) {
   var spam = card_stock.querySelector('span')
 
   if (talle === 'XL') {
-    spam.textContent = producto.stock.xl
+    spam.textContent = producto.stock.XL
   } else if (talle === 'L') {
-    spam.textContent = producto.stock.l
+    spam.textContent = producto.stock.L
   } else if (talle === 'M') {
-    spam.textContent = producto.stock.m
+    spam.textContent = producto.stock.M
   } else if (talle === 'S') {
-    spam.textContent = producto.stock.s
+    spam.textContent = producto.stock.S
   }
   card_stock.classList.remove('visually-hidden');
   setTimeout(function () {
-    card_stock.classList.add('visually-hidden');
+  card_stock.classList.add('visually-hidden');
 
   }, 1500)
 }
@@ -241,7 +265,7 @@ function LimpiarErrores() {
   });
 }
 
-async function agregar() {
+async function Agregar() {
   LimpiarErrores();
 
   try {
@@ -274,6 +298,8 @@ async function agregar() {
           if (res.ok) {
             // La respuesta fue exitosa
             mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+            limpiarformulario()
+            producto = new Producto();
             return res.json(); // devuelve los datos en formato JSON
           } else {
             // La respuesta no fue exitosa
@@ -282,13 +308,8 @@ async function agregar() {
         })
         .catch((error) => console.error("Error:", error))
         .then((response) => console.log("Respuesta:", response));
-
-      limpiarformulario()
-      producto = new Producto();
-
     }
   } catch (error) {
-
     console.log(error);
   }
 }
@@ -470,46 +491,26 @@ function editar() {
 }
 
 
-function buscar() {
-let result 
+function Buscar() {
   try {
-      fetch(`/producto/:{producto.id}`).
-        then(response => response.json()).then(datos => {
-        result= datos
-        }).
-        catch(err => console.log(err));
-
-
-
+    let url = `/producto/${producto.id}`;
+    fetch(url).
+      then(response => {
+        if (response.status==200) {
+          mostrarToast("Consulta realizada con exito", "bg-success");
+          return  response.json()
+        } else {
+          mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
+        }
+      }).then( datos => {
+        if (datos!=undefined) {
+          producto = datos
+          CargarFormulario()
+        }else{
+          limpiarformulario()
+        }
+      } );
   } catch (e) {
-    console.log(e.mensaje)
+    console.log(e)
   }
-
-
-  productos.map((result, index) => {
-    if (result.titulo == sku || result.sku == sku) {
-      console.log(result);
-      let input_sku = document.getElementById("id-sku");
-      let input_titulo = document.getElementById("titulo");
-      let input_precio = document.getElementById("precio");
-      let input_imagen = document.getElementById("imagen");
-      let input_descripcion = document.getElementById("descripcion");
-
-      let input_s = document.getElementById("s");
-      let input_m = document.getElementById("m");
-      let input_l = document.getElementById("l");
-      let input_xl = document.getElementById("xl");
-
-      input_titulo.value = result.titulo;
-      input_precio.value = result.precio;
-      /* input_imagen.value=result.imagen */
-      console.log(input_descripcion.value);
-      input_descripcion.value = result.descripcion;
-      input_s.value = result.stock.s;
-      input_m.value = result.stock.m;
-      input_l.value = result.stock.l;
-      input_xl.value = result.stock.xl;
-      input_sku.innerHTML = result.sku;
-    }
-  });
 }

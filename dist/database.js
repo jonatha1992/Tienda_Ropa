@@ -25,3 +25,4 @@ exports.AppDataSource = new typeorm_1.DataSource({
     logging: true,
     synchronize: false,
 });
+//# sourceMappingURL=database.js.map
