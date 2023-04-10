@@ -387,11 +387,11 @@ function verCarrito(){
                 <div class="grid-item encabezado">
                     <div class="title-product-cantidad" id="cantidad-desktop">
                     <div class="" style="display: flex;">
-                        <div style="    border: solid;
+                        <div style="    border: solid;    color: #080807;;    border-color: #FFC107;
                         padding: 10px;">-</div>
-                        <div style="    border: solid;
+                        <div style="    border-top: solid;border-bottom:solid;    color: #080807;;    border-color: #FFC107;
                         padding: 10px;">1</div>
-                        <div style="    border: solid;
+                        <div style="    border: solid;    color: #080807;;    border-color: #FFC107;
                         padding: 10px;">+</div>
                     </div>
                     </div>
