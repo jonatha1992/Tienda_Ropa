@@ -5,21 +5,9 @@ export class Producto {
 	precio = '';
 	imagen = '';
 	descripcion = '';
-	categoria = {
-		id: 0,
-		nombre: "",
-	};
-	color = {
-		id: 0,
-		nombre: "",
-	};
-	stock = {
-		id: 0,
-		S: 0,
-		M: 0,
-		L: 0,
-		XL: 0,
-	};
+	categoria = new categoria();
+	color = new color();
+	stock = new stock()
 
 }
 
@@ -43,5 +31,21 @@ export class color {
 	}
 
 }
+
+export class stock {
+	id = 0;
+	S = 0;
+	M = 0;
+	L = 0;
+	XL = 0;
+
+	VerificarStock() {
+		if (S === 0 && M === 0 && L === 0 && XL === 0) {
+			return false
+		} else {
+			return true
+		}
+	}
+};
 
 // export default Producto;

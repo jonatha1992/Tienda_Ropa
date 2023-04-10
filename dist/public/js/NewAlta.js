@@ -2,8 +2,8 @@ import { uploadFiles } from "./bd.js";
 import { Producto } from "../models/index.js";
 // const pro = new BEProducto();
 //constantes
+const formulario = document.querySelector("form");
 
-const input_img = document.getElementById("imagen");
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
 const categoria = document.getElementById("categoria");
@@ -11,8 +11,12 @@ const color = document.getElementById("color");
 const precio = document.getElementById("precio");
 const descripcion = document.getElementById("descripcion");
 const imagen = document.getElementById("imagen");
+const Contenedor_Stock = document.getElementById("contenedor-stock");
+const s = document.getElementById("S");
+const m = document.getElementById("M");
+const l = document.getElementById("L");
+const xl = document.getElementById("XL");
 
-const formulario = document.querySelector("form");
 
 const card_id = document.getElementById("card_id");
 const card_titulo = document.getElementById("card_titulo");
@@ -21,10 +25,6 @@ const card_descripcion = document.getElementById("card_descripcion");
 const card_imagen = document.getElementById("card_imagen");
 const card_stock = document.getElementById("card_stock");
 
-const s = document.getElementById("S");
-const m = document.getElementById("M");
-const l = document.getElementById("L");
-const xl = document.getElementById("XL");
 
 //variables
 // window.getItemAt = getItemAt;
@@ -34,9 +34,10 @@ let colores = [];
 
 let producto = new Producto();
 
-const BtnGrabar = document.getElementById("agregar-editar");
-// const btn_agregar = document.getElementById("agregar-editar");
+const BtnGrabar = document.getElementById("agregar");
+const BtnEditar = document.getElementById("editar");
 const BtnBuscar = document.getElementById("buscar");
+const BtnEliminar = document.getElementById("eliminar");
 
 //EVENTOS
 
@@ -58,11 +59,11 @@ l.addEventListener("input", AgregarCard);
 xl.addEventListener("input", AgregarCard);
 color.addEventListener("change", AgregarCard);
 categoria.addEventListener("change", AgregarCard);
-
-input_img.addEventListener("change", AgregarImagen);
-
+imagen.addEventListener("change", AgregarImagen);
 
 //funciones
+
+
 function AgregarCard(event) {
   try {
     LimpiarErrores();
@@ -101,7 +102,7 @@ function mostrarToast(mensaje, clase) {
   const toastHeader = document.querySelector('.toast-header');
   const toast = new bootstrap.Toast(toastDiv);
   toastBody.textContent = mensaje;
-  toastHeader.classList.remove('bg-success','bg-err')
+  toastHeader.classList.remove('bg-success', 'bg-err')
   toastHeader.classList.add(clase)
   toast.show();
 }
@@ -196,7 +197,7 @@ async function AgregarImagen(event) {
 }
 
 async function CargarFormulario() {
-  if(producto != null){
+  if (producto != null) {
     id.value = producto.id;
     card_id.textContent = producto.id
 
@@ -207,7 +208,7 @@ async function CargarFormulario() {
     color.value = producto.color.id;;
 
     precio.value = producto.precio;
-    card_precio.textContent= producto.precio
+    card_precio.textContent = producto.precio
 
 
     descripcion.value = producto.descripcion;
@@ -217,10 +218,10 @@ async function CargarFormulario() {
     m.value = producto.stock.M;
     l.value = producto.stock.L;
     xl.value = producto.stock.XL;
-    
-    input_img.src = producto.imagen
-    input_img.text = producto.imagen
-    card_imagen.src= producto.imagen
+
+    imagen.src = producto.imagen
+    imagen.text = producto.imagen
+    card_imagen.src = producto.imagen
     console.log(input_img);
   }
 }
@@ -250,9 +251,33 @@ function MostrarStockCard(event) {
   }
   card_stock.classList.remove('visually-hidden');
   setTimeout(function () {
-  card_stock.classList.add('visually-hidden');
+    card_stock.classList.add('visually-hidden');
 
   }, 1500)
+}
+
+function ValidarStock(elemento) {
+  {
+    let valido = false
+    // Recorre todos los elementos hijos del formulario
+    for (let i = 0; i < elemento.children.length; i++) {
+      const child = elemento.children[i];
+      // Si es un input o un textarea, valida su valor
+      if (child.tagName === 'INPUT') {
+        if (child.value === '0' || child.value === '') {
+          child.classList.add('is-invalid');
+          valido = true;
+        } else {
+          child.classList.remove('is-invalid');
+        }
+      }
+      // Si el elemento tiene hijos, llama a la función recursivamente
+      if (child.children.length > 0) {
+        validarFormulario(child);
+      }
+    }
+    return valido
+  }
 }
 
 function LimpiarErrores() {
@@ -265,49 +290,63 @@ function LimpiarErrores() {
   });
 }
 
+function validarFormulario(elemento) {
+  let valido = false
+  // Recorre todos los elementos hijos del formulario
+  for (let i = 0; i < elemento.children.length; i++) {
+    const child = elemento.children[i];
+
+    // Si es un input o un textarea, valida su valor
+    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
+      if (child.value === '') {
+        child.classList.add('is-invalid');
+        valido = true;
+      } else {
+        child.classList.remove('is-invalid');
+      }
+    }
+    // Si el elemento tiene hijos, llama a la función recursivamente
+    if (child.children.length > 0) {
+      validarFormulario(child);
+    }
+  }
+  return valido
+}
+
+
+
 async function Agregar() {
-  LimpiarErrores();
-
+  // LimpiarErrores();
   try {
-    if (
-      titulo.value == "" ||
-      precio.value == "" ||
-      descripcion.value == "" ||
-      imagen.value == ""
-    ) {
-      if (id.value == "") id.classList.add("is-invalid");
-      if (titulo.value == "") titulo.classList.add("is-invalid");
-      if (precio.value == "") precio.classList.add("is-invalid");
-      if (descripcion.value == "") descripcion.classList.add("is-invalid");
-      if (imagen.value == "") imagen.classList.add("is-invalid");
-      if (categoria.value == "") categoria.classList.add("is-invalid");
-    } else {
-      let url_img = await uploadFiles(producto.imagen);
-      producto.imagen = url_img
-
-      /* const refProduct= ref(db, "Productos/");
-        push(refProduct,producto) */
-      fetch("/producto", {
-        method: "POST", // or 'PUT'
-        body: JSON.stringify(producto), // data can be `string` or {object}!
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(res => {
-          if (res.ok) {
-            // La respuesta fue exitosa
-            mostrarToast("El Producto fue agreagado correctamente", "bg-success");
-            limpiarformulario()
-            producto = new Producto();
-            return res.json(); // devuelve los datos en formato JSON
-          } else {
-            // La respuesta no fue exitosa
-            mostrarToast('La respuesta de la solicitud Fetch no fue exitosa', 'bg-danger');
-          }
+    if (!validarFormulario(formulario)) {
+      if (!producto.stock.VerificarStock()) {
+        let url_img = await uploadFiles(producto.imagen);
+        producto.imagen = url_img
+        fetch("/producto", {
+          method: "POST", // or 'PUT'
+          body: JSON.stringify(producto), // data can be `string` or {object}!
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-        .catch((error) => console.error("Error:", error))
-        .then((response) => console.log("Respuesta:", response));
+          .then(res => {
+            if (res.ok) {
+              // La respuesta fue exitosa
+              mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+              limpiarformulario()
+              producto = new Producto();
+              return res.json(); // devuelve los datos en formato JSON
+            } else {
+              // La respuesta no fue exitosa
+              mostrarToast('La respuesta de la solicitud Fetch no fue exitosa', 'bg-danger');
+            }
+          })
+          .catch((error) => console.error("Error:", error))
+          .then((response) => console.log("Respuesta:", response));
+      }
+      else {
+        ValidarStock(Contenedor_Stock);
+      }
     }
   } catch (error) {
     console.log(error);
@@ -459,9 +498,7 @@ async function Agregar() {
 // init();
 
 function editar() {
-  const sku = inputElem.value;
 
-  console.log(sku);
   productos.map((result, index) => {
     if (result.titulo == sku || result.sku == sku) {
       console.log(result);
@@ -496,20 +533,20 @@ function Buscar() {
     let url = `/producto/${producto.id}`;
     fetch(url).
       then(response => {
-        if (response.status==200) {
+        if (response.status == 200) {
           mostrarToast("Consulta realizada con exito", "bg-success");
-          return  response.json()
+          return response.json()
         } else {
           mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
         }
-      }).then( datos => {
-        if (datos!=undefined) {
+      }).then(datos => {
+        if (datos != undefined) {
           producto = datos
           CargarFormulario()
-        }else{
+        } else {
           limpiarformulario()
         }
-      } );
+      });
   } catch (e) {
     console.log(e)
   }
