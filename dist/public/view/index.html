@@ -206,6 +206,7 @@
             width: 20%;
         }
         @media only screen and (min-width: 600px) {
+            
             .container-slick-categoria{
                 display: none;
             }
@@ -222,9 +223,16 @@
         
 
         }
-
+        .container-carrito{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 60vh;
+}
         @media only screen and (max-width: 767px) {
   /* Estilos para dispositivos móviles */
+    .container-carrito{
+    overflow-y: hidden;
+}
     #container-info{
         flex-direction: column;
         align-items: center;
@@ -334,15 +342,18 @@ a{
             justify-content: space-around;
         }
         .grid-container {
-                border: solid;
-                margin-top: 0rem;
-                margin-right: 5rem;
-                display: grid;
-                grid-template-columns: 30vw 15vw 15vw 15vw 15vw;
-                grid-gap: 20px;
-                width: 100%;
-                justify-items: center;
-                grid-template-rows: auto;
+            border-bottom: solid;
+            border-color: #ffd123;
+            /* border: solid; */
+            margin-top: 0rem;
+            margin-right: 5rem;
+            display: grid;
+            grid-template-columns: 30vw 15vw 15vw 15vw 15vw;
+            grid-gap: 20px;
+            width: 100%;
+            grid-template-rows: auto;
+            align-items: center;
+            justify-items: center;
             }
     @media (max-width: 767px) {
     .grid-container {
@@ -361,8 +372,11 @@ a{
 }
 
 .container-carrito{
+    border-bottom: solid;
+    border-color: #FFC107;
     overflow-y: scroll;
-    height: 75vh;
+    overflow-x: hidden;
+    height: 60vh;
 }
 #icon-basket{
     display: none;
@@ -376,6 +390,19 @@ a{
 .title-product-img{
     display: flex;
     justify-content: flex-start;
+}
+.btn-action{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+.btn-action button{
+    padding: 20px;
+}
+#total{
+    display: flex;
+    justify-content: flex-end;
 }
     </style>
 </head>
@@ -625,7 +652,9 @@ a{
             <div class="container-carrito" id="container-item-carrito">
                 
             </div>
-            <div class="grid-container ">
+            <div class="grid-container " style="    font-weight: bold;
+            font-size: 1.5rem;
+            height: 10vh;">
                 <div class="grid-item encabezado"></div>
                 <div class="grid-item encabezado"></div>
                 <div class="grid-item ">TOTAL</div>
