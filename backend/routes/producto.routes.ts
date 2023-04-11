@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { router } from ".";
 import path from "path";
 import {
     CrearProducto,
@@ -9,7 +9,6 @@ import {
     MostrarNovedades
 } from "../controllers";
 
-const router = Router();
 
 router.get("/productos", ListarProductos);
 

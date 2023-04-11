@@ -1,9 +1,8 @@
-import { Router } from "express";
+import { router } from ".";
 import {
     CrearColor, ListarColores, Obtenercolor, EliminarColor, ActualizarColor
 } from "../controllers";
 
-const router = Router();
 
 router.get("/colores", ListarColores);
 

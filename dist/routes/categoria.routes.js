@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
+const _1 = require(".");
 const controllers_1 = require("../controllers");
-const router = (0, express_1.Router)();
-router.get("/categorias", controllers_1.ListarCategorias);
-router.get("/categoria/:id", controllers_1.ObtenerCategoria);
-router.post("/categoria", controllers_1.CrearCategoria);
-router.delete("/producto/:id", controllers_1.EliminarCategoria);
-router.put("/producto/:id", controllers_1.ActualizarCategoria);
-exports.default = router;
+_1.router.get("/categorias", controllers_1.ListarCategorias);
+_1.router.get("/categoria/:id", controllers_1.ObtenerCategoria);
+_1.router.post("/categoria", controllers_1.CrearCategoria);
+_1.router.delete("/producto/:id", controllers_1.EliminarCategoria);
+_1.router.put("/producto/:id", controllers_1.ActualizarCategoria);
+exports.default = _1.router;
 //# sourceMappingURL=categoria.routes.js.map

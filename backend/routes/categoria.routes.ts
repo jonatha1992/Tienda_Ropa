@@ -1,9 +1,8 @@
-import { Router } from "express";
+import { router } from ".";
 import {
     CrearCategoria, ListarCategorias, ObtenerCategoria, EliminarCategoria, ActualizarCategoria,
 } from "../controllers";
 
-const router = Router();
 
 router.get("/categorias", ListarCategorias);
 
