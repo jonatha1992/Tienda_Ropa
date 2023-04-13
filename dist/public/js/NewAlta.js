@@ -31,6 +31,7 @@ const card_stock = document.getElementById("card_stock");
 let productos = [];
 let categorias = [];
 let colores = [];
+let StockGeneral = 0
 
 let producto = new Producto();
 
@@ -38,6 +39,7 @@ const BtnGrabar = document.getElementById("agregar");
 const BtnEditar = document.getElementById("editar");
 const BtnBuscar = document.getElementById("buscar");
 const BtnEliminar = document.getElementById("eliminar");
+var parrafos = document.querySelectorAll('.talla');
 
 //EVENTOS
 
@@ -46,6 +48,8 @@ window.addEventListener("load", IniciarAPP);
 // funciones de agregar datos a card
 BtnGrabar.addEventListener("click", Agregar);
 BtnBuscar.addEventListener("click", Buscar);
+BtnEditar.addEventListener("click", Editar);
+// BtnEliminar.addEventListener("click", Eliminar);
 
 id.addEventListener("input", AgregarCard);
 titulo.addEventListener("input", AgregarCard);
@@ -61,6 +65,15 @@ color.addEventListener("change", AgregarCard);
 categoria.addEventListener("change", AgregarCard);
 imagen.addEventListener("change", AgregarImagen);
 
+
+
+// Selecciona todos los párrafos dentro del contenedor
+
+//Agrega el evento click a cada párrafo
+parrafos.forEach(function (parrafo) {
+  parrafo.addEventListener('click', MostrarStockCard);
+});
+
 //funciones
 
 
@@ -69,7 +82,8 @@ function AgregarCard(event) {
     LimpiarErrores();
     let id = event.target.id;
     if (id == "S" || id == "M" || id == "L" || id == "XL") {
-      producto.stock[event.target.id] = event.target.value.trim();
+      producto.stock[event.target.id] = parseInt(event.target.value.trim());
+      StockGeneral = producto.stock.S+ producto.stock.M+ producto.stock.L+producto.stock.XL
     } else if (id == "categoria" || id == "color") {
 
       var combo = document.getElementById(id)
@@ -115,7 +129,7 @@ function limpiarformulario() {
   card_precio.textContent = '';
   card_descripcion.textContent = '';
   card_stock.textContent = '';
-  card_imagen.src = "../static/prototipo.png";
+  card_imagen.src = "/static/prototipo.png";
   producto = new Producto();
 }
 
@@ -141,6 +155,8 @@ function LimpiarHtml(div) { // funcion para eliminar todos el contenido de los n
 
 function IniciarAPP() {
   try {
+    limpiarformulario();
+
     let url = "/categorias";
     fetch(url)
       .then((response) => response.json())
@@ -189,9 +205,9 @@ async function AgregarImagen(event) {
       img.withd;
       card_imagen.src = img;
       producto.imagen = file;
-      card_imagen.classList.remove("visually-hidden");
+      Visualizar(card_imagen)
     } else {
-      card_imagen.classList.add("visually-hidden");
+      Ocultar(card_imagen)
     }
   }
 }
@@ -222,17 +238,38 @@ async function CargarFormulario() {
     imagen.src = producto.imagen
     imagen.text = producto.imagen
     card_imagen.src = producto.imagen
-    console.log(input_img);
+
+    console.log(producto);
+    console.log(imagen);
   }
 }
 
-// Selecciona todos los párrafos dentro del contenedor
-var parrafos = document.querySelectorAll('.talla');
+function EstadoAgregarBuscar() {
 
-//Agrega el evento click a cada párrafo
-parrafos.forEach(function (parrafo) {
-  parrafo.addEventListener('click', MostrarStockCard);
-});
+  id.disabled = false;
+  Ocultar(BtnEditar)
+  Ocultar(BtnEliminar)
+  Visualizar(BtnGrabar)
+}
+
+function EstadoEdicion() {
+
+  id.disabled = true;
+  Visualizar(BtnEditar)
+  Visualizar(BtnEliminar)
+  Ocultar(BtnGrabar)
+}
+
+
+
+
+function Visualizar(elemento) {
+  elemento.classList.remove('visually-hidden');
+}
+function Ocultar(elemento) {
+  elemento.classList.add('visually-hidden');
+}
+
 
 
 function MostrarStockCard(event) {
@@ -249,34 +286,19 @@ function MostrarStockCard(event) {
   } else if (talle === 'S') {
     spam.textContent = producto.stock.S
   }
-  card_stock.classList.remove('visually-hidden');
+  Visualizar(card_stock)
   setTimeout(function () {
-    card_stock.classList.add('visually-hidden');
-
+    Ocultar(card_stock)
   }, 1500)
 }
 
-function ValidarStock(elemento) {
-  {
-    let valido = false
-    // Recorre todos los elementos hijos del formulario
-    for (let i = 0; i < elemento.children.length; i++) {
-      const child = elemento.children[i];
-      // Si es un input o un textarea, valida su valor
-      if (child.tagName === 'INPUT') {
-        if (child.value === '0' || child.value === '') {
-          child.classList.add('is-invalid');
-          valido = true;
-        } else {
-          child.classList.remove('is-invalid');
-        }
-      }
-      // Si el elemento tiene hijos, llama a la función recursivamente
-      if (child.children.length > 0) {
-        validarFormulario(child);
-      }
-    }
-    return valido
+function MostrarMensajeError(mensaje) {
+  try {
+    console.log(mensaje)
+  }
+  catch (e) {
+    console.log(e)
+
   }
 }
 
@@ -316,10 +338,10 @@ function validarFormulario(elemento) {
 
 
 async function Agregar() {
-  // LimpiarErrores();
+  LimpiarErrores();
   try {
     if (!validarFormulario(formulario)) {
-      if (!producto.stock.VerificarStock()) {
+      if (StockGeneral > 0) {
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
         fetch("/producto", {
@@ -334,24 +356,90 @@ async function Agregar() {
               // La respuesta fue exitosa
               mostrarToast("El Producto fue agreagado correctamente", "bg-success");
               limpiarformulario()
-              producto = new Producto();
               return res.json(); // devuelve los datos en formato JSON
             } else {
               // La respuesta no fue exitosa
-              mostrarToast('La respuesta de la solicitud Fetch no fue exitosa', 'bg-danger');
+              mostrarToast('¡No se pudo agregar el numero Producto!', 'bg-danger');
             }
           })
           .catch((error) => console.error("Error:", error))
           .then((response) => console.log("Respuesta:", response));
       }
       else {
-        ValidarStock(Contenedor_Stock);
+        MostrarMensaje("ERror"); //mostrar mensaje de errror que no existe stock
       }
     }
   } catch (error) {
     console.log(error);
   }
 }
+
+
+async function Editar() {
+  try {
+    if (!validarFormulario(formulario)) {
+      if (producto.stock.StockGeneral > 0) {
+        let url_img = await uploadFiles(producto.imagen);
+        producto.imagen = url_img
+
+        fetch("/producto", {
+          method: "PUT", // or 'PUT'
+          body: JSON.stringify(producto), // data can be `string` or {object}!
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then(res => {
+            if (res.ok) {
+              // La respuesta fue exitosa
+              mostrarToast("El Producto fue Modificado correctamente", "bg-success");
+              limpiarformulario()
+              EstadoAgregarBuscar()
+              return res.json(); // devuelve los datos en formato JSON
+            } else {
+              // La respuesta Negativa
+              mostrarToast('La Modificación no se pudo realizar', 'bg-danger');
+            }
+          })
+          .catch((error) => console.error("Error:", error))
+          .then((response) => console.log("Respuesta:", response));
+      }
+      else {
+        MostrarMensajeError("Error ");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+
+function Buscar() {
+  try {
+    let url = `/producto/${producto.id}`;
+    fetch(url).
+      then(response => {
+        if (response.status == 200) {
+          mostrarToast("Consulta realizada con exito", "bg-success");
+          return response.json()
+        } else {
+          mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
+        }
+      }).then(datos => {
+        if (datos != undefined) {
+          producto = datos
+          CargarFormulario()
+          EstadoEdicion()
+        } else {
+          limpiarformulario()
+        }
+      });
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 // function init() {
 //   /* const refcategoria= ref(db, "Productos/");
 //     onChildAdded(refcategoria,(snap)=>{
@@ -497,57 +585,4 @@ async function Agregar() {
 
 // init();
 
-function editar() {
 
-  productos.map((result, index) => {
-    if (result.titulo == sku || result.sku == sku) {
-      console.log(result);
-      let input_sku = document.getElementById("id-sku");
-      let input_titulo = document.getElementById("titulo");
-      let input_precio = document.getElementById("precio");
-      let input_imagen = document.getElementById("imagen");
-      let input_descripcion = document.getElementById("descripcion");
-
-      let input_s = document.getElementById("s");
-      let input_m = document.getElementById("m");
-      let input_l = document.getElementById("l");
-      let input_xl = document.getElementById("xl");
-
-      input_titulo.value = result.titulo;
-      input_precio.value = result.precio;
-      /* input_imagen.value=result.imagen */
-      console.log(input_descripcion.value);
-      input_descripcion.value = result.descripcion;
-      input_s.value = result.stock.s;
-      input_m.value = result.stock.m;
-      input_l.value = result.stock.l;
-      input_xl.value = result.stock.xl;
-      input_sku.innerHTML = result.sku;
-    }
-  });
-}
-
-
-function Buscar() {
-  try {
-    let url = `/producto/${producto.id}`;
-    fetch(url).
-      then(response => {
-        if (response.status == 200) {
-          mostrarToast("Consulta realizada con exito", "bg-success");
-          return response.json()
-        } else {
-          mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
-        }
-      }).then(datos => {
-        if (datos != undefined) {
-          producto = datos
-          CargarFormulario()
-        } else {
-          limpiarformulario()
-        }
-      });
-  } catch (e) {
-    console.log(e)
-  }
-}

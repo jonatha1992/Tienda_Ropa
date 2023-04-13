@@ -19,8 +19,9 @@ export class categoria {
 		this.id = id;
 		this.nombre = nombre;
 	}
-
 }
+
+
 export class color {
 	id = 0;
 	nombre = ''
@@ -38,14 +39,4 @@ export class stock {
 	M = 0;
 	L = 0;
 	XL = 0;
-
-	VerificarStock() {
-		if (S === 0 && M === 0 && L === 0 && XL === 0) {
-			return false
-		} else {
-			return true
-		}
-	}
 };
-
-// export default Producto;

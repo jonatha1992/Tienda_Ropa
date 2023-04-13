@@ -74,6 +74,7 @@ export const MostrarNovedades = async (req: Request, res: Response) => {
 export const ObtenerProducto = async (req: Request, res: Response) => {
      try {
           const Id = parseInt(req.params.id)
+          console.log(Id);
           if  (Id === 0){
                return res.status(404).json({ message: 'No se encontro el codigo buscacdo' })
           }else{
@@ -85,7 +86,12 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
                          stock: true,
                     },
                });
-               return res.json(Producto);
+
+               if(Producto != null) {
+                    return res.status(200).json(Producto);
+               }else {
+                    return res.status(404).json({mensaje:"No se pudo encontrar el codigo buscado"});
+               }
 
           }
      } catch (error: any) {
@@ -112,10 +118,10 @@ export const CrearProducto = async (req: Request, res: Response) => {
                     .json({ message: "Por favor ,  llene todos los campos " });
           else {
                let newStock = new BEStock();
-               newStock.S = parseInt(stock.s);
-               newStock.L = parseInt(stock.l);
-               newStock.M = parseInt(stock.m);
-               newStock.XL = parseInt(stock.xl);
+               newStock.S = parseInt(stock.S);
+               newStock.M = parseInt(stock.M);
+               newStock.L = parseInt(stock.L);
+               newStock.XL = parseInt(stock.XL);
                await newStock.save();
 
                let newProducto = new BEProducto();
@@ -136,6 +142,18 @@ export const CrearProducto = async (req: Request, res: Response) => {
 };
 
 export const EliminarProducto = async (req: Request, res: Response) => {
+     try {
+          const Id = parseInt(req.params.id);
+          console.log(Id);
+          await BEProducto.delete({ id: Id });
+
+          return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+     } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+     }
+};
+
+export const ObtenerUltimoID = async (req: Request, res: Response) => {
      try {
           const Id = parseInt(req.params.id);
           console.log(Id);
@@ -173,8 +191,8 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
                await producto.save();
                return res.json(producto);
           }else{
-               return res.status(400)
-               .json({ message: "el producto no se pudo encontrar" });
+               return res.status(404)
+               .json({ message: "el Producto no se pudo encontrar" });
           } 
                
           
