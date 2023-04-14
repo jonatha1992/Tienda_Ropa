@@ -74,7 +74,6 @@ export const MostrarNovedades = async (req: Request, res: Response) => {
 export const ObtenerProducto = async (req: Request, res: Response) => {
      try {
           const Id = parseInt(req.params.id)
-          console.log(Id);
           if  (Id === 0){
                return res.status(404).json({ message: 'No se encontro el codigo buscacdo' })
           }else{
@@ -153,33 +152,27 @@ export const EliminarProducto = async (req: Request, res: Response) => {
      }
 };
 
-export const ObtenerUltimoID = async (req: Request, res: Response) => {
-     try {
-          const Id = parseInt(req.params.id);
-          console.log(Id);
-          await BEProducto.delete({ id: Id });
+// export const ObtenerUltimoID = async (req: Request, res: Response) => {
+//      try {
+//           const Id = parseInt(req.params.id);
+//           console.log(Id);
+//           await BEProducto.delete({ id: Id });
 
-          return res.json(`Producto ${Id} Borrado satisfactoriamente`);
-     } catch (error: any) {
-          return res.status(500).json({ message: error.message });
-     }
-};
+//           return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+//      } catch (error: any) {
+//           return res.status(500).json({ message: error.message });
+//      }
+// };
 
 export const ActualizarProducto = async (req: Request, res: Response) => {
      try {
-          const Id = parseInt(req.params.id);
-          const { titulo, descripcion, stock, categoria, color } = req.body;
+          const {id, titulo, descripcion, stock, categoria, color } = req.body;
           const newProducto = req.body as BEProducto;
-
           let producto = await BEProducto.findOne({
-               where: { id: Id },
-               relations: {
-                    categoria: true,
-                    color: true,
-                    stock: true,
-               },
+               where: {id: id}  
           });
-
+          console.log(producto)
+          
           if (producto != null) {
                producto.titulo = newProducto.titulo;
                producto.descripcion = newProducto.descripcion;

@@ -9,6 +9,8 @@ export class Producto {
 	color = new color();
 	stock = new stock()
 
+
+
 }
 
 export class categoria {

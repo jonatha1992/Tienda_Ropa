@@ -38,5 +38,14 @@ export class BEProducto extends BaseEntity {
   @UpdateDateColumn()
   public updateAt: Date;
 
+  // verificarCamposVacios(): boolean {
+  //   for (let propiedad in this) {
+  //     if (!this[propiedad]) {
+  //       return true; // hay un campo vacío
+  //     }
+  //   }
+  //   return false; // no hay campos vacíos
+  // }
+
 }
 

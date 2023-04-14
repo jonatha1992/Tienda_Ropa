@@ -31,9 +31,10 @@ const card_stock = document.getElementById("card_stock");
 let productos = [];
 let categorias = [];
 let colores = [];
-let StockGeneral = 0
 
 let producto = new Producto();
+let reader = new FileReader();
+
 
 const BtnGrabar = document.getElementById("agregar");
 const BtnEditar = document.getElementById("editar");
@@ -76,6 +77,10 @@ parrafos.forEach(function (parrafo) {
 
 //funciones
 
+function ControlarStock(){
+  return producto.stock.S + producto.stock.M + producto.stock.L + producto.stock.XL
+}
+
 
 function AgregarCard(event) {
   try {
@@ -83,7 +88,7 @@ function AgregarCard(event) {
     let id = event.target.id;
     if (id == "S" || id == "M" || id == "L" || id == "XL") {
       producto.stock[event.target.id] = parseInt(event.target.value.trim());
-      StockGeneral = producto.stock.S+ producto.stock.M+ producto.stock.L+producto.stock.XL
+      ControlarStock()
     } else if (id == "categoria" || id == "color") {
 
       var combo = document.getElementById(id)
@@ -235,14 +240,18 @@ async function CargarFormulario() {
     l.value = producto.stock.L;
     xl.value = producto.stock.XL;
 
-    imagen.src = producto.imagen
-    imagen.text = producto.imagen
+    ControlarStock();
+    console.log(imagen);
+
+    // imagen.src = producto.imagen
+    // imagen.text = producto.imagen
     card_imagen.src = producto.imagen
 
     console.log(producto);
-    console.log(imagen);
   }
 }
+
+
 
 function EstadoAgregarBuscar() {
 
@@ -261,15 +270,12 @@ function EstadoEdicion() {
 }
 
 
-
-
 function Visualizar(elemento) {
   elemento.classList.remove('visually-hidden');
 }
 function Ocultar(elemento) {
   elemento.classList.add('visually-hidden');
 }
-
 
 
 function MostrarStockCard(event) {
@@ -301,6 +307,8 @@ function MostrarMensajeError(mensaje) {
 
   }
 }
+
+
 
 function LimpiarErrores() {
   var nodosHijos2 = document.querySelectorAll("input", "textarea");
@@ -335,13 +343,11 @@ function validarFormulario(elemento) {
   return valido
 }
 
-
-
 async function Agregar() {
   LimpiarErrores();
   try {
     if (!validarFormulario(formulario)) {
-      if (StockGeneral > 0) {
+      if (ControlarStock > 0) {
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
         fetch("/producto", {
@@ -374,15 +380,25 @@ async function Agregar() {
   }
 }
 
-
+function  verificarCamposVacios(objeto) {
+  for (let propiedad in objeto) {
+    if (!objeto[propiedad] || objeto[propiedad] == null) {
+      return true; // hay un campo vacío
+    }
+  }
+  return false; // no hay campos vacíos
+}
 async function Editar() {
   try {
-    if (!validarFormulario(formulario)) {
-      if (producto.stock.StockGeneral > 0) {
+    if (!verificarCamposVacios(producto)) {
+      if (ControlarStock() > 0) {
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
 
-        fetch("/producto", {
+        let url = `/producto/${producto.id}`;
+
+
+        fetch(url, {
           method: "PUT", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
@@ -411,7 +427,6 @@ async function Editar() {
   } catch (error) {
     console.log(error);
   }
-
 }
 
 
