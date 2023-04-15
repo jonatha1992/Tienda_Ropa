@@ -380,6 +380,43 @@ async function Agregar() {
   }
 }
 
+
+async function Eliminar() {
+  LimpiarErrores();
+  try {
+    if (producto.id !== null || producto.id === 0) {
+      if (ControlarStock == 0) {
+        let url_img = await uploadFiles(producto.imagen);
+        producto.imagen = url_img
+        fetch("/producto", {
+          method: "DELETE", // or 'PUT'
+          body: JSON.stringify(producto), // data can be `string` or {object}!
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then(res => {
+            if (res.ok) {
+              // La respuesta fue exitosa
+              mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+              limpiarformulario()
+              return res.json(); // devuelve los datos en formato JSON
+            } else {
+              // La respuesta no fue exitosa
+              mostrarToast('¡No se pudo agregar el numero Producto!', 'bg-danger');
+            }
+          })
+          .catch((error) => console.error("Error:", error))
+          .then((response) => console.log("Respuesta:", response));
+      }
+      else {
+        MostrarMensaje("ERror"); //mostrar mensaje de errror que no existe stock
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 function  verificarCamposVacios(objeto) {
   for (let propiedad in objeto) {
     if (!objeto[propiedad] || objeto[propiedad] == null) {
@@ -397,8 +434,7 @@ async function Editar() {
 
         let url = `/producto/${producto.id}`;
 
-
-        fetch(url, {
+        fetch( url, {
           method: "PUT", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {

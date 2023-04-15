@@ -163,12 +163,12 @@ exports.EliminarProducto = EliminarProducto;
 // };
 const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id, titulo, descripcion, stock, categoria, color } = req.body;
+        const Id = parseInt(req.params.id);
+        const { titulo, descripcion, stock, categoria, color } = req.body;
         const newProducto = req.body;
         let producto = yield models_1.BEProducto.findOne({
-            where: { id: id }
+            where: { id: Id }
         });
-        console.log(producto);
         if (producto != null) {
             producto.titulo = newProducto.titulo;
             producto.descripcion = newProducto.descripcion;
@@ -182,7 +182,7 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
         else {
             return res.status(404)
-                .json({ message: "el Producto no se pudo encontrar" });
+                .json({ message: "el Producto no encontrado" });
         }
     }
     catch (error) {
