@@ -143,13 +143,18 @@ export const CrearProducto = async (req: Request, res: Response) => {
 export const EliminarProducto = async (req: Request, res: Response) => {
      try {
 
-          
           const Id = parseInt(req.params.id);
           if (Id === undefined || Id === 0) {
                return res.status(404).json("Error el producto no se puede elimina");
           }else
           {
-               await BEProducto.delete({ id: Id });
+               const productoExistente = await BEProducto.findOne({where:{
+                    id: Id
+               }});
+
+               if (!productoExistente){
+                    await BEProducto.delete({ id: Id });
+               }
                return res.status(200).json(`Producto ${Id} Borrado satisfactoriamente`);
           }
      } catch (error: any) {
@@ -191,7 +196,7 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
                return res.json(producto);
           }else{
                return res.status(404)
-               .json({ message: "el Producto no encontrado" });
+               .json({ message: "el Producto no se encontrado" });
           } 
                
           

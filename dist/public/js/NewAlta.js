@@ -77,7 +77,7 @@ parrafos.forEach(function (parrafo) {
 
 //funciones
 
-function ControlarStock(){
+function ControlarStock() {
   return producto.stock.S + producto.stock.M + producto.stock.L + producto.stock.XL
 }
 
@@ -121,9 +121,10 @@ function mostrarToast(mensaje, clase) {
   const toastHeader = document.querySelector('.toast-header');
   const toast = new bootstrap.Toast(toastDiv);
   toastBody.textContent = mensaje;
-  toastHeader.classList.remove('bg-success', 'bg-err')
+  toastHeader.classList.remove('bg-success', 'bg-danger');
   toastHeader.classList.add(clase)
   toast.show();
+
 }
 
 
@@ -386,11 +387,9 @@ async function Eliminar() {
   try {
     if (producto.id !== null || producto.id === 0) {
       if (ControlarStock == 0) {
-        let url_img = await uploadFiles(producto.imagen);
-        producto.imagen = url_img
-        fetch("/producto", {
+
+        fetch(`/producto/${producto.id}`,{
           method: "DELETE", // or 'PUT'
-          body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
             "Content-Type": "application/json",
           },
@@ -398,12 +397,12 @@ async function Eliminar() {
           .then(res => {
             if (res.ok) {
               // La respuesta fue exitosa
-              mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+              mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
               limpiarformulario()
               return res.json(); // devuelve los datos en formato JSON
             } else {
               // La respuesta no fue exitosa
-              mostrarToast('¡No se pudo agregar el numero Producto!', 'bg-danger');
+              mostrarToast('¡No se pudo Eliminar el numero Producto!', 'bg-danger');
             }
           })
           .catch((error) => console.error("Error:", error))
@@ -417,7 +416,7 @@ async function Eliminar() {
     console.log(error);
   }
 }
-function  verificarCamposVacios(objeto) {
+function verificarCamposVacios(objeto) {
   for (let propiedad in objeto) {
     if (!objeto[propiedad] || objeto[propiedad] == null) {
       return true; // hay un campo vacío
@@ -434,7 +433,7 @@ async function Editar() {
 
         let url = `/producto/${producto.id}`;
 
-        fetch( url, {
+        fetch(url, {
           method: "PUT", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
