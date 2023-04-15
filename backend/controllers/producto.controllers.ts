@@ -142,11 +142,16 @@ export const CrearProducto = async (req: Request, res: Response) => {
 
 export const EliminarProducto = async (req: Request, res: Response) => {
      try {
-          const Id = parseInt(req.params.id);
-          console.log(Id);
-          await BEProducto.delete({ id: Id });
 
-          return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+          
+          const Id = parseInt(req.params.id);
+          if (Id === undefined || Id === 0) {
+               return res.status(404).json("Error el producto no se puede elimina");
+          }else
+          {
+               await BEProducto.delete({ id: Id });
+               return res.status(200).json(`Producto ${Id} Borrado satisfactoriamente`);
+          }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
      }
