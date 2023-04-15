@@ -166,12 +166,13 @@ export const EliminarProducto = async (req: Request, res: Response) => {
 
 export const ActualizarProducto = async (req: Request, res: Response) => {
      try {
-          const {id, titulo, descripcion, stock, categoria, color } = req.body;
+          const Id = parseInt(req.params.id);
+          
+          const { titulo, descripcion, stock, categoria, color } = req.body;
           const newProducto = req.body as BEProducto;
           let producto = await BEProducto.findOne({
-               where: {id: id}  
+               where: {id: Id}  
           });
-          console.log(producto)
           
           if (producto != null) {
                producto.titulo = newProducto.titulo;
@@ -185,7 +186,7 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
                return res.json(producto);
           }else{
                return res.status(404)
-               .json({ message: "el Producto no se pudo encontrar" });
+               .json({ message: "el Producto no encontrado" });
           } 
                
           

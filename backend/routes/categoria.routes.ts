@@ -10,8 +10,8 @@ router.get("/categoria/:id", ObtenerCategoria);
 
 router.post("/categoria", CrearCategoria);
 
-router.delete("/producto/:id", EliminarCategoria);
+router.delete("/categoria/:id", EliminarCategoria);
 
-router.put("/producto/:id", ActualizarCategoria);
+router.put("/categoria/:id", ActualizarCategoria);
 
 export default router
