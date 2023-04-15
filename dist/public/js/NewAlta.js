@@ -50,7 +50,7 @@ window.addEventListener("load", IniciarAPP);
 BtnGrabar.addEventListener("click", Agregar);
 BtnBuscar.addEventListener("click", Buscar);
 BtnEditar.addEventListener("click", Editar);
-// BtnEliminar.addEventListener("click", Eliminar);
+BtnEliminar.addEventListener("click", Eliminar);
 
 id.addEventListener("input", AgregarCard);
 titulo.addEventListener("input", AgregarCard);
@@ -244,9 +244,9 @@ async function CargarFormulario() {
     ControlarStock();
     console.log(imagen);
 
-    // imagen.src = producto.imagen
     // imagen.text = producto.imagen
     card_imagen.src = producto.imagen
+    imagen.src = producto.imagen
 
     console.log(producto);
   }
@@ -344,6 +344,15 @@ function validarFormulario(elemento) {
   return valido
 }
 
+function verificarCamposVacios(objeto) {
+  for (let propiedad in objeto) {
+    if (!objeto[propiedad] || objeto[propiedad] == null) {
+      return true; // hay un campo vacío
+    }
+  }
+  return false; // no hay campos vacíos
+}
+
 async function Agregar() {
   LimpiarErrores();
   try {
@@ -372,9 +381,6 @@ async function Agregar() {
           .catch((error) => console.error("Error:", error))
           .then((response) => console.log("Respuesta:", response));
       }
-      else {
-        MostrarMensaje("ERror"); //mostrar mensaje de errror que no existe stock
-      }
     }
   } catch (error) {
     console.log(error);
@@ -383,11 +389,9 @@ async function Agregar() {
 
 
 async function Eliminar() {
-  LimpiarErrores();
   try {
     if (producto.id !== null || producto.id === 0) {
-      if (ControlarStock == 0) {
-
+      
         fetch(`/producto/${producto.id}`,{
           method: "DELETE", // or 'PUT'
           headers: {
@@ -399,6 +403,7 @@ async function Eliminar() {
               // La respuesta fue exitosa
               mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
               limpiarformulario()
+              EstadoAgregarBuscar()
               return res.json(); // devuelve los datos en formato JSON
             } else {
               // La respuesta no fue exitosa
@@ -407,29 +412,20 @@ async function Eliminar() {
           })
           .catch((error) => console.error("Error:", error))
           .then((response) => console.log("Respuesta:", response));
-      }
-      else {
-        MostrarMensaje("ERror"); //mostrar mensaje de errror que no existe stock
-      }
     }
   } catch (error) {
     console.log(error);
   }
 }
-function verificarCamposVacios(objeto) {
-  for (let propiedad in objeto) {
-    if (!objeto[propiedad] || objeto[propiedad] == null) {
-      return true; // hay un campo vacío
-    }
-  }
-  return false; // no hay campos vacíos
-}
+
 async function Editar() {
   try {
     if (!verificarCamposVacios(producto)) {
       if (ControlarStock() > 0) {
-        let url_img = await uploadFiles(producto.imagen);
-        producto.imagen = url_img
+        if(producto.imagenes != imagen.src) {
+          let url_img = await uploadFiles(producto.imagen);
+          producto.imagen = url_img
+        }
 
         let url = `/producto/${producto.id}`;
 
@@ -454,9 +450,6 @@ async function Editar() {
           })
           .catch((error) => console.error("Error:", error))
           .then((response) => console.log("Respuesta:", response));
-      }
-      else {
-        MostrarMensajeError("Error ");
       }
     }
   } catch (error) {

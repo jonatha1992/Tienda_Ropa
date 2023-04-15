@@ -142,9 +142,18 @@ exports.CrearProducto = CrearProducto;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        console.log(Id);
-        yield models_1.BEProducto.delete({ id: Id });
-        return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+        if (Id === undefined || Id === 0) {
+            return res.status(404).json("Error el producto no se puede elimina");
+        }
+        else {
+            const productoExistente = yield models_1.BEProducto.findOne({ where: {
+                    id: Id
+                } });
+            if (!productoExistente) {
+                yield models_1.BEProducto.delete({ id: Id });
+            }
+            return res.status(200).json(`Producto ${Id} Borrado satisfactoriamente`);
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -182,7 +191,7 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
         else {
             return res.status(404)
-                .json({ message: "el Producto no encontrado" });
+                .json({ message: "el Producto no se encontrado" });
         }
     }
     catch (error) {
