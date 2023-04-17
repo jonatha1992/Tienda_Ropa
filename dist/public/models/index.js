@@ -8,10 +8,10 @@ export class Producto {
 	categoria = new categoria();
 	color = new color();
 	stock = new stock()
-
-
-
+	createtAt = "";
+	updateAt = "";
 }
+
 
 export class categoria {
 	id = 0;
