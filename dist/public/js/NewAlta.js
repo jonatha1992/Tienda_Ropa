@@ -1,8 +1,9 @@
-import { uploadFiles } from "./bd.js";
+import { uploadFiles , TraerProductos } from "./bd.js";
 import { Producto } from "../models/index.js";
 // const pro = new BEProducto();
 //constantes
 const formulario = document.querySelector("form");
+const section = document.querySelector("section");
 
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -74,7 +75,13 @@ parrafos.forEach(function (parrafo) {
   parrafo.addEventListener('click', MostrarStockCard);
 });
 
+
+
 //funciones
+
+function FiltrarProductos() {
+    
+}
 
 function ControlarStock(stock) {
   return stock.S + stock.M + stock.L + stock.XL
@@ -157,10 +164,19 @@ function LimpiarHtml(div) { // funcion para eliminar todos el contenido de los n
 }
 
 function scrollSuave() {
-  $('body, html').animate({
-    scrollTop: '20px'
-  }, 300);
-};
+  // $('body, html').animate({
+  //   scrollTop: '20px'
+  // }, 300);
+
+  // function()
+  //  {
+    window.scrollTo({
+      
+      top: section.offsetTop,
+      behavior: 'smooth'
+    });
+  };
+// };
 
 function IniciarAPP() {
   try {
@@ -182,17 +198,20 @@ function IniciarAPP() {
         MostrarColores();
       });
 
-    url = "/productos";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => {
-        productos = datos;
-        MostrarProductos(productos);
-      });
+    productos = TraerProductos()
   } catch (error) {
     console.error(error);
   }
 }
+
+// function TraerProductos() {
+//   url = "/productos";
+//   fetch(url)
+//     .then((response) => response.json())
+//     .then((datos) => {
+//       productos = datos;
+//     });
+// }
 
 function MostrarCategorias() {
   categorias.forEach((cat) => {
@@ -448,6 +467,7 @@ async function Agregar() {
               // La respuesta fue exitosa
               mostrarToast("El Producto fue agreagado correctamente", "bg-success");
               limpiarformulario()
+              MostrarProductos()
               return res.json(); // devuelve los datos en formato JSON
             } else {
               // La respuesta no fue exitosa
@@ -480,6 +500,7 @@ async function Eliminar(id) {
             mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
             limpiarformulario()
             EstadoAgregarBuscar()
+            MostrarProductos()
             return res.json(); // devuelve los datos en formato JSON
           } else {
             // La respuesta no fue exitosa
@@ -517,7 +538,8 @@ async function Editar(id) {
               // La respuesta fue exitosa
               mostrarToast("El Producto fue Modificado correctamente", "bg-success");
               limpiarformulario()
-              EstadoAgregarBuscar()
+              EstadoAgregarBuscar() 
+              MostrarProductos()
               return res.json(); // devuelve los datos en formato JSON
             } else {
               // La respuesta Negativa

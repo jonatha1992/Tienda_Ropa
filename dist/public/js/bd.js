@@ -35,3 +35,16 @@ async function uploadFiles(file) {
 
 
 export { uploadFiles }
+
+
+export function TraerProductos() {
+  url = "/productos";
+  let productos
+  fetch(url)
+    .then((response) => response.json())
+    .then((datos) => {
+      productos = datos;
+    });
+
+  return productos  
+}
