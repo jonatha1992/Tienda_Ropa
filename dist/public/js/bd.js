@@ -34,4 +34,34 @@ async function uploadFiles(file) {
 }
 
 
-export { uploadFiles }
+export { uploadFiles ,TraerProductos , TraerColores ,TraerCategorias}
+
+
+async function TraerProductos() {
+  let url = "/productos";
+  let response = await fetch(url);
+  let datos = await response.json();  
+  return datos
+    // .then((response) => response.json())
+    // .then(datos =>  datos );
+}
+
+async function TraerColores(){
+
+  let url = "/colores";
+  let response = await fetch(url);
+  let datos = await response.json();  
+  return datos
+
+}
+
+
+async function TraerCategorias(){
+
+  let url = "/categorias";
+  let response = await fetch(url);
+  let datos = await response.json();  
+  return datos
+
+}
+

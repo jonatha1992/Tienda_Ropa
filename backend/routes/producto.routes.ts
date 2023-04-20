@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { router } from ".";
 import path from "path";
 import {
     CrearProducto,
@@ -9,7 +9,6 @@ import {
     MostrarNovedades
 } from "../controllers";
 
-const router = Router();
 
 router.get("/productos", ListarProductos);
 
@@ -20,8 +19,5 @@ router.post("/producto", CrearProducto);
 router.delete("/producto/:id", EliminarProducto);
 
 router.put("/producto/:id", ActualizarProducto);
-
-
-
 
 export default router

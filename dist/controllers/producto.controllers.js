@@ -55,8 +55,7 @@ const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function
                 },
             });
         }
-        console.log(Productos);
-        return res.json(Productos);
+        return res.status(200).json(Productos);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -83,7 +82,9 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const Id = parseInt(req.params.id);
         if (Id === 0) {
-            return res.status(404).json({ message: 'No se encontro el codigo buscacdo' });
+            return res
+                .status(404)
+                .json({ message: "No se encontro el codigo buscacdo" });
         }
         else {
             const Producto = yield models_1.BEProducto.findOne({
@@ -94,7 +95,16 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
                     stock: true,
                 },
             });
-            return res.json(Producto);
+            if (Producto != null) {
+                return res.status(200).json(Producto);
+            }
+            else {
+                return res
+                    .status(404)
+                    .json({
+                    mensaje: "No se pudo encontrar el codigo buscado",
+                });
+            }
         }
     }
     catch (error) {
@@ -112,10 +122,10 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 .json({ message: "Por favor ,  llene todos los campos " });
         else {
             let newStock = new models_1.BEStock();
-            newStock.S = parseInt(stock.s);
-            newStock.L = parseInt(stock.l);
-            newStock.M = parseInt(stock.m);
-            newStock.XL = parseInt(stock.xl);
+            newStock.S = parseInt(stock.S);
+            newStock.M = parseInt(stock.M);
+            newStock.L = parseInt(stock.L);
+            newStock.XL = parseInt(stock.XL);
             yield newStock.save();
             let newProducto = new models_1.BEProducto();
             newProducto.titulo = titulo;
@@ -126,7 +136,7 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             newProducto.precio = precio;
             newProducto.stock = newStock;
             yield newProducto.save();
-            return res.json(newProducto);
+            return res.status(200).json(newProducto);
         }
     }
     catch (error) {
@@ -137,15 +147,45 @@ exports.CrearProducto = CrearProducto;
 const EliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
-        console.log(Id);
-        yield models_1.BEProducto.delete({ id: Id });
-        return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+        if (Id === undefined || Id === 0) {
+            return res
+                .status(404)
+                .json("Error el producto no se puede eliminar");
+        }
+        else {
+            const productoExistente = yield models_1.BEProducto.findOne({
+                where: {
+                    id: Id,
+                },
+            });
+            if (productoExistente) {
+                yield models_1.BEProducto.delete({ id: Id });
+                return res
+                    .status(200)
+                    .json(`Producto ${Id} Borrado satisfactoriamente`);
+            }
+            else {
+                return res
+                    .status(404)
+                    .json(`Producto ${Id} No se encontro`);
+            }
+        }
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
 exports.EliminarProducto = EliminarProducto;
+// export const ObtenerUltimoID = async (req: Request, res: Response) => {
+//      try {
+//           const Id = parseInt(req.params.id);
+//           console.log(Id);
+//           await BEProducto.delete({ id: Id });
+//           return res.json(`Producto ${Id} Borrado satisfactoriamente`);
+//      } catch (error: any) {
+//           return res.status(500).json({ message: error.message });
+//      }
+// };
 const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = parseInt(req.params.id);
@@ -153,11 +193,6 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
         const newProducto = req.body;
         let producto = yield models_1.BEProducto.findOne({
             where: { id: Id },
-            relations: {
-                categoria: true,
-                color: true,
-                stock: true,
-            },
         });
         if (producto != null) {
             producto.titulo = newProducto.titulo;
@@ -168,11 +203,12 @@ const ActualizarProducto = (req, res) => __awaiter(void 0, void 0, void 0, funct
             producto.precio = newProducto.precio;
             producto.stock = newProducto.stock;
             yield producto.save();
-            return res.json(producto);
+            return res.status(200).json(producto);
         }
         else {
-            return res.status(400)
-                .json({ message: "el producto no se pudo encontrar" });
+            return res
+                .status(404)
+                .json({ message: "el Producto no se encontrado" });
         }
     }
     catch (error) {

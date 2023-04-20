@@ -5,7 +5,7 @@ import { AppDataSource } from './database'
 import indexRoutesCategorias from './routes/categoria.routes'
 import indexRoutesProducto from './routes/producto.routes'
 import indexRoutesColor from './routes/color.routes'
-import indexRoutesUsuario from './routes/usuario.ruotes'
+import indexRoutesUsuario from './routes/usuario.routes'
 
 async function main() {
     await AppDataSource.initialize();

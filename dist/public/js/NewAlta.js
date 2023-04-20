@@ -1,8 +1,13 @@
-import { uploadFiles } from "./bd.js";
+import { uploadFiles, TraerProductos, TraerColores, TraerCategorias } from "./bd.js";
 import { Producto } from "../models/index.js";
-// const pro = new BEProducto();
+
+
+
 //constantes
 const formulario = document.querySelector("form");
+const section = document.querySelector("section");
+const tbody = document.querySelector('tbody');
+const spinner = document.getElementById('spinner');
 
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -11,7 +16,6 @@ const color = document.getElementById("color");
 const precio = document.getElementById("precio");
 const descripcion = document.getElementById("descripcion");
 const imagen = document.getElementById("imagen");
-const Contenedor_Stock = document.getElementById("contenedor-stock");
 const s = document.getElementById("S");
 const m = document.getElementById("M");
 const l = document.getElementById("L");
@@ -31,7 +35,6 @@ const card_stock = document.getElementById("card_stock");
 let productos = [];
 let categorias = [];
 let colores = [];
-
 let producto = new Producto();
 
 const BtnGrabar = document.getElementById("agregar");
@@ -39,13 +42,17 @@ const BtnEditar = document.getElementById("editar");
 const BtnBuscar = document.getElementById("buscar");
 const BtnEliminar = document.getElementById("eliminar");
 
+var parrafos = document.querySelectorAll('.talla');
+
 //EVENTOS
 
 window.addEventListener("load", IniciarAPP);
 
 // funciones de agregar datos a card
-BtnGrabar.addEventListener("click", Agregar);
-BtnBuscar.addEventListener("click", Buscar);
+BtnGrabar.addEventListener("click", () => Agregar());
+BtnBuscar.addEventListener("click", () => Buscar(producto.id));
+BtnEditar.addEventListener("click", () => Editar(producto.id));
+BtnEliminar.addEventListener("click", () => Eliminar(producto.id));
 
 id.addEventListener("input", AgregarCard);
 titulo.addEventListener("input", AgregarCard);
@@ -61,20 +68,52 @@ color.addEventListener("change", AgregarCard);
 categoria.addEventListener("change", AgregarCard);
 imagen.addEventListener("change", AgregarImagen);
 
+
+
+// Selecciona todos los párrafos dentro del contenedor
+
+//Agrega el evento click a cada párrafo
+parrafos.forEach(function (parrafo) {
+  parrafo.addEventListener('click', MostrarStockCard);
+});
+
+
+
 //funciones
 
+function FiltrarProductos(id) {
+  try {
+    let filtrados = productos.filter(x => x.categoria?.id == id)
+    console.log(filtrados)
+    MostrarProductos(filtrados)
+  } catch (error) {
+    console.log(error)
+
+  }
+}
+
+
+function ControlarStock(stock) {
+  return stock.S + stock.M + stock.L + stock.XL
+}
 
 function AgregarCard(event) {
   try {
     LimpiarErrores();
     let id = event.target.id;
+    console.log(id)
     if (id == "S" || id == "M" || id == "L" || id == "XL") {
-      producto.stock[event.target.id] = event.target.value.trim();
+      producto.stock[event.target.id] = parseInt(event.target.value.trim());
+      ControlarStock(producto.stock)
     } else if (id == "categoria" || id == "color") {
-
       var combo = document.getElementById(id)
       producto[event.target.id].id = event.target.value.trim();
       producto[event.target.id].nombre = combo.options[combo.selectedIndex].text;
+      if (id === "categoria") {
+        console.log(producto.categoria.id)
+        FiltrarProductos(producto.categoria.id)
+      }
+
     } else {
       producto[event.target.id] = event.target.value.trim();
       if (event.target.id == "id") {
@@ -102,9 +141,10 @@ function mostrarToast(mensaje, clase) {
   const toastHeader = document.querySelector('.toast-header');
   const toast = new bootstrap.Toast(toastDiv);
   toastBody.textContent = mensaje;
-  toastHeader.classList.remove('bg-success', 'bg-err')
+  toastHeader.classList.remove('bg-success', 'bg-danger');
   toastHeader.classList.add(clase)
   toast.show();
+
 }
 
 
@@ -115,7 +155,7 @@ function limpiarformulario() {
   card_precio.textContent = '';
   card_descripcion.textContent = '';
   card_stock.textContent = '';
-  card_imagen.src = "../static/prototipo.png";
+  card_imagen.src = "/static/prototipo.png";
   producto = new Producto();
 }
 
@@ -138,30 +178,50 @@ function LimpiarHtml(div) { // funcion para eliminar todos el contenido de los n
   }
 }
 
+function scrollSuave() {
+  // $('body, html').animate({
+  //   scrollTop: '20px'
+  // }, 300);
 
-function IniciarAPP() {
+  // function()
+  //  {
+  window.scrollTo({
+
+    top: section.offsetTop,
+    behavior: 'smooth'
+  });
+};
+// };
+
+async function IniciarAPP() {
   try {
-    let url = "/categorias";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => {
-        categorias = datos;
-        mostrarCategorias();
-      });
+    limpiarformulario();
 
-    url = "/colores";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => {
-        colores = datos;
-        mostrarColores(datos);
-      });
+    mostrarSpinner();
+    categorias = await TraerCategorias();
+    MostrarCategorias();
+
+    colores = await TraerColores();
+    MostrarColores();
+
+    productos = await TraerProductos()
+    ocultarSpinner()
+    MostrarProductos(productos)
   } catch (error) {
     console.error(error);
   }
 }
 
-function mostrarCategorias() {
+// function TraerProductos() {
+//   url = "/productos";
+//   fetch(url)
+//     .then((response) => response.json())
+//     .then((datos) => {
+//       productos = datos;
+//     });
+// }
+
+function MostrarCategorias() {
   categorias.forEach((cat) => {
     const { id, nombre } = cat;
     const option = document.createElement("OPTION");
@@ -171,7 +231,7 @@ function mostrarCategorias() {
   });
 }
 
-function mostrarColores() {
+function MostrarColores() {
   colores.forEach((col) => {
     const { id, nombre } = col;
     const option = document.createElement("OPTION");
@@ -179,6 +239,81 @@ function mostrarColores() {
     option.textContent = nombre;
     color.appendChild(option);
   });
+}
+
+function MostrarProductos(productos) {
+
+
+  tbody.innerHTML = "";
+
+  productos.forEach(producto => {
+
+    let tr = document.createElement("tr");
+    tr.id = producto.id;
+
+    let tdId = document.createElement("td");
+    tdId.textContent = producto.id;
+
+    let tdTitulo = document.createElement("td");
+    tdTitulo.textContent = producto.titulo;
+
+    let tdDescripcion = document.createElement("td");
+    tdDescripcion.textContent = producto.descripcion;
+
+    let tdPrecio = document.createElement("td");
+    tdPrecio.textContent = `$${producto.precio}`;
+
+    let tdStock = document.createElement("td");
+    tdStock.textContent = `${ControlarStock(producto.stock)}`;
+
+    let tdImagen = document.createElement("td");
+    let img = document.createElement("img");
+    img.width = 50;
+    img.height = 50;
+    img.src = producto.imagen
+    tdImagen.appendChild(img);
+
+    let tdBtn = document.createElement("td");
+
+    let BtnSeleccionar = document.createElement("button");
+    BtnSeleccionar.onclick = () => Seleccionar(tr.id)
+
+
+    // formulario.focus();
+    BtnSeleccionar.classList.add('btn', 'btn-primary', 'me-2', "bg-primary");
+    BtnSeleccionar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-index-thumb-fill"                             viewBox="0 0 16 16">
+                                 <path  d="M8.5 1.75v2.716l.047-.002c.312-.012.742-.016 1.051.046.28.056.543.18.738.288.273.152.456.385.56.642l.132-.012c.312-.024.794-.038 1.158.108.37.148.689.487.88.716.075.09.141.175.195.248h.582a2 2 0 0 1 1.99 2.199l-.272 2.715a3.5 3.5 0 0 1-.444 1.389l-1.395 2.441A1.5 1.5 0 0 1 12.42 16H6.118a1.5 1.5 0 0 1-1.342-.83l-1.215-2.43L1.07 8.589a1.517 1.517 0 0 1 2.373-1.852L5 8.293V1.75a1.75 1.75 0 0 1 3.5 0z" />
+                            </svg>`
+
+    tdBtn.appendChild(BtnSeleccionar)
+
+    let BtnEliminar = document.createElement("button");
+    BtnEliminar.onclick = () => Eliminar(tr.id);
+    BtnEliminar.classList.add('btn', 'btn-danger', 'me-2', 'bg-danger');
+    BtnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">   <path   d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" /> </svg>`
+
+    tdBtn.appendChild(BtnEliminar)
+
+    tr.appendChild(tdId)
+    tr.appendChild(tdId);
+    tr.appendChild(tdTitulo);
+    tr.appendChild(tdDescripcion);
+    tr.appendChild(tdPrecio);
+    tr.appendChild(tdStock);
+    tr.appendChild(tdImagen);
+    tr.appendChild(tdBtn)
+
+    tbody.appendChild(tr);
+  })
+
+}
+
+async function Seleccionar(id) {
+
+  producto = productos.find(x => x.id == id);
+  EstadoEdicion()
+  CargarFormulario()
+  scrollSuave()
 }
 
 async function AgregarImagen(event) {
@@ -189,9 +324,9 @@ async function AgregarImagen(event) {
       img.withd;
       card_imagen.src = img;
       producto.imagen = file;
-      card_imagen.classList.remove("visually-hidden");
+      Visualizar(card_imagen)
     } else {
-      card_imagen.classList.add("visually-hidden");
+      Ocultar(card_imagen)
     }
   }
 }
@@ -219,20 +354,41 @@ async function CargarFormulario() {
     l.value = producto.stock.L;
     xl.value = producto.stock.XL;
 
-    imagen.src = producto.imagen
-    imagen.text = producto.imagen
+    ControlarStock(producto.stock);
+    console.log(imagen);
+
     card_imagen.src = producto.imagen
-    console.log(input_img);
+    imagen.src = producto.imagen
+
   }
 }
 
-// Selecciona todos los párrafos dentro del contenedor
-var parrafos = document.querySelectorAll('.talla');
 
-//Agrega el evento click a cada párrafo
-parrafos.forEach(function (parrafo) {
-  parrafo.addEventListener('click', MostrarStockCard);
-});
+function EstadoAgregarBuscar() {
+
+  id.disabled = false;
+  Ocultar(BtnEditar)
+  Ocultar(BtnEliminar)
+  Visualizar(BtnGrabar)
+  Visualizar(BtnBuscar)
+}
+
+function EstadoEdicion() {
+
+  id.disabled = true;
+  Visualizar(BtnEditar)
+  Visualizar(BtnEliminar)
+  Ocultar(BtnGrabar)
+  Ocultar(BtnBuscar)
+}
+
+
+function Visualizar(elemento) {
+  elemento.classList.remove('visually-hidden');
+}
+function Ocultar(elemento) {
+  elemento.classList.add('visually-hidden');
+}
 
 
 function MostrarStockCard(event) {
@@ -249,36 +405,12 @@ function MostrarStockCard(event) {
   } else if (talle === 'S') {
     spam.textContent = producto.stock.S
   }
-  card_stock.classList.remove('visually-hidden');
+  Visualizar(card_stock)
   setTimeout(function () {
-    card_stock.classList.add('visually-hidden');
-
+    Ocultar(card_stock)
   }, 1500)
 }
 
-function ValidarStock(elemento) {
-  {
-    let valido = false
-    // Recorre todos los elementos hijos del formulario
-    for (let i = 0; i < elemento.children.length; i++) {
-      const child = elemento.children[i];
-      // Si es un input o un textarea, valida su valor
-      if (child.tagName === 'INPUT') {
-        if (child.value === '0' || child.value === '') {
-          child.classList.add('is-invalid');
-          valido = true;
-        } else {
-          child.classList.remove('is-invalid');
-        }
-      }
-      // Si el elemento tiene hijos, llama a la función recursivamente
-      if (child.children.length > 0) {
-        validarFormulario(child);
-      }
-    }
-    return valido
-  }
-}
 
 function LimpiarErrores() {
   var nodosHijos2 = document.querySelectorAll("input", "textarea");
@@ -297,8 +429,8 @@ function validarFormulario(elemento) {
     const child = elemento.children[i];
 
     // Si es un input o un textarea, valida su valor
-    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
-      if (child.value === '') {
+    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA'|| child.id !== 'id') {
+      if (child.value === '' ) {
         child.classList.add('is-invalid');
         valido = true;
       } else {
@@ -313,45 +445,165 @@ function validarFormulario(elemento) {
   return valido
 }
 
-
+function verificarCamposVacios(objeto) {
+  for (let propiedad in objeto) {
+    if (!objeto[propiedad] || objeto[propiedad] == null) {
+      return true; // hay un campo vacío
+    }
+  }
+  return false; // no hay campos vacíos
+}
 
 async function Agregar() {
-  // LimpiarErrores();
+  LimpiarErrores();
   try {
     if (!validarFormulario(formulario)) {
-      if (!producto.stock.VerificarStock()) {
+      if (ControlarStock(producto.stock) > 0) {
+        mostrarSpinner()
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
-        fetch("/producto", {
+
+        let res = fetch("/producto", {
           method: "POST", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
             "Content-Type": "application/json",
           },
         })
-          .then(res => {
-            if (res.ok) {
-              // La respuesta fue exitosa
-              mostrarToast("El Producto fue agreagado correctamente", "bg-success");
-              limpiarformulario()
-              producto = new Producto();
-              return res.json(); // devuelve los datos en formato JSON
-            } else {
-              // La respuesta no fue exitosa
-              mostrarToast('La respuesta de la solicitud Fetch no fue exitosa', 'bg-danger');
-            }
-          })
-          .catch((error) => console.error("Error:", error))
-          .then((response) => console.log("Respuesta:", response));
-      }
-      else {
-        ValidarStock(Contenedor_Stock);
+        if (res.status===200) {
+          // La respuesta fue exitosa
+          mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+          limpiarformulario()
+          productos = await TraerProductos()
+          ocultarSpinner()
+          MostrarProductos(productos)
+        } else {
+          mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
+        }
       }
     }
   } catch (error) {
     console.log(error);
   }
 }
+
+
+async function Eliminar(id) {
+  try {
+    if (id !== undefined || id !== 0) {
+      mostrarSpinner()
+      let res = await fetch(`/producto/${id}`, {
+        method: "DELETE", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      if (res.status===200) {
+        // La respuesta fue exitosa
+        mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
+        limpiarformulario()
+        EstadoAgregarBuscar()
+        productos = await TraerProductos()
+        ocultarSpinner();
+        MostrarProductos(productos)
+        return res.json(); // devuelve los datos en formato JSON
+      } else {
+        // La respuesta no fue exitosa
+        mostrarToast('¡No se pudo Eliminar el numero Producto!', 'bg-danger');
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function Editar(id) {
+  try {
+    if (!verificarCamposVacios(producto)) {
+      if (ControlarStock(producto.stock) > 0) {
+        mostrarSpinner()
+        if (producto.imagenes != imagen.src) {
+          let url_img = await uploadFiles(producto.imagen);
+          producto.imagen = url_img
+        }
+
+        let url = `/producto/${id}`;
+
+        let res = await fetch(url, {
+          method: "PUT", // or 'PUT'
+          body: JSON.stringify(producto), // data can be `string` or {object}!
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+
+        if (res.status===200) {
+          // La respuesta fue exitosa
+          mostrarToast("El Producto fue Modificado correctamente", "bg-success");
+          limpiarformulario()
+          EstadoAgregarBuscar()
+          ocultarSpinner()
+          productos = await TraerProductos()
+          MostrarProductos(productos)
+        } else {
+          // La respuesta Negativa
+          mostrarToast('La Modificación no se pudo realizar', 'bg-danger');
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function Buscar(id) {
+  try {
+    let url = `/producto/${id}`;
+    fetch(url).
+      then(response => {
+        if (response.status == 200) {
+          mostrarToast("Consulta realizada con exito", "bg-success");
+          return response.json()
+        } else {
+          mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
+        }
+      }).then(datos => {
+        if (datos != undefined) {
+          producto = datos
+          CargarFormulario()
+          EstadoEdicion()
+        } else {
+          limpiarformulario()
+        }
+      });
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
+// Función para mostrar el spinner
+function mostrarSpinner() {
+  spinner.classList.remove('visually-hidden') ;
+}
+
+// Función para ocultar el spinner
+function ocultarSpinner() {
+  spinner.classList.add('visually-hidden');
+}
+
+  // resultado.innerHTML = "";
+  // const spinner = document.createElement('div');
+  // spinner.classList.add('spinner2');
+
+  // spinner.innerHTML = `
+  //       <div class="bounce1"></div>
+  //       <div class="bounce2"></div>
+  //       <div class="bounce3"></div>
+  //                     `;
+  // resultado.appendChild(spinner);
+
+
 // function init() {
 //   /* const refcategoria= ref(db, "Productos/");
 //     onChildAdded(refcategoria,(snap)=>{
@@ -497,57 +749,4 @@ async function Agregar() {
 
 // init();
 
-function editar() {
 
-  productos.map((result, index) => {
-    if (result.titulo == sku || result.sku == sku) {
-      console.log(result);
-      let input_sku = document.getElementById("id-sku");
-      let input_titulo = document.getElementById("titulo");
-      let input_precio = document.getElementById("precio");
-      let input_imagen = document.getElementById("imagen");
-      let input_descripcion = document.getElementById("descripcion");
-
-      let input_s = document.getElementById("s");
-      let input_m = document.getElementById("m");
-      let input_l = document.getElementById("l");
-      let input_xl = document.getElementById("xl");
-
-      input_titulo.value = result.titulo;
-      input_precio.value = result.precio;
-      /* input_imagen.value=result.imagen */
-      console.log(input_descripcion.value);
-      input_descripcion.value = result.descripcion;
-      input_s.value = result.stock.s;
-      input_m.value = result.stock.m;
-      input_l.value = result.stock.l;
-      input_xl.value = result.stock.xl;
-      input_sku.innerHTML = result.sku;
-    }
-  });
-}
-
-
-function Buscar() {
-  try {
-    let url = `/producto/${producto.id}`;
-    fetch(url).
-      then(response => {
-        if (response.status == 200) {
-          mostrarToast("Consulta realizada con exito", "bg-success");
-          return response.json()
-        } else {
-          mostrarToast(`¡No existe el Codigo de Articulo ${producto.id} !`, "bg-danger")
-        }
-      }).then(datos => {
-        if (datos != undefined) {
-          producto = datos
-          CargarFormulario()
-        } else {
-          limpiarformulario()
-        }
-      });
-  } catch (e) {
-    console.log(e)
-  }
-}
