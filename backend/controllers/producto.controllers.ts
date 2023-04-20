@@ -49,9 +49,7 @@ export const ListarProductos = async (req: Request, res: Response) => {
                     },
                });
           }
-
-          console.log(Productos);
-          return res.json(Productos);
+          return res.status(200).json(Productos);
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
      }
@@ -73,10 +71,12 @@ export const MostrarNovedades = async (req: Request, res: Response) => {
 };
 export const ObtenerProducto = async (req: Request, res: Response) => {
      try {
-          const Id = parseInt(req.params.id)
-          if  (Id === 0){
-               return res.status(404).json({ message: 'No se encontro el codigo buscacdo' })
-          }else{
+          const Id = parseInt(req.params.id);
+          if (Id === 0) {
+               return res
+                    .status(404)
+                    .json({ message: "No se encontro el codigo buscacdo" });
+          } else {
                const Producto = await BEProducto.findOne({
                     where: { id: Id },
                     relations: {
@@ -86,12 +86,15 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
                     },
                });
 
-               if(Producto != null) {
+               if (Producto != null) {
                     return res.status(200).json(Producto);
-               }else {
-                    return res.status(404).json({mensaje:"No se pudo encontrar el codigo buscado"});
+               } else {
+                    return res
+                         .status(404)
+                         .json({
+                              mensaje: "No se pudo encontrar el codigo buscado",
+                         });
                }
-
           }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
@@ -133,7 +136,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
                newProducto.stock = newStock;
                await newProducto.save();
 
-               return res.json(newProducto);
+               return res.status(200).json(newProducto);
           }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
@@ -142,20 +145,28 @@ export const CrearProducto = async (req: Request, res: Response) => {
 
 export const EliminarProducto = async (req: Request, res: Response) => {
      try {
-
           const Id = parseInt(req.params.id);
           if (Id === undefined || Id === 0) {
-               return res.status(404).json("Error el producto no se puede elimina");
-          }else
-          {
-               const productoExistente = await BEProducto.findOne({where:{
-                    id: Id
-               }});
+               return res
+                    .status(404)
+                    .json("Error el producto no se puede eliminar");
+          } else {
+               const productoExistente = await BEProducto.findOne({
+                    where: {
+                         id: Id,
+                    },
+               });
 
-               if (!productoExistente){
+               if (productoExistente) {
                     await BEProducto.delete({ id: Id });
+                    return res
+                         .status(200)
+                         .json(`Producto ${Id} Borrado satisfactoriamente`);
+               }else{
+                    return res
+                         .status(404)
+                         .json(`Producto ${Id} No se encontro`);
                }
-               return res.status(200).json(`Producto ${Id} Borrado satisfactoriamente`);
           }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
@@ -177,13 +188,13 @@ export const EliminarProducto = async (req: Request, res: Response) => {
 export const ActualizarProducto = async (req: Request, res: Response) => {
      try {
           const Id = parseInt(req.params.id);
-          
+
           const { titulo, descripcion, stock, categoria, color } = req.body;
           const newProducto = req.body as BEProducto;
           let producto = await BEProducto.findOne({
-               where: {id: Id}  
+               where: { id: Id },
           });
-          
+
           if (producto != null) {
                producto.titulo = newProducto.titulo;
                producto.descripcion = newProducto.descripcion;
@@ -193,11 +204,12 @@ export const ActualizarProducto = async (req: Request, res: Response) => {
                producto.precio = newProducto.precio;
                producto.stock = newProducto.stock;
                await producto.save();
-               return res.json(producto);
-          }else{
-               return res.status(404)
-               .json({ message: "el Producto no se encontrado" });
-          } 
+               return res.status(200).json(producto);
+          } else {
+               return res
+                    .status(404)
+                    .json({ message: "el Producto no se encontrado" });
+          }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
      }

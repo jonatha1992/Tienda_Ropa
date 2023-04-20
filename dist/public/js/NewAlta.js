@@ -1,9 +1,13 @@
-import { uploadFiles , TraerProductos } from "./bd.js";
+import { uploadFiles, TraerProductos, TraerColores, TraerCategorias } from "./bd.js";
 import { Producto } from "../models/index.js";
-// const pro = new BEProducto();
+
+
+
 //constantes
 const formulario = document.querySelector("form");
 const section = document.querySelector("section");
+const tbody = document.querySelector('tbody');
+const spinner = document.getElementById('spinner');
 
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -31,9 +35,7 @@ const card_stock = document.getElementById("card_stock");
 let productos = [];
 let categorias = [];
 let colores = [];
-
 let producto = new Producto();
-
 
 const BtnGrabar = document.getElementById("agregar");
 const BtnEditar = document.getElementById("editar");
@@ -79,9 +81,17 @@ parrafos.forEach(function (parrafo) {
 
 //funciones
 
-function FiltrarProductos() {
-    
+function FiltrarProductos(id) {
+  try {
+    let filtrados = productos.filter(x => x.categoria?.id == id)
+    console.log(filtrados)
+    MostrarProductos(filtrados)
+  } catch (error) {
+    console.log(error)
+
+  }
 }
+
 
 function ControlarStock(stock) {
   return stock.S + stock.M + stock.L + stock.XL
@@ -91,14 +101,19 @@ function AgregarCard(event) {
   try {
     LimpiarErrores();
     let id = event.target.id;
+    console.log(id)
     if (id == "S" || id == "M" || id == "L" || id == "XL") {
       producto.stock[event.target.id] = parseInt(event.target.value.trim());
       ControlarStock(producto.stock)
     } else if (id == "categoria" || id == "color") {
-
       var combo = document.getElementById(id)
       producto[event.target.id].id = event.target.value.trim();
       producto[event.target.id].nombre = combo.options[combo.selectedIndex].text;
+      if (id === "categoria") {
+        console.log(producto.categoria.id)
+        FiltrarProductos(producto.categoria.id)
+      }
+
     } else {
       producto[event.target.id] = event.target.value.trim();
       if (event.target.id == "id") {
@@ -170,35 +185,28 @@ function scrollSuave() {
 
   // function()
   //  {
-    window.scrollTo({
-      
-      top: section.offsetTop,
-      behavior: 'smooth'
-    });
-  };
+  window.scrollTo({
+
+    top: section.offsetTop,
+    behavior: 'smooth'
+  });
+};
 // };
 
-function IniciarAPP() {
+async function IniciarAPP() {
   try {
     limpiarformulario();
 
-    let url = "/categorias";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => {
-        categorias = datos;
-        MostrarCategorias();
-      });
+    mostrarSpinner();
+    categorias = await TraerCategorias();
+    MostrarCategorias();
 
-    url = "/colores";
-    fetch(url)
-      .then((response) => response.json())
-      .then((datos) => {
-        colores = datos;
-        MostrarColores();
-      });
+    colores = await TraerColores();
+    MostrarColores();
 
-    productos = TraerProductos()
+    productos = await TraerProductos()
+    ocultarSpinner()
+    MostrarProductos(productos)
   } catch (error) {
     console.error(error);
   }
@@ -233,9 +241,9 @@ function MostrarColores() {
   });
 }
 
-function MostrarProductos() {
+function MostrarProductos(productos) {
 
-  let tbody = document.querySelector('tbody');
+
   tbody.innerHTML = "";
 
   productos.forEach(producto => {
@@ -280,7 +288,7 @@ function MostrarProductos() {
     tdBtn.appendChild(BtnSeleccionar)
 
     let BtnEliminar = document.createElement("button");
-    BtnEliminar.onclick = () => Eliminar(id);
+    BtnEliminar.onclick = () => Eliminar(tr.id);
     BtnEliminar.classList.add('btn', 'btn-danger', 'me-2', 'bg-danger');
     BtnEliminar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">   <path   d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" /> </svg>`
 
@@ -297,6 +305,7 @@ function MostrarProductos() {
 
     tbody.appendChild(tr);
   })
+
 }
 
 async function Seleccionar(id) {
@@ -355,7 +364,6 @@ async function CargarFormulario() {
 }
 
 
-
 function EstadoAgregarBuscar() {
 
   id.disabled = false;
@@ -404,8 +412,6 @@ function MostrarStockCard(event) {
 }
 
 
-
-
 function LimpiarErrores() {
   var nodosHijos2 = document.querySelectorAll("input", "textarea");
 
@@ -423,8 +429,8 @@ function validarFormulario(elemento) {
     const child = elemento.children[i];
 
     // Si es un input o un textarea, valida su valor
-    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
-      if (child.value === '') {
+    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA'|| child.id !== 'id') {
+      if (child.value === '' ) {
         child.classList.add('is-invalid');
         valido = true;
       } else {
@@ -453,29 +459,27 @@ async function Agregar() {
   try {
     if (!validarFormulario(formulario)) {
       if (ControlarStock(producto.stock) > 0) {
+        mostrarSpinner()
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
-        fetch("/producto", {
+
+        let res = fetch("/producto", {
           method: "POST", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
             "Content-Type": "application/json",
           },
         })
-          .then(res => {
-            if (res.ok) {
-              // La respuesta fue exitosa
-              mostrarToast("El Producto fue agreagado correctamente", "bg-success");
-              limpiarformulario()
-              MostrarProductos()
-              return res.json(); // devuelve los datos en formato JSON
-            } else {
-              // La respuesta no fue exitosa
-              mostrarToast('¡No se pudo agregar el numero Producto!', 'bg-danger');
-            }
-          })
-          .catch((error) => console.error("Error:", error))
-          .then((response) => console.log("Respuesta:", response));
+        if (res.status===200) {
+          // La respuesta fue exitosa
+          mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+          limpiarformulario()
+          productos = await TraerProductos()
+          ocultarSpinner()
+          MostrarProductos(productos)
+        } else {
+          mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
+        }
       }
     }
   } catch (error) {
@@ -486,29 +490,27 @@ async function Agregar() {
 
 async function Eliminar(id) {
   try {
-    if (id || id === 0) {
-
-      fetch(`/producto/${id}`, {
+    if (id !== undefined || id !== 0) {
+      mostrarSpinner()
+      let res = await fetch(`/producto/${id}`, {
         method: "DELETE", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
         },
       })
-        .then(res => {
-          if (res.ok) {
-            // La respuesta fue exitosa
-            mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
-            limpiarformulario()
-            EstadoAgregarBuscar()
-            MostrarProductos()
-            return res.json(); // devuelve los datos en formato JSON
-          } else {
-            // La respuesta no fue exitosa
-            mostrarToast('¡No se pudo Eliminar el numero Producto!', 'bg-danger');
-          }
-        })
-        .catch((error) => console.error("Error:", error))
-        .then((response) => console.log("Respuesta:", response));
+      if (res.status===200) {
+        // La respuesta fue exitosa
+        mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
+        limpiarformulario()
+        EstadoAgregarBuscar()
+        productos = await TraerProductos()
+        ocultarSpinner();
+        MostrarProductos(productos)
+        return res.json(); // devuelve los datos en formato JSON
+      } else {
+        // La respuesta no fue exitosa
+        mostrarToast('¡No se pudo Eliminar el numero Producto!', 'bg-danger');
+      }
     }
   } catch (error) {
     console.log(error);
@@ -519,6 +521,7 @@ async function Editar(id) {
   try {
     if (!verificarCamposVacios(producto)) {
       if (ControlarStock(producto.stock) > 0) {
+        mostrarSpinner()
         if (producto.imagenes != imagen.src) {
           let url_img = await uploadFiles(producto.imagen);
           producto.imagen = url_img
@@ -526,28 +529,26 @@ async function Editar(id) {
 
         let url = `/producto/${id}`;
 
-        fetch(url, {
+        let res = await fetch(url, {
           method: "PUT", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
             "Content-Type": "application/json",
           },
         })
-          .then(res => {
-            if (res.ok) {
-              // La respuesta fue exitosa
-              mostrarToast("El Producto fue Modificado correctamente", "bg-success");
-              limpiarformulario()
-              EstadoAgregarBuscar() 
-              MostrarProductos()
-              return res.json(); // devuelve los datos en formato JSON
-            } else {
-              // La respuesta Negativa
-              mostrarToast('La Modificación no se pudo realizar', 'bg-danger');
-            }
-          })
-          .catch((error) => console.error("Error:", error))
-          .then((response) => console.log("Respuesta:", response));
+
+        if (res.status===200) {
+          // La respuesta fue exitosa
+          mostrarToast("El Producto fue Modificado correctamente", "bg-success");
+          limpiarformulario()
+          EstadoAgregarBuscar()
+          ocultarSpinner()
+          productos = await TraerProductos()
+          MostrarProductos(productos)
+        } else {
+          // La respuesta Negativa
+          mostrarToast('La Modificación no se pudo realizar', 'bg-danger');
+        }
       }
     }
   } catch (error) {
@@ -581,6 +582,26 @@ function Buscar(id) {
 }
 
 
+// Función para mostrar el spinner
+function mostrarSpinner() {
+  spinner.classList.remove('visually-hidden') ;
+}
+
+// Función para ocultar el spinner
+function ocultarSpinner() {
+  spinner.classList.add('visually-hidden');
+}
+
+  // resultado.innerHTML = "";
+  // const spinner = document.createElement('div');
+  // spinner.classList.add('spinner2');
+
+  // spinner.innerHTML = `
+  //       <div class="bounce1"></div>
+  //       <div class="bounce2"></div>
+  //       <div class="bounce3"></div>
+  //                     `;
+  // resultado.appendChild(spinner);
 
 
 // function init() {

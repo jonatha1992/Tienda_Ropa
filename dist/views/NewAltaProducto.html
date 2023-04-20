@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/NewStyle.css">
+    <link rel="stylesheet" href="/css/spinner.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:wght@300&display=swap"
@@ -150,17 +151,19 @@
         </div>
     </div>
     <div id="resultado" class="conteiner pt-3 ">
-        <table class="table bg-white w-100">
-            <thead>
+        
+        <table class="table  w-100  text-white">
+            <thead class=" bg-black bg-gradient">
                 <th>Cod. Art.</th>
                 <th>Titulo</th>
                 <th>Descripción</th>
                 <th>Precio</th>
-                <th>Stock</th>
+                <th>Stock Gral</th>
                 <th>imagen</th>
                 <th>Elegir</th>
             </thead>
-            <tbody>
+            <tbody class=" bg-black bg-gradient">
+                   
                 <!-- <tr>
                     <td>Zapatos</td>
                     <td>Lorem ipsum dolor sit amet, molestiae labore, !</td>
@@ -183,9 +186,19 @@
                             </svg>
                         </button>
                     </td> -->
-                    
+
             </tbody>
         </table>
+        <div id="spinner" class="row justify-content-center text-center  m-4">
+            <div class="sk-chase">
+                <div class="sk-chase-dot"></div>
+                <div class="sk-chase-dot"></div>
+                <div class="sk-chase-dot"></div>
+                <div class="sk-chase-dot"></div>
+                <div class="sk-chase-dot"></div>
+                <div class="sk-chase-dot"></div>
+            </div>
+        </div>
     </div>
     <script type="module" src="/js/NewAlta.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
