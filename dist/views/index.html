@@ -67,7 +67,7 @@
         }
 
         .remeras {
-            background-image: url('https://q7u3x2b9.rocketcdn.me/wp-content/uploads/2020/03/camperas-abrigadas-livianas-apra-mujer-scaled.jpg');
+            background-image: url('https://img.freepik.com/fotos-premium/moda-cancha-baloncesto-marco-manos-mujer-negra-feminista-estilo-urbano-pelo-axila-ciudad-aptitud-deportiva-retrato-nina-pelota-ropa-elegante-segura-moda_590464-133987.jpg?w=900');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -90,7 +90,7 @@
 
         .banner-2 {
             margin-top: 75px;
-            margin-bottom: 75px;
+            margin-bottom: 30px;
             text-align: center;
             color: #575757
         }
@@ -104,7 +104,7 @@
         }
 
         .card-img-top {
-            height: 200px;
+            height: 500px;
         }
 
         .card-titulo {
@@ -143,11 +143,11 @@
         }
         .slick-item-categoria{
             border: solid;
-            border-color: #d23447;
+            border-color: #000000;
             margin-right: 10px;
             padding: 10px;
             border-radius: 10px;
-            background-color: #e997b4;
+            background-color: #ffd123;
         }
 
         /* .container-slick-categoria{
@@ -210,6 +210,12 @@
             .container-slick-categoria{
                 display: none;
             }
+            .item-img {
+                height: 75%;
+            }
+            .glider-slide {
+                align-items: center;
+            }
             #floatingSelectCategoria{
                 display: block;
             }
@@ -230,6 +236,19 @@
 }
         @media only screen and (max-width: 767px) {
   /* Estilos para dispositivos móviles */
+    .card-img-top {
+            height: 200px;
+        }
+
+    .design-promociones {
+        width: 110px;
+}
+    .contenedor-imagen {
+    height: 350px;
+}
+    .contenedor-preview{
+        display: none;
+    }
     .container-carrito{
     overflow-y: hidden;
 }
@@ -243,12 +262,11 @@
     }
 }
 
-        .input-box{
-            padding-bottom: 20px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-        }
+    .input-box{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
     .form-stock-color-talle{
         display: flex;
     /* height: 75%; */
@@ -261,6 +279,9 @@
     }
     .botones button{
         width: 100%;
+        background-color: #ffd123;
+        border: solid;
+        border-color: black;
     }
     #Pantalla-product{
         display: none;
@@ -406,7 +427,97 @@ a{
     display: flex;
     justify-content: flex-end;
 }
+.tag {
+    background: #cccccc;
+    border-radius: 50px;
+    font-size: 12px;
+    margin: 0;
+    color: #fff;
+    padding: 2px 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
 
+.tag-teal {
+    background-color: #47bcd4;
+}
+
+.tag-purple {
+    background-color: #5e76bf;
+}
+
+.tag-pink {
+    background-color: #cd5b9f;
+}
+
+.alert-talle{
+    display: none;
+    color: red;
+}
+.container-talle{
+    display: flex;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+.design-promociones {
+    height: 100%;
+    display: flex;
+    /* padding: 0px 0px 10px 0px; */
+    border-radius: 10px;
+    background-color: aliceblue;
+    text-align: start;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.img-promociones {
+    border-radius: 10px;
+    height: 130px;
+    width: 120px;
+}
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    color: var(--bs-btn-active-color);
+    background-color: #ffd123;
+    border-color: #000;
+}
+.pago{
+    display: flex;
+    height: 25vh;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.despacho{
+    display: flex;
+    height: 25vh;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.contacto{
+    height: 25vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.form-control {
+    width: 80%;
+    border-color: #343a40;
+}
+.nombre{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.numero{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+#pago-despacho-contacto{
+    display: none;
+}
     </style>
 </head>
 
@@ -426,8 +537,8 @@ a{
                     
                 </button> -->
             </div>
-            <div class="col-4 header-section">
-                <img src="../view/Logo.jpg"
+            <div class="col-4 header-section" id="logo">
+                <img src="https://firebasestorage.googleapis.com/v0/b/unmil-f0fee.appspot.com/o/Logo.jpg?alt=media&token=9e3a0cb6-f0cb-4246-8b76-f30c3f22fbf2"
                     alt="">
             </div>
             <div class="col-4 header-section">
@@ -474,7 +585,7 @@ a{
     <div class="glider-contain">
         <div class="glider">
             <div>
-                <img src="https://www.rapsodia.com.ar/media/wysiwyg/bcat_desk_saleisonsale_6.jpg" class="item-img"
+                <img src="https://www.esdesignbarcelona.com/sites/default/files/img/estilos-de-moda-urbana-y-sus-caracteristicas-2.jpg" class="item-img"
                     alt="...">
             </div>
             <div>
@@ -543,7 +654,7 @@ a{
     <div class="lista-contain container-fluid" id="lista-contain">
         <div class="container info-orden">
             <div class="d-flex">
-                <p >Inicio/</p><p class="ruta"></p>
+                <p id="inicio">Inicio/</p><p class="ruta"></p>
             </div>
             <div class="form-floating">
                 <select class="form-select" id="floatingSelectCategoria" aria-label="Floating label select example">
@@ -582,8 +693,9 @@ a{
                 </div>
                 
                 <div class="form-stock-color-talle">
-                    <h3>Color</h3>
-                    <div class="color input-box">
+                    
+                    <div class="color input-box" >
+                        <h3>Color</h3>
                         <div class="">
                             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
                             <label class="btn btn-outline-secondary" for="option1">Checked</label>
@@ -635,6 +747,12 @@ a{
                 </div>
             </div>
         </div>
+        <div class="row" style="margin-top: 75px;">
+            <span>podria interesarte:</span>
+            <div id="slick-intereses">
+
+            </div>
+        </div>
     </div>
 
     <div class="container-fluid" id="container-carrito">
@@ -669,6 +787,44 @@ a{
                 <button type="button" class="btn btn-secondary">Secondary</button>
             </div>
         </div >
+    </div>
+
+    <div class="container" id="pago-despacho-contacto">
+        <div class="contacto">
+            <span style="font-size: 1.3rem;">Datos de contacto</span>
+                <form>
+                    <div class="mb-3 nombre">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3 numero">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                </form>
+        </div>
+        <div class="pago" >
+            <span style="font-size: 1.3rem;">Selecciona metodo de pago:</span>
+            <div class="" style="text-align: center;">
+                <input type="radio" class="btn-check" name="pago" id="efectivo" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="efectivo" style="width: 80%;">Efectivo</label>
+            </div>
+            <div class="" style="text-align: center;">
+                <input type="radio" class="btn-check" name="pago" id="mercado-pago" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="mercado-pago" style="width: 80%;">Mercado Pago</label>
+            </div>
+        </div>
+        <div class="despacho">
+            <span style="font-size: 1.3rem;">Selecciona entrega:</span>
+            <div class="" style="text-align: center;">
+                <input type="radio" class="btn-check" name="entrega" id="envio-domicilio" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="envio-domicilio" style="width: 80%;" >Envio a domicilio</label>
+            </div>
+            <div class="" style="text-align: center;">
+                <input type="radio" class="btn-check" name="entrega" id="retiro-sucursal" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="retiro-sucursal" style="width: 80%;">Retiro en sucursal</label>
+            </div>
+        </div>
     </div>
     <footer>
         <div class="container-fluid" style="text-align: center;">
