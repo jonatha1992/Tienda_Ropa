@@ -23,6 +23,12 @@ let categorias = [];
 let productos=[]
 let carrito=[]   
 
+let dollarUS2 = Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    useGrouping: true,
+}); // $147,741.15
+
 function filtrarListas(categoria){
     let container_categoria=document.querySelector('.categorias-contain').style.display='none'
     let container_pagos=document.querySelector('.medios-pago').style.display='none'
@@ -32,6 +38,52 @@ function filtrarListas(categoria){
 			scrollTop: '0px'
 		}, 300);
 }
+
+
+document.getElementById('logo').addEventListener("click",e=>{
+    document.getElementById('container-carrito').style.display='none'
+    let container_categoria=document.querySelector('.categorias-contain').style.display='block'
+    let container_pagos=document.querySelector('.medios-pago').style.display='flex'
+    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_banner=document.querySelector('.banner-2').style.display='block'
+    document.getElementById('container-slick-categoria').style.display='block'
+        document.getElementById('Pantalla-product').style.display='none'
+        document.getElementById('lista-contain').style.display='block'
+        $('body, html').animate({
+			scrollTop: '0px'
+		}, 300);
+})
+
+
+document.getElementById(`inicio`).addEventListener("click", e => {
+    let container_categoria=document.querySelector('.categorias-contain').style.display='block'
+    let container_pagos=document.querySelector('.medios-pago').style.display='flex'
+    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_banner=document.querySelector('.banner-2').style.display='block'
+    let html=''
+    let ruta_cat=document.querySelector('.ruta')
+    ruta_cat.innerHTML=''
+        for (let i=0; i < productos.length;i++){
+                let data=[productos[i]]
+                    
+                html+=`
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="${productos[i].imagen}" class="card-img-top" alt="...">
+                        <div class="card-body" style="text-align: center;">
+                            <h5 class="card-title card-titulo">${productos[i].titulo}</h5>
+                            <p class="card-text card-precio">${productos[i].precio}</p>
+                            <button type="button" class="btn btn-secondary" onclick="verProducto(
+                                '${productos[i].id}',
+                                )">AGREGAR AL CARRITO</button>
+                        </div>
+                    </div>
+                </div>
+                `
+            
+        }
+    container_list_product.innerHTML=html
+})
 
 
 function IniciarAPP() {
@@ -108,7 +160,7 @@ async function mostrarProductos(){
                             class="card-img-top" alt="...">
                         <div class="card-body" style="text-align: center;">
                             <h5 class="card-title card-titulo">${productos[i].titulo}</h5>
-                            <p class="card-text card-precio">${productos[i].precio}</p>
+                            <p class="card-text card-precio">${dollarUS2.format(productos[i].precio)}</p>
                             <button type="button" class="btn btn-secondary" onclick="verProducto(
                                 '${productos[i].id}',
                                 )">AGREGAR AL CARRITO</button>
@@ -118,6 +170,7 @@ async function mostrarProductos(){
             `
         }
         container_list_product.innerHTML=html
+        console.log(productos)
     } 
 
 
@@ -242,25 +295,35 @@ function mostrarId() {
         document.getElementById('Pantalla-product').style.display='block'
         document.getElementById('lista-contain').style.display='none'
         let htmlTalles=``
+        let objectStock
+        let valuesStock
+        let keysStock
         for (let i=0; i < productos.length;i++){
+            console.log(id,productos[i].id)
             if(id==productos[i].id){
-                let objectStock=productos[i].stock
-                let valuesStock=Object.values(objectStock);
-                let keysStock=Object.keys(objectStock)
+                objectStock=productos[i].stock
+                valuesStock=Object.values(objectStock);
+                keysStock=Object.keys(objectStock)
+                /*console.log(valuesStock,keysStock)
                 for (let i=0; i < valuesStock.length;i++){
-                    if (valuesStock[i]!=0 && keysStock[i]!='id'){
+                    if (valuesStock[i]>0 && keysStock[i]!='id'){
                         htmlTalles+= `
                         <div class="">
                             <input type="radio" class="btn-check" name="options2" id="${keysStock[i]}" autocomplete="off">
                             <label class="btn btn-outline-secondary" for="${keysStock[i]}">${keysStock[i]}</label>
                         </div>`
                     }
-                }
-                console.log('stock:  ',objectStock)
+                } */
                 
                 let html=`
                 <div class="row" id="container-info">
+                
+                <div class="info">
+                <span style="color: #6c757d;display:block">${productos[i].titulo}</span>
+                <span class="tag tag-purple">${productos[i].categoria.nombre}</span>
+                </div>
                 <div class="col-6 width-mobile" style="display: flex; justify-content: space-around;">
+                
                     <div class="contenedor-preview">
                         <img src="${productos[i].imagen}" alt="">
                         <img src="${productos[i].imagen}" alt="">
@@ -273,18 +336,19 @@ function mostrarId() {
                 </div>
                 <div class="col-6 width-mobile" style="display: flex;flex-direction: column;justify-content: space-evenly;   ">
                     <div class="contenedor-info-product ">
-                        <h1 style="color: #6c757d;">${productos[i].titulo}</h1>
-                        <h1 style="    font-weight: bold;">$${productos[i].precio}</h1>
+                        
+                        <h1 style="    font-weight: bold;">${dollarUS2.format(productos[i].precio)}</h1>
                         <span style="    color: #6c757d;">${productos[i].descripcion}
                         </span>
                         
                     </div>
                     
                     <div class="form-stock-color-talle">
-                        <h3>Color</h3>
-                        <div class="color input-box" >
+                        
+                        <div class="color input-box" style="display: none;">
+                            <h3>Color</h3>
                             <div class="">
-                                <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+                                <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
                                 <label class="btn btn-outline-secondary" for="option1">Checked</label>
                             </div>
                             <div class="">
@@ -304,53 +368,80 @@ function mostrarId() {
                                 <label class="btn btn-outline-secondary" for="option5">Radio</label>
                             </div>
                         </div>
-                        <h3>Talle</h3>
+                        <div class="container-talle">
                         <div class="talle input-box" id="talle">
                             
                         </div>
-                        
+                        <div class="alert-talle"><span>Selecciona un talle.</span></div>
+                        </div>
                         <div class="botones">
                             <button type="button" class="btn btn-secondary btn-lg" onclick="agregarCarrito('${productos[i].id}')">Agregar a Carrito</button>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row" style="margin-top: 50px;">
+            <span style='font-size: 1.2rem;
+            padding-bottom: 20px;'>Tambien podria interesarte:</span>
+            <div id="slick-intereses">
+                
+            </div>
             </div>`
             document.getElementById('Pantalla-product').innerHTML=html
-            document.getElementById('talle').innerHTML=htmlTalles
+            
+            cargarIntereses(productos[i].categoria.id)
+            
         }
     }
+    for (let i=0; i < valuesStock.length;i++){
+        if (valuesStock[i]>0 && keysStock[i]!='id'){
+            htmlTalles+= `
+            <div class="">
+                <input type="radio" class="btn-check" name="options2" id="${keysStock[i]}" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="${keysStock[i]}">${keysStock[i]}</label>
+            </div>`
+        }
     }
-
-    
+    document.getElementById('talle').innerHTML=htmlTalles
+}
 
 function agregarCarrito(id){
-    document.getElementById('Pantalla-product').style.display='none'
-    document.getElementById('lista-contain').style.display='block'
     
-    for (let i=0; i < productos.length;i++){
-        if(productos[i].id==id){
-            carrito.push(productos[i])
+    let form_input=document.getElementById('talle')
 
-            let form_input=document.getElementById('talle')
-            form_input.querySelectorAll('input').forEach(function(checkElement) {
-                if(checkElement.checked){
-                console.log('checkelementID',checkElement.id)
-                let index=carrito.length-1
-                carrito[index].talle=checkElement.id
-                console.log(index)
+    form_input.querySelectorAll('input').forEach(function(checkElement) {
+        if(checkElement.checked){
+            for (let i=0; i < productos.length;i++){
+                if(productos[i].id==id){
+                    document.querySelector('.alert-talle').style.display='none'
+                    carrito.push(productos[i])
+                    let index=carrito.length-1
+                    carrito[index].talle=checkElement.id
+                    console.log('se agrego',productos[i].id)
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                    document.getElementById('icon-basket').style.display='block'
+                    document.querySelector('.badge').style.display='block'
+                    document.querySelector('.badge').innerHTML=carrito.length
+                    document.getElementById('Pantalla-product').style.display='none'
+                    document.getElementById('lista-contain').style.display='block'
+                    document.getElementById('container-slick-categoria').style.display='block'
+                    $('body, .lista-contain').animate({
+                        scrollTop: '0px'
+                    }, 300);
+                }
             }
-    })
-            console.log('se agrego',productos[i].id)
-            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }else{
+            document.querySelector('.alert-talle').style.display='flex'
         }
-    }
-    document.getElementById('icon-basket').style.display='block'
-        document.querySelector('.badge').style.display='block'
-    document.querySelector('.badge').innerHTML=carrito.length
+    })
+    
+    
 }
 
 function verCarrito(){
+    console.log(carrito)
     filtrarListas()
+    document.getElementById('Pantalla-product').style.display='none'
     document.getElementById('container-slick-categoria').style.display='none'
     document.getElementById('lista-contain').style.display='none'
     document.getElementById('container-carrito').style.display='block'
@@ -358,8 +449,6 @@ function verCarrito(){
     let html=``
     let total=0
     for (let i=0; i < carrito.length;i++){
-        
-        console.log(parseInt(carrito[i].precio))
         let precio= parseInt(carrito[i].precio)
         total+=precio
 
@@ -397,10 +486,10 @@ function verCarrito(){
                     </div>
                 </div>
                 <div class="grid-item encabezado">
-                    <div class="title-product-precio hidden"><span>$${productos[z].precio}</span></div>
+                    <div class="title-product-precio hidden"><span>${dollarUS2.format(productos[z].precio)}</span></div>
                 </div>
                 <div class="grid-item encabezado">
-                    <div class="title-product-subtotal"><span>$${productos[z].precio}</span></div>
+                    <div class="title-product-subtotal"><span>${dollarUS2.format(productos[z].precio)}</span></div>
                 </div>
                 <div class="grid-item">
                     <div class="title-product-trash"> 
@@ -436,4 +525,69 @@ function deleteItemCarrito(index){
     verCarrito()
     document.querySelector('.badge').innerHTML=carrito.length
     localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+function shuffleArray(arr) {
+    return arr.sort(function() {
+    return Math.random() - 0.5;
+    });
+}
+function cargarIntereses(cate){
+    let contenedor_intereses=document.getElementById('slick-intereses')
+    var shuffledArray = shuffleArray(productos);
+    let html=``
+    for (let z=0; z < shuffledArray.length;z++){
+        if(shuffledArray[z].categoria.id==cate)
+        html+=`
+                    <div class="container-item-intereses" onclick="verProducto(${shuffledArray[z].id})">
+                        <div class="design-promociones">
+                            <img class="img-promociones" src="${shuffledArray[z].imagen}" alt="">
+                            <span>${shuffledArray[z].titulo}</span>
+                            <span>${shuffledArray[z].precio}</span>
+                        </div>
+                    </div>
+                    
+    `
+    }
+    
+    contenedor_intereses.innerHTML=html
+
+    $('#slick-intereses').slick({
+        arrows:false,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 3,
+        responsive: [
+            {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: false
+            }
+            },
+            {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                
+            }
+            },
+            {
+            breakpoint: 480,
+            settings: {
+
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                variableWidth: true
+            }
+            }
+            // You can unslick at a given breakpoint now by adding:
+            // settings: "unslick"
+            // instead of a settings object
+        ]
+        });
 }
