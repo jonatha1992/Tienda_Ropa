@@ -89,11 +89,9 @@ export const ObtenerProducto = async (req: Request, res: Response) => {
                if (Producto != null) {
                     return res.status(200).json(Producto);
                } else {
-                    return res
-                         .status(404)
-                         .json({
-                              mensaje: "No se pudo encontrar el codigo buscado",
-                         });
+                    return res.status(404).json({
+                         mensaje: "No se pudo encontrar el codigo buscado",
+                    });
                }
           }
      } catch (error: any) {
@@ -112,31 +110,45 @@ export const CrearProducto = async (req: Request, res: Response) => {
                color,
                precio,
           } = req.body;
-          const producto = req.body as BEProducto;
-
-          if (!titulo || !descripcion || !categoria)
+          const ID = parseInt(req.body.id);
+          if (
+               !titulo ||
+               !descripcion ||
+               !categoria ||
+               !imagen ||
+               !color ||
+               !precio
+          ) {
                return res
                     .status(400)
                     .json({ message: "Por favor ,  llene todos los campos " });
-          else {
-               let newStock = new BEStock();
-               newStock.S = parseInt(stock.S);
-               newStock.M = parseInt(stock.M);
-               newStock.L = parseInt(stock.L);
-               newStock.XL = parseInt(stock.XL);
-               await newStock.save();
+          } else {
+               const producto = await BEProducto.findOne({ where: { id: ID } });
+               if (!producto) {
+                    return res
+                         .status(401)
+                         .json({
+                              message: "El Codigo de articulo ya se encuentra utlizado",
+                         });
+               } else {
+                    let newStock = new BEStock();
+                    newStock.S = parseInt(stock.S);
+                    newStock.M = parseInt(stock.M);
+                    newStock.L = parseInt(stock.L);
+                    newStock.XL = parseInt(stock.XL);
+                    await newStock.save();
 
-               let newProducto = new BEProducto();
-               newProducto.titulo = titulo;
-               newProducto.descripcion = descripcion;
-               newProducto.categoria = categoria;
-               newProducto.color = color;
-               newProducto.imagen = imagen;
-               newProducto.precio = precio;
-               newProducto.stock = newStock;
-               await newProducto.save();
-
-               return res.status(200).json(newProducto);
+                    let newProducto = new BEProducto();
+                    newProducto.titulo = titulo;
+                    newProducto.descripcion = descripcion;
+                    newProducto.categoria = categoria;
+                    newProducto.color = color;
+                    newProducto.imagen = imagen;
+                    newProducto.precio = precio;
+                    newProducto.stock = newStock;
+                    await newProducto.save();
+                    return res.status(200).json(newProducto);
+               }
           }
      } catch (error: any) {
           return res.status(500).json({ message: error.message });
@@ -162,7 +174,7 @@ export const EliminarProducto = async (req: Request, res: Response) => {
                     return res
                          .status(200)
                          .json(`Producto ${Id} Borrado satisfactoriamente`);
-               }else{
+               } else {
                     return res
                          .status(404)
                          .json(`Producto ${Id} No se encontro`);

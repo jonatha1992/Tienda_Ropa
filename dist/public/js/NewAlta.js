@@ -84,7 +84,6 @@ parrafos.forEach(function (parrafo) {
 function FiltrarProductos(id) {
   try {
     let filtrados = productos.filter(x => x.categoria?.id == id)
-    console.log(filtrados)
     MostrarProductos(filtrados)
   } catch (error) {
     console.log(error)
@@ -101,7 +100,6 @@ function AgregarCard(event) {
   try {
     LimpiarErrores();
     let id = event.target.id;
-    console.log(id)
     if (id == "S" || id == "M" || id == "L" || id == "XL") {
       producto.stock[event.target.id] = parseInt(event.target.value.trim());
       ControlarStock(producto.stock)
@@ -110,10 +108,8 @@ function AgregarCard(event) {
       producto[event.target.id].id = event.target.value.trim();
       producto[event.target.id].nombre = combo.options[combo.selectedIndex].text;
       if (id === "categoria") {
-        console.log(producto.categoria.id)
         FiltrarProductos(producto.categoria.id)
       }
-
     } else {
       producto[event.target.id] = event.target.value.trim();
       if (event.target.id == "id") {
@@ -428,13 +424,15 @@ function validarFormulario(elemento) {
   for (let i = 0; i < elemento.children.length; i++) {
     const child = elemento.children[i];
 
-    // Si es un input o un textarea, valida su valor
-    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA'|| child.id !== 'id') {
-      if (child.value === '' ) {
-        child.classList.add('is-invalid');
-        valido = true;
-      } else {
-        child.classList.remove('is-invalid');
+    if (child.id !== 'id') {
+      // Si es un input o un textarea, valida su valor
+      if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
+        if (child.value === '') {
+          child.classList.add('is-invalid');
+          valido = true;
+        } else {
+          child.classList.remove('is-invalid');
+        }
       }
     }
     // Si el elemento tiene hijos, llama a la función recursivamente
@@ -463,14 +461,14 @@ async function Agregar() {
         let url_img = await uploadFiles(producto.imagen);
         producto.imagen = url_img
 
-        let res = fetch("/producto", {
+        let res = await fetch("/producto", {
           method: "POST", // or 'PUT'
           body: JSON.stringify(producto), // data can be `string` or {object}!
           headers: {
             "Content-Type": "application/json",
           },
         })
-        if (res.status===200) {
+        if (res.status === 200) {
           // La respuesta fue exitosa
           mostrarToast("El Producto fue agreagado correctamente", "bg-success");
           limpiarformulario()
@@ -479,6 +477,7 @@ async function Agregar() {
           MostrarProductos(productos)
         } else {
           mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
+          ocultarSpinner()
         }
       }
     }
@@ -498,7 +497,7 @@ async function Eliminar(id) {
           "Content-Type": "application/json",
         },
       })
-      if (res.status===200) {
+      if (res.status === 200) {
         // La respuesta fue exitosa
         mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
         limpiarformulario()
@@ -522,7 +521,7 @@ async function Editar(id) {
     if (!verificarCamposVacios(producto)) {
       if (ControlarStock(producto.stock) > 0) {
         mostrarSpinner()
-        if (producto.imagenes != imagen.src) {
+        if (producto.imagen != imagen.src) {
           let url_img = await uploadFiles(producto.imagen);
           producto.imagen = url_img
         }
@@ -537,7 +536,7 @@ async function Editar(id) {
           },
         })
 
-        if (res.status===200) {
+        if (res.status === 200) {
           // La respuesta fue exitosa
           mostrarToast("El Producto fue Modificado correctamente", "bg-success");
           limpiarformulario()
@@ -548,6 +547,7 @@ async function Editar(id) {
         } else {
           // La respuesta Negativa
           mostrarToast('La Modificación no se pudo realizar', 'bg-danger');
+          ocultarSpinner()
         }
       }
     }
@@ -584,7 +584,7 @@ function Buscar(id) {
 
 // Función para mostrar el spinner
 function mostrarSpinner() {
-  spinner.classList.remove('visually-hidden') ;
+  spinner.classList.remove('visually-hidden');
 }
 
 // Función para ocultar el spinner
