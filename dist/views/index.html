@@ -99,7 +99,7 @@
             position: sticky;
             top: 0;
             /* left: 0; */
-            z-index: 999;
+            z-index: 990;
             background-color: white;
         }
 
@@ -207,7 +207,7 @@
         }
         @media only screen and (min-width: 600px) {
             
-            .container-slick-categoria{
+            #container-slick-categoria{
                 display: none;
             }
             .item-img {
@@ -236,6 +236,9 @@
 }
         @media only screen and (max-width: 767px) {
   /* Estilos para dispositivos móviles */
+    .design-promociones {
+    flex-direction: column;
+    }
     .card-img-top {
             height: 200px;
         }
@@ -466,7 +469,7 @@ a{
     border-radius: 10px;
     background-color: aliceblue;
     text-align: start;
-    flex-direction: column;
+    flex-direction: row;
     margin-left: 10px;
     margin-right: 10px;
     text-transform: uppercase;
@@ -484,7 +487,7 @@ a{
 }
 .pago{
     display: flex;
-    height: 25vh;
+    height: 20vh;
     flex-direction: column;
     justify-content: space-evenly;
 }
@@ -495,13 +498,13 @@ a{
     justify-content: space-evenly;
 }
 .contacto{
-    height: 25vh;
+    
+    height: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 .form-control {
-    width: 80%;
     border-color: #343a40;
 }
 .nombre{
@@ -518,6 +521,61 @@ a{
 #pago-despacho-contacto{
     display: none;
 }
+#back{
+    display: none;
+}
+#back-carrito{
+    display: none;
+}
+/* .btn {
+    --bs-btn-bg: #f8f9fa;
+} */
+
+#modal-despacho.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+#modal-despacho {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.35s ease-in;
+}
+.modal {
+    --bs-modal-zindex: 999;
+}
+
+.modal-confirm {
+    color: #636363;
+    width: 325px;
+    font-size: 14px;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: var(--bs-modal-margin);
+    pointer-events: none;
+}
+
+.modal-confirm .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+}
+.modal-content {
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgb(255 209 35) 100%);
+}
     </style>
 </head>
 
@@ -525,17 +583,19 @@ a{
     <header>
         <div class="row">
             <div class="col-4 header-section">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" id="menu-mobile"aria-expanded="false" aria-label="Toggle navigation">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" id="svg-img"
                         class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                         <path
                             d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                     </svg>
                 </button>
-                <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    
-                </button> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16" id="back">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16" id="back-carrito">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                </svg>
             </div>
             <div class="col-4 header-section" id="logo">
                 <img src="https://firebasestorage.googleapis.com/v0/b/unmil-f0fee.appspot.com/o/Logo.jpg?alt=media&token=9e3a0cb6-f0cb-4246-8b76-f30c3f22fbf2"
@@ -784,27 +844,28 @@ a{
             </div>
             <div class="btn-action">
 
-                <button type="button" class="btn btn-secondary">Secondary</button>
+                <button type="button" class="btn btn-secondary" onclick='despachar()'>Secondary</button>
             </div>
         </div >
     </div>
 
     <div class="container" id="pago-despacho-contacto">
-        <div class="contacto">
-            <span style="font-size: 1.3rem;">Datos de contacto</span>
+        <div class="contacto" id="contacto">
+            <span style="font-size: 1.3rem;font-weight: bold;">Datos de contacto</span>
                 <form>
                     <div class="mb-3 nombre">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre">
                     </div>
                     <div class="mb-3 numero">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                        <label for="telefono" class="form-label">Numero</label>
+                        <input type="number" class="form-control" id="telefono">
                     </div>
                 </form>
         </div>
-        <div class="pago" >
-            <span style="font-size: 1.3rem;">Selecciona metodo de pago:</span>
+
+        <div class="pago" id="pago">
+            <span style="font-size: 1.3rem;font-weight: bold;">Selecciona metodo de pago:</span>
             <div class="" style="text-align: center;">
                 <input type="radio" class="btn-check" name="pago" id="efectivo" autocomplete="off">
                 <label class="btn btn-outline-secondary" for="efectivo" style="width: 80%;">Efectivo</label>
@@ -814,8 +875,9 @@ a{
                 <label class="btn btn-outline-secondary" for="mercado-pago" style="width: 80%;">Mercado Pago</label>
             </div>
         </div>
-        <div class="despacho">
-            <span style="font-size: 1.3rem;">Selecciona entrega:</span>
+
+        <div class="despacho" id="despacho">
+            <span style="font-size: 1.3rem;font-weight: bold;">Selecciona entrega:</span>
             <div class="" style="text-align: center;">
                 <input type="radio" class="btn-check" name="entrega" id="envio-domicilio" autocomplete="off">
                 <label class="btn btn-outline-secondary" for="envio-domicilio" style="width: 80%;" >Envio a domicilio</label>
@@ -823,6 +885,18 @@ a{
             <div class="" style="text-align: center;">
                 <input type="radio" class="btn-check" name="entrega" id="retiro-sucursal" autocomplete="off">
                 <label class="btn btn-outline-secondary" for="retiro-sucursal" style="width: 80%;">Retiro en sucursal</label>
+            </div>
+        </div>
+        <div class="botones">
+            <button type="button" class="btn btn-primary btn-lg" onclick="validarForm()">SIGUIENTE</button>
+        </div>
+        
+    </div>
+
+    <div class=" container modal" id="modal-despacho" data-animation="slideInOutLeft">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+
             </div>
         </div>
     </div>

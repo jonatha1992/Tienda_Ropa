@@ -3,6 +3,9 @@ window.verProducto=verProducto
 window.agregarCarrito=agregarCarrito
 window.verCarrito=verCarrito
 window.deleteItemCarrito=deleteItemCarrito
+window.despachar=despachar
+window.validarForm=validarForm
+window.enviarNotificacion=enviarNotificacion
 /* async function traerProductos() {
     let productos=[]
     fetch('/productos')
@@ -22,7 +25,7 @@ let container_list_product=document.getElementById('lista-productos')
 let categorias = [];
 let productos=[]
 let carrito=[]   
-
+let formDespacho={}
 let dollarUS2 = Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -41,12 +44,27 @@ function filtrarListas(categoria){
 
 
 document.getElementById('logo').addEventListener("click",e=>{
+    const ancho = window.screen.width;
+    const alto = window.screen.height;
+
+    if (ancho < 768) {
+        console.log("Este dispositivo es un móvil.");
+        document.getElementById('container-slick-categoria').style.display='block'
+    } else if (ancho >= 768 && ancho < 1024) {
+        console.log("Este dispositivo es una tablet.");
+        document.getElementById('container-slick-categoria').style.display='none'
+    } else {
+        console.log("Este dispositivo es un escritorio.");
+        document.getElementById('container-slick-categoria').style.display='none'
+    }
+
+    document.getElementById('back').style.display='none'
+    document.getElementById('menu-mobile').style.display='block'
     document.getElementById('container-carrito').style.display='none'
     let container_categoria=document.querySelector('.categorias-contain').style.display='block'
     let container_pagos=document.querySelector('.medios-pago').style.display='flex'
     let container_glider=document.querySelector('.glider-contain').style.display='block'
     let container_banner=document.querySelector('.banner-2').style.display='block'
-    document.getElementById('container-slick-categoria').style.display='block'
         document.getElementById('Pantalla-product').style.display='none'
         document.getElementById('lista-contain').style.display='block'
         $('body, html').animate({
@@ -54,8 +72,43 @@ document.getElementById('logo').addEventListener("click",e=>{
 		}, 300);
 })
 
+document.getElementById('back').addEventListener("click",e=>{
+    const ancho = window.screen.width;
+    const alto = window.screen.height;
 
+    if (ancho < 768) {
+        console.log("Este dispositivo es un móvil.");
+        document.getElementById('container-slick-categoria').style.display='block'
+    } else if (ancho >= 768 && ancho < 1024) {
+        console.log("Este dispositivo es una tablet.");
+        document.getElementById('container-slick-categoria').style.display='none'
+    } else {
+        console.log("Este dispositivo es un escritorio.");
+        document.getElementById('container-slick-categoria').style.display='none'
+    }
+    obtenerLocalStorage()
+    document.getElementById('menu-mobile').style.display='block'
+    document.getElementById('back').style.display='none'
+    document.getElementById('container-carrito').style.display='none'
+    let container_categoria=document.querySelector('.categorias-contain').style.display='block'
+    let container_pagos=document.querySelector('.medios-pago').style.display='flex'
+    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_banner=document.querySelector('.banner-2').style.display='block'
+    
+        document.getElementById('Pantalla-product').style.display='none'
+        document.getElementById('lista-contain').style.display='block'
+        $('body, html').animate({
+			scrollTop: '0px'
+		}, 300);
+})
+
+document.getElementById('back-carrito').addEventListener("click",e=>{
+    document.getElementById('back-carrito').style.display='none'
+    verCarrito()
+})
 document.getElementById(`inicio`).addEventListener("click", e => {
+    document.getElementById('container-slick-categoria').style.display='block'
+    document.getElementById('menu-mobile').style.display='block'
     let container_categoria=document.querySelector('.categorias-contain').style.display='block'
     let container_pagos=document.querySelector('.medios-pago').style.display='flex'
     let container_glider=document.querySelector('.glider-contain').style.display='block'
@@ -291,6 +344,8 @@ function mostrarId() {
 
     function verProducto(id){
         filtrarListas()
+        document.getElementById('back').style.display='block'
+        document.getElementById('menu-mobile').style.display='none'
         document.getElementById('container-slick-categoria').style.display='none'
         document.getElementById('Pantalla-product').style.display='block'
         document.getElementById('lista-contain').style.display='none'
@@ -319,7 +374,7 @@ function mostrarId() {
                 <div class="row" id="container-info">
                 
                 <div class="info">
-                <span style="color: #6c757d;display:block">${productos[i].titulo}</span>
+                <span style="color: #6c757d;display:block;font-size: 2rem;">${productos[i].titulo}</span>
                 <span class="tag tag-purple">${productos[i].categoria.nombre}</span>
                 </div>
                 <div class="col-6 width-mobile" style="display: flex; justify-content: space-around;">
@@ -406,9 +461,7 @@ function mostrarId() {
 }
 
 function agregarCarrito(id){
-    
     let form_input=document.getElementById('talle')
-
     form_input.querySelectorAll('input').forEach(function(checkElement) {
         if(checkElement.checked){
             for (let i=0; i < productos.length;i++){
@@ -425,6 +478,8 @@ function agregarCarrito(id){
                     document.getElementById('Pantalla-product').style.display='none'
                     document.getElementById('lista-contain').style.display='block'
                     document.getElementById('container-slick-categoria').style.display='block'
+                    document.getElementById('menu-mobile').style.display='block'
+                    document.getElementById('back').style.display='none'
                     $('body, .lista-contain').animate({
                         scrollTop: '0px'
                     }, 300);
@@ -434,13 +489,14 @@ function agregarCarrito(id){
             document.querySelector('.alert-talle').style.display='flex'
         }
     })
-    
-    
 }
 
 function verCarrito(){
     console.log(carrito)
     filtrarListas()
+    document.getElementById('pago-despacho-contacto').style.display='none'
+    document.getElementById('back').style.display='block'
+    document.getElementById('menu-mobile').style.display='none'
     document.getElementById('Pantalla-product').style.display='none'
     document.getElementById('container-slick-categoria').style.display='none'
     document.getElementById('lista-contain').style.display='none'
@@ -542,8 +598,12 @@ function cargarIntereses(cate){
                     <div class="container-item-intereses" onclick="verProducto(${shuffledArray[z].id})">
                         <div class="design-promociones">
                             <img class="img-promociones" src="${shuffledArray[z].imagen}" alt="">
-                            <span>${shuffledArray[z].titulo}</span>
-                            <span>${shuffledArray[z].precio}</span>
+                            <div style="display: flex;
+                            flex-direction: column;
+                            justify-content: space-evenly;;">
+                                <span>${shuffledArray[z].titulo}</span>
+                                <span>${shuffledArray[z].precio}</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -590,4 +650,240 @@ function cargarIntereses(cate){
             // instead of a settings object
         ]
         });
+}
+
+
+function despachar(){
+    document.getElementById('icon-basket').style.display='none'
+    document.querySelector('.badge').style.display='none'
+    document.getElementById('back').style.display='none'
+    document.getElementById('back-carrito').style.display='block'
+    document.getElementById('container-carrito').style.display='none'
+    document.getElementById('pago-despacho-contacto').style.display='block'
+    
+}
+
+function validarNumeroTelefono(numero) {
+    // Verificar si el número comienza con "11" y tiene una longitud de diez dígitos
+    if (/^11\d{8}$/.test(numero)) {
+      return true; // El número es válido
+    } else {
+      return false; // El número es inválido
+    }
+}
+
+function validarForm(){
+    
+    let telefono=document.getElementById('telefono').value
+    let nombre=document.getElementById('nombre').value
+    const isValidNumber_ = validarNumeroTelefono(telefono)
+    if(isValidNumber_&& telefono!='' ){
+        formDespacho.telefono=telefono
+        document.getElementById(`telefono`).classList.remove('is-invalid')
+    }
+
+    if(nombre!=''){
+        formDespacho.nombre=nombre
+        document.getElementById(`nombre`).classList.remove('is-invalid')
+    }
+
+    let form_input_pago=document.getElementById(`pago`)
+    form_input_pago.querySelectorAll('input').forEach(function(checkElement) {
+        if(checkElement.checked){
+            formDespacho.metodo_pago=checkElement.id
+        }
+    })
+
+    let form_input_despacho=document.getElementById(`despacho`)
+    form_input_despacho.querySelectorAll('input').forEach(function(checkElement) {
+        if(checkElement.checked){
+            formDespacho.envio=checkElement.id
+        }
+                
+    })
+
+    if(formDespacho.nombre){
+        if(formDespacho.telefono){
+            if(formDespacho.metodo_pago){
+                if(formDespacho.envio){
+                    
+                    const modalDespacho= document.getElementById('modal-despacho')
+                    const isVisible = "is-visible";
+                    modalDespacho.classList.add(isVisible)
+                    let contenido=document.querySelector('.modal-content')
+                    if (formDespacho.envio=='envio-domicilio'){
+                        console.log('ingresar direccion')
+                        let html= `
+                        <div style="padding-bottom: 20px;">
+                        <span style="text-align: center;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        color: #495057;">INGRESE DOMICILIO DE ENVIO:</span>
+                        </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="direccion" placeholder="direccion">
+                                <label for="direccion">Direccion</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="entrecalles" placeholder="entrecalles">
+                                <label for="entrecalles">Entrecalles</label>
+                            </div>
+                            <div class="botones" style="margin-top: 20px;">
+                                <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg" onclick="enviarNotificacion()">ENVIAR PEDIDO</button>
+                            </div>`
+                        contenido.innerHTML=html
+                    }else{
+                        let html= `
+                        <div style="padding-bottom: 20px;">
+                            <span style="text-align: center;
+                            font-size: 1.2rem;
+                            font-weight: bold;
+                            color: #495057;">INGRESE SUCURSAL DE ENVIO:</span>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-select" id="sucursal" aria-label="Floating label select example">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                            <label for="sucursal">Works with selects</label>
+                        </div>
+                        <div class="botones" style="margin-top: 20px;">
+                            <button  type="button" class="btn btn-primary btn-lg" onclick="enviarNotificacion()">ENVIAR PEDIDO</button>
+                        </div>`
+                        
+                        contenido.innerHTML=html
+                    }
+                }else{
+                    console.log('ingrese metodo de envio/retiro')
+                }
+            }else{
+                console.log('ingrese metodo de pago')
+            }
+        }else{
+            document.getElementById(`telefono`).classList.add('is-invalid')
+        }
+    }else{
+        document.getElementById(`nombre`).classList.add('is-invalid')
+    }
+    
+}
+
+let contacto= document.querySelector(`#contacto`)
+contacto.addEventListener("input", e => {
+    if(e.target.id=='nombre'){
+        let nombre=e.target.value
+        let  input_nombre=document.getElementById('nombre')
+        if (nombre.length!=0){
+            input_nombre.classList.remove('is-invalid');
+            /* document.getElementById('noNombre').style.display="none" */
+        }
+    }
+    if(e.target.id=='telefono'){
+        let numero=e.target.value
+        if (numero.length==10){
+            document.getElementById('telefono').classList.remove('is-invalid');
+            /* document.getElementById('invalid-feedback-numero').innerHTML="" */
+        }else{
+            document.getElementById('telefono').classList.add('is-invalid');
+        }
+    }
+});
+
+
+document.addEventListener("click", e => {
+    if (e.target == document.querySelector("#modal-despacho.is-visible")) {
+        const isVisible = "is-visible";
+    document.querySelector("#modal-despacho.is-visible").classList.remove(isVisible);
+    /* modalAtras(true) */
+    }
+});
+
+
+function enviarNotificacion(){
+    if (formDespacho.envio=='envio-domicilio'){
+        let direccion=document.getElementById('direccion')
+        let entrecalles=document.getElementById('entrecalles')
+        if(direccion.value !=''){
+            formDespacho.domicilio={
+                direccion:direccion.value,
+                entrecalles:entrecalles.value
+            }
+            reporte()
+        }else{
+            direccion.classList.add('is-visible')
+            console.log('completa domicilio')
+        }
+    }else{
+        let sucursal=document.getElementById('sucursal')
+        if(sucursal!=''){
+            formDespacho.sucursal=sucursal.value
+            reporte()
+        }else{
+            console.log('completa sucu')
+            direccion.classList.add('is-visible')
+        }
+    }
+    
+    
+}
+
+
+function reporte(){
+    let pago=formDespacho.metodo_pago
+    const fechaHoraActual = new Date();
+    const fechaHoraActualStr = fechaHoraActual.toLocaleString();
+    let pruebita=`Hola%20este%20es%20el%20pedido%20${formDespacho.id}%0A`
+    if(formDespacho.domicilio){
+        pruebita+=`con%20envio%20a%20%2A${formDespacho.domicilio.direccion}%2CEntrecalles:%20${formDespacho.domicilio.entrecalles}%2A`
+    }else{
+        pruebita+=`retira%20en%20sucursal%20%2A${formDespacho.sucursal}%2A`
+    }
+    pruebita+=`%0AMetodo%20De%20Pago:%20%2A${pago.replace(' ','%20')}%2A
+                %0AFecha%20De%20Compra:%20${fechaHoraActualStr}
+                %0ADetalle%20del%20pedido:${pizzasxbordes()}`
+    let enlace=`http://api.whatsapp.com/send?phone=+5491160235647&text=${pruebita}`
+    window.location.href =enlace
+    /* const btncompra = document.getElementById('fin');
+    btncompra.disabled = false;
+    setTimeout(() => btncompra.disabled = false, 1000,); */
+}
+
+
+function pizzasxbordes(){
+    let k=``
+    let t=0
+    for (let x=0; x < carrito.length;x++){
+        let pizza=carrito[x].titulo.replace(/\s+/g, '%20');
+        let agg=[carrito[x].agregados]
+        k += `%0A1x%20${pizza}%20${carrito[x].talle}`
+        /* for (let z=0; z < productos.length;z++){
+            for (let i=0; i < agg.length;i++){
+                if(agg[i].acompañamiento==productos[z].titulo){
+
+                    k+=`%0A%09%2B%20${productos[z].nombre.replace(' ', '%20')}`
+                    t+=productos[z].precio
+                }
+                if (agg[i].bebidas==productos[z].titulo) {
+                    k+=`%0A%09%2B%20${productos[z].nombre.replace(' ', '%20')}`
+                    t+=productos[z].precio
+                }
+                if (agg[i].comida==productos[z].titulo){
+
+                    k+=`%0A%09%2B%20${productos[z].nombre.replace(' ', '%20')}`
+                        t+=productos[z].precio
+                }
+                if (agg[i].postres_helados==productos[z].titulo){
+
+                    k+=`%0A%09%2B%20${productos[z].titulo.replace(' ', '%20')}`
+                        t+=productos[z].precio
+                }
+            }
+        } */
+        /* k+=`%0A%09%20${carrito[x].aclaracion.replace(' ', '%20')}` */
+        t+=carrito[x].precio
+    }
+    k +=`%0A%2ATOTAL%3A%24${t}%2A`
+    return k
 }
