@@ -537,7 +537,7 @@ async function Editar(id) {
       if (ControlarStock(producto.stock) > 0) {
         mostrarSpinner()
         if (producto.imagen !== imagen.src) {
-          await deleteFile(producto.imagen);
+          await deleteFile(imagen.src);
           let url_img = await uploadFiles(producto.imagen);
           producto.imagen = url_img
         }
