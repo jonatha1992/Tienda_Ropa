@@ -112,7 +112,7 @@ const ObtenerProducto = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.ObtenerProducto = ObtenerProducto;
 const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { titulo, descripcion, stock, categoria, imagen, color, precio, } = req.body;
+        const { titulo, descripcion, stock, categoria, imagen, color, precio } = req.body;
         const ID = parseInt(req.body.id);
         if (!titulo ||
             !descripcion ||
@@ -126,7 +126,7 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         else {
             const producto = yield models_1.BEProducto.findOne({ where: { id: ID } });
-            if (!producto) {
+            if (producto) {
                 return res
                     .status(401)
                     .json({
@@ -141,6 +141,7 @@ const CrearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 newStock.XL = parseInt(stock.XL);
                 yield newStock.save();
                 let newProducto = new models_1.BEProducto();
+                newProducto.id = ID;
                 newProducto.titulo = titulo;
                 newProducto.descripcion = descripcion;
                 newProducto.categoria = categoria;

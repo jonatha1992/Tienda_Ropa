@@ -9,7 +9,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-
         push,
         } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js"; */
 
-import { getStorage, uploadBytes, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-storage.js"
+import { getStorage, uploadBytes, ref, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.8.0/firebase-storage.js"
 
 const firebaseConfig = {
   apiKey: "AIzaSyD16cBwNmCcxcLOdJg-MT68NVjJMp_TPN8",
@@ -35,8 +35,11 @@ async function uploadFiles(file) {
 
 
 async function deleteFile(url){
-  var fileRef = storage.refFromURL(url);
-  fileRef.delete().then(function() {
+  // var fileRef = storage.refFromURL(url);
+//  var fileRef = refFromURL(storage,url);
+ var fileRef = ref(storage,url);
+
+  fileRef.delete().then(function() {s
     console.log("Archivo eliminado exitosamente.");
   }).catch(function(error) {
     console.error("Error al eliminar archivo:", error);

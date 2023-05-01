@@ -1,10 +1,13 @@
 import { BECategoria, BEColor, BEStock } from '.';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, JoinColumn, OneToOne, BaseEntity, JoinTable, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm'
 
 
 @Entity({ name: 'producto' })
 export class BEProducto extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  // @PrimaryGeneratedColumn()
+  // public id: number;
+
+  @PrimaryColumn()
   public id: number;
 
   @Column()

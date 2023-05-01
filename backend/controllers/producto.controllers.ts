@@ -108,9 +108,9 @@ export const CrearProducto = async (req: Request, res: Response) => {
                categoria,
                imagen,
                color,
-               precio,
+               precio
           } = req.body;
-          const ID = parseInt(req.body.id);
+           const ID = parseInt(req.body.id);
           if (
                !titulo ||
                !descripcion ||
@@ -124,7 +124,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
                     .json({ message: "Por favor ,  llene todos los campos " });
           } else {
                const producto = await BEProducto.findOne({ where: { id: ID } });
-               if (!producto) {
+               if (producto) {
                     return res
                          .status(401)
                          .json({
@@ -139,6 +139,7 @@ export const CrearProducto = async (req: Request, res: Response) => {
                     await newStock.save();
 
                     let newProducto = new BEProducto();
+                    newProducto.id = ID
                     newProducto.titulo = titulo;
                     newProducto.descripcion = descripcion;
                     newProducto.categoria = categoria;

@@ -1,4 +1,4 @@
-import { uploadFiles, TraerProductos, TraerColores, TraerCategorias } from "./bd.js";
+import { uploadFiles, TraerProductos, TraerColores, TraerCategorias, deleteFile } from "./bd.js";
 import { Producto } from "../models/index.js";
 
 
@@ -336,7 +336,7 @@ async function CargarFormulario() {
     card_titulo.textContent = producto.titulo;
 
     categoria.value = producto.categoria.id;
-    color.value = producto.color.id;;
+    color.value = producto.color.id;
 
     precio.value = producto.precio;
     card_precio.textContent = producto.precio
@@ -351,7 +351,6 @@ async function CargarFormulario() {
     xl.value = producto.stock.XL;
 
     ControlarStock(producto.stock);
-    console.log(imagen);
 
     card_imagen.src = producto.imagen
     imagen.src = producto.imagen
@@ -424,7 +423,7 @@ function validarFormulario(elemento) {
   for (let i = 0; i < elemento.children.length; i++) {
     const child = elemento.children[i];
 
-    if (child.id !== 'id') {
+    // if (child.id !== 'id') {
       // Si es un input o un textarea, valida su valor
       if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
         if (child.value === '') {
@@ -434,7 +433,7 @@ function validarFormulario(elemento) {
           child.classList.remove('is-invalid');
         }
       }
-    }
+    // }
     // Si el elemento tiene hijos, llama a la función recursivamente
     if (child.children.length > 0) {
       validarFormulario(child);
@@ -496,7 +495,8 @@ async function Eliminar(id) {
         headers: {
           "Content-Type": "application/json",
         },
-      })
+      }).then(await deleteFile(producto.imagen))
+
       if (res.status === 200) {
         // La respuesta fue exitosa
         mostrarToast("El Producto fue Eliminado correctamente", "bg-success");
@@ -521,7 +521,8 @@ async function Editar(id) {
     if (!verificarCamposVacios(producto)) {
       if (ControlarStock(producto.stock) > 0) {
         mostrarSpinner()
-        if (producto.imagen != imagen.src) {
+        if (producto.imagen !== imagen.src) {
+          await deleteFile(producto.imagen);
           let url_img = await uploadFiles(producto.imagen);
           producto.imagen = url_img
         }

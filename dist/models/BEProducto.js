@@ -15,7 +15,7 @@ const typeorm_1 = require("typeorm");
 let BEProducto = class BEProducto extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryColumn)(),
     __metadata("design:type", Number)
 ], BEProducto.prototype, "id", void 0);
 __decorate([
