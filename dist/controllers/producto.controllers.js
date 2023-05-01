@@ -54,6 +54,7 @@ const ListarProductos = (req, res) => __awaiter(void 0, void 0, void 0, function
                     stock: true,
                 },
             });
+            Productos.sort((a, b) => a.id - b.id);
         }
         return res.status(200).json(Productos);
     }

@@ -48,6 +48,8 @@ export const ListarProductos = async (req: Request, res: Response) => {
                          stock: true,
                     },
                });
+               Productos.sort((a, b) => a.id - b.id);
+
           }
           return res.status(200).json(Productos);
      } catch (error: any) {

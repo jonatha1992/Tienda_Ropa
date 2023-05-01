@@ -7,7 +7,7 @@ import { Producto } from "../models/index.js";
 const formulario = document.querySelector("form");
 const section = document.querySelector("section");
 const tbody = document.querySelector('tbody');
-const spinner = document.getElementById('spinner');
+const spinners = document.querySelectorAll('#spinner');
 
 const id = document.getElementById("id");
 const titulo = document.getElementById("titulo");
@@ -600,12 +600,16 @@ function Buscar(id) {
 
 // Función para mostrar el spinner
 function mostrarSpinner() {
-  spinner.classList.remove('visually-hidden');
+  // spinner.classList.remove('visually-hidden');
+  spinners.forEach(spinner => spinner.classList.remove('visually-hidden'));
+
 }
 
 // Función para ocultar el spinner
 function ocultarSpinner() {
-  spinner.classList.add('visually-hidden');
+  // spinner.classList.add('visually-hidden');
+  spinners.forEach(spinner => spinner.classList.add('visually-hidden'));
+
 }
 
   // resultado.innerHTML = "";
