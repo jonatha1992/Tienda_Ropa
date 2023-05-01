@@ -24,5 +24,5 @@ export const AppDataSource = new DataSource({
     port: 6263,
     entities: [BECategoria, BEProducto, BEStock, BEColor, BEUsuario],
     logging: true,
-    synchronize: false,
+    synchronize: false 
 });
