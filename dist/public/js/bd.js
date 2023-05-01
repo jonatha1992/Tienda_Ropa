@@ -34,7 +34,18 @@ async function uploadFiles(file) {
 }
 
 
-export { uploadFiles ,TraerProductos , TraerColores ,TraerCategorias}
+async function deleteFile(url){
+  var fileRef = storage.refFromURL(url);
+  fileRef.delete().then(function() {
+    console.log("Archivo eliminado exitosamente.");
+  }).catch(function(error) {
+    console.error("Error al eliminar archivo:", error);
+  });
+}
+
+
+
+export { uploadFiles ,TraerProductos , TraerColores ,TraerCategorias,deleteFile}
 
 
 async function TraerProductos() {

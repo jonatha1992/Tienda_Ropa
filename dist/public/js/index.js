@@ -373,7 +373,7 @@ function mostrarId() {
                 let html=`
                 <div class="row" id="container-info">
                 
-                <div class="info">
+                <div class="info" id="info-mobile">
                 <span style="color: #6c757d;display:block;font-size: 2rem;">${productos[i].titulo}</span>
                 <span class="tag tag-purple">${productos[i].categoria.nombre}</span>
                 </div>
@@ -390,8 +390,14 @@ function mostrarId() {
                     </div>
                 </div>
                 <div class="col-6 width-mobile" style="display: flex;flex-direction: column;justify-content: space-evenly;   ">
-                    <div class="contenedor-info-product ">
-                        
+                    <div class="contenedor-info-product " style="height: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;">
+                        <div class="info" id="info-desktop">
+                        <span style="color: #6c757d;display:block;font-size: 2rem;">${productos[i].titulo}</span>
+                        <span class="tag tag-purple">${productos[i].categoria.nombre}</span>
+                        </div>
                         <h1 style="    font-weight: bold;">${dollarUS2.format(productos[i].precio)}</h1>
                         <span style="    color: #6c757d;">${productos[i].descripcion}
                         </span>
