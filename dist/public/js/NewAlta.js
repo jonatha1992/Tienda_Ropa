@@ -424,15 +424,15 @@ function validarFormulario(elemento) {
     const child = elemento.children[i];
 
     // if (child.id !== 'id') {
-      // Si es un input o un textarea, valida su valor
-      if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
-        if (child.value === '') {
-          child.classList.add('is-invalid');
-          valido = true;
-        } else {
-          child.classList.remove('is-invalid');
-        }
+    // Si es un input o un textarea, valida su valor
+    if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA' || child.tagName === 'SELECT') {
+      if (child.value === '' || child.value ==='--Seleccione') {
+        child.classList.add('is-invalid');
+        valido = true;
+      } else {
+        child.classList.remove('is-invalid');
       }
+    }
     // }
     // Si el elemento tiene hijos, llama a la función recursivamente
     if (child.children.length > 0) {
@@ -441,6 +441,13 @@ function validarFormulario(elemento) {
   }
   return valido
 }
+
+function ValidarId() {
+
+  var valido = productos.some(x => x.id == producto.id)
+  return valido
+}
+
 
 function verificarCamposVacios(objeto) {
   for (let propiedad in objeto) {
@@ -454,32 +461,36 @@ function verificarCamposVacios(objeto) {
 async function Agregar() {
   LimpiarErrores();
   try {
-    if (!validarFormulario(formulario)) {
-      if (ControlarStock(producto.stock) > 0) {
-        mostrarSpinner()
-        let url_img = await uploadFiles(producto.imagen);
-        producto.imagen = url_img
+    if (!validarFormulario(formulario) ) {
+      if (!ValidarId()) {
+        if (ControlarStock(producto.stock) > 0) {
+          mostrarSpinner()
 
-        let res = await fetch("/producto", {
-          method: "POST", // or 'PUT'
-          body: JSON.stringify(producto), // data can be `string` or {object}!
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        if (res.status === 200) {
-          // La respuesta fue exitosa
-          mostrarToast("El Producto fue agreagado correctamente", "bg-success");
-          limpiarformulario()
-          productos = await TraerProductos()
-          ocultarSpinner()
-          MostrarProductos(productos)
-        } else {
-          mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
-          ocultarSpinner()
+          let url_img = await uploadFiles(producto.imagen);
+          producto.imagen = url_img
+
+          let res = await fetch("/producto", {
+            method: "POST", // or 'PUT'
+            body: JSON.stringify(producto), // data can be `string` or {object}!
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          if (res.status === 200) {
+            // La respuesta fue exitosa
+            mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+            limpiarformulario()
+            productos = await TraerProductos()
+            ocultarSpinner()
+            MostrarProductos(productos)
+          } else {
+            mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
+            ocultarSpinner()
+          }
         }
       }
     }
+
   } catch (error) {
     console.log(error);
   }
@@ -490,12 +501,16 @@ async function Eliminar(id) {
   try {
     if (id !== undefined || id !== 0) {
       mostrarSpinner()
+      producto = productos.find(x => x.id == id);
+      await deleteFile(producto.imagen)
+
+
       let res = await fetch(`/producto/${id}`, {
         method: "DELETE", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(await deleteFile(producto.imagen))
+      })
 
       if (res.status === 200) {
         // La respuesta fue exitosa
