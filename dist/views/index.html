@@ -219,14 +219,19 @@
             flex-direction: column;
             width: 20%;
         }
+
+        .glider-track{
+                height: 70vh;
+            }
+            .item-img {
+                height: 100%;
+            }
         @media only screen and (min-width: 600px) {
             
             #container-slick-categoria{
                 display: none;
             }
-            .item-img {
-                height: 75%;
-            }
+            
             .glider-slide {
                 align-items: center;
             }
@@ -254,7 +259,12 @@
     }
         @media only screen and (max-width: 767px) {
   /* Estilos para dispositivos móviles */
-
+    .glider-track{
+                height: auto;
+            }
+            .item-img {
+                height: 100%;
+            }
     #info-mobile{
         display: block;
     }
