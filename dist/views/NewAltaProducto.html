@@ -15,6 +15,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:wght@300&display=swap"
         rel="stylesheet">
     <link rel="shortcut icon" href="#">
+    <style>
+        @media only screen and (max-width: 767px) {
+  /*/Estilos para dispositivos móviles */
+    .descripcion{
+        display: none;
+    }
+    .body{
+    margin: 1rem;
+}
+.card {
+    /* width: 300px; */
+    height: 75vh;
+}
+}
+    </style>
 </head>
 
 <body class="body text-white">
@@ -167,14 +182,13 @@
             <thead class=" bg-black bg-gradient">
                 <th>Cod. Art.</th>
                 <th>Titulo</th>
-                <th>Descripción</th>
+                <th class="descripcion">Descripción</th>
                 <th>Precio</th>
                 <th>Stock Gral</th>
-                <th>imagen</th>
                 <th>Elegir</th>
             </thead>
             <tbody class=" bg-black bg-gradient">
-                   
+
                 <!-- <tr>
                     <td>Zapatos</td>
                     <td>Lorem ipsum dolor sit amet, molestiae labore, !</td>

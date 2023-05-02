@@ -238,22 +238,48 @@ function MostrarColores() {
 }
 
 function MostrarProductos(productos) {
-
-
   tbody.innerHTML = "";
-
   productos.forEach(producto => {
-
+    let img = document.createElement("img");
     let tr = document.createElement("tr");
     tr.id = producto.id;
-
     let tdId = document.createElement("td");
+
     tdId.textContent = producto.id;
+    /* tdId.innerHTML+=img; */
+    img.width = 50;
+    img.height = 50;
+    tdId.style.display='flex'
+    tdId.style.flexDirection='column'
+    tdId.style.alignItems='center'
+    img.style.display='block'
+    img.src = producto.imagen
+    console.log(img)
+    tdId.appendChild(img);
+
+    /* tdId.style.display='flex'
+    tdId.style.flexDirection='column'
+    tdId.style.alignItems='center' */
+
+    
 
     let tdTitulo = document.createElement("td");
     tdTitulo.textContent = producto.titulo;
 
     let tdDescripcion = document.createElement("td");
+    
+    tdDescripcion.classList.add("descripcion");
+    const ancho = window.screen.width;
+    const alto = window.screen.height;
+
+    if (ancho < 768) {
+      tdDescripcion.classList.add("descripcion");
+      console.log("Este dispositivo es un móvil.");
+    } else if (ancho >= 768 && ancho < 1024) {
+      console.log("Este dispositivo es una tablet.");
+    } else {
+      console.log("Este dispositivo es un escritorio.");
+    }
     tdDescripcion.textContent = producto.descripcion;
 
     let tdPrecio = document.createElement("td");
@@ -262,12 +288,8 @@ function MostrarProductos(productos) {
     let tdStock = document.createElement("td");
     tdStock.textContent = `${ControlarStock(producto.stock)}`;
 
-    let tdImagen = document.createElement("td");
-    let img = document.createElement("img");
-    img.width = 50;
-    img.height = 50;
-    img.src = producto.imagen
-    tdImagen.appendChild(img);
+
+
 
     let tdBtn = document.createElement("td");
 
@@ -291,12 +313,10 @@ function MostrarProductos(productos) {
     tdBtn.appendChild(BtnEliminar)
 
     tr.appendChild(tdId)
-    tr.appendChild(tdId);
     tr.appendChild(tdTitulo);
     tr.appendChild(tdDescripcion);
     tr.appendChild(tdPrecio);
     tr.appendChild(tdStock);
-    tr.appendChild(tdImagen);
     tr.appendChild(tdBtn)
 
     tbody.appendChild(tr);
