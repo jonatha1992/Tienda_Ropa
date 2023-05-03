@@ -35,7 +35,7 @@ let dollarUS2 = Intl.NumberFormat("en-US", {
 function filtrarListas(categoria){
     let container_categoria=document.querySelector('.categorias-contain').style.display='none'
     let container_pagos=document.querySelector('.medios-pago').style.display='none'
-    let container_glider=document.querySelector('.glider-contain').style.display='none'
+    let container_glider=document.querySelector('#carrusel-hero').style.display='none'
     let container_banner=document.querySelector('.banner-2').style.display='none'
     $('body, html').animate({
 			scrollTop: '0px'
@@ -63,7 +63,7 @@ document.getElementById('logo').addEventListener("click",e=>{
     document.getElementById('container-carrito').style.display='none'
     let container_categoria=document.querySelector('.categorias-contain').style.display='block'
     let container_pagos=document.querySelector('.medios-pago').style.display='flex'
-    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_glider=document.querySelector('#carrusel-hero').style.display='block'
     let container_banner=document.querySelector('.banner-2').style.display='block'
         document.getElementById('Pantalla-product').style.display='none'
         document.getElementById('lista-contain').style.display='block'
@@ -92,7 +92,7 @@ document.getElementById('back').addEventListener("click",e=>{
     document.getElementById('container-carrito').style.display='none'
     let container_categoria=document.querySelector('.categorias-contain').style.display='block'
     let container_pagos=document.querySelector('.medios-pago').style.display='flex'
-    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_glider=document.querySelector('#carrusel-hero').style.display='block'
     let container_banner=document.querySelector('.banner-2').style.display='block'
     
         document.getElementById('Pantalla-product').style.display='none'
@@ -111,7 +111,7 @@ document.getElementById(`inicio`).addEventListener("click", e => {
     document.getElementById('menu-mobile').style.display='block'
     let container_categoria=document.querySelector('.categorias-contain').style.display='block'
     let container_pagos=document.querySelector('.medios-pago').style.display='flex'
-    let container_glider=document.querySelector('.glider-contain').style.display='block'
+    let container_glider=document.querySelector('#carrusel-hero').style.display='block'
     let container_banner=document.querySelector('.banner-2').style.display='block'
     let html=''
     let ruta_cat=document.querySelector('.ruta')
@@ -816,7 +816,7 @@ function enviarNotificacion(){
                 direccion:direccion.value,
                 entrecalles:entrecalles.value
             }
-            reporte()
+            enviarOrden()
         }else{
             direccion.classList.add('is-visible')
             console.log('completa domicilio')
@@ -825,7 +825,7 @@ function enviarNotificacion(){
         let sucursal=document.getElementById('sucursal')
         if(sucursal!=''){
             formDespacho.sucursal=sucursal.value
-            reporte()
+            enviarOrden()
         }else{
             console.log('completa sucu')
             direccion.classList.add('is-visible')
@@ -850,7 +850,9 @@ function reporte(){
                 %0AFecha%20De%20Compra:%20${fechaHoraActualStr}
                 %0ADetalle%20del%20pedido:${pizzasxbordes()}`
     let enlace=`http://api.whatsapp.com/send?phone=+5491160235647&text=${pruebita}`
-    window.location.href =enlace
+    /* window.location.href =enlace */
+    
+    formDespacho.carrito=carrito
     /* const btncompra = document.getElementById('fin');
     btncompra.disabled = false;
     setTimeout(() => btncompra.disabled = false, 1000,); */
@@ -892,4 +894,27 @@ function pizzasxbordes(){
     }
     k +=`%0A%2ATOTAL%3A%24${t}%2A`
     return k
+}
+
+async function enviarOrden(){
+    let res = await fetch("/newOrden", {
+        method: "POST", // or 'PUT'
+        body: JSON.stringify(formDespacho), // data can be `string` or {object}!
+        headers: {
+        "Content-Type": "application/json",
+        },
+    })
+    if (res.status === 200) {
+        // La respuesta fue exitosa
+        reporte()
+        /* mostrarToast("El Producto fue agreagado correctamente", "bg-success");
+        limpiarformulario()
+        productos = await TraerProductos()
+        ocultarSpinner()
+        MostrarProductos(productos) */
+    } else {
+        console.log('no se pudo agregar la orden')
+        /* mostrarToast('¡No se pudo agregar el nuevo Producto!', 'bg-danger');
+        ocultarSpinner() */
+    }
 }

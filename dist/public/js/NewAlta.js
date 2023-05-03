@@ -252,6 +252,7 @@ function MostrarProductos(productos) {
     tdId.style.display='flex'
     tdId.style.flexDirection='column'
     tdId.style.alignItems='center'
+    tdId.style.verticalAlign= 'middle';
     img.style.display='block'
     img.src = producto.imagen
     console.log(img)
@@ -264,11 +265,13 @@ function MostrarProductos(productos) {
     
 
     let tdTitulo = document.createElement("td");
+    tdTitulo.style.verticalAlign= 'middle';
     tdTitulo.textContent = producto.titulo;
 
     let tdDescripcion = document.createElement("td");
     
     tdDescripcion.classList.add("descripcion");
+    tdDescripcion.style.verticalAlign= 'middle';
     const ancho = window.screen.width;
     const alto = window.screen.height;
 
@@ -283,15 +286,18 @@ function MostrarProductos(productos) {
     tdDescripcion.textContent = producto.descripcion;
 
     let tdPrecio = document.createElement("td");
+    tdPrecio.style.verticalAlign= 'middle';
     tdPrecio.textContent = `$${producto.precio}`;
 
     let tdStock = document.createElement("td");
+    tdStock.style.verticalAlign= 'middle';
     tdStock.textContent = `${ControlarStock(producto.stock)}`;
 
 
 
 
     let tdBtn = document.createElement("td");
+    tdBtn.style.verticalAlign= 'middle';
 
     let BtnSeleccionar = document.createElement("button");
     BtnSeleccionar.onclick = () => Seleccionar(tr.id)
