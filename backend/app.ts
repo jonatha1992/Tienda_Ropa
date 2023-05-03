@@ -18,6 +18,16 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use("/", router);
 
 
+router.get("/", (req, res) =>{
+	res.status(200).sendFile(path.resolve(__dirname, 'public/views/index.html'));
+});
+
+ router.get("/alta", function (req, res) {
+    res.status(200).sendFile(path.join(__dirname, 'public/views/NewAltaProducto.html'))
+});
+ router.get("/login", function (req, res) {
+    res.status(200).sendFile(path.join(__dirname, 'public/views/login.html'))
+});
 
 
 // app.use("/alta", function (req, res) {

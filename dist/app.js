@@ -16,6 +16,15 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.static(path_1.default.resolve(__dirname, 'public')));
 //rutas paginas
 app.use("/", routes_1.router);
+routes_1.router.get("/", (req, res) => {
+    res.status(200).sendFile(path_1.default.resolve(__dirname, 'public/views/index.html'));
+});
+routes_1.router.get("/alta", function (req, res) {
+    res.status(200).sendFile(path_1.default.join(__dirname, 'public/views/NewAltaProducto.html'));
+});
+routes_1.router.get("/login", function (req, res) {
+    res.status(200).sendFile(path_1.default.join(__dirname, 'public/views/login.html'));
+});
 // app.use("/alta", function (req, res) {
 //     res.status(200).sendFile(path.join(__dirname, 'public/view/NewAltaProducto.html'))
 // });
