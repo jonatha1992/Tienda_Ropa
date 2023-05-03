@@ -19,33 +19,79 @@ __decorate([
     __metadata("design:type", Number)
 ], BEStock.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => _1.BEProducto, (producto) => producto.stock, { nullable: true, onDelete: 'CASCADE' }),
+    (0, typeorm_1.OneToOne)(() => _1.BEProducto, (producto) => producto.stock, {
+        nullable: true,
+        onDelete: "CASCADE",
+    }),
     (0, typeorm_1.JoinColumn)({ name: "productoId" }),
-    __metadata("design:type", _1.BEProducto
-    // @Column()
-    // public XXS: number
-    // @Column()
-    // public XS: number
-    )
+    __metadata("design:type", _1.BEProducto)
 ], BEStock.prototype, "producto", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "XXS", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "XS", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Uno", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Dos", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Tres", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Cuatro", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "OchentaCinco", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Noventa", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "NoventaCinco", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "Cien", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], BEStock.prototype, "S", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], BEStock.prototype, "M", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], BEStock.prototype, "L", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], BEStock.prototype, "XL", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "XXL", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], BEStock.prototype, "General", void 0);
 BEStock = __decorate([
-    (0, typeorm_1.Entity)({ name: 'stock' })
+    (0, typeorm_1.Entity)({ name: "stock" })
 ], BEStock);
 exports.BEStock = BEStock;
 //# sourceMappingURL=BEStock.js.map
