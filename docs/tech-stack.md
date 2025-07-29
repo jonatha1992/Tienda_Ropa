@@ -19,7 +19,7 @@
 - **Pydantic v2** (modelos/validación)
 - **Uvicorn** (ASGI server)
 - **PostgreSQL** (Railway)
-- Migraciones (opcional): Alembic
+- Migraciones: Alembic (gestión de versiones y cambios en la base de datos)
 - Integración de autenticación con Firebase Auth y tokens JWT
 - Instalación y gestión de dependencias Python con `uv` (recomendado):
 	- Crear entorno: `uv venv .venv`

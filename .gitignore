@@ -1,2 +1,27 @@
-node_modules
-node_modules
+# Ignorar cachés de Python (backend)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+backend/.mypy_cache/
+backend/.pytest_cache/
+backend/.venv/
+
+# Ignorar cachés de Node/Vite/Vue (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# Ignorar cachés globales
+.cache/
+.mypy_cache/
+.pytest_cache/
+
+# Ignorar archivos de entorno
+*.env
+.env*
+
+# Ignorar archivos de Alembic autogenerados
+backend/alembic/versions/*.pyc
+

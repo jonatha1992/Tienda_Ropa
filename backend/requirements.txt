@@ -11,3 +11,4 @@ sqlalchemy==2.0.42
 starlette==0.47.2
 typing-extensions==4.14.1
 typing-inspection==0.4.1
+alembic
