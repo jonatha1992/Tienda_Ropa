@@ -21,6 +21,9 @@
 - **PostgreSQL** (Railway)
 - Migraciones (opcional): Alembic
 - Integración de autenticación con Firebase Auth y tokens JWT
+- Instalación y gestión de dependencias Python con `uv` (recomendado):
+	- Crear entorno: `uv venv .venv`
+	- Instalar dependencias: `uv pip install -r requirements.txt`
 
 ## Integración / Operación
 - Entornos: `development`, `production`

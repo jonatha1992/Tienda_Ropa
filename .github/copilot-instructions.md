@@ -5,7 +5,7 @@
 2) Si falta alguno, crearlo con un esqueleto mínimo y confirmar.
 3) Solo implementar/editar una feature o endpoint si está en `planning.md` (o issues); si no, agregarlo primero.
 4) Tras cambios relevantes (feature/endpoint/config), **actualizar README** (sección API: ruta, método, ejemplos de request/response, errores).
-5) **Frontend:** TypeScript estricto; lint con ESLint/Prettier; tests (Vitest) cuando corresponda.
+5) **Frontend:** TypeScript estricto; usando tailwinds css para maquetado , lint con ESLint/Prettier; tests (Vitest) cuando corresponda.
 6) **Backend:** Validación con Pydantic; tests con pytest (y/o requests a la API); seguir convenciones.
 7) **Limpieza de código:** identificar y eliminar imports, funciones, tipos, módulos y archivos no usados.
    - Comprobar referencias en todo el workspace antes de borrar.
