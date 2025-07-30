@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, String, Float
-from sqlalchemy.orm import declarative_base
-import datetime
 
-Base = declarative_base()
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, String, Float
+import datetime
+from app.models import Base
 
 
 class Order(Base):

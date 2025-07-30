@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import declarative_base
-import datetime
 
-Base = declarative_base()
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
+import datetime
+from app.models import Base
 
 
 class Inventory(Base):

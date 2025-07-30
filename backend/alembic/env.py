@@ -1,8 +1,6 @@
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
 from alembic import context
 
 # this is the Alembic Config object, which provides
@@ -21,7 +19,15 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
-from app.models.user import Base
+
+# Importar todos los modelos para autogenerar migraciones
+from app.models import Base
+from app.models.user import User
+from app.models.product import Product
+from app.models.customer import Customer
+from app.models.order import Order
+from app.models.inventory import Inventory
+from app.models.order_item import OrderItem
 
 target_metadata = Base.metadata
 

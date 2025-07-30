@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, ForeignKey, Float
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from sqlalchemy import Column, Integer, ForeignKey, Float
+from app.models import Base
 
 
 class OrderItem(Base):
