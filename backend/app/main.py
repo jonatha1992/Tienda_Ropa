@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-
 from app.routes.products import router as products_router
 from app.routes.customers import router as customers_router
 from app.routes.orders import router as orders_router
