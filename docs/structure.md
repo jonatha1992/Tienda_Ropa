@@ -20,7 +20,6 @@ flowchart TD
   B11 --> B12[v1/]
   B12 --> B13[endpoints/]
   B13 --> B14[items.py]
-  B1 --> B2[core/config.py]
   B1 --> B3[db/session.py]
   B1 --> B4[models/user.py]
   B --> BA[alembic/]

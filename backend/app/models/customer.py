@@ -1,12 +1,11 @@
 
-from sqlalchemy import Column, Integer, String
-from app.models import Base
 
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Customer(Base):
-    __tablename__ = "customers"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True)
-    phone = Column(String)
-    address = Column(String)
+class Customer(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    email: Optional[str] = Field(default=None, index=True)
+    phone: Optional[str] = None
+    address: Optional[str] = None
