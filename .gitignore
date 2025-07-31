@@ -7,12 +7,13 @@ backend/.mypy_cache/
 backend/.pytest_cache/
 backend/.venv/
 
+key.json
 # Ignorar cachés de Node/Vite/Vue (frontend)
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
 frontend/.cache/
-
+firebase_service_account.json
 # Ignorar cachés globales
 .cache/
 .mypy_cache/

@@ -21,4 +21,9 @@
 - Validar y documentar integración entre frontend y backend (ejemplo: flujo de login, alta de producto).
 
 ## Hecho
-- (vacío)
+- Autenticación (Firebase Auth + tokens JWT) y autorización por rol (backend, frontend). [31/07/2025]
+- Integrar endpoints RESTful en FastAPI según estructura `/backend/app/api/v1/endpoints/`. [31/07/2025]
+- Refactorizar modelos SQLAlchemy y Pydantic para alinearse con `/backend/app/db/models.py` y validaciones estrictas. [31/07/2025]
+- Implementar migraciones con Alembic y documentar proceso. [31/07/2025]
+- Implementar tests unitarios y de integración (Backend: pytest, requests, mocks). [31/07/2025]
+- Agregar y documentar endpoints `/health`. [31/07/2025]
