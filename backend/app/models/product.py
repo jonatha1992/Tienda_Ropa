@@ -1,30 +1,46 @@
+from typing import Optional, List
+from sqlmodel import SQLModel, Field, Relationship
 
-from typing import Optional
-from sqlmodel import SQLModel, Field
-
-class ProductCreate(SQLModel):
+class ProductBase(SQLModel):
     name: str
     description: Optional[str] = None
     price: float
-    stock: Optional[int] = None
-    image_url: Optional[str] = None
-    color: Optional[str] = None
-    talle: Optional[str] = None
     genero: Optional[str] = "unisex"
     estado: Optional[str] = "nuevo"
     edad_destino: Optional[str] = "adulto"
 
-class Product(SQLModel, table=True):
+class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    description: Optional[str] = None
-    price: float
-    stock: Optional[int] = None
-    image_url: Optional[str] = None
-    color: Optional[str] = None  # Color del producto
-    talle: Optional[str] = None  # Talle (tamaño)
-    genero: Optional[str] = Field(default="unisex")  # masculino, femenino, unisex
-    estado: Optional[str] = Field(default="nuevo")  # nuevo, usado
-    edad_destino: Optional[str] = Field(default="adulto")  # niño, adulto
+    
+    images: List["ProductImage"] = Relationship(back_populates="product")
+    variants: List["ProductVariant"] = Relationship(back_populates="product")
 
+class ProductImage(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    product_id: int = Field(foreign_key="product.id")
+    image_url: str
+    
+    product: Product = Relationship(back_populates="images")
 
+class ProductVariant(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    product_id: int = Field(foreign_key="product.id")
+    color: Optional[str] = None
+    talle: Optional[str] = None
+    stock: int
+    
+    product: Product = Relationship(back_populates="variants")
+
+class ProductCreate(ProductBase):
+    images: List[str]  # List of image URLs
+    variants: List["ProductVariantCreate"]
+
+class ProductVariantCreate(SQLModel):
+    color: Optional[str] = None
+    talle: Optional[str] = None
+    stock: int
+
+class ProductRead(ProductBase):
+    id: int
+    images: List["ProductImage"]
+    variants: List["ProductVariant"]
