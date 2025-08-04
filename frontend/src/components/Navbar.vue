@@ -21,6 +21,7 @@
             <a href="#" class="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium">CONTACT</a>
             <a href="#" class="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium">HOW TO SHOP</a>
             <a href="#" class="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium">ENVÍOS</a>
+            <router-link to="/admin/products" class="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium">Admin</router-link>
           </div>
         </div>
         <div class="flex items-center">

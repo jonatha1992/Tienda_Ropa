@@ -40,7 +40,18 @@ class ProductVariantCreate(SQLModel):
     talle: Optional[str] = None
     stock: int
 
+
+class ProductImageRead(SQLModel):
+    id: int
+    image_url: str
+
+class ProductVariantRead(SQLModel):
+    id: int
+    color: Optional[str]
+    talle: Optional[str]
+    stock: int
+
 class ProductRead(ProductBase):
     id: int
-    images: List["ProductImage"]
-    variants: List["ProductVariant"]
+    images: List["ProductImageRead"]
+    variants: List["ProductVariantRead"]

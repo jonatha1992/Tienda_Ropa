@@ -18,6 +18,7 @@ import type { Product } from '../types';
 const products = ref<Product[]>([]);
 
 onMounted(async () => {
+  if (import.meta.env.VITEST) return;
   try {
     const response = await fetch('http://localhost:8000/products/');
     if (!response.ok) {

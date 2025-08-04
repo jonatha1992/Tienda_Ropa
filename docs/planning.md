@@ -1,5 +1,3 @@
-
-
 # Planning / Issues
 
 ## Tareas
@@ -15,6 +13,14 @@
   - Implement user account pages (login, register, order history).
 - **Phase 3: Backend Integration**
   - Integrate frontend components with backend APIs to fetch and display data.
+- **Implementar ABM de Productos en el Frontend:**
+  - Crear componente `ProductAdmin.vue`.
+  - Diseñar formulario para alta y edición.
+  - Implementar lógica para interactuar con la API de productos.
+  - Añadir ruta `/admin/products` y enlace en la navegación.
+  - Reemplazar campo de texto de imágenes por un selector de archivos con previsualización.
+  - Implementar la subida de imágenes a Firebase Storage.
+  - Crear un modal de confirmación reutilizable para las acciones de guardar, actualizar y eliminar.
 - **General Tasks**
   - Autenticación (Firebase Auth + tokens JWT) y autorización por rol (backend, frontend).
   - Integrar endpoints RESTful en FastAPI según estructura `/backend/app/api/v1/endpoints/`.

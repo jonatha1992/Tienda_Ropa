@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.product import (
-    Product, ProductCreate, ProductRead, ProductImage, ProductVariant
+    Product, ProductCreate, ProductRead, ProductImage, ProductVariant, ProductImageRead, ProductVariantRead
 )
 from app.security import get_current_user
 
@@ -36,14 +36,14 @@ def create_product(
 @router.get("/products/", response_model=List[ProductRead])
 def read_products(session: Session = Depends(get_session), skip: int = 0, limit: int = 100):
     products = session.exec(select(Product).offset(skip).limit(limit)).all()
-    return products
+    return [ProductRead.model_validate(p) for p in products]
 
 @router.get("/products/{product_id}", response_model=ProductRead)
 def read_product(product_id: int, session: Session = Depends(get_session)):
     product = session.get(Product, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    return product
+    return ProductRead.model_validate(product)
 
 @router.put("/products/{product_id}", response_model=ProductRead)
 def update_product(
