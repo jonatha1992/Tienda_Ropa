@@ -17,22 +17,17 @@ def create_product(
     product: ProductCreate = Body(...), 
     user=Depends(get_current_user)
 ):
-    # Create Product instance
-    db_product = Product.from_orm(product)
+    # Separate the main product data from the related images and variants
+    product_data = product.model_dump(exclude={'images', 'variants'})
+    db_product = Product(**product_data)
+
+    # Create ProductImage objects and link them to the product
+    db_product.images = [ProductImage(image_url=url) for url in product.images]
+    
+    # Create ProductVariant objects and link them to the product
+    db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
+
     session.add(db_product)
-    session.commit()
-    session.refresh(db_product)
-
-    # Create ProductImage instances
-    for image_url in product.images:
-        db_image = ProductImage(product_id=db_product.id, image_url=image_url)
-        session.add(db_image)
-
-    # Create ProductVariant instances
-    for variant_data in product.variants:
-        db_variant = ProductVariant(product_id=db_product.id, **variant_data.dict())
-        session.add(db_variant)
-
     session.commit()
     session.refresh(db_product)
     
@@ -62,11 +57,20 @@ def update_product(
         raise HTTPException(status_code=404, detail="Product not found")
     
     # Update product fields
-    product_data = product.dict(exclude_unset=True)
+    product_data = product.model_dump(exclude_unset=True, exclude={'images', 'variants'})
     for key, value in product_data.items():
-        if hasattr(db_product, key):
-            setattr(db_product, key, value)
-    
+        setattr(db_product, key, value)
+
+    # Delete old variants and images
+    for variant in db_product.variants:
+        session.delete(variant)
+    for image in db_product.images:
+        session.delete(image)
+
+    # Create new ones
+    db_product.images = [ProductImage(image_url=url) for url in product.images]
+    db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
+
     session.add(db_product)
     session.commit()
     session.refresh(db_product)

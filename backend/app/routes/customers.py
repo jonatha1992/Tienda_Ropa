@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post("/customers/", response_model=Customer)
 def create_customer(session: Session = Depends(get_session), customer: CustomerCreate = Body(...), user=Depends(get_current_user)):
-    db_customer = Customer(**customer.dict())
+    db_customer = Customer(**customer.model_dump())
     session.add(db_customer)
     session.commit()
     session.refresh(db_customer)
@@ -42,7 +42,7 @@ def update_customer(
     db_customer = session.get(Customer, customer_id)
     if not db_customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    customer_data = customer.dict(exclude_unset=True)
+    customer_data = customer.model_dump(exclude_unset=True)
     for key, value in customer_data.items():
         setattr(db_customer, key, value)
     session.add(db_customer)

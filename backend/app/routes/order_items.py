@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.post("/order-items/", response_model=OrderItem)
 def create_order_item(*, session: Session = Depends(get_session), order_item: OrderItem, user=Depends(get_current_user)):
-    db_order_item = OrderItem.from_orm(order_item)
+    db_order_item = OrderItem.model_validate(order_item)
     session.add(db_order_item)
     session.commit()
     session.refresh(db_order_item)
@@ -42,7 +42,7 @@ def update_order_item(
     db_order_item = session.get(OrderItem, order_item_id)
     if not db_order_item:
         raise HTTPException(status_code=404, detail="Order item not found")
-    order_item_data = order_item.dict(exclude_unset=True)
+    order_item_data = order_item.model_dump(exclude_unset=True)
     for key, value in order_item_data.items():
         setattr(db_order_item, key, value)
     session.add(db_order_item)

@@ -8,11 +8,11 @@ def test_create_and_get_product(client, auth_cookie):
     data = {
         "name": "pantalon",
         "price": 1.0,
-        "color": "azul",
-        "talle": "M",
         "genero": "masculino",
         "estado": "nuevo",
-        "edad_destino": "adulto"
+        "edad_destino": "adulto",
+        "images": ["image_url.jpg"],
+        "variants": [{"color": "azul", "talle": "M", "stock": 10}]
     }
     response = client.post("/api/v1/products/", json=data, cookies=auth_cookie)
     if response.status_code != 200:
@@ -49,7 +49,9 @@ def test_create_and_get_order(client, auth_cookie):
     }
     product_data = {
         "name": "camisa",
-        "price": 10.0
+        "price": 10.0,
+        "images": ["image_url.jpg"],
+        "variants": [{"color": "blanco", "talle": "L", "stock": 5}]
     }
     customer_resp = client.post("/api/v1/customers/", json=customer_data, cookies=auth_cookie)
     product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)
@@ -77,8 +79,8 @@ def test_create_and_get_inventory(client, auth_cookie):
         "name": "zapato",
         "description": "cuero",
         "price": 20.0,
-        "stock": 10,
-        "image_url": "img2.jpg"
+        "images": ["img2.jpg"],
+        "variants": [{"color": "negro", "talle": "42", "stock": 10}]
     }
     product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)
     product_id = product_resp.json()["id"]
@@ -110,8 +112,8 @@ def test_create_and_get_order_item(client, auth_cookie):
         "name": "gorra",
         "description": "poliester",
         "price": 5.0,
-        "stock": 3,
-        "image_url": "img3.jpg"
+        "images": ["img3.jpg"],
+        "variants": [{"color": "rojo", "talle": "único", "stock": 3}]
     }
     customer_resp = client.post("/api/v1/customers/", json=customer_data, cookies=auth_cookie)
     product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)

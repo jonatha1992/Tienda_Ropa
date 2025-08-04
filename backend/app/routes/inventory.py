@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/inventory/", response_model=Inventory)
 def create_inventory(session: Session = Depends(get_session), inventory: Inventory = Body(...), user=Depends(get_current_user)):
-    db_inventory = Inventory.from_orm(inventory)
+    db_inventory = Inventory.model_validate(inventory)
     session.add(db_inventory)
     session.commit()
     session.refresh(db_inventory)
@@ -43,7 +43,7 @@ def update_inventory(
     db_inventory = session.get(Inventory, inventory_id)
     if not db_inventory:
         raise HTTPException(status_code=404, detail="Inventory item not found")
-    inventory_data = inventory.dict(exclude_unset=True)
+    inventory_data = inventory.model_dump(exclude_unset=True)
     for key, value in inventory_data.items():
         setattr(db_inventory, key, value)
     session.add(db_inventory)
