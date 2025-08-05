@@ -85,39 +85,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../store/auth'
 import { auth } from '../firebase'
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    signInWithPopup,
     signInWithRedirect,
     getRedirectResult,
     GoogleAuthProvider
 } from 'firebase/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const isLogin = ref(true)
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref('')
 
+// Observar cambios en el estado de autenticación
+watch(() => authStore.isAuthenticated, (isAuth) => {
+    console.log('🔄 Estado de autenticación cambió:', isAuth)
+    if (isAuth) {
+        console.log('✅ Usuario autenticado, redirigiendo a admin...')
+        router.push('/admin/products')
+    }
+}, { immediate: true })
+
 // Verificar si hay resultado de redirect al cargar el componente
 onMounted(async () => {
     console.log('🔍 Verificando resultado de redirect...')
+    console.log('🔍 Current user en firebase:', auth.currentUser)
+    console.log('🔍 Auth store user:', authStore.firebaseUser)
+    console.log('🔍 Auth store authenticated:', authStore.isAuthenticated)
 
     try {
         const result = await getRedirectResult(auth)
         if (result) {
             // Usuario autenticado exitosamente después del redirect
             console.log('✅ Login con Google exitoso (redirect):', result.user.email)
-            console.log('🎉 Token obtenido, redirigiendo a admin...')
-
-            // Pequeña pausa para que el usuario vea que fue exitoso
-            setTimeout(() => {
-                router.push('/admin/products')
-            }, 1000)
+            console.log('🎉 Token obtenido, el store debería actualizar automáticamente...')
+            // No redirigir manualmente aquí, el watch lo hará
         } else {
             console.log('ℹ️ No hay resultado de redirect pendiente')
         }
@@ -144,7 +155,7 @@ const toggleMode = () => {
 }
 
 const signInWithGoogle = async () => {
-    console.log('🔄 Iniciando login con Google usando redirect...')
+    console.log('🔄 Iniciando login con Google...')
     loading.value = true
     error.value = ''
 
@@ -158,12 +169,32 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay múltiples
         })
 
-        console.log('🌐 Redirigiendo a Google...')
-        // Usar SOLO redirect (sin popup)
-        await signInWithRedirect(auth, provider)
-
-        // Después de esto, la página se redirigirá a Google
-        // Cuando regrese, el onMounted manejará el resultado
+        console.log('🪟 Intentando abrir popup de Google...')
+        
+        try {
+            // Intentar primero con popup
+            const result = await signInWithPopup(auth, provider)
+            console.log('✅ Login con Google exitoso (popup):', result.user.email)
+            
+            // El store detectará automáticamente el cambio y redirigirá
+            // No necesitamos redirigir manualmente aquí
+            loading.value = false
+            return
+            
+        } catch (popupError: any) {
+            console.log('⚠️ Popup falló, intentando con redirect:', popupError.code)
+            
+            // Si el popup falla, usar redirect
+            if (popupError.code === 'auth/popup-blocked' || 
+                popupError.code === 'auth/cancelled-popup-request') {
+                
+                console.log('🌐 Redirigiendo a Google...')
+                await signInWithRedirect(auth, provider)
+                return
+            } else {
+                throw popupError
+            }
+        }
 
     } catch (err: any) {
         console.error('❌ Error login Google:', err)
@@ -180,18 +211,18 @@ const handleSubmit = async () => {
         let result
         if (isLogin.value) {
             result = await signInWithEmailAndPassword(auth, email.value, password.value)
-            console.log('✅ Login exitoso:', result.user)
+            console.log('✅ Login exitoso:', result.user.email)
         } else {
             result = await createUserWithEmailAndPassword(auth, email.value, password.value)
-            console.log('✅ Registro exitoso:', result.user)
+            console.log('✅ Registro exitoso:', result.user.email)
         }
 
-        // Redirigir a admin después del login exitoso
-        router.push('/admin/products')
+        // El store detectará automáticamente el cambio y redirigirá
+        // No necesitamos redirigir manualmente aquí
+        loading.value = false
     } catch (err: any) {
         console.error('❌ Error auth:', err)
         error.value = getErrorMessage(err.code) || err.message || 'Error de autenticación'
-    } finally {
         loading.value = false
     }
 }

@@ -26,26 +26,41 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const initAuth = () => {
+        console.log('🚀 Inicializando autenticación...')
         return new Promise<void>((resolve) => {
-            onAuthStateChanged(auth, async (fbUser) => {
-                console.log('🔐 Auth state changed:', fbUser?.email)
+            let resolved = false
+
+            const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+                console.log('🔐 Auth state changed:', fbUser?.email || 'Usuario no autenticado')
+                console.log('🔍 Firebase User object:', fbUser)
 
                 if (fbUser) {
                     firebaseUser.value = fbUser
-                    token.value = await fbUser.getIdToken()
-                    console.log('✅ Token de Firebase obtenido')
-                    
-                    // Sincronizar con el backend
-                    await fetchBackendUser()
+                    try {
+                        token.value = await fbUser.getIdToken()
+                        console.log('✅ Token de Firebase obtenido:', token.value?.substring(0, 20) + '...')
+
+                        // Sincronizar con el backend
+                        await fetchBackendUser()
+                    } catch (error) {
+                        console.error('❌ Error obteniendo token de Firebase:', error)
+                        await logout()
+                    }
 
                 } else {
+                    console.log('🚪 Usuario deslogueado')
                     firebaseUser.value = null
                     backendUser.value = null
                     token.value = null
                 }
 
                 loading.value = false
-                resolve()
+
+                // Solo resolvemos la primera vez
+                if (!resolved) {
+                    resolved = true
+                    resolve()
+                }
             })
         })
     }
