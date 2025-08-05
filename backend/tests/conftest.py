@@ -53,18 +53,21 @@ def client(db_session):
 
 @pytest.fixture()
 def auth_cookie(client):
-    # Registrar y loguear usuario de test
-    register_data = {
-        "username": "apitest",
-        "email": "apitest@example.com",
-        "password": "testpass"
+    # Para Firebase Auth, necesitamos simular un token válido
+    # En lugar de hacer login tradicional, devolvemos headers de autorización
+    from app.auth_firebase import verify_firebase_token
+    
+    # Mock Firebase user para las pruebas
+    mock_firebase_user = {
+        'uid': 'test_firebase_uid_api_test',
+        'email': 'apitest@example.com',
+        'name': 'API Test User',
+        'email_verified': True
     }
-    client.post("/api/v1/auth/register", json=register_data)
-    login_data = {
-        "username": "apitest",
-        "password": "testpass"
+    
+    # Sobrescribir la dependencia de Firebase auth
+    app.dependency_overrides[verify_firebase_token] = lambda: mock_firebase_user
+    
+    return {
+        "Authorization": "Bearer mock_firebase_token_for_testing"
     }
-    response = client.post("/api/v1/auth/login", json=login_data)
-    assert response.status_code == 200
-    assert "access_token" in response.cookies
-    return {"access_token": response.cookies["access_token"]}

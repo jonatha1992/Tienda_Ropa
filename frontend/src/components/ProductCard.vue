@@ -1,11 +1,11 @@
 <template>
-  <div class="group relative">
+  <div class="relative group">
     <div
-      class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+      class="w-full overflow-hidden bg-gray-200 rounded-md min-h-80 aspect-w-1 aspect-h-1 group-hover:opacity-75 lg:h-80 lg:aspect-none">
       <img :src="product.images[0]?.image_url" :alt="product.name"
-        class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+        class="object-cover object-center w-full h-full lg:w-full lg:h-full" />
     </div>
-    <div class="mt-4 flex justify-between">
+    <div class="flex justify-between mt-4">
       <div>
         <h3 class="text-sm text-gray-700">
           <a :href="'/product/' + product.id"> <!-- Debería enlazar a la página del producto -->

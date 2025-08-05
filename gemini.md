@@ -36,7 +36,7 @@
   - Arranque local:  
     ```bash
     cd backend
-    python -m venv .venv && .venv\Scripts\activate
+    python -m venv .venv ; .venv\Scripts\activate
     pip install -r requirements.txt
     uvicorn app.main:app --reload
     ```
@@ -48,9 +48,7 @@
   - Tests: Vitest + Testing Library.
   - Arranque local:  
     ```bash
-    cd frontend
-    npm install
-    npm run dev
+    cd frontend ; npm install ;  npm run dev
     ```
 
 ## 3. Convenciones y patrones

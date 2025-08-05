@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Product } from '../types';
 import { useCartStore } from '../store/cart';
@@ -79,7 +79,7 @@ const cartStore = useCartStore();
 onMounted(async () => {
   const productId = route.params.id;
   try {
-    const response = await fetch(`http://localhost:8000/products/${productId}`);
+    const response = await fetch(`http://localhost:8000/api/v1/products/${productId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

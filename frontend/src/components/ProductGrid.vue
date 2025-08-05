@@ -15,19 +15,17 @@ import { ref, onMounted } from 'vue';
 import ProductCard from './ProductCard.vue';
 import type { Product } from '../types';
 
+import apiClient from '../api';
+
 const products = ref<Product[]>([]);
 
 onMounted(async () => {
   if (import.meta.env.VITEST) return;
   try {
-    const response = await fetch('http://localhost:8000/products/');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    products.value = data;
+    const response = await apiClient.get('/products/');
+    products.value = response.data;
   } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
+    console.error('Error fetching products:', error);
   }
 });
 </script>

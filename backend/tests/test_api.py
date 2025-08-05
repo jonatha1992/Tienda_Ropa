@@ -14,14 +14,14 @@ def test_create_and_get_product(client, auth_cookie):
         "images": ["image_url.jpg"],
         "variants": [{"color": "azul", "talle": "M", "stock": 10}]
     }
-    response = client.post("/api/v1/products/", json=data, cookies=auth_cookie)
+    response = client.post("/api/v1/products/", json=data, headers=auth_cookie)
     if response.status_code != 200:
         print("Error detail:", response.json())
     assert response.status_code == 200
     product = response.json()
     assert product["name"] == "pantalon"
 
-    response = client.get("/api/v1/products/", cookies=auth_cookie)
+    response = client.get("/api/v1/products/", headers=auth_cookie)
     assert response.status_code == 200
     products = response.json()
     assert any(p["name"] == "pantalon" for p in products)
@@ -31,12 +31,12 @@ def test_create_and_get_customer(client, auth_cookie):
         "name": "cliente1",
         "email": "cliente1@example.com"
     }
-    response = client.post("/api/v1/customers/", json=data, cookies=auth_cookie)
+    response = client.post("/api/v1/customers/", json=data, headers=auth_cookie)
     assert response.status_code == 200
     customer = response.json()
     assert customer["name"] == "cliente1"
 
-    response = client.get("/api/v1/customers/", cookies=auth_cookie)
+    response = client.get("/api/v1/customers/", headers=auth_cookie)
     assert response.status_code == 200
     customers = response.json()
     assert any(c["name"] == "cliente1" for c in customers)
@@ -53,8 +53,8 @@ def test_create_and_get_order(client, auth_cookie):
         "images": ["image_url.jpg"],
         "variants": [{"color": "blanco", "talle": "L", "stock": 5}]
     }
-    customer_resp = client.post("/api/v1/customers/", json=customer_data, cookies=auth_cookie)
-    product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)
+    customer_resp = client.post("/api/v1/customers/", json=customer_data, headers=auth_cookie)
+    product_resp = client.post("/api/v1/products/", json=product_data, headers=auth_cookie)
     customer_id = customer_resp.json()["id"]
     product_id = product_resp.json()["id"]
 
@@ -63,12 +63,12 @@ def test_create_and_get_order(client, auth_cookie):
         "status": "pending",
         "total": 10.0
     }
-    response = client.post("/api/v1/orders/", json=order_data, cookies=auth_cookie)
+    response = client.post("/api/v1/orders/", json=order_data, headers=auth_cookie)
     assert response.status_code == 200
     order = response.json()
     assert order["customer_id"] == customer_id
 
-    response = client.get("/api/v1/orders/", cookies=auth_cookie)
+    response = client.get("/api/v1/orders/", headers=auth_cookie)
     assert response.status_code == 200
     orders = response.json()
     assert any(o["customer_id"] == customer_id for o in orders)
@@ -82,7 +82,7 @@ def test_create_and_get_inventory(client, auth_cookie):
         "images": ["img2.jpg"],
         "variants": [{"color": "negro", "talle": "42", "stock": 10}]
     }
-    product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)
+    product_resp = client.post("/api/v1/products/", json=product_data, headers=auth_cookie)
     product_id = product_resp.json()["id"]
 
     inventory_data = {
@@ -90,12 +90,12 @@ def test_create_and_get_inventory(client, auth_cookie):
         "quantity": 10,
         "last_update": "2025-07-30T00:00:00"
     }
-    response = client.post("/api/v1/inventory/", json=inventory_data, cookies=auth_cookie)
+    response = client.post("/api/v1/inventory/", json=inventory_data, headers=auth_cookie)
     assert response.status_code == 200
     inventory = response.json()
     assert inventory["product_id"] == product_id
 
-    response = client.get("/api/v1/inventory/", cookies=auth_cookie)
+    response = client.get("/api/v1/inventory/", headers=auth_cookie)
     assert response.status_code == 200
     inventories = response.json()
     assert any(i["product_id"] == product_id for i in inventories)
@@ -115,8 +115,8 @@ def test_create_and_get_order_item(client, auth_cookie):
         "images": ["img3.jpg"],
         "variants": [{"color": "rojo", "talle": "único", "stock": 3}]
     }
-    customer_resp = client.post("/api/v1/customers/", json=customer_data, cookies=auth_cookie)
-    product_resp = client.post("/api/v1/products/", json=product_data, cookies=auth_cookie)
+    customer_resp = client.post("/api/v1/customers/", json=customer_data, headers=auth_cookie)
+    product_resp = client.post("/api/v1/products/", json=product_data, headers=auth_cookie)
     customer_id = customer_resp.json()["id"]
     product_id = product_resp.json()["id"]
 
@@ -126,7 +126,7 @@ def test_create_and_get_order_item(client, auth_cookie):
         "total": 5.0,
         "created_at": "2025-07-30T00:00:00"
     }
-    order_resp = client.post("/api/v1/orders/", json=order_data, cookies=auth_cookie)
+    order_resp = client.post("/api/v1/orders/", json=order_data, headers=auth_cookie)
     order_id = order_resp.json()["id"]
 
     order_item_data = {
@@ -135,12 +135,12 @@ def test_create_and_get_order_item(client, auth_cookie):
         "quantity": 1,
         "price": 5.0
     }
-    response = client.post("/api/v1/order-items/", json=order_item_data, cookies=auth_cookie)
+    response = client.post("/api/v1/order-items/", json=order_item_data, headers=auth_cookie)
     assert response.status_code == 200
     order_item = response.json()
     assert order_item["order_id"] == order_id
 
-    response = client.get("/api/v1/order-items/", cookies=auth_cookie)
+    response = client.get("/api/v1/order-items/", headers=auth_cookie)
     assert response.status_code == 200
     order_items = response.json()
     assert any(oi["order_id"] == order_id for oi in order_items)

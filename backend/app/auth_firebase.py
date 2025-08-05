@@ -2,17 +2,19 @@ import firebase_admin
 from firebase_admin import auth, credentials
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
-# Inicializar Firebase Admin SDK solo si no estamos en modo test
+from app.core.config import settings
 import os
-if not os.environ.get("TESTING"):
+
+if settings.ENVIRONMENT != "test":
     cred_path = os.path.join(os.path.dirname(__file__), "..", "firebase_service_account.json")
-    cred_path = os.path.abspath(cred_path)
-    cred = credentials.Certificate(cred_path)
-    try:
-        firebase_admin.get_app()
-    except ValueError:
-        firebase_admin.initialize_app(cred)
+    if os.path.exists(cred_path):
+        cred = credentials.Certificate(cred_path)
+        try:
+            firebase_admin.get_app()
+        except ValueError:
+            firebase_admin.initialize_app(cred)
+
+security = HTTPBearer()
 
 security = HTTPBearer()
 
