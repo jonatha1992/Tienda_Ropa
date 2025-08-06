@@ -1,18 +1,60 @@
 # Copilot Instructions: Tienda_Ropa
 
+## ⚠️ COMANDOS OBLIGATORIOS PARA EJECUTAR SERVICIOS ⚠️
+
+### � ANTES DE INICIAR - Verificar puertos:
+```powershell
+# Backend (puerto 8000):
+netstat -an | findstr :8000
+
+# Frontend (puerto 5173):
+netstat -an | findstr :5173
+```
+**Si hay salida, el servidor YA ESTÁ CORRIENDO - NO iniciar uno nuevo**
+
+### �🚀 BACKEND - Secuencia OBLIGATORIA:
+```powershell
+cd c:\Repositorio\Tienda_Ropa\backend
+& .\.venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload
+```
+**NUNCA ejecutar uvicorn sin estos pasos previos**
+
+### 🎨 FRONTEND - Secuencia OBLIGATORIA:
+```powershell
+cd c:\Repositorio\Tienda_Ropa\frontend
+npm run dev
+```
+
 ## Reglas para agentes Copilot
 
-1. Antes de actuar, leer en este orden: `README.md` → `docs/planning.md` (o issues) → `docs/tech-stack.md` → `docs/structure.md`.
-2. Si falta alguno, crearlo con un esqueleto mínimo y confirmar.
-3. Solo implementar/editar una feature o endpoint si está en `planning.md` (o issues); si no, agregarlo primero.
-4. Tras cambios relevantes (feature/endpoint/config), **actualizar README** (sección API: ruta, método, ejemplos de request/response, errores).
-5. **Frontend:** TypeScript estricto; usando tailwinds css para maquetado, lint con ESLint/Prettier; tests (Vitest) cuando corresponda.
-6. **Backend:** Validación con SQLModel (antes Pydantic); tests con pytest (y/o requests a la API); seguir convenciones.
-7. **Limpieza de código:** identificar y eliminar imports, funciones, tipos, módulos y archivos no usados.
+1. **PROTOCOLO OBLIGATORIO DE ARRANQUE:**
+   - **ANTES DE INICIAR CUALQUIER SERVIDOR:** Verificar si ya está corriendo con `netstat -an | findstr :8000` (backend) o `netstat -an | findstr :5173` (frontend)
+   - **Backend:** SIEMPRE ejecutar estos 3 comandos en orden:
+     1. `cd c:\Repositorio\Tienda_Ropa\backend`
+     2. `& .\.venv\Scripts\Activate.ps1`
+     3. `python -m uvicorn app.main:app --reload`
+   - **Frontend:** SIEMPRE ejecutar estos 2 comandos en orden:
+     1. `cd c:\Repositorio\Tienda_Ropa\frontend`
+     2. `npm run dev`
+   - **Tests Backend:** SIEMPRE ejecutar estos 3 comandos en orden:
+     1. `cd c:\Repositorio\Tienda_Ropa\backend`
+     2. `& .\.venv\Scripts\Activate.ps1`
+     3. `python -m pytest`
+   - NUNCA ejecutar servidores sin seguir estos pasos exactos.
+   - SI YA HAY UN SERVIDOR CORRIENDO, informar al usuario y NO iniciar uno nuevo.
+
+2. Antes de actuar, leer en este orden: `README.md` → `docs/planning.md` (o issues) → `docs/tech-stack.md` → `docs/structure.md`.
+3. Si falta alguno, crearlo con un esqueleto mínimo y confirmar.
+4. Solo implementar/editar una feature o endpoint si está en `planning.md` (o issues); si no, agregarlo primero.
+5. Tras cambios relevantes (feature/endpoint/config), **actualizar README** (sección API: ruta, método, ejemplos de request/response, errores).
+6. **Frontend:** TypeScript estricto; usando tailwinds css para maquetado, lint con ESLint/Prettier; tests (Vitest) cuando corresponda.
+7. **Backend:** Validación con SQLModel (antes Pydantic); tests con pytest (y/o requests a la API); seguir convenciones.
+8. **Limpieza de código:** identificar y eliminar imports, funciones, tipos, módulos y archivos no usados.
    - Comprobar referencias en todo el workspace antes de borrar.
    - Si algo es parte de una API pública, marcar deprecado y planificar su remoción en `docs/planning.md`.
    - Si hay dudas, abrir PR explicando qué se elimina y por qué; actualizar `README`/`planning` si corresponde.
-8. Cuando completes una tarea de `docs/planning.md`, muévela de la sección 'Tareas' a 'Hecho' y agrega la fecha de finalización. Ejemplo:
+9. Cuando completes una tarea de `docs/planning.md`, muévela de la sección 'Tareas' a 'Hecho' y agrega la fecha de finalización. Ejemplo:
    - Tarea completada [29/07/2025]
 
 ---
@@ -33,22 +75,26 @@
   - API REST estructurada en `/backend/app/routes/` (ejemplo: `products.py`, `customers.py`).
   - Configuración en `.env` y `app/core/config.py`.
   - Tests con pytest y requests.
-  - Arranque local:  
-    ```bash
-    cd backend
-    python -m venv .venv ; .venv\Scripts\activate
-    pip install -r requirements.txt
-    uvicorn app.main:app --reload
+  - **ARRANQUE OBLIGATORIO DEL BACKEND:**  
+    ```powershell
+    # SIEMPRE ejecutar en este orden exacto:
+    cd c:\Repositorio\Tienda_Ropa\backend
+    & .\.venv\Scripts\Activate.ps1
+    python -m uvicorn app.main:app --reload
     ```
+    **NUNCA ejecutar uvicorn sin activar el .venv primero y estar en el directorio backend**
+
 - **Frontend:**  
   - SPA con Vue 3, Vite y TypeScript estricto.
   - Maquetado con Tailwind CSS.
   - Estado con Pinia (opcional).
   - Linting: ESLint + Prettier.
   - Tests: Vitest + Testing Library.
-  - Arranque local:  
-    ```bash
-    cd frontend ; npm install ; npm run dev
+  - **ARRANQUE OBLIGATORIO DEL FRONTEND:**  
+    ```powershell
+    # SIEMPRE ejecutar en este orden exacto:
+    cd c:\Repositorio\Tienda_Ropa\frontend
+    npm run dev
     ```
 
 ## 3. Convenciones y patrones

@@ -52,10 +52,13 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 @pytest.fixture()
-def auth_cookie(client):
+def auth_cookie(client, db_session):
     # Para Firebase Auth, necesitamos simular un token válido
     # En lugar de hacer login tradicional, devolvemos headers de autorización
     from app.auth_firebase import verify_firebase_token
+    from app.models.user import User
+    from app.models.role import Role, RoleType
+    from app.models.user_role import UserRole
     
     # Mock Firebase user para las pruebas
     mock_firebase_user = {
@@ -64,6 +67,33 @@ def auth_cookie(client):
         'name': 'API Test User',
         'email_verified': True
     }
+    
+    # Crear el usuario en la base de datos si no existe
+    existing_user = db_session.query(User).filter(User.firebase_uid == mock_firebase_user['uid']).first()
+    if not existing_user:
+        # Crear roles si no existen
+        admin_role = db_session.query(Role).filter(Role.name == RoleType.ADMIN).first()
+        if not admin_role:
+            admin_role = Role(name=RoleType.ADMIN, description="Administrator role")
+            db_session.add(admin_role)
+            db_session.commit()
+            db_session.refresh(admin_role)
+        
+        # Crear el usuario
+        test_user = User(
+            firebase_uid=mock_firebase_user['uid'],
+            email=mock_firebase_user['email'],
+            username=mock_firebase_user['email'].split('@')[0],
+            nombre=mock_firebase_user['name']
+        )
+        db_session.add(test_user)
+        db_session.commit()
+        db_session.refresh(test_user)
+        
+        # Asignar rol de administrador al usuario de test
+        user_role = UserRole(user_id=test_user.id, role_id=admin_role.id)
+        db_session.add(user_role)
+        db_session.commit()
     
     # Sobrescribir la dependencia de Firebase auth
     app.dependency_overrides[verify_firebase_token] = lambda: mock_firebase_user
