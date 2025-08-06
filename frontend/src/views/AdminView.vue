@@ -124,12 +124,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import { useToast } from 'vue-toastification';
 import { storage } from '../firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import ConfirmationModal from './ConfirmationModal.vue';
-import ProductCard from './ProductCard.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
+import ProductCard from '../components/ProductCard.vue';
 import { useAuthStore } from '../store/auth';
+import apiClient from '../api';
 
+const toast = useToast();
 const authStore = useAuthStore();
 
 interface ProductVariant {
@@ -293,32 +296,24 @@ async function deleteProduct(id?: number) {
   if (!id) return;
 
   if (!authStore.token) {
-    alert('No estás autenticado. Por favor inicia sesión.');
+    toast.error('❌ No estás autenticado. Por favor inicia sesión.');
     return;
   }
 
   console.log('🗑️ Eliminando producto ID:', id);
 
   try {
-    const response = await fetch(`${API_URL}${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`,
-        'Content-Type': 'application/json'
-      },
-    });
+    const response = await apiClient.delete(`/products/${id}`);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error ${response.status}: ${errorText}`);
+    if (response.status === 200) {
+      console.log('✅ Producto eliminado');
+      await fetchProducts();
+      toast.success('🎉 Producto eliminado exitosamente!');
     }
-
-    console.log('✅ Producto eliminado');
-    await fetchProducts();
-    alert('Producto eliminado exitosamente!');
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error al eliminar producto:', error);
-    alert(`Error al eliminar producto: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
+    toast.error(`❌ ${errorMessage}`);
   }
 }// --- Lógica de Imágenes ---
 function handleFileSelect(event: Event) {

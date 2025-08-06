@@ -30,6 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
         return new Promise<void>((resolve) => {
             let resolved = false
 
+            // @ts-ignore - unsubscribe is intentionally not used in this context
             const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
                 console.log('🔐 Auth state changed:', fbUser?.email || 'Usuario no autenticado')
                 console.log('🔍 Firebase User object:', fbUser)

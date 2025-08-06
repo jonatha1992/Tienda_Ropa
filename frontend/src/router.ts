@@ -1,20 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from './components/Home.vue';
+import HomeView from './views/HomeView.vue';
 import ProductDetail from './components/ProductDetail.vue';
 import ShoppingCart from './components/ShoppingCart.vue';
-import ProductAdmin from './components/ProductAdmin.vue';
-import Auth from './components/Auth.vue';
+import AdminView from './views/AdminView.vue';
+import AdminUserManagementView from './views/AdminUserManagementView.vue';
+import AuthView from './views/AuthView.vue';
 import { useAuthStore } from './store/auth';
 import { auth } from './firebase'; // Importar auth
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: HomeView },
   { path: '/product/:id', component: ProductDetail },
   { path: '/cart', component: ShoppingCart },
-  { path: '/auth', component: Auth },
+  { path: '/auth', component: AuthView },
   {
     path: '/admin/products',
-    component: ProductAdmin,
+    component: AdminView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/users',
+    component: AdminUserManagementView,
     meta: { requiresAuth: true }
   },
 ];
@@ -31,7 +37,7 @@ router.beforeEach(async (to, _from, next) => {
   // Esperar a que se inicialice la autenticación si aún no se ha hecho
   if (authStore.loading) {
     await new Promise(resolve => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
+      const unsubscribe = auth.onAuthStateChanged((user: any) => {
         unsubscribe();
         resolve(user);
       });

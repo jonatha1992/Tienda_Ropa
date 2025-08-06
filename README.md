@@ -34,4 +34,17 @@ cd backend
 python -m venv .venv && source .venv/bin/activate    # en Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 cp .env.example .env
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate    # en Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env
 uvicorn app.main:app --reload  # http://localhost:8000
+```
+
+### Frontend (Vue 3)
+```bash
+cd frontend
+npm install
+npm run dev  # http://localhost:5173
+```

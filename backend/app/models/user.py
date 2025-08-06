@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
@@ -10,6 +10,12 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     hashed_password: Optional[str] = Field(default=None)
+    
+    # Relación con UserRole (many-to-many through user_roles)
+    user_roles: List["UserRole"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={"foreign_keys": "UserRole.user_id"}
+    )
 
 # Alias para compatibilidad con controladores/rutas
 UserDB = User
@@ -26,3 +32,8 @@ class UserLogin(SQLModel):
 # DTO para enviar los datos del usuario al cliente.
 class UserRead(UserBase):
     id: int
+
+# Importación para evitar problemas de importación circular
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.models.user_role import UserRole

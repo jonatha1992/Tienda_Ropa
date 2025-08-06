@@ -7,7 +7,7 @@ from app.db.session import get_session
 from app.models.product import (
     Product, ProductCreate, ProductRead, ProductImage, ProductVariant, ProductImageRead, ProductVariantRead
 )
-from app.security import get_current_user
+from app.security import get_current_user, require_manager_or_admin
 
 router = APIRouter()
 
@@ -15,7 +15,7 @@ router = APIRouter()
 def create_product(
     session: Session = Depends(get_session), 
     product: ProductCreate = Body(...), 
-    user=Depends(get_current_user)
+    user=Depends(require_manager_or_admin())
 ):
     # Separate the main product data from the related images and variants
     product_data = product.model_dump(exclude={'images', 'variants'})
@@ -50,7 +50,7 @@ def update_product(
     product_id: int, 
     session: Session = Depends(get_session), 
     product: ProductCreate = Body(...), 
-    user=Depends(get_current_user)
+    user=Depends(require_manager_or_admin())
 ):
     db_product = session.get(Product, product_id)
     if not db_product:
@@ -77,10 +77,26 @@ def update_product(
     return db_product
 
 @router.delete("/products/{product_id}")
-def delete_product(product_id: int, session: Session = Depends(get_session), user=Depends(get_current_user)):
+def delete_product(product_id: int, session: Session = Depends(get_session), user=Depends(require_manager_or_admin())):
+    """Eliminar un producto y todos sus datos relacionados"""
+    from sqlmodel import select
+    
     product = session.get(Product, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Primero eliminar las imágenes relacionadas
+    from app.models.product import ProductImage, ProductVariant
+    images = session.exec(select(ProductImage).where(ProductImage.product_id == product_id)).all()
+    for image in images:
+        session.delete(image)
+    
+    # Luego eliminar las variantes relacionadas
+    variants = session.exec(select(ProductVariant).where(ProductVariant.product_id == product_id)).all()
+    for variant in variants:
+        session.delete(variant)
+    
+    # Finalmente eliminar el producto
     session.delete(product)
     session.commit()
-    return {"ok": True}
+    return {"ok": True, "message": "Product and related data deleted successfully"}

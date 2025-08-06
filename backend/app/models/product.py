@@ -12,8 +12,14 @@ class ProductBase(SQLModel):
 class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     
-    images: List["ProductImage"] = Relationship(back_populates="product")
-    variants: List["ProductVariant"] = Relationship(back_populates="product")
+    images: List["ProductImage"] = Relationship(
+        back_populates="product",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
+    variants: List["ProductVariant"] = Relationship(
+        back_populates="product", 
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
 
 class ProductImage(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
