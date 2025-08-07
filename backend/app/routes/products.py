@@ -98,7 +98,11 @@ def update_product(
             db_product.variants = [ProductVariant(
                 color=product.color, 
                 talle=product.talle, 
-                stock=product.stock or 0
+        if product.color is not None and product.talle is not None and product.stock is not None:
+            db_product.variants = [ProductVariant(
+                color=product.color, 
+                talle=product.talle, 
+                stock=product.stock
             )]
     else:
         # For regular products, create variants from the variants list
