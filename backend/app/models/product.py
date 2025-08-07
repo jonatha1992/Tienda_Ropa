@@ -40,7 +40,7 @@ class ProductVariant(SQLModel, table=True):
 
 class ProductCreate(ProductBase):
     images: List[str]  # List of image URLs
-    variants: Optional[List["ProductVariantCreate"]] = None
+    variants: List["ProductVariantCreate"] = []
     # For unique products, we'll also accept single variant fields
     color: Optional[str] = None
     talle: Optional[str] = None
