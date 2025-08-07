@@ -48,3 +48,11 @@
   - Navegación actualizada con menú de administración basado en roles
   - Script de inicialización de roles por defecto
   - Protección de endpoints por roles apropiados
+- ABM de productos: soporte para producto único y variantes [07/08/2025]
+  - Implementado backend: campo `is_unique_product` en modelo Product
+  - API actualizada para manejar productos únicos vs productos con variantes
+  - Frontend: checkbox para alternar entre producto único y múltiples variantes
+  - UI condicional: campos únicos (color/talle/stock) vs lista de variantes
+  - Validación frontend y backend para ambos tipos de producto
+  - Migración de base de datos creada
+  - Tests pasando y build exitoso
