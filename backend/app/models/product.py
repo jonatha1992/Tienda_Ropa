@@ -8,6 +8,7 @@ class ProductBase(SQLModel):
     genero: Optional[str] = "unisex"
     estado: Optional[str] = "nuevo"
     edad_destino: Optional[str] = "adulto"
+    is_unique_product: bool = False
 
 class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -39,7 +40,11 @@ class ProductVariant(SQLModel, table=True):
 
 class ProductCreate(ProductBase):
     images: List[str]  # List of image URLs
-    variants: List["ProductVariantCreate"]
+    variants: Optional[List["ProductVariantCreate"]] = None
+    # For unique products, we'll also accept single variant fields
+    color: Optional[str] = None
+    talle: Optional[str] = None
+    stock: Optional[int] = None
 
 class ProductVariantCreate(SQLModel):
     color: Optional[str] = None

@@ -40,6 +40,24 @@
               <textarea v-model="product.description" rows="3"
                 class="block w-full mt-1 border-gray-300 rounded-md shadow-sm"></textarea>
             </div>
+
+            <!-- Checkbox para producto único -->
+            <div class="md:col-span-2">
+              <div class="flex items-center">
+                <input 
+                  type="checkbox" 
+                  id="is_unique_product" 
+                  v-model="product.is_unique_product" 
+                  class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                >
+                <label for="is_unique_product" class="ml-3 text-sm font-medium text-gray-700">
+                  Producto único (solo una combinación de atributos)
+                </label>
+              </div>
+              <p class="mt-1 text-sm text-gray-500">
+                Si está marcado, solo podrá ingresar un color y talla. Si no, podrá crear múltiples variantes.
+              </p>
+            </div>
           </div>
 
           <div class="mt-6">
@@ -54,21 +72,62 @@
           </div>
 
           <div class="mt-6">
-            <h3 class="text-lg font-medium text-gray-800">Variantes</h3>
-            <div v-for="(variant, index) in product.variants" :key="index"
-              class="grid items-center grid-cols-4 gap-4 p-4 mt-4 border rounded">
-              <input type="text" v-model="variant.color" placeholder="Color"
-                class="border-gray-300 rounded-md shadow-sm">
-              <input type="text" v-model="variant.talle" placeholder="Talle"
-                class="border-gray-300 rounded-md shadow-sm">
-              <input type="number" v-model.number="variant.stock" placeholder="Stock"
-                class="border-gray-300 rounded-md shadow-sm">
-              <button type="button" @click="removeVariant(index)"
-                class="text-red-500 hover:text-red-700">Eliminar</button>
+            <!-- Unique Product Fields -->
+            <div v-if="product.is_unique_product">
+              <h3 class="text-lg font-medium text-gray-800">Atributos del Producto</h3>
+              <div class="grid grid-cols-3 gap-4 mt-4">
+                <div>
+                  <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
+                  <input 
+                    type="text" 
+                    id="color"
+                    v-model="product.color" 
+                    placeholder="Color"
+                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                  >
+                </div>
+                <div>
+                  <label for="talle" class="block text-sm font-medium text-gray-700">Talle</label>
+                  <input 
+                    type="text" 
+                    id="talle"
+                    v-model="product.talle" 
+                    placeholder="Talle"
+                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                  >
+                </div>
+                <div>
+                  <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
+                  <input 
+                    type="number" 
+                    id="stock"
+                    v-model.number="product.stock" 
+                    placeholder="Stock"
+                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    min="0"
+                  >
+                </div>
+              </div>
             </div>
-            <button type="button" @click="addVariant"
-              class="px-4 py-2 mt-4 text-sm font-medium bg-gray-100 border rounded-md hover:bg-gray-200">Añadir
-              Variante</button>
+
+            <!-- Multiple Variants -->
+            <div v-else>
+              <h3 class="text-lg font-medium text-gray-800">Variantes</h3>
+              <div v-for="(variant, index) in product.variants" :key="index"
+                class="grid items-center grid-cols-4 gap-4 p-4 mt-4 border rounded">
+                <input type="text" v-model="variant.color" placeholder="Color"
+                  class="border-gray-300 rounded-md shadow-sm">
+                <input type="text" v-model="variant.talle" placeholder="Talle"
+                  class="border-gray-300 rounded-md shadow-sm">
+                <input type="number" v-model.number="variant.stock" placeholder="Stock"
+                  class="border-gray-300 rounded-md shadow-sm">
+                <button type="button" @click="removeVariant(index)"
+                  class="text-red-500 hover:text-red-700">Eliminar</button>
+              </div>
+              <button type="button" @click="addVariant"
+                class="px-4 py-2 mt-4 text-sm font-medium bg-gray-100 border rounded-md hover:bg-gray-200">Añadir
+                Variante</button>
+            </div>
           </div>
 
           <div class="flex justify-end mt-6">
@@ -154,6 +213,7 @@ interface Product {
   price: number;
   genero: string;
   estado: string;
+  is_unique_product?: boolean;
   images: ProductImage[];
   variants: ProductVariant[];
 }
@@ -164,8 +224,13 @@ interface ProductCreate {
   price: number;
   genero: string;
   estado: string;
+  is_unique_product: boolean;
   images: string[];
   variants: Omit<ProductVariant, 'id'>[];
+  // For unique products
+  color: string | null;
+  talle: string | null;
+  stock: number;
 }
 
 // Tipo para ProductCard (compatible con el tipo global)
@@ -188,8 +253,12 @@ const product = ref<ProductCreate>({
   price: 0,
   genero: 'unisex',
   estado: 'nuevo',
+  is_unique_product: false,
   images: [],
   variants: [],
+  color: null,
+  talle: null,
+  stock: 0,
 });
 
 const selectedFiles = ref<File[]>([]);
@@ -200,20 +269,38 @@ const modalMessage = ref('');
 const confirmAction = ref<(() => void) | null>(null);
 
 // Vista previa del producto para el ProductCard
-const previewProduct = computed((): ProductCardType => ({
-  id: 1, // ID temporal para la vista previa
-  name: product.value.name || 'Nombre del producto',
-  description: product.value.description || 'Descripción del producto',
-  price: product.value.price || 0,
-  images: imagePreviews.value.length > 0
-    ? imagePreviews.value.map(url => ({ image_url: url }))
-    : [{ image_url: 'https://via.placeholder.com/300x300?text=Sin+Imagen' }],
-  variants: product.value.variants.map(v => ({
-    color: v.color || '',
-    size: v.talle || '',
-    stock: v.stock || 0
-  }))
-}));
+const previewProduct = computed((): ProductCardType => {
+  let variants: { color: string; size: string; stock: number }[] = [];
+  
+  if (product.value.is_unique_product) {
+    // For unique products, show the single variant
+    if (product.value.color || product.value.talle || product.value.stock) {
+      variants = [{
+        color: product.value.color || '',
+        size: product.value.talle || '',
+        stock: product.value.stock || 0
+      }];
+    }
+  } else {
+    // For variant products, show all variants
+    variants = product.value.variants.map(v => ({
+      color: v.color || '',
+      size: v.talle || '',
+      stock: v.stock || 0
+    }));
+  }
+
+  return {
+    id: 1, // ID temporal para la vista previa
+    name: product.value.name || 'Nombre del producto',
+    description: product.value.description || 'Descripción del producto',
+    price: product.value.price || 0,
+    images: imagePreviews.value.length > 0
+      ? imagePreviews.value.map(url => ({ image_url: url }))
+      : [{ image_url: 'https://via.placeholder.com/300x300?text=Sin+Imagen' }],
+    variants
+  };
+});
 
 // --- Lógica de la API ---
 async function fetchProducts() {
@@ -361,8 +448,13 @@ function editProduct(p: Product) {
     price: p.price,
     genero: p.genero,
     estado: p.estado,
+    is_unique_product: p.is_unique_product || false,
     images: p.images.map((img) => img.image_url),
-    variants: p.variants.map(v => ({ color: v.color, talle: v.talle, stock: v.stock }))
+    variants: p.variants.map(v => ({ color: v.color, talle: v.talle, stock: v.stock })),
+    // For unique products, populate single fields from first variant
+    color: p.variants.length > 0 ? p.variants[0].color : null,
+    talle: p.variants.length > 0 ? p.variants[0].talle : null,
+    stock: p.variants.length > 0 ? p.variants[0].stock : 0,
   };
   imagePreviews.value = p.images.map((img) => img.image_url);
   selectedFiles.value = [];
@@ -378,7 +470,19 @@ function removeVariant(index: number) {
 
 function resetForm() {
   editing.value = false;
-  product.value = { name: '', description: null, price: 0, genero: 'unisex', estado: 'nuevo', images: [], variants: [] };
+  product.value = { 
+    name: '', 
+    description: null, 
+    price: 0, 
+    genero: 'unisex', 
+    estado: 'nuevo', 
+    is_unique_product: false,
+    images: [], 
+    variants: [],
+    color: null,
+    talle: null,
+    stock: 0,
+  };
   selectedFiles.value = [];
   imagePreviews.value = [];
 }

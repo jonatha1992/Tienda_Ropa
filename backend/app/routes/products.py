@@ -18,14 +18,25 @@ def create_product(
     user=Depends(require_manager_or_admin())
 ):
     # Separate the main product data from the related images and variants
-    product_data = product.model_dump(exclude={'images', 'variants'})
+    product_data = product.model_dump(exclude={'images', 'variants', 'color', 'talle', 'stock'})
     db_product = Product(**product_data)
 
     # Create ProductImage objects and link them to the product
     db_product.images = [ProductImage(image_url=url) for url in product.images]
     
-    # Create ProductVariant objects and link them to the product
-    db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
+    # Handle variants based on product type
+    if product.is_unique_product:
+        # For unique products, create a single variant from the direct fields
+        if product.color is not None or product.talle is not None or product.stock is not None:
+            db_product.variants = [ProductVariant(
+                color=product.color, 
+                talle=product.talle, 
+                stock=product.stock or 0
+            )]
+    else:
+        # For regular products, create variants from the variants list
+        if product.variants:
+            db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
 
     session.add(db_product)
     session.commit()
@@ -57,7 +68,7 @@ def update_product(
         raise HTTPException(status_code=404, detail="Product not found")
     
     # Update product fields
-    product_data = product.model_dump(exclude_unset=True, exclude={'images', 'variants'})
+    product_data = product.model_dump(exclude_unset=True, exclude={'images', 'variants', 'color', 'talle', 'stock'})
     for key, value in product_data.items():
         setattr(db_product, key, value)
 
@@ -67,9 +78,22 @@ def update_product(
     for image in db_product.images:
         session.delete(image)
 
-    # Create new ones
+    # Create new images
     db_product.images = [ProductImage(image_url=url) for url in product.images]
-    db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
+    
+    # Handle variants based on product type
+    if product.is_unique_product:
+        # For unique products, create a single variant from the direct fields
+        if product.color is not None or product.talle is not None or product.stock is not None:
+            db_product.variants = [ProductVariant(
+                color=product.color, 
+                talle=product.talle, 
+                stock=product.stock or 0
+            )]
+    else:
+        # For regular products, create variants from the variants list
+        if product.variants:
+            db_product.variants = [ProductVariant(**variant.model_dump()) for variant in product.variants]
 
     session.add(db_product)
     session.commit()
