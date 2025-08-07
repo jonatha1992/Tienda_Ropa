@@ -274,7 +274,11 @@ const previewProduct = computed((): ProductCardType => {
   
   if (product.value.is_unique_product) {
     // For unique products, show the single variant
-    if (product.value.color || product.value.talle || product.value.stock) {
+    if (
+      (product.value.color !== null && product.value.color !== undefined) ||
+      (product.value.talle !== null && product.value.talle !== undefined) ||
+      (product.value.stock !== null && product.value.stock !== undefined)
+    ) {
       variants = [{
         color: product.value.color || '',
         size: product.value.talle || '',
