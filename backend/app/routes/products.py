@@ -32,7 +32,17 @@ def create_product(
                 color=product.color, 
                 talle=product.talle, 
                 stock=product.stock or 0
+        if product.color is not None and product.talle is not None and product.stock is not None:
+            db_product.variants = [ProductVariant(
+                color=product.color, 
+                talle=product.talle, 
+                stock=product.stock
             )]
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="For unique products, color, talle, and stock must all be provided."
+            )
     else:
         # For regular products, create variants from the variants list
         if product.variants:
