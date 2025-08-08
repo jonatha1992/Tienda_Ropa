@@ -1,18 +1,13 @@
-# Railway Dockerfile for backend
-FROM python:3.11-slim
+# Railway Dockerfile for backend - Using UV for faster builds
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies including curl for uv
+# Install system dependencies for building packages
 RUN apt-get update && apt-get install -y \
     build-essential \
-    curl \
     && rm -rf /var/lib/apt/lists/*
-
-# Install uv, a fast Python package installer
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Copy requirements and install Python dependencies using uv
 COPY backend/requirements.txt .
