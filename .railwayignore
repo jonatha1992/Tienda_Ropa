@@ -1,0 +1,18 @@
+# Railway ignore file
+frontend/
+docs/
+img/
+scripts/
+*.md
+!README.md
+.git/
+.github/
+.vscode/
+*.xlsx
+*.sqlite3
+__pycache__/
+.pytest_cache/
+node_modules/
+# Sensitive files
+firebase_service_account.json
+.env
