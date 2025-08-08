@@ -21,6 +21,7 @@ firebase_service_account.json
 
 # Ignorar archivos de entorno
 *.env
+*/.env
 .env*
 
 # Ignorar archivos de Alembic autogenerados

@@ -5,6 +5,10 @@ from alembic import context
 from sqlmodel import SQLModel
 import sys
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -25,8 +29,12 @@ if config.config_file_name is not None:
 
 target_metadata = SQLModel.metadata
 
+# Get database URL from environment variables
+database_url = os.getenv("DATABASE_URL", "sqlite:///./db.sqlite3")
+
 def run_migrations_offline() -> None:
-    url = config.get_main_option("sqlalchemy.url")
+    """Run migrations in 'offline' mode."""
+    url = database_url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -39,8 +47,13 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
+    """Run migrations in 'online' mode."""
+    # Override the sqlalchemy.url in the config
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration["sqlalchemy.url"] = database_url
+    
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
