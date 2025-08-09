@@ -10,8 +10,10 @@ security = HTTPBearer()
 
 def initialize_firebase():
     """Initialize Firebase Admin SDK"""
-    # Solo evitar inicialización en test si no hay credenciales
-    if settings.ENVIRONMENT == "test" and not settings.FIREBASE_SERVICE_ACCOUNT_KEY:
+    # Solo evitar inicialización en test si NO hay NINGUNA credencial
+    if (settings.ENVIRONMENT == "test" and 
+        not settings.FIREBASE_SERVICE_ACCOUNT_KEY and 
+        not settings.FIREBASE_PROJECT_ID):
         print("Skipping Firebase initialization in test mode without credentials")
         return
         
@@ -55,17 +57,18 @@ def initialize_firebase():
         except json.JSONDecodeError:
             print("Error: Invalid JSON in FIREBASE_SERVICE_ACCOUNT_KEY")
     
-    # Option 2: Use local file (for development)
-    if not cred and settings.FIREBASE_SERVICE_ACCOUNT_PATH:
+    # Option 3: Use local file (for development)
+    if not cred:
         cred_path = os.path.join(
             os.path.dirname(__file__), "..", "..", 
-            settings.FIREBASE_SERVICE_ACCOUNT_PATH
+            "firebase_service_account.json"
         )
         
         if os.path.exists(cred_path):
             cred = credentials.Certificate(cred_path)
+            print("Using local Firebase service account file")
         else:
-            print(f"Warning: Firebase service account file not found at {cred_path}")
+            print(f"No local Firebase service account file found at {cred_path}")
     
     if cred:
         try:
