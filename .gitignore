@@ -20,9 +20,12 @@ firebase_service_account.json
 .pytest_cache/
 
 # Ignorar archivos de entorno
+.env
+.env.*
 *.env
-*/.env
-.env*
+backend/.env
+backend/.env.*
+backend/*.env
 
 # Ignorar archivos de Alembic autogenerados
 backend/alembic/versions/*.pyc
