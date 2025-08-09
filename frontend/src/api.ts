@@ -1,11 +1,12 @@
 
 import axios from 'axios';
 import { auth } from './firebase';
+import { config } from './config';
 import type { Role, RoleType, User, Color, Category, Size } from './types';
 import type { Product } from './types';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.BACKEND_URL || 'http://localhost:8000/api/v1',
+  baseURL: config.backendUrl,
   headers: {
     'Content-Type': 'application/json',
   },

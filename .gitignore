@@ -26,6 +26,10 @@ firebase_service_account.json
 backend/.env
 backend/.env.*
 backend/*.env
+frontend/.env
+frontend/.env.*
+frontend/*.env
+frontend/.env.production
 
 # Ignorar archivos de Alembic autogenerados
 backend/alembic/versions/*.pyc

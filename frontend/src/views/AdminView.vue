@@ -324,6 +324,7 @@ import ConfirmationModal from '../components/ConfirmationModal.vue';
 import ProductCard from '../components/ProductCard.vue';
 import { useAuthStore } from '../store/auth';
 import { masterDataApi } from '../api';
+import { config } from '../config';
 import type { Color, Category, Size } from '../types';
 import apiClient from '../api';
 import type { Product as GlobalProduct } from '../types';
@@ -375,7 +376,7 @@ interface ProductCreate {
   variants: Omit<ProductVariant, 'id'>[];
 }
 
-const API_URL = 'http://localhost:8000/api/v1/products/';
+const API_URL = config.backendUrl + '/products/';
 
 const products = ref<Product[]>([]);
 const editing = ref(false);
@@ -436,7 +437,7 @@ const previewProduct = computed((): GlobalProduct => {
 async function loadMasterData() {
   try {
     console.log('📋 Cargando datos maestros...');
-    console.log('🔗 URL base API:', import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1');
+    console.log('🔗 URL base API:', config.backendUrl);
     
     // Cargar colores, categorías y talles usando la nueva API
     console.log('🌈 Cargando colores...');
