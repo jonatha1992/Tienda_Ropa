@@ -10,7 +10,9 @@ security = HTTPBearer()
 
 def initialize_firebase():
     """Initialize Firebase Admin SDK"""
-    if settings.ENVIRONMENT == "test":
+    # Solo evitar inicialización en test si no hay credenciales
+    if settings.ENVIRONMENT == "test" and not settings.FIREBASE_SERVICE_ACCOUNT_KEY:
+        print("Skipping Firebase initialization in test mode without credentials")
         return
         
     try:
