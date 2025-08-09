@@ -25,8 +25,30 @@ def initialize_firebase():
     
     cred = None
     
-    # Option 1: Use environment variable (for Railway/production)
-    if settings.FIREBASE_SERVICE_ACCOUNT_KEY:
+    # Option 1: Use individual environment variables (simpler for Railway)
+    if (settings.FIREBASE_PROJECT_ID and settings.FIREBASE_PRIVATE_KEY and 
+        settings.FIREBASE_CLIENT_EMAIL):
+        try:
+            service_account_info = {
+                "type": settings.FIREBASE_TYPE,
+                "project_id": settings.FIREBASE_PROJECT_ID,
+                "private_key_id": settings.FIREBASE_PRIVATE_KEY_ID,
+                "private_key": settings.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'),
+                "client_email": settings.FIREBASE_CLIENT_EMAIL,
+                "client_id": settings.FIREBASE_CLIENT_ID,
+                "auth_uri": settings.FIREBASE_AUTH_URI,
+                "token_uri": settings.FIREBASE_TOKEN_URI,
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": f"https://www.googleapis.com/robot/v1/metadata/x509/{settings.FIREBASE_CLIENT_EMAIL.replace('@', '%40')}",
+                "universe_domain": "googleapis.com"
+            }
+            cred = credentials.Certificate(service_account_info)
+            print("Using individual Firebase environment variables")
+        except Exception as e:
+            print(f"Error with individual Firebase variables: {e}")
+    
+    # Option 2: Use environment variable JSON (fallback)
+    if not cred and settings.FIREBASE_SERVICE_ACCOUNT_KEY:
         try:
             service_account_info = json.loads(settings.FIREBASE_SERVICE_ACCOUNT_KEY)
             cred = credentials.Certificate(service_account_info)
