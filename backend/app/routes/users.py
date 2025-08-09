@@ -73,3 +73,38 @@ async def test_auth_endpoint():
     Endpoint simple que no requiere autenticación para verificar que el routing funciona.
     """
     return {"message": "Auth endpoint is working", "timestamp": "2025-08-07"}
+
+@router.get("/test-firebase")
+async def test_firebase_config():
+    """
+    Endpoint para verificar la configuración de Firebase sin autenticación.
+    """
+    import firebase_admin
+    from app.core.config import settings
+    
+    try:
+        app_instance = firebase_admin.get_app()
+        return {
+            "status": "Firebase initialized",
+            "app_name": app_instance.name,
+            "project_id": app_instance.project_id,
+            "environment": settings.ENVIRONMENT,
+            "has_firebase_key": bool(settings.FIREBASE_SERVICE_ACCOUNT_KEY),
+            "firebase_project_id": settings.FIREBASE_PROJECT_ID
+        }
+    except ValueError:
+        return {
+            "status": "Firebase not initialized", 
+            "error": "No app instance found",
+            "environment": settings.ENVIRONMENT,
+            "has_firebase_key": bool(settings.FIREBASE_SERVICE_ACCOUNT_KEY),
+            "firebase_project_id": settings.FIREBASE_PROJECT_ID
+        }
+    except Exception as e:
+        return {
+            "status": "Firebase error", 
+            "error": str(e),
+            "environment": settings.ENVIRONMENT,
+            "has_firebase_key": bool(settings.FIREBASE_SERVICE_ACCOUNT_KEY),
+            "firebase_project_id": settings.FIREBASE_PROJECT_ID
+        }
