@@ -1,6 +1,7 @@
 {
   "hosting": {
-    "public": "frontend/dist",
+    "site": "m-vintage-test",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
