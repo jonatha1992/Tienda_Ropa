@@ -4,17 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-<<<<<<< HEAD
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-=======
     "dev": "vite --mode dev",
     "dev:test": "vite --mode test",
     "build": "vue-tsc -b && vite build --mode pro",
     "build:test": "vue-tsc -b && vite build --mode test",
     "build:dev": "vue-tsc -b && vite build --mode dev",
->>>>>>> dev
-    "preview": "vite preview",
     "test": "vitest"
   },
   "dependencies": {
@@ -43,8 +37,4 @@
     "vitest": "^2.0.4",
     "vue-tsc": "^2.2.12"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev

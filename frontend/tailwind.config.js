@@ -2,11 +2,7 @@
 export default {
     content: [
         "./index.html",
-<<<<<<< HEAD
-        "./src/**/*.{vue,js,ts,jsx,tsx}",
-=======
         "./src/**/*.{vue,js,ts,jsx,tsx}"
->>>>>>> dev
     ],
     theme: {
         extend: {
@@ -39,17 +35,9 @@ export default {
                 }
             },
             fontFamily: {
-<<<<<<< HEAD
-                sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            },
-        },
-    },
-    plugins: [],
-=======
                 sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
             }
         }
     },
     plugins: []
->>>>>>> dev
 }
