@@ -23,7 +23,11 @@
   - Crear un modal de confirmación reutilizable para las acciones de guardar, actualizar y eliminar.
 - **General Tasks**
   - Integrar y testear subida/lectura de imágenes con Firebase Storage desde frontend y backend.
+<<<<<<< HEAD
   - Configurar y documentar variables de entorno en `.env.example` (ambos servicios).
+=======
+  - (COMPLETADO) Configurar y documentar variables de entorno en `.env.example` (ambos servicios). [10/08/2025]
+>>>>>>> dev
   - Mejorar manejo centralizado de errores y validaciones (FastAPI + frontend).
 - Revisión y limpieza de código muerto según política en `docs/structure.md` y `.github/instructions/04-dead-code-policy.instructions.md`. [07/08/2025]
   - Documentar endpoints y ejemplos de request/response en README.md.
@@ -49,3 +53,8 @@
   - Script de inicialización de roles por defecto
   - Protección de endpoints por roles apropiados
 - Revisión y limpieza de código muerto según política en `docs/structure.md` y `.github/instructions/04-dead-code-policy.instructions.md`. [07/08/2025]
+ - Unificación esquema multi-entorno dev/test/pro (backend y frontend) y actualización README. [10/08/2025]
+   - Nuevos archivos .env.dev / .env.test
+   - Scripts Vite dev:test / build modes
+   - Refactor Settings FastAPI y Alembic para ENVIRONMENT=dev|test|pro
+  - Enforced PostgreSQL obligatorio en entornos test/pro (validación Settings + actualización .env.* y README). [10/08/2025]

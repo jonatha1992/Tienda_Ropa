@@ -34,9 +34,16 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1  # Windows PowerShell
 pip install -r requirements.txt
+<<<<<<< HEAD
 cp .env.example .env
 # Configurar variables en .env
 uvicorn app.main:app --reload  # http://localhost:8000
+=======
+# Crear archivo de entorno (NO usar valores reales en .env.example)
+Copy-Item .env.example .env.dev
+# Editar .env.dev y establecer DATABASE_URL apuntando a tu instancia Postgres local/remota.
+$env:ENVIRONMENT="dev"; uvicorn app.main:app --reload  # http://localhost:8000
+>>>>>>> dev
 ```
 
 ### Frontend (Vue 3)
@@ -62,6 +69,7 @@ npm run dev  # http://localhost:5173
    railway link
    ```
 
+<<<<<<< HEAD
 2. **Configurar variables de entorno en Railway:**
    - `DATABASE_URL`: URL de PostgreSQL proporcionada por Railway
    - `SECRET_KEY`: Clave secreta para JWT
@@ -76,6 +84,23 @@ npm run dev  # http://localhost:5173
    # y pégalo como una sola línea en la variable FIREBASE_SERVICE_ACCOUNT_KEY
    cat backend/firebase_service_account.json
    ```
+=======
+2. **Variables de entorno (configurarlas SIEMPRE en el panel, no subir .env.production):**
+   Obligatorias test/pro (PostgreSQL requerido, no SQLite):
+   - `ENVIRONMENT=pro|test`
+    - `SECRET_KEY` (>=32 chars, genera con `python - <<<'import secrets;print(secrets.token_urlsafe(48))'`)
+    - `DATABASE_URL` (PostgreSQL)
+    - Credenciales Firebase (elige 1 estrategia):
+       - `FIREBASE_SERVICE_ACCOUNT_JSON_B64` (recomendado)  O
+       - `FIREBASE_SERVICE_ACCOUNT_KEY` (JSON una línea)    O
+       - Variables individuales: `FIREBASE_PROJECT_ID`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, etc.
+    - `PRODUCTION_FRONTEND_URL` (para CORS)
+
+    Generar base64 (PowerShell):
+    ```powershell
+    [Convert]::ToBase64String([IO.File]::ReadAllBytes('serviceAccount.json'))
+    ```
+>>>>>>> dev
 
 3. **Desplegar:**
    ```bash
@@ -91,6 +116,38 @@ npm run dev  # http://localhost:5173
    firebase deploy
    ```
 
+<<<<<<< HEAD
+=======
+## Configuración de Entornos
+
+Ramas → Entorno:
+- `dev`  → ENVIRONMENT=dev
+- `test` → ENVIRONMENT=test
+- `main` → ENVIRONMENT=pro
+
+Archivos locales aceptados (no subir secretos; Postgres también en test/pro):
+```
+backend/.env.dev
+backend/.env.test
+backend/.env.pro (evitar commit; usar hosting)
+frontend/.env.dev
+frontend/.env.test
+frontend/.env.pro (no subir)
+```
+No commitear `.env.pro`. En hosting usar variables directas.
+
+Prioridad carga backend: variables del sistema > archivo específico (.env.{environment}) > .env
+
+Frontend (Vite): usar modos:
+```
+npm run dev            # dev (.env.dev)
+npm run dev:test       # test (.env.test)
+npm run build          # pro (añadir --mode pro en scripts)
+```
+
+Variable única para backend: `VITE_BACKEND_URL`.
+
+>>>>>>> dev
 ---
 
 ## API Endpoints

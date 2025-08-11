@@ -7,8 +7,19 @@ import sys
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Multi-environment loading aligned with app.core.config
+import base64
+RAW_ENV = os.getenv("ENVIRONMENT", "development").lower()
+ENV_FILE_MAP = {
+    "development": ".env.dev",
+    "test": ".env.test",
+    "production": ".env.production",
+}
+candidate = ENV_FILE_MAP.get(RAW_ENV)
+if candidate and os.path.isfile(os.path.join(os.path.dirname(__file__), '..', candidate)):
+    load_dotenv(os.path.join(os.path.dirname(__file__), '..', candidate))
+elif os.path.isfile(os.path.join(os.path.dirname(__file__), '..', '.env')):
+    load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -29,8 +40,10 @@ if config.config_file_name is not None:
 
 target_metadata = SQLModel.metadata
 
-# Get database URL from environment variables
-database_url = os.getenv("DATABASE_URL", "sqlite:///./db.sqlite3")
+from app.core.config import settings
+
+# Use unified settings for the database URL
+database_url = settings.DATABASE_URL
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
