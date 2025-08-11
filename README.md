@@ -34,16 +34,10 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1  # Windows PowerShell
 pip install -r requirements.txt
-<<<<<<< HEAD
-cp .env.example .env
-# Configurar variables en .env
-uvicorn app.main:app --reload  # http://localhost:8000
-=======
 # Crear archivo de entorno (NO usar valores reales en .env.example)
 Copy-Item .env.example .env.dev
 # Editar .env.dev y establecer DATABASE_URL apuntando a tu instancia Postgres local/remota.
 $env:ENVIRONMENT="dev"; uvicorn app.main:app --reload  # http://localhost:8000
->>>>>>> dev
 ```
 
 ### Frontend (Vue 3)
@@ -69,22 +63,6 @@ npm run dev  # http://localhost:5173
    railway link
    ```
 
-<<<<<<< HEAD
-2. **Configurar variables de entorno en Railway:**
-   - `DATABASE_URL`: URL de PostgreSQL proporcionada por Railway
-   - `SECRET_KEY`: Clave secreta para JWT
-   - `FIREBASE_PROJECT_ID`: ID del proyecto Firebase
-   - `FIREBASE_SERVICE_ACCOUNT_KEY`: JSON completo de la service account key
-   - `PRODUCTION_FRONTEND_URL`: URL del frontend en producción
-   - `ENVIRONMENT`: `production`
-
-   **Para obtener la Firebase Service Account Key:**
-   ```bash
-   # Copia el contenido completo del archivo firebase_service_account.json
-   # y pégalo como una sola línea en la variable FIREBASE_SERVICE_ACCOUNT_KEY
-   cat backend/firebase_service_account.json
-   ```
-=======
 2. **Variables de entorno (configurarlas SIEMPRE en el panel, no subir .env.production):**
    Obligatorias test/pro (PostgreSQL requerido, no SQLite):
    - `ENVIRONMENT=pro|test`
@@ -100,7 +78,6 @@ npm run dev  # http://localhost:5173
     ```powershell
     [Convert]::ToBase64String([IO.File]::ReadAllBytes('serviceAccount.json'))
     ```
->>>>>>> dev
 
 3. **Desplegar:**
    ```bash
@@ -116,8 +93,6 @@ npm run dev  # http://localhost:5173
    firebase deploy
    ```
 
-<<<<<<< HEAD
-=======
 ## Configuración de Entornos
 
 Ramas → Entorno:
@@ -147,7 +122,6 @@ npm run build          # pro (añadir --mode pro en scripts)
 
 Variable única para backend: `VITE_BACKEND_URL`.
 
->>>>>>> dev
 ---
 
 ## API Endpoints

@@ -19,19 +19,6 @@ firebase_service_account.json
 .mypy_cache/
 .pytest_cache/
 
-<<<<<<< HEAD
-# Ignorar archivos de entorno
-.env
-.env.*
-*.env
-backend/.env
-backend/.env.*
-backend/*.env
-frontend/.env
-frontend/.env.*
-frontend/*.env
-frontend/.env.production
-=======
 ## Environment files (never commit real secrets)
 # Generic patterns
 *.env
@@ -50,7 +37,6 @@ frontend/*.env
 !frontend/.env.example
 
 # Allow sample files if needed (add them explicitly with ! pattern)
->>>>>>> dev
 
 # Ignorar archivos de Alembic autogenerados
 backend/alembic/versions/*.pyc

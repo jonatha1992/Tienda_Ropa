@@ -66,6 +66,7 @@ class Settings(BaseSettings):
 
     # CORS / Frontend
     FRONTEND_URL: str = "http://localhost:5173"
+    PRODUCTION_FRONTEND_URL: Optional[str] = None
 
 
     # Alternativa: lista separada por comas, tiene prioridad si se define
