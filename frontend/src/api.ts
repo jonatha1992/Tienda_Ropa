@@ -117,6 +117,11 @@ export const usersApi = {
   async getCurrentUser(): Promise<User> {
     const response = await apiClient.get('/users/me');
     return response.data;
+  },
+  // Get all users (admin/manager only)
+  async getAllUsers(): Promise<User[]> {
+    const response = await apiClient.get('/users/');
+    return response.data;
   }
 };
 

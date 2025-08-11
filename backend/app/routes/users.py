@@ -2,11 +2,22 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_session
 from app.models.user import User, UserRead
-from app.controllers.user_controller import get_user_by_firebase_uid, create_user_from_firebase
+from app.controllers.user_controller import get_user_by_firebase_uid, create_user_from_firebase, get_all_users
 from app.core.auth_firebase import verify_firebase_token
 from app.controllers.role_controller import get_user_roles
+from app.core.security import require_manager_or_admin
+from app.models.role import Role
+from sqlmodel import Session
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+@router.get("/", response_model=list[UserRead])
+def list_users(
+    db: Session = Depends(get_session),
+    current_user= Depends(require_manager_or_admin())
+):
+    users = get_all_users(db)
+    return users
 
 @router.get("/me", response_model=UserRead)
 async def get_or_create_me(

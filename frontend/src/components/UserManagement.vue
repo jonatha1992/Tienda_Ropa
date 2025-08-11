@@ -212,16 +212,11 @@ const availableRoles = computed(() => {
 const loadUsers = async () => {
   try {
     loading.value = true
-    // This is a placeholder - you'll need to implement a users endpoint
-    // For now, we'll just show the current user
-    const currentUser = await usersApi.getCurrentUser()
-    const userRoles = await rolesApi.getMyRoles()
-    
-    users.value = [{
-      ...currentUser,
-      roles: userRoles
-    }]
-    toast.success('👥 Usuarios cargados correctamente')
+  const allUsers = await usersApi.getAllUsers()
+    // (Opcional) podríamos solicitar roles de cada usuario individualmente si se necesita mostrar roles (ya hay endpoint roles/user/:id)
+    // Por rendimiento inicial, sólo cargamos roles del usuario actual; los demás se cargan on-demand al abrir modal
+    users.value = allUsers.map(u => ({ ...u, roles: undefined }))
+    toast.success(`👥 ${allUsers.length} usuarios cargados`)
   } catch (error: any) {
     console.error('Error loading users:', error)
     const errorMessage = error.response?.data?.detail || 'Error al cargar usuarios'

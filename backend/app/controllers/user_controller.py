@@ -57,7 +57,7 @@ def create_user(db: Session, user_create: UserCreate) -> User:
     db.refresh(new_user)
     return new_user
 
-def get_all_user(db: Session) -> List[User]:
+def get_all_users(db: Session) -> List[User]:
     return db.exec(select(User)).all()
 
 def search_users(db: Session, query: str) -> List[User]:
