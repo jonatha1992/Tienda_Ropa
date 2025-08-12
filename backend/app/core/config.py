@@ -45,7 +45,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # Formato recomendado: postgresql+psycopg2://user:password@host:port/db_name
-    DATABASE_URL: str = "postgresql+psycopg2://user:password@localhost:5432/tienda_ropa"  # Placeholder; sobrescribir por entorno
+    DATABASE_URL: str = "app.db"  # Placeholder; sobrescribir por entorno
 
     # Firebase opción 1/2 (mantener campos aunque usemos sólo individuales para evitar AttributeError en helpers)
     FIREBASE_SERVICE_ACCOUNT_JSON_B64: Optional[str] = None
@@ -66,7 +66,6 @@ class Settings(BaseSettings):
 
     # CORS / Frontend
     FRONTEND_URL: str = "http://localhost:5173"
-    PRODUCTION_FRONTEND_URL: Optional[str] = None
 
 
     # Alternativa: lista separada por comas, tiene prioridad si se define

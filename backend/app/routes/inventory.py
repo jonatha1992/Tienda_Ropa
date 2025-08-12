@@ -7,12 +7,18 @@ from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.inventory import Inventory
+from app.models.product import Product
 
 router = APIRouter()
 
 
 @router.post("/inventory/", response_model=Inventory)
 def create_inventory(session: Session = Depends(get_session), inventory: Inventory = Body(...), user=Depends(get_current_user)):
+    # Verificar que el producto existe
+    product = session.get(Product, inventory.product_id)
+    if not product:
+        raise HTTPException(status_code=422, detail="Product not found")
+    
     db_inventory = Inventory.model_validate(inventory)
     session.add(db_inventory)
     session.commit()

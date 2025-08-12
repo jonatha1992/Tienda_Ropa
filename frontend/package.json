@@ -9,6 +9,7 @@
     "build": "vue-tsc -b && vite build --mode pro",
     "build:test": "vue-tsc -b && vite build --mode test",
     "build:dev": "vue-tsc -b && vite build --mode dev",
+    "preview": "vite preview",
     "test": "vitest"
   },
   "dependencies": {

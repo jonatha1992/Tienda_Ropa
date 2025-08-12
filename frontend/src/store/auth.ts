@@ -2,25 +2,44 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { auth } from '../firebase'
 import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth'
-import apiClient from '../api'
-import type { User } from '../types' // Asegúrate de que este tipo coincida con el modelo UserRead del backend
+import apiClient, { rolesApi } from '../api'
+import type { User, Role } from '../types' // Asegúrate de que este tipo coincida con el modelo UserRead del backend
 
 export const useAuthStore = defineStore('auth', () => {
     const firebaseUser = ref<FirebaseUser | null>(null)
     const backendUser = ref<User | null>(null)
+    const userRoles = ref<Role[]>([])
     const token = ref<string | null>(null)
     const loading = ref(true)
 
     const isAuthenticated = computed(() => !!backendUser.value)
 
+    const isAdmin = computed(() =>
+        userRoles.value.some(role => ['admin', 'manager'].includes(role.name))
+    )
+
+    const hasAdminAccess = computed(() => isAdmin.value)
+
     const fetchBackendUser = async () => {
         try {
             const response = await apiClient.get('/users/me')
             backendUser.value = response.data
+            // También obtener los roles del usuario
+            await fetchUserRoles()
         } catch (error) {
             console.error('❌ Error fetching backend user:', error)
             // Si falla, probablemente el token no es válido, desloguear
             await logout()
+        }
+    }
+
+    const fetchUserRoles = async () => {
+        try {
+            const roles = await rolesApi.getMyRoles()
+            userRoles.value = roles
+        } catch (error) {
+            console.error('❌ Error fetching user roles:', error)
+            userRoles.value = []
         }
     }
 
@@ -66,6 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
         } finally {
             firebaseUser.value = null
             backendUser.value = null
+            userRoles.value = []
             token.value = null
         }
     }
@@ -73,11 +93,15 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         firebaseUser,
         backendUser,
+        userRoles,
         token,
         loading,
         isAuthenticated,
+        isAdmin,
+        hasAdminAccess,
         initAuth,
         logout,
-        fetchBackendUser
+        fetchBackendUser,
+        fetchUserRoles
     }
 })

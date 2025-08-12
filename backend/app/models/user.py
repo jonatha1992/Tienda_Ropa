@@ -1,11 +1,13 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
+from .role import RoleRead
 
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
     is_active: bool = Field(default=True)
     username: Optional[str] = Field(default=None, index=True, unique=True)
     firebase_uid: Optional[str] = Field(default=None, unique=True, index=True)
+    nombre: Optional[str] = Field(default=None)
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -33,6 +35,23 @@ class UserLogin(SQLModel):
 # DTO para enviar los datos del usuario al cliente.
 class UserRead(UserBase):
     id: int
+    name: Optional[str] = None  # Alias para nombre
+    
+    @classmethod
+    def from_user(cls, user: "User") -> "UserRead":
+        """Crear UserRead desde User con el alias name"""
+        return cls(
+            id=user.id,
+            email=user.email,
+            is_active=user.is_active,
+            username=user.username,
+            firebase_uid=user.firebase_uid,
+            nombre=user.nombre,
+            name=user.nombre  # Alias
+        )
+
+class UserWithRoles(UserRead):
+    roles: List[RoleRead] = []
 
 # Importación para evitar problemas de importación circular
 from typing import TYPE_CHECKING

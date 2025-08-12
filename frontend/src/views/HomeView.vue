@@ -1,6 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <HeroBanner />
+        <MasterDataShowcase />
         <ProductGrid />
         <Footer />
     </div>
@@ -8,6 +9,7 @@
 
 <script setup lang="ts">
 import HeroBanner from '../components/HeroBanner.vue';
+import MasterDataShowcase from '../components/MasterDataShowcase.vue';
 import ProductGrid from '../components/ProductGrid.vue';
 import Footer from '../components/Footer.vue';
 </script>

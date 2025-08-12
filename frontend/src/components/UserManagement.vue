@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Search and Filters -->
-    <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex flex-col gap-4 sm:flex-row">
       <div class="flex-1">
         <input
           v-model="searchQuery"
@@ -14,7 +14,7 @@
       <button
         @click="loadUsers"
         :disabled="loading"
-        class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md"
+        class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
       >
         {{ loading ? 'Cargando...' : 'Actualizar Lista' }}
       </button>
@@ -24,7 +24,7 @@
     <!-- Toast notifications are now handled by vue-toastification -->
 
     <!-- Users Table -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-hidden bg-white rounded-lg shadow-md">
       <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900">
           Usuarios del Sistema ({{ filteredUsers.length }})
@@ -43,18 +43,18 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Usuario</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Roles</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Estado</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="user in filteredUsers" :key="user.id">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                  <div class="flex-shrink-0 w-10 h-10">
+                    <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
                       <span class="text-sm font-medium text-gray-700">
                         {{ getUserInitials(user.email) }}
                       </span>
@@ -82,14 +82,14 @@
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
                   Activo
                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                 <button
                   @click="manageUserRoles(user)"
-                  class="text-blue-600 hover:text-blue-900 mr-4"
+                  class="mr-4 text-blue-600 hover:text-blue-900"
                 >
                   Gestionar Roles
                 </button>
@@ -107,8 +107,8 @@
     </div>
 
     <!-- Role Management Modal -->
-    <div v-if="showRoleModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+    <div v-if="showRoleModal" class="fixed inset-0 z-50 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
+      <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-1/2">
         <div class="mt-3">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-bold text-gray-900">
@@ -126,7 +126,7 @@
           
           <!-- Current Roles -->
           <div class="mb-4">
-            <h4 class="text-sm font-medium text-gray-700 mb-2">Roles Actuales</h4>
+            <h4 class="mb-2 text-sm font-medium text-gray-700">Roles Actuales</h4>
             <div class="flex flex-wrap gap-2">
               <span
                 v-for="role in selectedUser?.roles || []"
@@ -150,9 +150,9 @@
           
           <!-- Add Role -->
           <div class="mb-4">
-            <h4 class="text-sm font-medium text-gray-700 mb-2">Agregar Rol</h4>
+            <h4 class="mb-2 text-sm font-medium text-gray-700">Agregar Rol</h4>
             <div class="flex gap-2">
-              <select v-model="selectedRoleToAdd" class="flex-1 border border-gray-300 rounded-md px-3 py-2">
+              <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 border border-gray-300 rounded-md">
                 <option value="">Seleccionar rol</option>
                 <option
                   v-for="role in availableRoles"
@@ -165,7 +165,7 @@
               <button
                 @click="addUserRole"
                 :disabled="!selectedRoleToAdd || loading"
-                class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md"
+                class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
                 Agregar
               </button>
@@ -212,11 +212,10 @@ const availableRoles = computed(() => {
 const loadUsers = async () => {
   try {
     loading.value = true
+    // Obtener todos los usuarios desde el endpoint correcto
   const allUsers = await usersApi.getAllUsers()
-    // (Opcional) podríamos solicitar roles de cada usuario individualmente si se necesita mostrar roles (ya hay endpoint roles/user/:id)
-    // Por rendimiento inicial, sólo cargamos roles del usuario actual; los demás se cargan on-demand al abrir modal
-    users.value = allUsers.map(u => ({ ...u, roles: undefined }))
-    toast.success(`👥 ${allUsers.length} usuarios cargados`)
+  users.value = Array.isArray(allUsers) ? allUsers : []
+    toast.success('👥 Usuarios cargados correctamente')
   } catch (error: any) {
     console.error('Error loading users:', error)
     const errorMessage = error.response?.data?.detail || 'Error al cargar usuarios'

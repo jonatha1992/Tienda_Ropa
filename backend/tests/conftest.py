@@ -5,25 +5,48 @@ Proporciona fixtures comunes y configuración de base de datos de prueba.
 """
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'backend')))
+
+# Cambiar al directorio backend para que los archivos .env se carguen correctamente
+backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+os.chdir(backend_dir)
+sys.path.insert(0, backend_dir)
+
+# Configurar entorno ANTES de importar settings
+os.environ["ENVIRONMENT"] = "dev"
+
+# También configurar la DATABASE_URL directamente para tests si no está configurada
+if not os.environ.get("DATABASE_URL"):
+    os.environ["DATABASE_URL"] = "sqlite:///./test_app.db"
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
-from sqlmodel import SQLModel, create_engine, Session
-
+from sqlmodel import SQLModel, Session
+import sqlmodel
 from app.main import app
 from app.db.session import get_session
 
 
-# Configuración de la base de datos de test
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.sqlite3"
+# Configuración de la base de datos de test: usar base de datos de desarrollo
+EXPLICIT_URL = os.getenv("TEST_DATABASE_URL")
+PERSIST = os.getenv("TEST_PERSIST") == "1"
+
+if EXPLICIT_URL:
+    SQLALCHEMY_DATABASE_URL = EXPLICIT_URL
+else:
+    # Usar la misma base de datos de desarrollo para tests
+    SQLALCHEMY_DATABASE_URL = "postgresql://postgres:RjNOCBmzcBdVPEaVUbFbFKFHBjcdnOya@gondola.proxy.rlwy.net:52848/railway"
+
+print(f"[TEST DB] Using: {SQLALCHEMY_DATABASE_URL} (persist={PERSIST})")
+
+# Configuración del engine para PostgreSQL
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    pool_pre_ping=True,
+    future=True
 )
+
 TestingSessionLocal = sessionmaker(class_=Session, autocommit=False, autoflush=False, bind=engine)
 
 @pytest.fixture(scope="session", autouse=True)
@@ -33,22 +56,23 @@ def setup_database():
     from app.models.user import User
     from app.models.role import Role
     from app.models.user_role import UserRole
-    from app.models.product import Product
+    from app.models.product import Product, ProductImage, ProductVariant
     from app.models.customer import Customer
     from app.models.order import Order
     from app.models.order_item import OrderItem
     from app.models.inventory import Inventory
     
+    # Eliminar todas las tablas primero para asegurar un estado limpio
+    SQLModel.metadata.drop_all(bind=engine)
+    
     # Crear todas las tablas antes de los tests
     SQLModel.metadata.create_all(bind=engine)
     
-    # Inicializar datos maestros si no existen
+    # Inicializar datos maestros (siempre, ya que eliminamos las tablas arriba)
     with TestingSessionLocal() as db:
         from sqlmodel import select
         
-        # Verificar si ya hay datos
-        colors_result = db.exec(select(Color)).first()
-        if colors_result is None:
+        try:
             # Inicializar datos de prueba
             colors = [
                 Color(name="BLANCO", hex_code="#FFFFFF", is_active=True),
@@ -76,17 +100,33 @@ def setup_database():
                 db.add(size)
                 
             db.commit()
+            print("✅ Test data initialized successfully")
+            
+        except Exception as e:
+            print(f"❌ Error initializing test data: {e}")
+            db.rollback()
+            raise
     
     yield
     # No eliminar las tablas para mantener los datos
 
 @pytest.fixture()
 def db_session():
-    db = TestingSessionLocal()
+    """Sesión por test.
+    Si PERSIST es False, cada test se aísla con transacción y rollback.
+    """
+    connection = engine.connect()
+    tx = connection.begin()
+    db = TestingSessionLocal(bind=connection)  # type: ignore
     try:
         yield db
+        if PERSIST:
+            tx.commit()
     finally:
+        if not PERSIST:
+            tx.rollback()
         db.close()
+        connection.close()
 
 
 @pytest.fixture()
@@ -107,7 +147,7 @@ def client(db_session):
 def auth_cookie(client, db_session):
     # Para Firebase Auth, necesitamos simular un token válido
     # En lugar de hacer login tradicional, devolvemos headers de autorización
-    from app.auth_firebase import verify_firebase_token
+    from app.core.auth_firebase import verify_firebase_token
     from app.models.user import User
     from app.models.role import Role, RoleType
     from app.models.user_role import UserRole

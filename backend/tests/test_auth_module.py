@@ -10,10 +10,6 @@ from app.main import app
 class TestAuthenticationBasics:
     """Tests básicos de autenticación Firebase"""
 
-    @pytest.fixture
-    def client(self):
-        return TestClient(app)
-
     def test_health_endpoint_no_auth_required(self, client):
         """Test que el endpoint de salud no requiera autenticación"""
         response = client.get("/health")
@@ -121,17 +117,13 @@ class TestRoleManagement:
 class TestEndpointProtection:
     """Tests para verificar que los endpoints estén protegidos correctamente"""
 
-    @pytest.fixture
-    def client(self):
-        return TestClient(app)
-
     @pytest.mark.parametrize("endpoint", [
         "/api/v1/users/me",
-        "/api/v1/roles",
-        "/api/v1/customers",
-        "/api/v1/orders",
-        "/api/v1/inventory",
-        "/api/v1/order-items"
+        "/api/v1/roles/",
+        "/api/v1/customers/",
+        "/api/v1/orders/",
+        "/api/v1/inventory/",
+        "/api/v1/order-items/"
     ])
     def test_protected_endpoints_require_auth(self, client, endpoint):
         """Test que los endpoints protegidos requieran autenticación"""
@@ -141,8 +133,9 @@ class TestEndpointProtection:
     @pytest.mark.parametrize("endpoint", [
         "/api/v1/colors",
         "/api/v1/categories", 
+        "/api/v1/categories/with-stock",
         "/api/v1/sizes",
-        "/api/v1/products"  # Los productos son públicos para consulta
+        "/api/v1/products/"  # Los productos son públicos para consulta (con slash final)
     ])
     def test_public_endpoints_no_auth_required(self, client, endpoint):
         """Test que los endpoints públicos no requieran autenticación"""
@@ -158,10 +151,6 @@ class TestEndpointProtection:
 class TestApiRouting:
     """Tests para verificar que el routing de la API funcione"""
 
-    @pytest.fixture
-    def client(self):
-        return TestClient(app)
-
     def test_api_prefix_routing(self, client):
         """Test que el prefijo /api/v1 funcione"""
         response = client.get("/api/v1/users/me")
@@ -175,19 +164,41 @@ class TestApiRouting:
 
     def test_all_main_routes_exist(self, client):
         """Test que todas las rutas principales existan"""
-        routes = [
-            "/api/v1/users/me",
-            "/api/v1/roles",
-            "/api/v1/products",  # Público
-            "/api/v1/customers",
-            "/api/v1/orders",
-            "/api/v1/inventory",
-            "/api/v1/order-items",
-            "/api/v1/colors",    # Público
-            "/api/v1/categories", # Público
-            "/api/v1/sizes"      # Público
+        # Rutas que no requieren base de datos
+        simple_routes = [
+            "/api/v1/colors",    # Público - master data
+            "/api/v1/categories", # Público - master data
+            "/api/v1/sizes"      # Público - master data
         ]
         
-        for route in routes:
+        # Rutas que pueden fallar por auth pero deben existir (no 404)
+        auth_routes = [
+            "/api/v1/users/me",
+            "/api/v1/roles/",
+            "/api/v1/customers/",
+            "/api/v1/orders/",
+            "/api/v1/inventory/",
+            "/api/v1/order-items/"
+        ]
+        
+        # Rutas que requieren BD pero deben existir
+        db_routes = [
+            "/api/v1/products/"   # Público pero requiere BD
+        ]
+        
+        # Test rutas simples - deberían funcionar perfectamente
+        for route in simple_routes:
             response = client.get(route)
-            assert response.status_code != 404, f"Route {route} should exist"
+            assert response.status_code == 200, f"Route {route} should work and return 200"
+        
+        # Test rutas de auth - pueden fallar por auth pero no por 404
+        for route in auth_routes:
+            response = client.get(route)
+            assert response.status_code != 404, f"Route {route} should exist (got {response.status_code})"
+            assert response.status_code in [401, 403, 200], f"Route {route} should return auth error or success"
+        
+        # Test rutas de BD - pueden fallar por BD pero no por 404
+        for route in db_routes:
+            response = client.get(route)
+            assert response.status_code != 404, f"Route {route} should exist (got {response.status_code})"
+            # Puede ser 200 (success) o 500 (DB error) pero no 404

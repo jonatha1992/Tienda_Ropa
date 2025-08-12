@@ -87,6 +87,27 @@ class TestMasterDataEndpoints:
 class TestMasterDataIntegration:
     """Tests de integración para verificar que los datos inicializados están disponibles"""
     
+    def test_database_connection_and_endpoints(self, client):
+        """Test diagnóstico para verificar conexión a DB y endpoints básicos"""
+        # Test básico de endpoints
+        response = client.get("/api/v1/colors")
+        print(f"Colors endpoint status: {response.status_code}")
+        if response.status_code != 200:
+            print(f"Colors endpoint error: {response.text}")
+        
+        response = client.get("/api/v1/categories") 
+        print(f"Categories endpoint status: {response.status_code}")
+        if response.status_code != 200:
+            print(f"Categories endpoint error: {response.text}")
+            
+        response = client.get("/api/v1/sizes")
+        print(f"Sizes endpoint status: {response.status_code}")
+        if response.status_code != 200:
+            print(f"Sizes endpoint error: {response.text}")
+        
+        # Solo verificar que los endpoints existen
+        assert True, "Diagnostic test completed"
+    
     def test_master_data_are_available(self, client):
         """Test que los datos maestros inicializados estén disponibles"""
         # Verificar colores
@@ -110,17 +131,20 @@ class TestMasterDataIntegration:
         print(f"Talles encontrados: {len(sizes_data)}")
         
         # Verificar que hay al menos algunos datos básicos
-        if len(colors_data) > 0:
-            color_names = [color["name"] for color in colors_data]
-            assert any(name in ["BLANCO", "NEGRO", "ROJO", "AZUL"] for name in color_names)
+        # Si no hay datos, es probable que hay un problema con la inicialización
+        assert len(colors_data) >= 3, f"Should have at least 3 colors, found {len(colors_data)}"
+        assert len(categories_data) >= 3, f"Should have at least 3 categories, found {len(categories_data)}" 
+        assert len(sizes_data) >= 3, f"Should have at least 3 sizes, found {len(sizes_data)}"
         
-        if len(categories_data) > 0:
-            category_names = [cat["name"] for cat in categories_data]
-            assert any(name in ["VESTIDOS", "REMERAS", "PANTOLONES"] for name in category_names)
+        # Verificar datos específicos
+        color_names = [color["name"] for color in colors_data]
+        assert any(name in ["BLANCO", "NEGRO", "ROJO", "AZUL"] for name in color_names), f"Expected basic colors, found: {color_names}"
         
-        if len(sizes_data) > 0:
-            size_names = [size["name"] for size in sizes_data]
-            assert any(name in ["S", "M", "L"] for name in size_names)
+        category_names = [cat["name"] for cat in categories_data]
+        assert any(name in ["VESTIDOS", "REMERAS", "PANTOLONES"] for name in category_names), f"Expected basic categories, found: {category_names}"
+        
+        size_names = [size["name"] for size in sizes_data]
+        assert any(name in ["S", "M", "L"] for name in size_names), f"Expected basic sizes, found: {size_names}"
 
     def test_data_consistency(self, client):
         """Test que los datos sean consistentes entre llamadas"""

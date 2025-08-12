@@ -9,6 +9,17 @@ from app.routes.users import router as users_router
 from app.routes.roles import router as roles_router
 from app.routes.master_data import router as master_data_router
 from app.core.config import settings
+from fastapi import Depends
+from app.db.session import get_session
+from sqlmodel import Session, select
+from app.models.user import User
+from app.models.role import Role
+from app.models.user_role import UserRole
+from app.models.product import Product, ProductImage, ProductVariant
+from app.models.customer import Customer
+from app.models.order import Order
+from app.models.order_item import OrderItem
+from app.models.inventory import Inventory
 
 app = FastAPI(
     title="Tienda Ropa API",
@@ -54,3 +65,22 @@ def debug_auth():
         return {"status": "Firebase not initialized", "error": "No app instance found"}
     except Exception as e:
         return {"status": "Firebase error", "error": str(e)}
+
+@app.get("/debug/dump", response_model=None)
+def debug_dump(db: Session = Depends(get_session)):
+    """Devuelve un volcado compacto de tablas principales (solo para desarrollo)."""
+    def rows(model):
+        return [r.__dict__ for r in db.exec(select(model)).all()]
+    return {
+        "environment": settings.ENVIRONMENT,
+        "users": rows(User),
+        "roles": rows(Role),
+        "user_roles": rows(UserRole),
+        "products": rows(Product),
+        "product_images": rows(ProductImage),
+        "product_variants": rows(ProductVariant),
+        "customers": rows(Customer),
+        "orders": rows(Order),
+        "order_items": rows(OrderItem),
+        "inventory": rows(Inventory)
+    }

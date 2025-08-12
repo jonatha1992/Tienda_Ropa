@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir tests*.py)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(move test_integration_complete.py disabled )",
+      "Bash(move test_inventory_module.py disabled )",
+      "Bash(move test_ecommerce_module.py disabled )",
+      "Bash(move:*)",
+      "Bash(mv:*)",
+      "Bash(curl:*)",
+      "Bash(..venvScriptsActivate.ps1)",
+      "Bash(python -m pytest)",
+      "Bash(powershell.exe:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

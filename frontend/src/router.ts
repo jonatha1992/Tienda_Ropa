@@ -22,12 +22,12 @@ const routes = [
   {
     path: '/admin/products',
     component: AdminView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/admin/users',
     component: AdminUserManagementView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
 ];
 
@@ -55,9 +55,18 @@ router.beforeEach(async (to, _from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     console.log('🔒 Ruta protegida, redirigiendo a login');
     next('/auth');
+  } else if (to.meta.requiresAdmin && !authStore.hasAdminAccess) {
+    console.log('🔒 Ruta de admin, usuario sin permisos, redirigiendo a home');
+    next('/');
   } else if (to.path === '/auth' && authStore.isAuthenticated) {
-    console.log('✅ Usuario ya autenticado, redirigiendo a admin');
-    next('/admin/products');
+    // Si el usuario ya está autenticado, redirigir según sus roles
+    if (authStore.hasAdminAccess) {
+      console.log('✅ Admin autenticado, redirigiendo a admin');
+      next('/admin/products');
+    } else {
+      console.log('✅ Usuario regular autenticado, redirigiendo a home');
+      next('/');
+    }
   } else {
     next();
   }

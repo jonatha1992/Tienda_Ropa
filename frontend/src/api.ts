@@ -118,10 +118,12 @@ export const usersApi = {
     const response = await apiClient.get('/users/me');
     return response.data;
   },
-  // Get all users (admin/manager only)
+
+  // Get all users (debug endpoint)
   async getAllUsers(): Promise<User[]> {
-    const response = await apiClient.get('/users/');
-    return response.data;
+    const response = await apiClient.get('/users/debug-all');
+    // Si la respuesta no tiene 'users', retorna array vacío
+    return Array.isArray(response.data?.users) ? response.data.users : [];
   }
 };
 
@@ -136,6 +138,12 @@ export const masterDataApi = {
   // Get all categories
   async getCategories(): Promise<Category[]> {
     const response = await apiClient.get('/categories');
+    return response.data;
+  },
+
+  // Get categories that have products with stock (for navbar)
+  async getCategoriesWithStock(): Promise<Category[]> {
+    const response = await apiClient.get('/categories/with-stock');
     return response.data;
   },
 

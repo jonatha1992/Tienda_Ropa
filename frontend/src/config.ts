@@ -1,3 +1,8 @@
+// Configuración centralizada y mínima del frontend.
+// Principios:
+// 1. Fail-fast en build (no dev) si falta una variable obligatoria.
+// 2. Fallbacks solo para desarrollo local.
+// 3. Objeto único exportado (config) para facilitar refactors.
 
 const isDev = import.meta.env.DEV;
 

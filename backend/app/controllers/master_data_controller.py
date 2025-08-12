@@ -3,6 +3,7 @@ Controladores para gestión de datos maestros: colores, categorías y talles.
 """
 from sqlmodel import Session, select
 from app.models.master_data import Color, Category, Size, ColorCreate, CategoryCreate, SizeCreate
+from app.models.product import Product, ProductVariant
 from typing import List, Optional
 
 
@@ -96,6 +97,63 @@ def create_categories_bulk(db: Session, categories: List[CategoryCreate]) -> Lis
         db.refresh(category)
     
     return created_categories
+
+
+def get_categories_with_stock(db: Session) -> List[Category]:
+    """
+    Obtener categorías que tienen productos con stock disponible.
+    Solo devuelve categorías que tienen al menos un producto con stock > 0.
+    """
+    try:
+        # Obtener todas las categorías activas
+        all_categories = db.exec(select(Category).where(Category.is_active == True)).all()
+        
+        # Si no hay categorías, devolver lista vacía
+        if not all_categories:
+            return []
+        
+        # Filtrar categorías que tienen productos con stock
+        categories_with_stock = []
+        
+        for category in all_categories:
+            # Buscar productos de esta categoría
+            products = db.exec(
+                select(Product).where(Product.categoria == category.name)
+            ).all()
+            
+            # Si no hay productos en esta categoría, continuar
+            if not products:
+                continue
+            
+            # Verificar si algún producto tiene stock
+            has_stock = False
+            for product in products:
+                try:
+                    if product.is_unique:
+                        # Para productos únicos, verificar stock directo
+                        if product.stock and product.stock > 0:
+                            has_stock = True
+                            break
+                    else:
+                        # Para productos con variantes, verificar stock en variantes
+                        variants = db.exec(
+                            select(ProductVariant).where(ProductVariant.product_id == product.id)
+                        ).all()
+                        if variants and any(variant.stock > 0 for variant in variants):
+                            has_stock = True
+                            break
+                except Exception:
+                    # Si hay error con un producto específico, continuar con el siguiente
+                    continue
+            
+            if has_stock:
+                categories_with_stock.append(category)
+        
+        return sorted(categories_with_stock, key=lambda c: c.name)
+    
+    except Exception:
+        # En caso de error, devolver lista vacía en lugar de fallar
+        return []
 
 
 # === TALLES ===

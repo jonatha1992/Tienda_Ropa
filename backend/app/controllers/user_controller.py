@@ -22,7 +22,8 @@ def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
     new_user = User(
         firebase_uid=firebase_user['uid'],
         email=firebase_user['email'],
-        username=firebase_user.get('name') # Opcional, si viene de Firebase
+        username=firebase_user.get('email', '').split('@')[0] if firebase_user.get('email') else None,
+        nombre=firebase_user.get('name') # Opcional, si viene de Firebase
     )
     db.add(new_user)
     db.commit()
@@ -42,9 +43,23 @@ def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
             print(f"✅ Primer usuario creado con rol de administrador: {new_user.email}")
         else:
             print("⚠️ Rol de admin no encontrado. Ejecute primero la inicialización de roles.")
-    
-    return new_user
+    else:
+        # Para todos los demás usuarios, asignar el rol de USER por defecto
+        user_role_def = db.exec(select(Role).where(Role.name == RoleType.USER)).first()
+        if user_role_def:
+            user_role = UserRole(
+                user_id=new_user.id,
+                role_id=user_role_def.id,
+                assigned_by=None # Auto-asignado
+            )
+            db.add(user_role)
+            db.commit()
+            print(f"✅ Nuevo usuario '{new_user.email}' asignado con rol por defecto 'USER'.")
+        else:
+            print(f"⚠️ Rol 'USER' no encontrado para el usuario '{new_user.email}'. Ejecute la inicialización de roles.")
 
+    return new_user
+    
 def create_user(db: Session, user_create: UserCreate) -> User:
     # Esta función se mantiene por si se quiere crear un usuario con el método tradicional
     new_user = User(
