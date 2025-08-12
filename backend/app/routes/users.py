@@ -1,23 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_session
-<<<<<<< HEAD
-from app.models.user import User, UserRead
-=======
 from app.models.user import User, UserRead, UserWithRoles
->>>>>>> dev
 from app.controllers.user_controller import get_user_by_firebase_uid, create_user_from_firebase, get_all_users
 from app.core.auth_firebase import verify_firebase_token
 from app.controllers.role_controller import get_user_roles
 from app.core.security import require_manager_or_admin
-<<<<<<< HEAD
-from app.models.role import Role
-from sqlmodel import Session
-
-router = APIRouter(prefix="/users", tags=["Users"])
-
-@router.get("/", response_model=list[UserRead])
-=======
 from firebase_admin import auth as firebase_auth
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import select
@@ -76,15 +64,11 @@ def sync_firebase_users(
     return {"imported": imported, "total_users": total}
 
 @router.get("/", response_model=list[UserWithRoles])
->>>>>>> dev
 def list_users(
     db: Session = Depends(get_session),
     current_user= Depends(require_manager_or_admin())
 ):
     users = get_all_users(db)
-<<<<<<< HEAD
-    return users
-=======
     enriched = []
     for u in users:
         roles = get_user_roles(db, u.id)
@@ -101,7 +85,6 @@ def list_users(
             "roles": role_items
         })
     return enriched
->>>>>>> dev
 
 @router.get("/me", response_model=UserRead)
 async def get_or_create_me(
@@ -122,11 +105,7 @@ async def get_or_create_me(
     if not user:
         user = create_user_from_firebase(db, firebase_user)
     
-<<<<<<< HEAD
-    return user
-=======
     return UserRead.from_user(user)
->>>>>>> dev
 
 @router.get("/debug", response_model=dict)
 async def debug_user_auth(
