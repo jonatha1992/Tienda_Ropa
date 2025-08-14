@@ -1,10 +1,6 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <HeroBanner />
-<<<<<<< HEAD
-        <MasterDataShowcase />
-=======
->>>>>>> dev
         <ProductGrid />
         <Footer />
     </div>

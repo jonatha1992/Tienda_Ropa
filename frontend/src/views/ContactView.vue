@@ -1,36 +1,28 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white shadow rounded-lg p-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">Contacto</h1>
+  <div class="min-h-screen py-8 bg-gray-50">
+    <div class="max-w-4xl px-4 mx-auto sm:px-6 lg:px-8">
+      <div class="p-6 bg-white rounded-lg shadow">
+        <h1 class="mb-6 text-3xl font-bold text-gray-900">Contacto</h1>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
           <!-- Información de contacto -->
           <div>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Información de Contacto</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">Información de Contacto</h2>
             <div class="space-y-4">
               <div class="flex items-center">
-                <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-<<<<<<< HEAD
-                <span class="text-gray-600">info@mvintage.com</span>
-=======
-                <a href="mailto:mvintageapp@gmail.com" class="text-gray-600 hover:text-gray-900 transition-colors">mvintageapp@gmail.com</a>
->>>>>>> dev
+                <a href="mailto:mvintageapp@gmail.com" class="text-gray-600 transition-colors hover:text-gray-900">mvintageapp@gmail.com</a>
               </div>
               <div class="flex items-center">
-                <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                 </svg>
-<<<<<<< HEAD
-                <span class="text-gray-600">+54 11 1234-5678</span>
-=======
-                <a href="tel:+5491139471826" class="text-gray-600 hover:text-gray-900 transition-colors">+54 9 11 3947-1826</a>
->>>>>>> dev
+                <a href="tel:+5491139471826" class="text-gray-600 transition-colors hover:text-gray-900">+54 9 11 3947-1826</a>
               </div>
               <div class="flex items-center">
-                <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
@@ -41,28 +33,28 @@
 
           <!-- Formulario de contacto -->
           <div>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Envíanos un mensaje</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">Envíanos un mensaje</h2>
             <form class="space-y-4">
               <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                <label for="name" class="block mb-1 text-sm font-medium text-gray-700">Nombre</label>
                 <input type="text" id="name" name="name" 
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Tu nombre">
               </div>
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label for="email" class="block mb-1 text-sm font-medium text-gray-700">Email</label>
                 <input type="email" id="email" name="email"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="tu@email.com">
               </div>
               <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensaje</label>
+                <label for="message" class="block mb-1 text-sm font-medium text-gray-700">Mensaje</label>
                 <textarea id="message" name="message" rows="4"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Tu mensaje..."></textarea>
               </div>
               <button type="submit"
-                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200">
+                class="w-full px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700">
                 Enviar Mensaje
               </button>
             </form>
