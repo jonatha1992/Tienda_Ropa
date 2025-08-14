@@ -1,16 +1,10 @@
-<<<<<<< HEAD
-=======
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Mono:wght@400;500;700&display=swap');
 
->>>>>>> dev
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-<<<<<<< HEAD
-  @apply font-sans bg-secondary-50 text-secondary-900;
-=======
   @apply bg-white text-gray-900;
   font-family: 'Lato', sans-serif;
 }
@@ -50,5 +44,4 @@ body {
 
 .btn-light {
   @apply bg-white text-black border border-black hover:bg-black hover:text-white;
->>>>>>> dev
 }
