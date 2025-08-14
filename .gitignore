@@ -1,4 +1,4 @@
-.claude/
+# Ignorar cachés de Python (backend)
 __pycache__/
 *.pyc
 *.pyo
@@ -40,6 +40,7 @@ frontend/*.env
 
 # Ignorar archivos de Alembic autogenerados y configuración de base de datos
 backend/alembic/versions/*.pyc
+backend/alembic.ini
 
 # Ignorar cachés y configuración de Firebase
 frontend/.firebase/

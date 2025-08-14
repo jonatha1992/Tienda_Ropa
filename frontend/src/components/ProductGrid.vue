@@ -1,9 +1,9 @@
 <template>
   <div class="bg-white">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+    <div class="px-4 py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
       <!-- Section Header -->
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-light tracking-wide text-gray-900 mb-4">
+      <div class="mb-16 text-center">
+        <h2 class="mb-4 text-3xl font-light tracking-wide text-gray-900 md:text-4xl">
           {{ title }}
         </h2>
         <div class="w-24 h-0.5 bg-gray-900 mx-auto"></div>
@@ -15,20 +15,20 @@
       </div>
       
       <!-- Load More Button -->
-      <div v-if="hasMoreProducts" class="text-center mt-16">
+      <div v-if="hasMoreProducts" class="mt-16 text-center">
         <button @click="loadMoreProducts" class="btn-minimal btn-light">
           Ver Más Productos
         </button>
       </div>
       
       <!-- Empty State -->
-      <div v-if="displayProducts.length === 0" class="text-center py-16">
-        <div class="text-gray-400 mb-4">
+      <div v-if="displayProducts.length === 0" class="py-16 text-center">
+        <div class="mb-4 text-gray-400">
           <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay productos disponibles</h3>
+        <h3 class="mb-2 text-lg font-medium text-gray-900">No hay productos disponibles</h3>
         <p class="text-gray-500">Revisa más tarde o explora otras categorías</p>
       </div>
     </div>

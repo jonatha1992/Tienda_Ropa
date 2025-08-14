@@ -20,9 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
     })
 
     const hasAdminAccess = computed(() => isAdmin.value)
-    
-    // Alias para compatibilidad con componentes que esperan 'user'
-    const user = computed(() => firebaseUser.value)
 
     const fetchBackendUser = async () => {
         try {
@@ -97,7 +94,6 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         firebaseUser,
         backendUser,
-        user,
         userRoles,
         token,
         loading,

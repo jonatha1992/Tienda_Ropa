@@ -61,7 +61,7 @@ router.beforeEach(async (to, _from, next) => {
   // Para rutas de admin, asegurar que los roles estén cargados
   if (to.meta.requiresAdmin && authStore.isAuthenticated) {
     console.log('🔍 Verificando permisos de admin...');
-    
+
     // Si no hay roles cargados, intentar cargarlos
     if (authStore.userRoles.length === 0) {
       console.log('📋 Cargando roles del usuario...');
@@ -71,10 +71,10 @@ router.beforeEach(async (to, _from, next) => {
         console.error('❌ Error cargando roles:', error);
       }
     }
-    
+
     console.log('🔐 Roles del usuario:', authStore.userRoles);
     console.log('🔐 Tiene acceso admin:', authStore.hasAdminAccess);
-    
+
     if (!authStore.hasAdminAccess) {
       console.log('🔒 Usuario sin permisos de admin, redirigiendo a home');
       next('/');
