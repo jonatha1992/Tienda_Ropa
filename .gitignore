@@ -1,4 +1,4 @@
-# Ignorar cachés de Python (backend)
+.claude/
 __pycache__/
 *.pyc
 *.pyo

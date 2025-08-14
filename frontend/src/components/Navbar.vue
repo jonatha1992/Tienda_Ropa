@@ -335,7 +335,7 @@ const openDropdown = () => {
 }
 
 const closeDropdown = () => {
-  dropdownTimeout = setTimeout(() => {
+  dropdownTimeout = window.setTimeout(() => {
     isDropdownOpen.value = false
   }, 150)
 }
@@ -361,7 +361,7 @@ const openUserDropdown = () => {
 }
 
 const closeUserDropdown = () => {
-  userDropdownTimeout = setTimeout(() => {
+  userDropdownTimeout = window.setTimeout(() => {
     isUserDropdownOpen.value = false
   }, 150)
 }
