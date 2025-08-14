@@ -11,10 +11,7 @@ from app.routes.master_data import router as master_data_router
 from app.core.config import settings
 from fastapi import Depends
 from app.db.session import get_session
-<<<<<<< HEAD
-=======
 from app.db.migrations import run_migrations
->>>>>>> dev
 from sqlmodel import Session, select
 from app.models.user import User
 from app.models.role import Role
@@ -24,27 +21,23 @@ from app.models.customer import Customer
 from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.models.inventory import Inventory
-<<<<<<< HEAD
-=======
 import logging
 
 logger = logging.getLogger(__name__)
->>>>>>> dev
 
 app = FastAPI(
     title="Tienda Ropa API",
     description="API para sistema de inventario y tienda online",
-    version="1.0.0"
+    version="1.0.0",
 )
 
-<<<<<<< HEAD
-=======
+
 @app.on_event("startup")
 async def startup_event():
     """Ejecutar migraciones automáticamente al iniciar la aplicación."""
     logger.info("Starting application...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
-    
+
     # Ejecutar migraciones automáticamente
     try:
         run_migrations()
@@ -55,7 +48,7 @@ async def startup_event():
         if settings.ENVIRONMENT not in ["development", "dev"]:
             raise
 
->>>>>>> dev
+
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -79,27 +72,32 @@ app.include_router(master_data_router, prefix="/api/v1")
 def health():
     return {"status": "ok"}
 
+
 @app.get("/debug/auth")
 def debug_auth():
     """Endpoint para debuggear la configuración de Firebase"""
     import firebase_admin
+
     try:
         app_instance = firebase_admin.get_app()
         return {
             "status": "Firebase initialized",
             "app_name": app_instance.name,
-            "project_id": app_instance.project_id
+            "project_id": app_instance.project_id,
         }
     except ValueError:
         return {"status": "Firebase not initialized", "error": "No app instance found"}
     except Exception as e:
         return {"status": "Firebase error", "error": str(e)}
 
+
 @app.get("/debug/dump", response_model=None)
 def debug_dump(db: Session = Depends(get_session)):
     """Devuelve un volcado compacto de tablas principales (solo para desarrollo)."""
+
     def rows(model):
         return [r.__dict__ for r in db.exec(select(model)).all()]
+
     return {
         "environment": settings.ENVIRONMENT,
         "users": rows(User),
@@ -111,5 +109,5 @@ def debug_dump(db: Session = Depends(get_session)):
         "customers": rows(Customer),
         "orders": rows(Order),
         "order_items": rows(OrderItem),
-        "inventory": rows(Inventory)
+        "inventory": rows(Inventory),
     }
