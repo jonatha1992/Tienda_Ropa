@@ -12,6 +12,10 @@ export interface Product {
   color?: string | null;
   talle?: string | null;
   stock?: number | null;
+  is_new?: boolean;
+  is_sale?: boolean;
+  original_price?: number;
+  created_at?: string;
   images: ProductImage[];
   variants: ProductVariant[];
 }
