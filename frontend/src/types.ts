@@ -4,14 +4,18 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  original_price?: number;
   genero?: string;
   estado?: string;
   categoria?: string;
   edad_destino?: string;
   is_unique: boolean;
+  is_new?: boolean;
+  is_sale?: boolean;
   color?: string | null;
   talle?: string | null;
   stock?: number | null;
+  created_at?: string;
   images: ProductImage[];
   variants: ProductVariant[];
 }

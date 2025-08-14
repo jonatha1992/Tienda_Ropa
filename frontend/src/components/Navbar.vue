@@ -313,8 +313,8 @@ const isMobileMenuOpen = ref(false)
 const isMobileShopMenuOpen = ref(false)
 
 // Timeout references for hover behavior
-let dropdownTimeout: NodeJS.Timeout | null = null
-let userDropdownTimeout: NodeJS.Timeout | null = null
+let dropdownTimeout: number | null = null
+let userDropdownTimeout: number | null = null
 
 // Computed properties
 const isAuthenticated = computed(() => authStore.isAuthenticated)
