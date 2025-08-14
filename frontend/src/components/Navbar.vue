@@ -1,10 +1,21 @@
 <template>
+<<<<<<< HEAD
   <nav class="shadow-md bg-secondary">
+=======
+  <nav class="sticky top-0 z-50 bg-white border-b border-gray-100">
+>>>>>>> dev
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex-shrink-0">
+<<<<<<< HEAD
           <router-link to="/" class="text-2xl font-bold text-primary">M-VINTAGE</router-link>
+=======
+          <router-link to="/" class="flex items-center space-x-2 text-2xl font-light tracking-wider text-gray-900 hover:text-gray-700">
+            <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-10 h-10" />
+            <span>M-VINTAGE</span>
+          </router-link>
+>>>>>>> dev
         </div>
 
         <!-- Desktop Menu -->
@@ -12,27 +23,67 @@
           <div class="flex items-baseline space-x-4">
             <div class="relative">
               <button @click.stop="toggleShopMenu"
+<<<<<<< HEAD
                 class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">SHOP</button>
               <div v-if="isShopMenuOpen" @click.stop
                 class="absolute z-10 w-48 mt-2 rounded-md shadow-lg bg-secondary ring-1 ring-black ring-opacity-5">
+=======
+                class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">
+                SHOP ▼
+              </button>
+              <div v-if="isShopMenuOpen" @click.stop
+                class="absolute z-10 w-48 mt-2 bg-white border border-gray-100 shadow-lg">
+>>>>>>> dev
                 <div class="py-1" role="menu" aria-orientation="vertical">
                   <div v-if="categories.length === 0" class="px-4 py-2 text-sm italic text-gray-500">
                     No hay stock con categorías
                   </div>
                   <router-link v-else v-for="category in categories" :key="category.id"
+<<<<<<< HEAD
                     :to="`/?category=${category.name.toUpperCase()}`" @click="closeMenus"
                     class="block px-4 py-2 text-sm text-primary hover:bg-gray-100" role="menuitem">{{
+=======
+                    :to="`/shop?category=${category.name.toLowerCase()}`" @click="closeMenus"
+                    class="block px-4 py-2 text-sm tracking-wide text-gray-900 uppercase transition-colors hover:bg-gray-50" role="menuitem">{{
+>>>>>>> dev
                     category.name }}</router-link>
                 </div>
               </div>
             </div>
+<<<<<<< HEAD
             <router-link to="/contact" class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">CONTACT</router-link>
             <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">HOW TO SHOP</router-link>
             <router-link to="/shipping" class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">ENVÍOS</router-link>
+=======
+            <!-- Admin Menu - Solo visible para administradores -->
+            <div v-if="authStore.hasAdminAccess" class="relative">
+              <button @click.stop="toggleAdminMenu"
+                class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">ADMIN ▼</button>
+              <div v-if="isAdminMenuOpen" @click.stop
+                class="absolute z-50 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg"
+                style="top: 100%; left: 0; min-width: 200px;">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <router-link to="/admin/products" @click="closeMenus"
+                    class="block px-4 py-2 text-sm text-primary hover:bg-gray-100" role="menuitem">
+                    Gestionar Productos
+                  </router-link>
+                  <router-link to="/admin/users" @click="closeMenus"
+                    class="block px-4 py-2 text-sm text-primary hover:bg-gray-100" role="menuitem">
+                    Gestionar Usuarios
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            
+            <router-link to="/contact" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CONTACT</router-link>
+            <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">HOW TO SHOP</router-link>
+            <router-link to="/shipping" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">ENVÍOS</router-link>
+>>>>>>> dev
           </div>
 
           <!-- Desktop Auth & Cart -->
           <div class="flex items-center space-x-4">
+<<<<<<< HEAD
             <router-link to="/cart" class="p-1 rounded-full text-accent hover:text-primary focus:outline-none">
               <span class="sr-only">Carrito</span>
               <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
@@ -41,13 +92,28 @@
               <button @click="handleLogout" class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">Cerrar Sesión</button>
             </div>
             <router-link v-else to="/auth" class="px-3 py-2 text-sm font-medium rounded-md text-primary hover:text-accent">Iniciar Sesión</router-link>
+=======
+            <router-link to="/cart" class="p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
+              <span class="sr-only">Carrito</span>
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+            </router-link>
+            <div v-if="authStore.isAuthenticated" class="flex items-center space-x-2">
+              <button @click="handleLogout" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">Cerrar Sesión</button>
+            </div>
+            <router-link v-else to="/auth" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">Iniciar Sesión</router-link>
+>>>>>>> dev
           </div>
         </div>
 
         <!-- Mobile Menu Button -->
         <div class="flex items-center md:hidden">
+<<<<<<< HEAD
           <router-link to="/cart" class="p-1 mr-4 rounded-full text-accent hover:text-primary focus:outline-none"><span class="sr-only">Carrito</span><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></router-link>
           <button @click.stop="toggleMobileMenu" class="inline-flex items-center justify-center p-2 rounded-md text-primary hover:text-accent focus:outline-none">
+=======
+          <router-link to="/cart" class="p-2 mr-4 text-gray-900 hover:text-gray-600 transition-colors focus:outline-none"><span class="sr-only">Carrito</span><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></router-link>
+          <button @click.stop="toggleMobileMenu" class="inline-flex items-center justify-center p-2 text-gray-900 hover:text-gray-600 transition-colors focus:outline-none">
+>>>>>>> dev
             <span class="sr-only">Open main menu</span>
             <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -57,6 +123,7 @@
     </div>
 
     <!-- Mobile Menu -->
+<<<<<<< HEAD
     <div v-if="isMobileMenuOpen" class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
         <button @click.stop="toggleMobileShopMenu" class="block w-full px-3 py-2 text-base font-medium text-left rounded-md text-primary hover:text-accent hover:bg-gray-600">SHOP</button>
@@ -80,6 +147,40 @@
           <div class="px-2 mt-3 space-y-1">
             <button v-if="authStore.isAuthenticated" @click="handleLogout" class="block w-full px-3 py-2 text-base font-medium text-left rounded-md text-primary hover:text-accent hover:bg-gray-600">Cerrar Sesión</button>
             <router-link v-else to="/auth" @click="closeMenus" class="block px-3 py-2 text-base font-medium rounded-md text-primary hover:text-accent hover:bg-gray-600">Iniciar Sesión</router-link>
+=======
+    <div v-if="isMobileMenuOpen" class="md:hidden bg-white border-t border-gray-100">
+      <div class="px-4 pt-4 pb-6 space-y-2">
+        <button @click.stop="toggleMobileShopMenu" class="block w-full px-3 py-3 text-sm font-medium tracking-wide text-left text-gray-900 uppercase hover:text-gray-600 transition-colors">SHOP</button>
+        <div v-if="isMobileShopMenuOpen" class="pl-4 space-y-1">
+          <div v-if="categories.length === 0" class="px-3 py-2 text-sm italic text-gray-500">
+            - No hay stock con categorías
+          </div>
+          <router-link v-else v-for="category in categories" :key="category.id" :to="`/shop?category=${category.name.toLowerCase()}`" @click="closeMenus" class="block px-3 py-2 text-sm tracking-wide text-gray-700 uppercase hover:text-gray-900 transition-colors">- {{ category.name }}</router-link>
+        </div>
+        <!-- Admin Menu Mobile - Solo visible para administradores -->
+        <div v-if="authStore.hasAdminAccess">
+          <button @click.stop="toggleMobileAdminMenu" class="block w-full px-3 py-3 text-sm font-medium tracking-wide text-left text-gray-900 uppercase hover:text-gray-600 transition-colors">ADMIN</button>
+          <div v-if="isMobileAdminMenuOpen" class="pl-4 space-y-1">
+            <router-link to="/admin/products" @click="closeMenus" class="block px-3 py-2 text-sm text-gray-700 hover:text-gray-900 transition-colors">- Gestionar Productos</router-link>
+            <router-link to="/admin/users" @click="closeMenus" class="block px-3 py-2 text-sm text-gray-700 hover:text-gray-900 transition-colors">- Gestionar Usuarios</router-link>
+          </div>
+        </div>
+        
+        <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase hover:text-gray-600 transition-colors">CONTACT</router-link>
+        <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase hover:text-gray-600 transition-colors">HOW TO SHOP</router-link>
+        <router-link to="/shipping" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase hover:text-gray-600 transition-colors">ENVÍOS</router-link>
+        
+        <div class="pt-4 mt-4 border-t border-gray-200">
+          <div v-if="authStore.isAuthenticated" class="flex items-center px-3 mb-3">
+            <div>
+              <div class="text-sm font-medium text-gray-900">{{ authStore.firebaseUser?.displayName }}</div>
+              <div class="text-xs text-gray-500">{{ authStore.firebaseUser?.email }}</div>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <button v-if="authStore.isAuthenticated" @click="handleLogout" class="block w-full px-3 py-3 text-sm font-medium tracking-wide text-left text-gray-900 uppercase hover:text-gray-600 transition-colors">Cerrar Sesión</button>
+            <router-link v-else to="/auth" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase hover:text-gray-600 transition-colors">Iniciar Sesión</router-link>
+>>>>>>> dev
           </div>
         </div>
       </div>
@@ -97,6 +198,11 @@ import type { Category } from '../types';
 const isShopMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobileShopMenuOpen = ref(false);
+<<<<<<< HEAD
+=======
+const isAdminMenuOpen = ref(false);
+const isMobileAdminMenuOpen = ref(false);
+>>>>>>> dev
 const authStore = useAuthStore();
 const router = useRouter();
 const categories = ref<Category[]>([]);
@@ -113,6 +219,19 @@ const toggleMobileShopMenu = () => {
   isMobileShopMenuOpen.value = !isMobileShopMenuOpen.value;
 }
 
+<<<<<<< HEAD
+=======
+const toggleAdminMenu = () => {
+  console.log('🔧 toggleAdminMenu clicked, current state:', isAdminMenuOpen.value);
+  isAdminMenuOpen.value = !isAdminMenuOpen.value;
+  console.log('🔧 toggleAdminMenu new state:', isAdminMenuOpen.value);
+};
+
+const toggleMobileAdminMenu = () => {
+  isMobileAdminMenuOpen.value = !isMobileAdminMenuOpen.value;
+};
+
+>>>>>>> dev
 const handleLogout = async () => {
   try {
     await authStore.logout();
@@ -142,11 +261,24 @@ const closeMenus = () => {
   isShopMenuOpen.value = false;
   isMobileMenuOpen.value = false;
   isMobileShopMenuOpen.value = false;
+<<<<<<< HEAD
+=======
+  isAdminMenuOpen.value = false;
+  isMobileAdminMenuOpen.value = false;
+>>>>>>> dev
 };
 
 onMounted(() => {
   loadCategories();
   document.addEventListener('click', closeMenus);
+<<<<<<< HEAD
+=======
+  
+  // Debug: verificar estado de admin cada segundo
+  setInterval(() => {
+    console.log('🔍 Debug Navbar - hasAdminAccess:', authStore.hasAdminAccess, 'userRoles:', authStore.userRoles);
+  }, 5000);
+>>>>>>> dev
 });
 
 onUnmounted(() => {

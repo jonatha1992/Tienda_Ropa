@@ -181,3 +181,150 @@ alembic upgrade head
 
 ### API Documentation
 Available at `/docs` (Swagger) and `/redoc` when backend is running.
+
+## Single Test Execution
+
+### Backend Individual Tests
+```powershell
+# Run a specific test file (execute from project root):
+cd C:\Repositorio\Tienda_Ropa
+& .\backend\.venv\Scripts\Activate.ps1
+python -m pytest backend/tests/test_auth_module.py -v
+
+# Run a specific test function:
+python -m pytest backend/tests/test_auth_module.py::test_specific_function -v
+
+# Run tests with coverage:
+python -m pytest backend/tests/ --cov=backend/app --cov-report=html
+```
+
+### Frontend Individual Tests  
+```powershell
+# Run specific test file:
+cd C:\Repositorio\Tienda_Ropa\frontend
+npm run test -- test_file_name
+
+# Run tests in watch mode:
+npm run test -- --watch
+```
+
+## Linting and Code Quality
+
+### Frontend Linting
+```powershell
+cd C:\Repositorio\Tienda_Ropa\frontend
+# Type checking (ALWAYS run before commits):
+vue-tsc --noEmit
+
+# If ESLint is configured, run:
+npm run lint
+```
+
+### Backend Code Quality
+```powershell
+cd C:\Repositorio\Tienda_Ropa
+& .\backend\.venv\Scripts\Activate.ps1
+# Manual type checking with mypy (if configured):
+python -m mypy backend/app/
+```
+
+## Critical Architecture Notes
+
+### Product Variant System
+- **Unique Products**: Set `is_unique=True` for single-variant products (no color/size options)
+- **Multi-Variant Products**: Set `is_unique=False` and create ProductVariant entries for each combination
+- **Stock Tracking**: Each ProductVariant has individual stock levels in Inventory table
+- **Images**: ProductImage entities link to Product (not variant-specific)
+
+### Authentication Flow
+1. **Firebase Frontend**: User authenticates via Firebase Auth (supports Google, email/password)
+2. **Token Validation**: Backend validates Firebase JWT tokens using Firebase Admin SDK  
+3. **User Sync**: First login creates User record in local database with Firebase UID
+4. **Role Assignment**: New users get default role; admin can assign Manager/Admin roles
+5. **Protected Routes**: Use `Depends(get_current_user)` for authentication in FastAPI routes
+
+### Environment Variable Priority
+**Backend**: System environment > `.env.{ENVIRONMENT}` > `.env`
+**Frontend**: Vite only loads `.env.{mode}` files (dev/test/pro modes)
+
+### Database Migration Workflow
+
+**AUTOMATIC MIGRATIONS**: Las migraciones se ejecutan automáticamente al iniciar la aplicación en entornos `development` y `test`.
+
+```powershell
+# After model changes, generate migration:
+cd C:\Repositorio\Tienda_Ropa
+& .\backend\.venv\Scripts\Activate.ps1
+alembic revision --autogenerate -m "Add new field to Product model"
+
+# Review the generated migration file in backend/alembic/versions/
+# Restart the application to apply migrations automatically
+# OR apply manually if needed:
+alembic upgrade head
+
+# Rollback if needed:
+alembic downgrade -1
+```
+
+**Important Notes:**
+- **Development/Test**: Migrations run automatically on application startup
+- **Production**: Migrations must be run manually for safety
+- **New Models**: Simply restart the application after adding new models or fields
+
+### Test Structure by Domain
+- `test_auth_module.py` - Firebase auth, JWT validation, user management
+- `test_master_data_module.py` - Colors, categories, sizes (foundational data)
+- `test_products_module.py` - Product CRUD, variants, images, search
+- `test_ecommerce_module.py` - Customer management, order processing
+- `test_inventory_module.py` - Stock adjustments, low stock alerts
+- `test_integration_complete.py` - End-to-end user flows (register → browse → order)
+
+## Documentation Maintenance Policy
+
+**CRITICAL: Always update documentation when making changes**
+
+Whenever implementing improvements, new features, or architectural changes, you MUST update the relevant documentation files:
+
+### Required Documentation Updates
+1. **CLAUDE.md** - Update if changes affect:
+   - Development commands or workflows
+   - Architecture patterns or conventions
+   - Environment setup or configuration
+   - Testing procedures
+
+2. **README.md** - Update if changes affect:
+   - Setup instructions
+   - API endpoints
+   - General project information
+   - Deployment procedures
+
+3. **docs/structure.md** - Update if changes affect:
+   - New components, models, or modules
+   - Project structure reorganization
+   - Component relationships or responsibilities
+
+4. **docs/tech-stack.md** - Update if changes affect:
+   - New technologies or libraries
+   - Technical architecture changes
+   - Integration patterns
+   - Development tool changes
+
+5. **docs/planning.md** - Update if changes affect:
+   - Completed milestones
+   - New development objectives
+   - Roadmap modifications
+
+### Documentation Update Process
+1. **Implement** the code changes
+2. **Test** the implementation thoroughly
+3. **Update** all relevant documentation files listed above
+4. **Verify** documentation accuracy and consistency
+5. **Commit** both code and documentation together
+
+**IMPORTANT**: Documentation updates are not optional - they are a required part of every significant change to ensure future Claude Code instances have complete and accurate context.
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

@@ -1,7 +1,54 @@
+<<<<<<< HEAD
+=======
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Mono:wght@400;500;700&display=swap');
+
+>>>>>>> dev
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
+<<<<<<< HEAD
   @apply font-sans bg-secondary-50 text-secondary-900;
+=======
+  @apply bg-white text-gray-900;
+  font-family: 'Lato', sans-serif;
+}
+
+.font-mono {
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Bohme-style components */
+.hero-section {
+  @apply relative overflow-hidden;
+}
+
+.product-card {
+  cursor: pointer;
+}
+
+.product-card .secondary-image {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+}
+
+.product-card:hover .secondary-image {
+  @apply opacity-100;
+}
+
+.product-card:hover .primary-image {
+  @apply opacity-0;
+}
+
+.btn-minimal {
+  @apply px-6 py-3 text-sm font-medium tracking-wide uppercase transition-colors duration-200;
+}
+
+.btn-dark {
+  @apply bg-black text-white hover:bg-gray-800;
+}
+
+.btn-light {
+  @apply bg-white text-black border border-black hover:bg-black hover:text-white;
+>>>>>>> dev
 }

@@ -54,9 +54,17 @@ class Settings(BaseSettings):
     # Firebase opción 3: variables individuales
     FIREBASE_TYPE: str = "service_account"
     FIREBASE_PROJECT_ID: str = "m-vintage"
+<<<<<<< HEAD
     FIREBASE_PRIVATE_KEY_ID: Optional[str] = None   
     FIREBASE_PRIVATE_KEY: Optional[str] = None
     FIREBASE_CLIENT_EMAIL: str = "firebase-adminsdk-fbsvc@m-vintage.iam.gserviceaccount.com"
+=======
+    FIREBASE_PRIVATE_KEY_ID: Optional[str] = None
+    FIREBASE_PRIVATE_KEY: Optional[str] = None
+    FIREBASE_CLIENT_EMAIL: str = (
+        "firebase-adminsdk-fbsvc@m-vintage.iam.gserviceaccount.com"
+    )
+>>>>>>> dev
     FIREBASE_CLIENT_ID: int = 115177179653983835424
     FIREBASE_AUTH_URI: str = "https://accounts.google.com/o/oauth2/auth"
     FIREBASE_TOKEN_URI: str = "https://oauth2.googleapis.com/token"
@@ -67,7 +75,10 @@ class Settings(BaseSettings):
     # CORS / Frontend
     FRONTEND_URL: str = "http://localhost:5173"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
     # Alternativa: lista separada por comas, tiene prioridad si se define
     CORS_ORIGINS: Optional[str] = None
 
@@ -94,7 +105,13 @@ class Settings(BaseSettings):
         env = values.get("ENVIRONMENT", "dev")
         if env in ("test", "pro"):
             if v.startswith("sqlite:"):
+<<<<<<< HEAD
                 raise ValueError("En entornos test/pro la base de datos debe ser PostgreSQL (no sqlite)")
+=======
+                raise ValueError(
+                    "En entornos test/pro la base de datos debe ser PostgreSQL (no sqlite)"
+                )
+>>>>>>> dev
         return v
 
     # ----------------- Helpers -----------------
@@ -104,7 +121,11 @@ class Settings(BaseSettings):
         Prioridad: CORS_ORIGINS (lista separada por comas) > FRONTEND_URL (+ PRODUCTION_FRONTEND_URL en prod).
         """
         if self.CORS_ORIGINS:
+<<<<<<< HEAD
             items = [o.strip() for o in self.CORS_ORIGINS.split(',') if o.strip()]
+=======
+            items = [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+>>>>>>> dev
             return items or [self.FRONTEND_URL]
         origins = [self.FRONTEND_URL]
         if self.ENVIRONMENT == "pro" and self.PRODUCTION_FRONTEND_URL:
@@ -122,7 +143,13 @@ class Settings(BaseSettings):
                 raw = base64.b64decode(self.FIREBASE_SERVICE_ACCOUNT_JSON_B64)
                 return json.loads(raw)
             except Exception as exc:  # pragma: no cover - logging eventual
+<<<<<<< HEAD
                 raise RuntimeError("FIREBASE_SERVICE_ACCOUNT_JSON_B64 inválido") from exc
+=======
+                raise RuntimeError(
+                    "FIREBASE_SERVICE_ACCOUNT_JSON_B64 inválido"
+                ) from exc
+>>>>>>> dev
 
         # JSON plano
         if self.FIREBASE_SERVICE_ACCOUNT_KEY:
@@ -132,12 +159,24 @@ class Settings(BaseSettings):
                 raise RuntimeError("FIREBASE_SERVICE_ACCOUNT_KEY no es JSON válido")
 
         # Variables individuales
+<<<<<<< HEAD
         if self.FIREBASE_PROJECT_ID and self.FIREBASE_PRIVATE_KEY and self.FIREBASE_CLIENT_EMAIL:
+=======
+        if (
+            self.FIREBASE_PROJECT_ID
+            and self.FIREBASE_PRIVATE_KEY
+            and self.FIREBASE_CLIENT_EMAIL
+        ):
+>>>>>>> dev
             return {
                 "type": self.FIREBASE_TYPE,
                 "project_id": self.FIREBASE_PROJECT_ID,
                 "private_key_id": self.FIREBASE_PRIVATE_KEY_ID,
+<<<<<<< HEAD
                 "private_key": self.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'),
+=======
+                "private_key": self.FIREBASE_PRIVATE_KEY.replace("\\n", "\n"),
+>>>>>>> dev
                 "client_email": self.FIREBASE_CLIENT_EMAIL,
                 "client_id": self.FIREBASE_CLIENT_ID,
                 "auth_uri": self.FIREBASE_AUTH_URI,

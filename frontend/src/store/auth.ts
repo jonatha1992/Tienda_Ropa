@@ -14,9 +14,16 @@ export const useAuthStore = defineStore('auth', () => {
 
     const isAuthenticated = computed(() => !!backendUser.value)
 
+<<<<<<< HEAD
     const isAdmin = computed(() =>
         userRoles.value.some(role => ['admin', 'manager'].includes(role.name))
     )
+=======
+    const isAdmin = computed(() => {
+        console.log('🔍 Checking admin access. User roles:', userRoles.value);
+        return userRoles.value.some(role => ['admin', 'manager'].includes(role.name.toLowerCase()))
+    })
+>>>>>>> dev
 
     const hasAdminAccess = computed(() => isAdmin.value)
 

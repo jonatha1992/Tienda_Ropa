@@ -11,6 +11,10 @@ from app.routes.master_data import router as master_data_router
 from app.core.config import settings
 from fastapi import Depends
 from app.db.session import get_session
+<<<<<<< HEAD
+=======
+from app.db.migrations import run_migrations
+>>>>>>> dev
 from sqlmodel import Session, select
 from app.models.user import User
 from app.models.role import Role
@@ -20,6 +24,12 @@ from app.models.customer import Customer
 from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.models.inventory import Inventory
+<<<<<<< HEAD
+=======
+import logging
+
+logger = logging.getLogger(__name__)
+>>>>>>> dev
 
 app = FastAPI(
     title="Tienda Ropa API",
@@ -27,6 +37,25 @@ app = FastAPI(
     version="1.0.0"
 )
 
+<<<<<<< HEAD
+=======
+@app.on_event("startup")
+async def startup_event():
+    """Ejecutar migraciones automáticamente al iniciar la aplicación."""
+    logger.info("Starting application...")
+    logger.info(f"Environment: {settings.ENVIRONMENT}")
+    
+    # Ejecutar migraciones automáticamente
+    try:
+        run_migrations()
+        logger.info("Application startup completed successfully")
+    except Exception as e:
+        logger.error(f"Error during application startup: {e}")
+        # En development podemos continuar, en otros entornos es más crítico
+        if settings.ENVIRONMENT not in ["development", "dev"]:
+            raise
+
+>>>>>>> dev
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,

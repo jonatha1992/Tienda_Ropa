@@ -5,35 +5,6 @@ Tienda_Ropa is a full-stack e-commerce application for clothing store management
 
 ## Directory Structure
 
-<<<<<<< HEAD
-  A --> B[backend/]
-  B --> B1[app/]
-  B1 --> B11[api/]
-  B11 --> B12[v1/]
-  B12 --> B13[endpoints/]
-  B13 --> B14[items.py]
-  B1 --> B3[db/session.py]
-  B1 --> B4[models/user.py]
-  B --> BA[alembic/]
-  B --> BAI[alembic.ini]
-  B1 --> B5[main.py]
-  B --> BR[requirements.txt]
-  B --> BD[Dockerfile]
-  B --> BE[.env.example]
-
-  A --> F[frontend/]
-  F --> FS[src/]
-  FS --> FSM[main.ts]
-  FS --> FSA[App.vue]
-  FS --> FSF[firebase.ts]
-  F --> FI[index.html]
-  F --> FP[package.json]
-  F --> FT[tsconfig.json]
-  F --> FV[vite.config.ts]
-  F --> FE[.eslintrc.cjs]
-  F --> FENV[.env.example]
-  F --> FD[Dockerfile]
-=======
 ```
 Tienda_Ropa/
 ├── backend/                    # FastAPI backend application
@@ -45,33 +16,41 @@ Tienda_Ropa/
 │   │   │   ├── master_data_controller.py
 │   │   │   ├── order_controller.py
 │   │   │   ├── product_controller.py
+│   │   │   ├── role_controller.py
 │   │   │   └── user_controller.py
 │   │   ├── core/               # Core configuration and utilities
-│   │   │   ├── auth.py         # Firebase auth integration
+│   │   │   ├── auth_firebase.py # Firebase auth integration
 │   │   │   ├── config.py       # Environment configuration
 │   │   │   └── security.py     # Security utilities
 │   │   ├── db/                 # Database configuration
-│   │   │   └── session.py      # Database session management
+│   │   │   ├── session.py      # Database session management
+│   │   │   └── migrations.py   # Automatic migration management
 │   │   ├── models/             # SQLModel data models
-│   │   │   ├── auth.py         # User, Role, UserRole models
 │   │   │   ├── customer.py     # Customer model
 │   │   │   ├── inventory.py    # Inventory model
 │   │   │   ├── master_data.py  # Color, Category, Size models
-│   │   │   ├── order.py        # Order, OrderItem models
-│   │   │   └── product.py      # Product, ProductVariant, ProductImage models
+│   │   │   ├── order.py        # Order model
+│   │   │   ├── order_item.py   # OrderItem model
+│   │   │   ├── product.py      # Product, ProductVariant, ProductImage models
+│   │   │   ├── role.py         # Role model
+│   │   │   ├── user.py         # User model
+│   │   │   └── user_role.py    # UserRole model
 │   │   ├── routes/             # API route handlers
-│   │   │   ├── auth.py
 │   │   │   ├── customers.py
 │   │   │   ├── inventory.py
 │   │   │   ├── master_data.py
 │   │   │   ├── orders.py
 │   │   │   ├── products.py
+│   │   │   ├── roles.py
 │   │   │   └── users.py
 │   │   └── main.py             # FastAPI application entry point
 │   ├── tests/                  # Backend test suite
 │   │   ├── conftest.py         # Test configuration
-│   │   └── test_basic_essential.py
+│   │   ├── test_basic_essential.py
+│   │   ├── test_master_data_module.py
+│   │   └── test_roles_and_permissions.py
 │   ├── alembic/                # Database migration files
+│   │   └── versions/           # Migration versions
 │   ├── .env.dev                # Development environment variables
 │   ├── .env.test               # Test environment variables
 │   ├── .venv/                  # Python virtual environment
@@ -80,13 +59,26 @@ Tienda_Ropa/
 │   ├── public/                 # Static assets
 │   ├── src/
 │   │   ├── components/         # Reusable Vue components
+│   │   │   ├── Footer.vue
+│   │   │   ├── HeroBanner.vue
+│   │   │   ├── MasterDataShowcase.vue
 │   │   │   ├── Navbar.vue
-│   │   │   └── ...
+│   │   │   ├── ProductCard.vue
+│   │   │   ├── ProductGrid.vue
+│   │   │   └── UserManagement.vue
 │   │   ├── views/              # Page-level components
+│   │   │   ├── AdminView.vue
+│   │   │   ├── AuthView.vue
+│   │   │   ├── HomeView.vue
+│   │   │   └── ...
 │   │   ├── store/              # Pinia state management
+│   │   │   ├── auth.ts
+│   │   │   └── cart.ts
 │   │   ├── types.ts            # TypeScript type definitions
 │   │   ├── router.ts           # Vue Router configuration
 │   │   ├── api.ts              # API client configuration
+│   │   ├── config.ts           # Frontend configuration
+│   │   ├── firebase.ts         # Firebase configuration
 │   │   ├── App.vue             # Root component
 │   │   └── main.ts             # Application entry point
 │   ├── .env.dev                # Frontend development variables
@@ -105,7 +97,6 @@ Tienda_Ropa/
 ```
 
 ## Key Components
->>>>>>> dev
 
 ### Backend Models
 - **Product**: Main product entity with `is_unique` flag for single vs multi-variant products
@@ -132,38 +123,29 @@ Tienda_Ropa/
 
 ### Authentication Flow
 1. Frontend: Firebase Auth for user login/registration
-2. Backend: Firebase JWT token validation
-3. Role-based permissions for API endpoints
-4. User synchronization between Firebase and local database
+2. Backend: Firebase token validation and user synchronization
+3. Role-based permissions for admin/manager/user access levels
 
 ## Development Workflow
 
-### Port Management
-- Backend: Port 8000 (uvicorn)
-- Frontend: Port 5173 (Vite dev server)
-- Always check ports before starting services
+### Environment Setup
+- Backend uses Python virtual environment with specific .env files per environment
+- Frontend uses Node.js with Vite and environment-specific configuration
+- Multi-environment support: dev, test, production
 
-### Windows Command Conventions
-- Use `;` instead of `&&` for command concatenation
-- Use PowerShell activation: `& .\.venv\Scripts\Activate.ps1`
-- Use `netstat -an | findstr :PORT` to check port availability
+### Database Migration Strategy
+- **Automatic Migrations**: Development and test environments run migrations automatically on application startup
+- **Manual Migrations**: Production environment requires manual migration execution for safety
+- **Migration Files**: Generated with Alembic and stored in `backend/alembic/versions/`
 
-### Environment Management
-- Multiple environment files (.env.dev, .env.test, .env.pro)
-- Environment-specific builds and configurations
-- Firebase integration for both auth and storage
+### API Architecture
+- RESTful endpoints under `/api/v1/` prefix
+- Authentication via Firebase JWT tokens
+- Response models using Pydantic/SQLModel
+- Comprehensive error handling and validation
 
-## Architecture (High Level)
-
-```
-Users/Store --> Frontend (Vue 3 + TS) --> Backend (FastAPI) --> Database (PostgreSQL)
-                   |                                                    
-                   └--> Firebase Storage (Images)
-```
-
-**Components:**
-- **Frontend**: Vue 3 + TypeScript (Firebase Hosting)
-- **Backend**: FastAPI (Railway)
-- **Database**: PostgreSQL
-- **Storage**: Firebase Storage
-- **Users**: Physical store staff and customers
+### Testing Strategy
+- Backend: pytest with comprehensive test modules
+- Frontend: Vitest for unit testing
+- Integration tests for critical user flows
+- Test data management via conftest.py

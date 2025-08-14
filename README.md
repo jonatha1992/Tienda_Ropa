@@ -122,6 +122,11 @@ npm run build          # pro (añadir --mode pro en scripts)
 
 Variable única para backend: `VITE_BACKEND_URL`.
 
+### Migraciones Automáticas
+- **Development/Test**: Las migraciones se ejecutan automáticamente al iniciar la aplicación
+- **Production**: Las migraciones deben ejecutarse manualmente por seguridad
+- **Workflow**: Crear migración → Revisar → Reiniciar aplicación (dev/test) o ejecutar manualmente (production)
+
 ---
 
 ## API Endpoints

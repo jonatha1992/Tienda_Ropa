@@ -8,21 +8,31 @@
 - **Role-based access control** for user permissions
 - **Multi-environment** configuration (dev/test/production)
 
-<<<<<<< HEAD
-## Backend
-- **FastAPI (Python)**
-- **SQLAlchemy 2.x** (ORM)
-- **Pydantic v2** (modelos/validación)
-- **Uvicorn** (ASGI server)
-- **PostgreSQL** (Railway)
-- Migraciones: Alembic (gestión de versiones y cambios en la base de datos)
-- Integración de autenticación con Firebase Auth y tokens JWT
-- Instalación y gestión de dependencias Python con `uv` (recomendado):
-	- Crear entorno: `uv venv .venv`
-	- Instalar dependencias: `uv pip install -r requirements.txt`
-=======
+## Backend Stack
+
+### Core Framework
+- **FastAPI (Python)** - Modern async web framework
+- **SQLAlchemy 2.x** - Object-relational mapping
+- **SQLModel** - Type-safe SQL models with Pydantic integration
+- **Pydantic v2** - Data validation and serialization
+- **Uvicorn** - ASGI server
+
+### Database & Migrations
+- **PostgreSQL** - Production database (Railway)
+- **SQLite** - Development database
+- **Alembic** - Database migration management with automatic execution in dev/test
+
+### Authentication & Security
+- **Firebase Auth** - User authentication
+- **JWT tokens** - API authentication
+- **Role-based access control** - User permissions
+
+### Development Tools
+- **Python Virtual Environment** - Dependency isolation
+- **pytest** - Testing framework
+- **Requirements.txt** - Dependency management
+
 ## Frontend Stack
->>>>>>> dev
 
 ### Core Framework
 - **Vue 3** with Composition API
