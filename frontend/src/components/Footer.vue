@@ -279,8 +279,4 @@
 </template>
 
 <script setup lang="ts">
-<<<<<<< HEAD
 </script>
-=======
-</script>
->>>>>>> dev
