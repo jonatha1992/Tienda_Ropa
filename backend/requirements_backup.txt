@@ -1,119 +1,119 @@
-a l e m b i c = = 1 . 1 6 . 4 
-a n n o t a t e d - t y p e s = = 0 . 7 . 0 
-a n y i o = = 4 . 9 . 0 
-a s t t o k e n s = = 3 . 0 . 0 
-b u i l d = = 1 . 2 . 2 . p o s t 1 
-C a c h e C o n t r o l = = 0 . 1 4 . 1 
-c e r t i f i = = 2 0 2 4 . 8 . 3 0 
-c h a r s e t - n o r m a l i z e r = = 3 . 4 . 0 
-c l e o = = 2 . 1 . 0 
-c l i c k = = 8 . 1 . 7 
-c o l o r a m a = = 0 . 4 . 6 
-c o m m = = 0 . 2 . 2 
-c r a s h t e s t = = 0 . 4 . 1 
-d e b u g p y = = 1 . 8 . 9 
-d e c o r a t o r = = 5 . 1 . 1 
-d e p r e c a t i o n = = 2 . 1 . 0 
-d i s t l i b = = 0 . 3 . 9 
-d u l w i c h = = 0 . 2 1 . 7 
-e t _ x m l f i l e = = 2 . 0 . 0 
-e x e c u t i n g = = 2 . 1 . 0 
-f a s t a p i = = 0 . 1 1 6 . 1 
-f a s t j s o n s c h e m a = = 2 . 2 0 . 0 
-f i l e l o c k = = 3 . 1 6 . 1 
-g o t r u e = = 2 . 1 2 . 3 
-g r e e n l e t = = 3 . 2 . 3 
-h 1 1 = = 0 . 1 6 . 0 
-h 2 = = 4 . 2 . 0 
-h p a c k = = 4 . 1 . 0 
-h t t p c o r e = = 1 . 0 . 9 
-h t t p x = = 0 . 2 8 . 1 
-h y p e r f r a m e = = 6 . 1 . 0 
-i d n a = = 3 . 1 0 
-i m p o r t l i b _ m e t a d a t a = = 8 . 5 . 0 
-i n i c o n f i g = = 2 . 1 . 0 
-i n s t a l l e r = = 0 . 7 . 0 
-i p y k e r n e l = = 6 . 2 9 . 5 
-i p y t h o n = = 8 . 3 0 . 0 
-j a r a c o . c l a s s e s = = 3 . 4 . 0 
-j e d i = = 0 . 1 9 . 2 
-j u p y t e r _ c l i e n t = = 8 . 6 . 3 
-j u p y t e r _ c o r e = = 5 . 7 . 2 
-k e y r i n g = = 2 4 . 3 . 1 
-M a k o = = 1 . 3 . 1 0 
-M a r k u p S a f e = = 3 . 0 . 2 
-m a t p l o t l i b - i n l i n e = = 0 . 1 . 7 
-m o r e - i t e r t o o l s = = 1 0 . 5 . 0 
-m s g p a c k = = 1 . 1 . 0 
-n e s t - a s y n c i o = = 1 . 6 . 0 
-n u m p y = = 2 . 1 . 3 
-o p e n p y x l = = 3 . 1 . 5 
-p a c k a g i n g = = 2 4 . 2 
-p a n d a s = = 2 . 2 . 3 
-p a r s o = = 0 . 8 . 4 
-p a s s l i b = = 1 . 7 . 4 
-p e x p e c t = = 4 . 9 . 0 
-p k g i n f o = = 1 . 1 1 . 2 
-p l a t f o r m d i r s = = 4 . 3 . 6 
-p l u g g y = = 1 . 6 . 0 
-p o e t r y = = 1 . 8 . 4 
-p o e t r y - c o r e = = 1 . 9 . 1 
-p o e t r y - p l u g i n - e x p o r t = = 1 . 8 . 0 
-p o s t g r e s t = = 1 . 1 . 1 
-p r o m p t _ t o o l k i t = = 3 . 0 . 4 8 
-p s u t i l = = 6 . 1 . 0 
-p s y c o p g 2 - b i n a r y = = 2 . 9 . 1 0 
-p t y p r o c e s s = = 0 . 7 . 0 
-p u r e _ e v a l = = 0 . 2 . 3 
-p y d a n t i c = = 2 . 1 1 . 7 
-p y d a n t i c _ c o r e = = 2 . 3 3 . 2 
-p y d a n t i c - s e t t i n g s = = 2 . 6 . 1 
-P y g m e n t s = = 2 . 1 8 . 0 
-P y J W T = = 2 . 1 0 . 1 
-p y p r o j e c t _ h o o k s = = 1 . 2 . 0 
-P y Q t 6 = = 6 . 4 . 2 
-p y q t 6 - p l u g i n s = = 6 . 4 . 2 . 2 . 3 
-P y Q t 6 - Q t 6 = = 6 . 4 . 3 
-p y q t 6 - t o o l s = = 6 . 4 . 2 . 3 . 3 
-P y Q t 6 _ s i p = = 1 3 . 8 . 0 
-p y t e s t = = 8 . 4 . 1 
-p y t h o n - d a t e u t i l = = 2 . 9 . 0 . p o s t 0 
-p y t h o n - d o t e n v = = 1 . 0 . 1 
-p y t z = = 2 0 2 4 . 2 
-p y w i n 3 2 = = 3 0 8 
-p y w i n 3 2 - c t y p e s = = 0 . 2 . 3 
-p y z m q = = 2 6 . 2 . 0 
-q t 6 - a p p l i c a t i o n s = = 6 . 4 . 3 . 2 . 3 
-q t 6 - t o o l s = = 6 . 4 . 3 . 1 . 3 
-R a p i d F u z z = = 3 . 1 0 . 1 
-r e a l t i m e = = 2 . 6 . 0 
-r e q u e s t s = = 2 . 3 2 . 3 
-r e q u e s t s - t o o l b e l t = = 1 . 0 . 0 
-s h e l l i n g h a m = = 1 . 5 . 4 
-s i x = = 1 . 1 6 . 0 
-s n i f f i o = = 1 . 3 . 1 
-S Q L A l c h e m y = = 2 . 0 . 4 2 
-s q l m o d e l = = 0 . 0 . 2 4 
-s t a c k - d a t a = = 0 . 6 . 3 
-s t a r l e t t e = = 0 . 4 7 . 2 
-s t o r a g e 3 = = 0 . 1 2 . 0 
-S t r E n u m = = 0 . 4 . 1 5 
-s u p a b a s e = = 2 . 1 7 . 0 
-s u p a f u n c = = 0 . 1 0 . 1 
-t o m l k i t = = 0 . 1 3 . 2 
-t o r n a d o = = 6 . 4 . 2 
-t r a i t l e t s = = 5 . 1 4 . 3 
-t r o v e - c l a s s i f i e r s = = 2 0 2 4 . 1 0 . 2 1 . 1 6 
-t y p i n g - i n s p e c t i o n = = 0 . 4 . 1 
-t y p i n g _ e x t e n s i o n s = = 4 . 1 4 . 1 
-t z d a t a = = 2 0 2 4 . 2 
-u r l l i b 3 = = 2 . 2 . 3 
-u v i c o r n = = 0 . 3 5 . 0 
-v i r t u a l e n v = = 2 0 . 2 7 . 1 
-w c w i d t h = = 0 . 2 . 1 3 
-w e b s o c k e t s = = 1 5 . 0 . 1 
-z i p p = = 3 . 2 1 . 0 
-f i r e b a s e - a d m i n = = 6 . 6 . 0 
-m e r c a d o p a g o = = 2 . 3 . 0
-c r y p t o g r a p h y > = 3 . 4 . 8
-r e s p o n s e s > = 0 . 2 1 . 0
+alembic==1.16.4
+annotated-types==0.7.0
+anyio==4.9.0
+asttokens==3.0.0
+build==1.2.2.post1
+CacheControl==0.14.1
+certifi==2024.8.30
+charset-normalizer==3.4.0
+cleo==2.1.0
+click==8.1.7
+colorama==0.4.6
+comm==0.2.2
+crashtest==0.4.1
+debugpy==1.8.9
+decorator==5.1.1
+deprecation==2.1.0
+distlib==0.3.9
+dulwich==0.21.7
+et_xmlfile==2.0.0
+executing==2.1.0
+fastapi==0.116.1
+fastjsonschema==2.20.0
+filelock==3.16.1
+gotrue==2.12.3
+greenlet==3.2.3
+h11==0.16.0
+h2==4.2.0
+hpack==4.1.0
+httpcore==1.0.9
+httpx==0.28.1
+hyperframe==6.1.0
+idna==3.10
+importlib_metadata==8.5.0
+iniconfig==2.1.0
+installer==0.7.0
+ipykernel==6.29.5
+ipython==8.30.0
+jaraco.classes==3.4.0
+jedi==0.19.2
+jupyter_client==8.6.3
+jupyter_core==5.7.2
+keyring==24.3.1
+Mako==1.3.10
+MarkupSafe==3.0.2
+matplotlib-inline==0.1.7
+more-itertools==10.5.0
+msgpack==1.1.0
+nest-asyncio==1.6.0
+numpy==2.1.3
+openpyxl==3.1.5
+packaging==24.2
+pandas==2.2.3
+parso==0.8.4
+passlib==1.7.4
+pexpect==4.9.0
+pkginfo==1.11.2
+platformdirs==4.3.6
+pluggy==1.6.0
+poetry==1.8.4
+poetry-core==1.9.1
+poetry-plugin-export==1.8.0
+postgrest==1.1.1
+prompt_toolkit==3.0.48
+psutil==6.1.0
+psycopg2-binary==2.9.10
+ptyprocess==0.7.0
+pure_eval==0.2.3
+pydantic==2.11.7
+pydantic_core==2.33.2
+pydantic-settings==2.6.1
+Pygments==2.18.0
+PyJWT==2.10.1
+pyproject_hooks==1.2.0
+PyQt6==6.4.2
+pyqt6-plugins==6.4.2.2.3
+PyQt6-Qt6==6.4.3
+pyqt6-tools==6.4.2.3.3
+PyQt6_sip==13.8.0
+pytest==8.4.1
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
+pytz==2024.2
+pywin32==308
+pywin32-ctypes==0.2.3
+pyzmq==26.2.0
+qt6-applications==6.4.3.2.3
+qt6-tools==6.4.3.1.3
+RapidFuzz==3.10.1
+realtime==2.6.0
+requests==2.32.3
+requests-toolbelt==1.0.0
+shellingham==1.5.4
+six==1.16.0
+sniffio==1.3.1
+SQLAlchemy==2.0.42
+sqlmodel==0.0.24
+stack-data==0.6.3
+starlette==0.47.2
+storage3==0.12.0
+StrEnum==0.4.15
+supabase==2.17.0
+supafunc==0.10.1
+tomlkit==0.13.2
+tornado==6.4.2
+traitlets==5.14.3
+trove-classifiers==2024.10.21.16
+typing-inspection==0.4.1
+typing_extensions==4.14.1
+tzdata==2024.2
+urllib3==2.2.3
+uvicorn==0.35.0
+virtualenv==20.27.1
+wcwidth==0.2.13
+websockets==15.0.1
+zipp==3.21.0
+firebase-admin==6.6.0
+mercadopago==2.3.0
+cryptography>=3.4.8
+responses>=0.21.0
