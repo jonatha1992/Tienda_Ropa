@@ -297,7 +297,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
-import { rolesApi, usersApi } from '../config'
+import { rolesApi, usersApi } from '../config/index'
 import type { Role, UserWithRoles } from '../types'
 
 const toast = useToast()
@@ -345,9 +345,9 @@ const loadUsers = async () => {
     loading.value = true
     const allUsers = await usersApi.getAllUsers()
     // Filtrar usuarios que tengan al menos un rol de manager, admin o employee
-    const filteredUsers = allUsers.filter(user => {
+    const filteredUsers = allUsers.filter((user: UserWithRoles) => {
       if (!user.roles || user.roles.length === 0) return false
-      return user.roles.some(role => 
+      return user.roles.some((role: Role) => 
         ['admin', 'manager', 'employee'].includes(role.name.toLowerCase())
       )
     })

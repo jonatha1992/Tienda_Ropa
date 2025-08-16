@@ -41,7 +41,7 @@ import { useRoute } from 'vue-router';
 import ProductCard from './ProductCard.vue';
 import type { Product } from '../types';
 
-import { apiClient } from '../config';
+import { apiClient } from '../config/index';
 
 const route = useRoute();
 const allProducts = ref<Product[]>([]);

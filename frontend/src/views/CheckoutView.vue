@@ -303,7 +303,7 @@ import { useCartStore } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { ordersApi, customersApi, orderItemsApi } from '../config/api';
-import type { PaymentMethod, Customer, Order, CustomerCreate, OrderItem } from '../types';
+import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();

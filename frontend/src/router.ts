@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './views/HomeView.vue'
-import ShopView from './views/ShopView.vue'
-import ProductView from './views/ProductView.vue'
-import CartView from './views/CartView.vue'
+import CollectionView from './views/CollectionView.vue'
+import ProductDetailView from './views/ProductDetailView.vue'
 import CheckoutView from './views/CheckoutView.vue'
-import LoginView from './views/LoginView.vue'
-import RegisterView from './views/RegisterView.vue'
+import AuthView from './views/AuthView.vue'
 import AdminView from './views/AdminView.vue'
 import PaymentSuccessView from './views/PaymentSuccessView.vue'
 import PaymentFailureView from './views/PaymentFailureView.vue'
@@ -20,12 +18,10 @@ import PrivacyView from './views/PrivacyView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
-  { path: '/shop', component: ShopView },
-  { path: '/product/:id', component: ProductView },
-  { path: '/cart', component: CartView },
+  { path: '/shop', component: CollectionView },
+  { path: '/product/:id', component: ProductDetailView },
   { path: '/checkout', component: CheckoutView },
-  { path: '/login', component: LoginView },
-  { path: '/register', component: RegisterView },
+  { path: '/auth', component: AuthView },
   { path: '/contact', component: ContactView },
   { path: '/how-to-shop', component: HowToShopView },
   { path: '/shipping', component: ShippingView },

@@ -147,7 +147,7 @@ import { ref,  onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../store/auth';
 import { useCartStore } from '../store/cart';
 import { useRouter } from 'vue-router';
-import { masterDataApi } from '../config';
+import { masterDataApi } from '../config/index';
 import type { Category } from '../types';
 
 const isShopMenuOpen = ref(false);

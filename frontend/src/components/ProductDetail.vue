@@ -367,7 +367,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Product, Color, Size } from '../types';
 import { useCartStore } from '../store/cart';
-import { productsApi, masterDataApi } from '../config';
+import { productsApi, masterDataApi } from '../config/index';
 import { useToast } from 'vue-toastification';
 
 const route = useRoute();
@@ -498,7 +498,7 @@ const loadSimilarProducts = async (categoria: string, currentProductId: number) 
     const allProducts = await productsApi.getProducts();
     
     // Filter products by same category, excluding current product
-    const filtered = allProducts.filter(p => 
+    const filtered = allProducts.filter((p: Product) => 
       p.categoria === categoria && 
       p.id !== currentProductId &&
       p.estado === 'activo' // Only show active products
