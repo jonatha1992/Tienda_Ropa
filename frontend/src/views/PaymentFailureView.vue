@@ -68,11 +68,9 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { paymentsApi } from '../config/api';
 import { useToast } from 'vue-toastification';
-import { useCartStore } from '../store/cart';
 
 const route = useRoute();
 const toast = useToast();
-const cartStore = useCartStore();
 const orderDetails = ref<any>(null);
 
 const getPaymentStatusText = (status: string) => {

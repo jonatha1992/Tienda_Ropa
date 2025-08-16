@@ -489,8 +489,12 @@ const loadOrders = async () => {
   try {
     // Convert filter values
     const processedFilters = { ...filters.value };
-    if (processedFilters.verification_required) {
-      processedFilters.verification_required = processedFilters.verification_required === 'true';
+    if (processedFilters.verification_required === 'true') {
+      processedFilters.verification_required = true;
+    } else if (processedFilters.verification_required === 'false') {
+      processedFilters.verification_required = false;
+    } else {
+      delete processedFilters.verification_required;
     }
     
     orders.value = await ordersApi.getOrdersWithFilters(processedFilters);
@@ -673,7 +677,7 @@ const getDeliveryStatusClass = (status: string) => {
   return map[status] || 'bg-gray-100 text-gray-800';
 };
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: string | undefined) => {
   if (!dateString) return 'N/A';
   return new Date(dateString).toLocaleDateString('es-AR', {
     year: 'numeric',

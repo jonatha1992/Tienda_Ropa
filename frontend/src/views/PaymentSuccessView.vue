@@ -136,11 +136,10 @@ onMounted(async () => {
         try {
           await emailService.sendPaymentSuccessEmail({
             to_email: pendingOrderData.value.customer.email,
-            to_name: pendingOrderData.value.customer.name,
+            customer_name: pendingOrderData.value.customer.name,
             order_id: orderId.toString(),
             total_amount: orderDetails.value.total,
-            payment_method: orderDetails.value.payment_method === 'mercadopago' ? 'MercadoPago' : orderDetails.value.payment_method,
-            items: pendingOrderData.value.items || []
+            payment_method: orderDetails.value.payment_method === 'mercadopago' ? 'MercadoPago' : orderDetails.value.payment_method
           });
           console.log('✅ Email de confirmación enviado');
         } catch (emailError) {

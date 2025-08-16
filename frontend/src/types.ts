@@ -257,7 +257,7 @@ export interface OrderResponse {
 export interface AdminOrderFilters {
   payment_method?: string;
   payment_status?: string;
-  verification_required?: boolean;
+  verification_required?: boolean | string;
   delivery_status?: string;
 }
 
