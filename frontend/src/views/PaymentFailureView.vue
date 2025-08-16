@@ -68,9 +68,11 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { paymentsApi } from '../config/api';
 import { useToast } from 'vue-toastification';
+import { useCartStore } from '../store/cart';
 
 const route = useRoute();
 const toast = useToast();
+const cartStore = useCartStore();
 const orderDetails = ref<any>(null);
 
 const getPaymentStatusText = (status: string) => {
@@ -98,6 +100,11 @@ const retryPayment = async () => {
 };
 
 onMounted(async () => {
+  // Clean up stored order data (payment failed, so clean up)
+  localStorage.removeItem('pending_order');
+  
+  // Note: Do NOT clear cart here - user might want to retry purchase
+  
   // Obtener order_id de los query params
   const orderId = route.query.external_reference || route.query.order_id;
   

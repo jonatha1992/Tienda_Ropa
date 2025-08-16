@@ -28,3 +28,23 @@ class Order(SQLModel, table=True):
     payment_status: PaymentStatus = Field(default=PaymentStatus.PENDING)
     mercadopago_payment_id: Optional[str] = Field(default=None)
     mercadopago_preference_id: Optional[str] = Field(default=None)
+    
+    # Campos para TRANSFERENCIA
+    bank_account_info: Optional[str] = Field(default=None, description="JSON con datos bancarios mostrados")
+    transfer_receipt_url: Optional[str] = Field(default=None, description="URL del comprobante subido")
+    transfer_verified: Optional[bool] = Field(default=None, description="Si admin verificó la transferencia")
+    transfer_verification_date: Optional[datetime] = Field(default=None)
+    
+    # Campos para EFECTIVO
+    delivery_cost: Optional[float] = Field(default=None, description="Costo de envío calculado")
+    delivery_zone: Optional[str] = Field(default=None, description="Zona de entrega")
+    delivery_scheduled_date: Optional[datetime] = Field(default=None, description="Fecha programada")
+    delivery_time_slot: Optional[str] = Field(default=None, description="Horario: mañana, tarde")
+    delivery_status: Optional[str] = Field(default=None, description="pending, scheduled, in_transit, delivered")
+    delivery_notes: Optional[str] = Field(default=None, description="Notas del delivery")
+    
+    # Campos ADMIN generales
+    admin_notes: Optional[str] = Field(default=None, description="Notas del administrador")
+    verification_required: bool = Field(default=False, description="Si requiere verificación manual")
+    verified_by_admin: Optional[bool] = Field(default=None, description="Si admin verificó")
+    admin_verification_date: Optional[datetime] = Field(default=None)

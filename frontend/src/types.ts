@@ -113,14 +113,46 @@ export interface Order {
   payment_status: PaymentStatus;
   mercadopago_payment_id?: string;
   mercadopago_preference_id?: string;
+  
+  // Campos para transferencia
+  bank_account_info?: string;
+  transfer_receipt_url?: string;
+  transfer_verified?: boolean;
+  transfer_verification_date?: string;
+  
+  // Campos para efectivo
+  delivery_cost?: number;
+  delivery_zone?: string;
+  delivery_scheduled_date?: string;
+  delivery_time_slot?: string;
+  delivery_status?: string;
+  delivery_notes?: string;
+  
+  // Campos admin
+  admin_notes?: string;
+  verification_required?: boolean;
+  verified_by_admin?: boolean;
+  admin_verification_date?: string;
+  
+  // Datos del customer incluidos
+  customer?: Customer;
 }
 
 export interface Customer {
   id: number;
   name: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   phone?: string;
   address?: string;
+  city?: string;
+  postal_code?: string;
+  province?: string;
+  country?: string;
+  address_reference?: string;
+  delivery_notes?: string;
+  preferred_delivery_time?: string;
 }
 
 export interface PaymentPreference {
@@ -159,7 +191,81 @@ export interface OrderItem {
 // Customer creation interface
 export interface CustomerCreate {
   name: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   phone?: string;
   address?: string;
+  city?: string;
+  postal_code?: string;
+  province?: string;
+  country?: string;
+  address_reference?: string;
+  delivery_notes?: string;
+  preferred_delivery_time?: string;
+}
+
+// Transfer payment interfaces
+export interface TransferInfo {
+  order_id: number;
+  bank_info: {
+    bank_name: string;
+    account_type: string;
+    account_number: string;
+    cbu: string;
+    alias: string;
+    holder_name: string;
+    cuit: string;
+  };
+  total_amount: number;
+  reference: string;
+  instructions: string[];
+}
+
+// Cash payment interfaces
+export interface DeliveryInfo {
+  order_id: number;
+  delivery_info: {
+    zone_code: string;
+    zone_name: string;
+    zone_description: string;
+    cost: number;
+    original_cost: number;
+    estimated_days: string;
+    free_threshold: number;
+    is_free: boolean;
+    savings: number;
+  };
+  original_total: number;
+  delivery_cost: number;
+  final_total: number;
+  customer_address: string;
+  estimated_delivery: string;
+  instructions: string[];
+}
+
+// Order response interfaces
+export interface OrderResponse {
+  order: Order;
+  payment_preference?: PaymentPreference;
+  transfer_info?: TransferInfo;
+  delivery_info?: DeliveryInfo;
+  payment_error?: string;
+}
+
+// Admin interfaces
+export interface AdminOrderFilters {
+  payment_method?: string;
+  payment_status?: string;
+  verification_required?: boolean;
+  delivery_status?: string;
+}
+
+export interface AdminStats {
+  pending_verification: number;
+  pending_delivery: number;
+  scheduled_delivery: number;
+  total_pending_amount: number;
+  orders_by_method: Record<PaymentMethod, number>;
+  last_updated: string;
 }

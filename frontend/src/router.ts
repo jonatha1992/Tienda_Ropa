@@ -7,9 +7,12 @@ import CartView from './views/CartView.vue'
 import AuthView from './views/AuthView.vue'
 import AdminView from './views/AdminView.vue'
 import AdminUserManagementView from './views/AdminUserManagementView.vue'
+import AdminPaymentsView from './views/AdminPaymentsView.vue'
 import PaymentSuccessView from './views/PaymentSuccessView.vue'
 import PaymentFailureView from './views/PaymentFailureView.vue'
 import PaymentPendingView from './views/PaymentPendingView.vue'
+import TransferInstructionsView from './views/TransferInstructionsView.vue'
+import CashConfirmationView from './views/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
 import ContactView from './views/ContactView.vue';
@@ -34,6 +37,8 @@ const routes = [
   { path: '/payment/success', component: PaymentSuccessView },
   { path: '/payment/failure', component: PaymentFailureView },
   { path: '/payment/pending', component: PaymentPendingView },
+  { path: '/payment/transfer-instructions', component: TransferInstructionsView },
+  { path: '/payment/cash-confirmation', component: CashConfirmationView },
   {
     path: '/admin',
     redirect: '/admin/products'
@@ -46,6 +51,11 @@ const routes = [
   {
     path: '/admin/users',
     component: AdminUserManagementView,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/payments',
+    component: AdminPaymentsView,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
 ];

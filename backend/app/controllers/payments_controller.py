@@ -3,6 +3,7 @@ Controlador de pagos con MercadoPago
 """
 import logging
 import mercadopago
+import json
 from typing import Dict, Any, Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
@@ -10,6 +11,9 @@ from sqlmodel import Session, select
 from app.core.config import settings
 from app.models.order import Order, PaymentStatus, PaymentMethod
 from app.models.customer import Customer
+from app.models.order_item import OrderItem
+from app.models.product import Product
+from app.core.mercadopago_categories import get_mercadopago_category, split_customer_name, get_product_description
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +28,44 @@ class PaymentsController:
         else:
             self.sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
     
+    def get_detailed_items(self, order_id: int, session: Session) -> list:
+        """
+        Obtiene los items detallados de una orden para MercadoPago
+        Implementa recomendaciones: items.id, items.description, items.category_id
+        """
+        order_items = session.exec(
+            select(OrderItem).where(OrderItem.order_id == order_id)
+        ).all()
+        
+        items_data = []
+        for order_item in order_items:
+            product = session.get(Product, order_item.product_id)
+            if product:
+                items_data.append({
+                    "id": f"PROD_{product.id}",                                    # ✅ items.id
+                    "title": product.name,
+                    "description": get_product_description(product.name, product.categoria),  # ✅ items.description
+                    "category_id": get_mercadopago_category(product.categoria),    # ✅ items.category_id
+                    "quantity": order_item.quantity,
+                    "unit_price": float(order_item.price),
+                    "currency_id": "ARS"
+                })
+        
+        # Si no hay items (error), usar fallback con la orden completa
+        if not items_data:
+            order = session.get(Order, order_id)
+            items_data = [{
+                "id": f"ORD_{order.id}",
+                "title": f"Orden #{order.id}",
+                "description": "Productos de ropa vintage de calidad premium",
+                "category_id": "fashion_clothes",
+                "quantity": 1,
+                "unit_price": float(order.total),
+                "currency_id": "ARS"
+            }]
+        
+        return items_data
+
     def create_preference(self, order_id: int, session: Session) -> Dict[str, Any]:
         """
         Crea una preferencia de pago en MercadoPago para una orden
@@ -44,21 +86,37 @@ class PaymentsController:
         if not customer:
             raise HTTPException(status_code=404, detail="Cliente no encontrado")
         
-        # Crear preferencia
+        # Obtener items detallados con todas las recomendaciones de MercadoPago
+        items_data = self.get_detailed_items(order_id, session)
+        
+        # Obtener first_name y last_name para MercadoPago
+        first_name = customer.first_name or ""
+        last_name = customer.last_name or ""
+        
+        # Si no están separados, intentar dividir el name existente
+        if not first_name and not last_name and customer.name:
+            first_name, last_name = split_customer_name(customer.name)
+        
+        # Crear preferencia con TODAS las recomendaciones de MercadoPago
         preference_data = {
-            "items": [
-                {
-                    "title": f"Orden #{order.id}",
-                    "quantity": 1,
-                    "unit_price": float(order.total),
-                    "currency_id": "ARS"
-                }
-            ],
+            "statement_descriptor": "M-VINTAGE ROPA",    # ✅ statement_descriptor
+            "items": items_data,                         # ✅ Items detallados con id, description, category_id
             "payer": {
-                "name": customer.name,
+                "name": first_name,                      # ✅ Solo primer nombre
+                "surname": last_name,                    # ✅ payer.last_name (apellido)
                 "email": customer.email or "noemail@example.com",
                 "phone": {
                     "number": customer.phone or "1234567890"
+                }
+            },
+            "shipments": {
+                "receiver_address": {
+                    "street_name": customer.address or "Sin dirección",
+                    "street_number": "",
+                    "zip_code": customer.postal_code or "",
+                    "city_name": customer.city or "",
+                    "state_name": customer.province or "",
+                    "country_name": customer.country or "AR"
                 }
             },
             "back_urls": {

@@ -75,10 +75,12 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { paymentsApi } from '../config/api';
 import { useToast } from 'vue-toastification';
+import { useCartStore } from '../store/cart';
 
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
+const cartStore = useCartStore();
 const orderDetails = ref<any>(null);
 const checking = ref(false);
 
@@ -120,6 +122,12 @@ const checkPaymentStatus = async () => {
 };
 
 onMounted(async () => {
+  // Clear cart since order was created successfully (even if payment is pending)
+  cartStore.clearCart();
+  
+  // Clean up any stored order data
+  localStorage.removeItem('pending_order');
+  
   // Obtener order_id de los query params
   const orderId = route.query.external_reference || route.query.order_id;
   

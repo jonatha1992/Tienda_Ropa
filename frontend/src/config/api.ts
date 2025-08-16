@@ -240,6 +240,46 @@ export const ordersApi = {
   // Delete order
   async deleteOrder(id: number): Promise<void> {
     await apiClient.delete(`/orders/${id}`);
+  },
+
+  // Admin functions
+  // Get orders with filters for admin panel
+  async getOrdersWithFilters(filters: any): Promise<any[]> {
+    const response = await apiClient.get('/orders/admin/filtered', { params: filters });
+    return response.data;
+  },
+
+  // Get admin statistics
+  async getAdminStats(): Promise<any> {
+    const response = await apiClient.get('/orders/admin/stats');
+    return response.data;
+  },
+
+  // Verify bank transfer
+  async verifyTransfer(orderId: number, verified: boolean, adminNotes: string): Promise<any> {
+    const response = await apiClient.post(`/orders/${orderId}/verify-transfer`, {
+      verified,
+      admin_notes: adminNotes
+    });
+    return response.data;
+  },
+
+  // Schedule delivery for cash orders
+  async scheduleDelivery(orderId: number, scheduledDate: Date, timeSlot: string, notes: string): Promise<any> {
+    const response = await apiClient.post(`/orders/${orderId}/schedule-delivery`, {
+      scheduled_date: scheduledDate.toISOString(),
+      time_slot: timeSlot,
+      notes
+    });
+    return response.data;
+  },
+
+  // Mark order as delivered
+  async markAsDelivered(orderId: number, deliveryNotes: string): Promise<any> {
+    const response = await apiClient.post(`/orders/${orderId}/mark-delivered`, {
+      delivery_notes: deliveryNotes
+    });
+    return response.data;
   }
 };
 

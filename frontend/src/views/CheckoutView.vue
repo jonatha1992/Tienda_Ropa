@@ -204,17 +204,66 @@
                   </div>
                 </div>
                 
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="province" class="block text-sm font-medium text-gray-700">Provincia</label>
+                    <input
+                      v-model="checkoutForm.province"
+                      type="text"
+                      id="province"
+                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+                      placeholder="Buenos Aires"
+                    >
+                  </div>
+                  
+                  <div>
+                    <label for="country" class="block text-sm font-medium text-gray-700">País</label>
+                    <select
+                      v-model="checkoutForm.country"
+                      id="country"
+                      required
+                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+                    >
+                      <option value="AR">Argentina</option>
+                      <option value="UY">Uruguay</option>
+                      <option value="CL">Chile</option>
+                    </select>
+                  </div>
+                </div>
+                
                 <div>
-                  <label for="country" class="block text-sm font-medium text-gray-700">País</label>
+                  <label for="addressReference" class="block text-sm font-medium text-gray-700">Referencias de dirección (opcional)</label>
+                  <input
+                    v-model="checkoutForm.addressReference"
+                    type="text"
+                    id="addressReference"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+                    placeholder="Entre calles, piso, depto, etc."
+                  >
+                </div>
+                
+                <div>
+                  <label for="deliveryNotes" class="block text-sm font-medium text-gray-700">Notas para la entrega (opcional)</label>
+                  <textarea
+                    v-model="checkoutForm.deliveryNotes"
+                    id="deliveryNotes"
+                    rows="2"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+                    placeholder="Horarios de entrega, portero eléctrico, etc."
+                  ></textarea>
+                </div>
+                
+                <div>
+                  <label for="preferredDeliveryTime" class="block text-sm font-medium text-gray-700">Horario preferido de entrega</label>
                   <select
-                    v-model="checkoutForm.country"
-                    id="country"
-                    required
+                    v-model="checkoutForm.preferredDeliveryTime"
+                    id="preferredDeliveryTime"
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
                   >
-                    <option value="AR">Argentina</option>
-                    <option value="UY">Uruguay</option>
-                    <option value="CL">Chile</option>
+                    <option value="cualquiera">Cualquier horario</option>
+                    <option value="mañana">Mañana (9:00 - 13:00)</option>
+                    <option value="tarde">Tarde (14:00 - 18:00)</option>
+                    <option value="noche">Noche (18:00 - 21:00)</option>
                   </select>
                 </div>
               </div>
@@ -320,7 +369,11 @@ const checkoutForm = ref({
   address: '',
   city: '',
   postalCode: '',
+  province: '',
   country: 'AR',
+  addressReference: '',
+  deliveryNotes: '',
+  preferredDeliveryTime: 'cualquiera',
   paymentMethod: 'transfer'
 });
 
@@ -383,9 +436,18 @@ const processOrder = async () => {
     // Step 1: Create customer
     const customerData: CustomerCreate = {
       name: `${checkoutForm.value.firstName} ${checkoutForm.value.lastName}`,
+      first_name: checkoutForm.value.firstName,
+      last_name: checkoutForm.value.lastName,
       email: checkoutForm.value.email,
       phone: checkoutForm.value.phone,
-      address: `${checkoutForm.value.address}, ${checkoutForm.value.city}, ${checkoutForm.value.postalCode}, ${checkoutForm.value.country}`
+      address: checkoutForm.value.address,
+      city: checkoutForm.value.city,
+      postal_code: checkoutForm.value.postalCode,
+      province: checkoutForm.value.province,
+      country: checkoutForm.value.country,
+      address_reference: checkoutForm.value.addressReference,
+      delivery_notes: checkoutForm.value.deliveryNotes,
+      preferred_delivery_time: checkoutForm.value.preferredDeliveryTime
     };
     
     const customer = await customersApi.createCustomer(customerData);
@@ -429,16 +491,36 @@ const processOrder = async () => {
       
       // Redirect to MercadoPago
       window.location.href = response.payment_preference.init_point;
-    } else {
-      // For other payment methods, show success and clear cart
+    } else if (checkoutForm.value.paymentMethod === 'transfer') {
+      // Clear cart and redirect to transfer instructions
       cartStore.clearCart();
       
-      if (checkoutForm.value.paymentMethod === 'transfer') {
-        toast.success('¡Pedido confirmado! Te enviaremos los datos de transferencia por email.');
-      } else {
-        toast.success('¡Pedido confirmado! Recibirás un email de confirmación pronto.');
-      }
+      // Store transfer info for instruction page
+      localStorage.setItem('transfer_order', JSON.stringify({
+        order_id: response.order.id,
+        customer: customer,
+        transfer_info: response.transfer_info
+      }));
       
+      toast.success('¡Pedido confirmado! Te mostraremos los datos de transferencia.');
+      router.push('/payment/transfer-instructions');
+    } else if (checkoutForm.value.paymentMethod === 'cash') {
+      // Clear cart and redirect to cash confirmation
+      cartStore.clearCart();
+      
+      // Store delivery info for confirmation page
+      localStorage.setItem('cash_order', JSON.stringify({
+        order_id: response.order.id,
+        customer: customer,
+        delivery_info: response.delivery_info
+      }));
+      
+      toast.success('¡Pedido confirmado! Te mostraremos los detalles de entrega.');
+      router.push('/payment/cash-confirmation');
+    } else {
+      // Fallback for unknown payment methods
+      cartStore.clearCart();
+      toast.success('¡Pedido confirmado! Recibirás información por email.');
       router.push('/');
     }
     

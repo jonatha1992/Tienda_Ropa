@@ -9,6 +9,8 @@ from app.db.session import get_session
 from app.models.order import Order, PaymentMethod, PaymentStatus
 from app.models.customer import Customer
 from app.controllers.payments_controller import payments_controller
+from app.controllers.transfer_controller import transfer_controller
+from app.controllers.cash_controller import cash_controller
 
 router = APIRouter()
 
@@ -33,15 +35,28 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     session.commit()
     session.refresh(db_order)
     
-    # Si es MercadoPago, crear preferencia automáticamente
+    # Manejar según método de pago
     response = {"order": db_order}
-    if db_order.payment_method == PaymentMethod.MERCADOPAGO:
-        try:
+    
+    try:
+        if db_order.payment_method == PaymentMethod.MERCADOPAGO:
+            # MercadoPago: Crear preferencia automáticamente
             preference_data = payments_controller.create_preference(db_order.id, session)
             response["payment_preference"] = preference_data
-        except Exception as e:
-            # Si falla la creación de preferencia, mantener la orden pero informar el error
-            response["payment_error"] = str(e)
+            
+        elif db_order.payment_method == PaymentMethod.TRANSFER:
+            # Transferencia: Configurar y obtener datos bancarios
+            transfer_data = transfer_controller.create_transfer_order(db_order.id, session)
+            response["transfer_info"] = transfer_data
+            
+        elif db_order.payment_method == PaymentMethod.CASH:
+            # Efectivo: Calcular entrega y costos
+            cash_data = cash_controller.create_cash_order(db_order.id, session)
+            response["delivery_info"] = cash_data
+            
+    except Exception as e:
+        # Si falla la configuración específica, mantener la orden pero informar el error
+        response["payment_error"] = str(e)
     
     return response
 
