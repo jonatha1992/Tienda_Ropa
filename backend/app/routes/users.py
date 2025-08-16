@@ -4,13 +4,20 @@ from app.db.session import get_session
 from app.models.user import User, UserRead, UserWithRoles
 from app.controllers.user_controller import get_user_by_firebase_uid, create_user_from_firebase, get_all_users
 from app.core.auth_firebase import verify_firebase_token
-from app.controllers.role_controller import get_user_roles
+from app.controllers.role_controller import get_user_roles, assign_role_to_user
 from app.core.security import require_manager_or_admin
 from firebase_admin import auth as firebase_auth
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import select
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+class CreateUserRequest(BaseModel):
+    email: str
+    password: str
+    username: str = None
+    role_id: int
 
 @router.get("/debug-all", response_model=dict)
 def debug_all_users(
@@ -62,6 +69,50 @@ def sync_firebase_users(
         raise HTTPException(status_code=500, detail=f"Error sincronizando usuarios: {e}")
     total = len(db.exec(select(User)).all())
     return {"imported": imported, "total_users": total}
+
+@router.post("/create", response_model=dict)
+def create_new_user(
+    user_data: CreateUserRequest,
+    db: Session = Depends(get_session),
+    current_user= Depends(require_manager_or_admin())
+):
+    """Crear un nuevo usuario en Firebase Auth y en la base de datos local con rol específico."""
+    try:
+        # 1. Crear usuario en Firebase Auth
+        firebase_user = firebase_auth.create_user(
+            email=user_data.email,
+            password=user_data.password,
+            display_name=user_data.username
+        )
+        
+        # 2. Crear usuario en la base de datos local
+        new_user = User(
+            firebase_uid=firebase_user.uid,
+            email=user_data.email,
+            username=user_data.username,
+            is_active=True
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        
+        # 3. Asignar el rol especificado
+        assign_role_to_user(db, new_user.id, user_data.role_id, current_user.id)
+        
+        return {
+            "success": True,
+            "message": f"Usuario {user_data.email} creado exitosamente",
+            "user_id": new_user.id,
+            "firebase_uid": firebase_user.uid
+        }
+        
+    except firebase_auth.EmailAlreadyExistsError:
+        raise HTTPException(status_code=400, detail="El email ya está registrado en Firebase")
+    except firebase_auth.WeakPasswordError:
+        raise HTTPException(status_code=400, detail="La contraseña es muy débil")
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al crear usuario: {str(e)}")
 
 @router.get("/", response_model=list[UserWithRoles])
 def list_users(

@@ -1,8 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { auth } from '../firebase'
+import { auth } from '../config'
 import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth'
-import apiClient, { rolesApi } from '../api'
+import { apiClient, rolesApi } from '../config'
 import type { User, Role } from '../types' // Asegúrate de que este tipo coincida con el modelo UserRead del backend
 
 export const useAuthStore = defineStore('auth', () => {

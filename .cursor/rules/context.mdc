@@ -1,0 +1,61 @@
+# Proyecto: Tienda_Ropa
+
+## Objetivo
+- E-commerce con FastAPI + SQLModel + Alembic y frontend Vue 3 (Vite + Pinia).
+- Integrar pagos con MercadoPago (preferencias, webhooks y páginas de resultado).
+
+## Entornos
+- ENVIRONMENT: dev | test | pro
+- Archivos: backend/.env.dev, backend/.env.test (no commitear secretos reales)
+- Variables clave:
+  - DATABASE_URL=sqlite:///app.db (dev) | postgresql+psycopg2://...
+  - MERCADOPAGO_ACCESS_TOKEN=...
+  - MERCADOPAGO_PUBLIC_KEY=...
+  - MERCADOPAGO_WEBHOOK_SECRET=...
+  - FRONTEND_URL=http://localhost:5173
+
+## Backend
+- Framework: FastAPI
+- Modelos: `app/models/*.py` (usar SQLModel)
+- Modelo [Order](cci:2://file:///c:/Repositorio/Tienda_Ropa/backend/app/models/order.py:18:0-29:66):
+  - payment_method: transfer | mercadopago | cash
+  - payment_status: pending | pending_payment | approved | rejected | cancelled
+  - mercadopago_payment_id, mercadopago_preference_id (nullable)
+- Migraciones: Alembic (`backend/alembic/`)
+  - upgrade: alembic upgrade head
+  - crear: alembic revision --autogenerate -m "..."
+- Rutas existentes: `app/routes/*`
+- Rutas nuevas (payments):
+  - POST /payments/create-preference
+  - POST /payments/webhook
+  - GET  /payments/status/{order_id}
+
+## Frontend
+- Vue 3 + Vite
+- API client: [src/config/api.ts](cci:7://file:///c:/Repositorio/Tienda_Ropa/frontend/src/config/api.ts:0:0-0:0)
+- Router: [src/router.ts](cci:7://file:///c:/Repositorio/Tienda_Ropa/frontend/src/router.ts:0:0-0:0)
+- Vistas de pago: /payment/success | /payment/failure | /payment/pending
+- Variables Vite (ejemplo): VITE_MP_PUBLIC_KEY
+
+## Comandos
+- Backend dev: uvicorn app.main:app --reload
+- Migraciones: alembic revision --autogenerate -m "..."; alembic upgrade head
+- Frontend dev: npm run dev
+
+## Convenciones
+- Nombres de tablas: singular minúscula (e.g., order, product)
+- DTO/Types TS sincronizados con backend (archivo [frontend/src/types.ts](cci:7://file:///c:/Repositorio/Tienda_Ropa/frontend/src/types.ts:0:0-0:0))
+- Validar `MERCADOPAGO_WEBHOOK_SECRET` en webhook
+- No exponer tokens de acceso en frontend
+
+## Plan de trabajo (FASES)
+- FASE 1: deps/env/config, modelo Order, migración BD
+- FASE 2: controlador y rutas payments, registrar en app
+- FASE 3: frontend env, paymentsApi, páginas de resultado, router, CheckoutView
+- FASE 4: tests backend payments + verificación E2E
+
+## Definition of Done
+- Migración aplica sin errores.
+- Endpoints de pagos probados (webhook validado).
+- Frontend redirige correctamente a success/failure/pending.
+- Pruebas mínimas de integración pasan.

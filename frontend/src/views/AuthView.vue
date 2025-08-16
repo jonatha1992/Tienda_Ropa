@@ -88,7 +88,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
-import { auth } from '../firebase'
+import { auth } from '../config/firebase'
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,

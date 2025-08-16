@@ -37,7 +37,7 @@
             Ver Colección
           </button>
           <button class="btn-minimal btn-dark">
-            Nuevos Arrivals
+            Nuevos Arribos
           </button>
         </div>
       </div>

@@ -1,36 +1,36 @@
 <template>
   <div class="min-h-screen bg-white">
     <!-- Breadcrumbs -->
-    <nav class="bg-gray-50 border-b border-gray-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center space-x-2 py-4 text-sm">
-          <router-link to="/" class="text-gray-500 hover:text-gray-700 transition-colors">
+    <nav class="border-b border-gray-200 bg-gray-50">
+      <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="flex items-center py-4 space-x-2 text-sm">
+          <router-link to="/" class="text-gray-500 transition-colors hover:text-gray-700">
             Home
           </router-link>
           <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
           </svg>
-          <router-link to="/shop" class="text-gray-500 hover:text-gray-700 transition-colors">
+          <router-link to="/shop" class="text-gray-500 transition-colors hover:text-gray-700">
             Shop
           </router-link>
           <svg v-if="selectedCategory" class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
           </svg>
-          <span v-if="selectedCategory" class="text-gray-900 font-medium">
+          <span v-if="selectedCategory" class="font-medium text-gray-900">
             {{ selectedCategory }}
           </span>
         </div>
       </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="lg:grid lg:grid-cols-4 lg:gap-8">
         <!-- Sidebar Filters -->
         <div class="hidden lg:block lg:col-span-1">
           <div class="sticky top-20">
             <!-- Categories Filter -->
-            <div class="border-b border-gray-200 pb-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Categorías</h3>
+            <div class="pb-6 border-b border-gray-200">
+              <h3 class="mb-4 text-lg font-medium text-gray-900">Categorías</h3>
               <div class="space-y-2">
                 <label v-for="category in categories" :key="category.id" class="flex items-center">
                   <input 
@@ -38,7 +38,7 @@
                     :value="category.name" 
                     v-model="filters.category"
                     @change="applyFilters"
-                    class="h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-500"
+                    class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
                   <span class="ml-3 text-sm text-gray-700">{{ category.name }}</span>
                   <span class="ml-auto text-xs text-gray-500">({{ getCategoryCount(category.name) }})</span>
@@ -49,7 +49,7 @@
                     value="" 
                     v-model="filters.category"
                     @change="applyFilters"
-                    class="h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-500"
+                    class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
                   <span class="ml-3 text-sm text-gray-700">Todas las categorías</span>
                   <span class="ml-auto text-xs text-gray-500">({{ allProducts.length }})</span>
@@ -58,8 +58,8 @@
             </div>
 
             <!-- Price Filter -->
-            <div class="border-b border-gray-200 py-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Precio</h3>
+            <div class="py-6 border-b border-gray-200">
+              <h3 class="mb-4 text-lg font-medium text-gray-900">Precio</h3>
               <div class="space-y-2">
                 <label v-for="priceRange in priceRanges" :key="priceRange.label" class="flex items-center">
                   <input 
@@ -67,7 +67,7 @@
                     :value="priceRange.value" 
                     v-model="filters.priceRange"
                     @change="applyFilters"
-                    class="h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-500"
+                    class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
                   <span class="ml-3 text-sm text-gray-700">{{ priceRange.label }}</span>
                 </label>
@@ -77,7 +77,7 @@
                     value="" 
                     v-model="filters.priceRange"
                     @change="applyFilters"
-                    class="h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-500"
+                    class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
                   <span class="ml-3 text-sm text-gray-700">Todos los precios</span>
                 </label>
@@ -86,11 +86,11 @@
 
             <!-- Sort Options -->
             <div class="py-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Ordenar por</h3>
+              <h3 class="mb-4 text-lg font-medium text-gray-900">Ordenar por</h3>
               <select 
                 v-model="filters.sortBy" 
                 @change="applyFilters"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               >
                 <option value="">Recomendados</option>
                 <option value="price-asc">Precio: Menor a Mayor</option>
@@ -104,7 +104,7 @@
             <!-- Clear Filters -->
             <button 
               @click="clearFilters"
-              class="w-full text-center text-sm text-gray-500 hover:text-gray-700 underline"
+              class="w-full text-sm text-center text-gray-500 underline hover:text-gray-700"
             >
               Limpiar filtros
             </button>
@@ -114,10 +114,10 @@
         <!-- Products Grid -->
         <div class="lg:col-span-3">
           <!-- Mobile Filter Toggle -->
-          <div class="lg:hidden mb-6">
+          <div class="mb-6 lg:hidden">
             <button 
               @click="showMobileFilters = !showMobileFilters"
-              class="flex items-center justify-center w-full py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              class="flex items-center justify-center w-full py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -132,7 +132,7 @@
               <h1 class="text-3xl font-light tracking-wide text-gray-900">
                 {{ collectionTitle }}
               </h1>
-              <p class="text-sm text-gray-500 mt-1">
+              <p class="mt-1 text-sm text-gray-500">
                 {{ filteredProducts.length }} producto{{ filteredProducts.length !== 1 ? 's' : '' }}
               </p>
             </div>
@@ -148,7 +148,7 @@
           </div>
 
           <!-- Load More / Pagination -->
-          <div v-if="hasMoreProducts" class="text-center mt-12">
+          <div v-if="hasMoreProducts" class="mt-12 text-center">
             <button 
               @click="loadMoreProducts"
               class="btn-minimal btn-light"
@@ -158,14 +158,14 @@
           </div>
 
           <!-- Empty State -->
-          <div v-if="filteredProducts.length === 0" class="text-center py-16">
-            <div class="text-gray-400 mb-4">
+          <div v-if="filteredProducts.length === 0" class="py-16 text-center">
+            <div class="mb-4 text-gray-400">
               <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No se encontraron productos</h3>
-            <p class="text-gray-500 mb-4">Intenta ajustar los filtros o explorar otras categorías</p>
+            <h3 class="mb-2 text-lg font-medium text-gray-900">No se encontraron productos</h3>
+            <p class="mb-4 text-gray-500">Intenta ajustar los filtros o explorar otras categorías</p>
             <button @click="clearFilters" class="btn-minimal btn-dark">
               Limpiar Filtros
             </button>
@@ -177,7 +177,7 @@
     <!-- Mobile Filters Overlay -->
     <div v-if="showMobileFilters" class="fixed inset-0 z-50 lg:hidden">
       <div class="fixed inset-0 bg-black bg-opacity-25" @click="showMobileFilters = false"></div>
-      <div class="fixed right-0 top-0 h-full w-full max-w-xs bg-white shadow-xl">
+      <div class="fixed top-0 right-0 w-full h-full max-w-xs bg-white shadow-xl">
         <div class="flex items-center justify-between p-4 border-b">
           <h2 class="text-lg font-medium text-gray-900">Filtros</h2>
           <button @click="showMobileFilters = false" class="p-2 text-gray-400 hover:text-gray-600">
@@ -190,7 +190,7 @@
           <!-- Mobile filters content (same as desktop) -->
           <!-- Categories -->
           <div>
-            <h3 class="text-base font-medium text-gray-900 mb-3">Categorías</h3>
+            <h3 class="mb-3 text-base font-medium text-gray-900">Categorías</h3>
             <div class="space-y-2">
               <label v-for="category in categories" :key="category.id" class="flex items-center">
                 <input 
@@ -198,7 +198,7 @@
                   :value="category.name" 
                   v-model="filters.category"
                   @change="applyFilters"
-                  class="h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-500"
+                  class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                 >
                 <span class="ml-3 text-sm text-gray-700">{{ category.name }}</span>
               </label>
@@ -214,8 +214,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductCard from '../components/ProductCard.vue'
-import { masterDataApi } from '../api'
-import apiClient from '../api'
+import { masterDataApi, apiClient } from '../config/index'
 import type { Product, Category } from '../types'
 
 const route = useRoute()
@@ -294,7 +293,13 @@ const filteredProducts = computed(() => {
         products.sort((a, b) => b.name.localeCompare(a.name))
         break
       case 'newest':
-        products.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+        // Ordenar por ID (asumiendo que IDs más altos = productos más nuevos)
+        // También priorizar productos marcados como 'new'
+        products.sort((a, b) => {
+          if (a.is_new && !b.is_new) return -1
+          if (!a.is_new && b.is_new) return 1
+          return b.id - a.id
+        })
         break
     }
   }

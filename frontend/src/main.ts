@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 
 const pinia = createPinia()
+const app = createApp(App)
 
 // Toast configuration
 const toastOptions = {
@@ -24,8 +25,18 @@ const toastOptions = {
     rtl: false
 }
 
-createApp(App)
-    .use(router)
-    .use(pinia)
-    .use(Toast, toastOptions)
-    .mount('#app')
+app.use(router)
+app.use(pinia)
+app.use(Toast, toastOptions)
+
+// Initialize cart from localStorage after Pinia is ready
+app.mount('#app')
+
+// Load cart from localStorage when app starts
+if (typeof window !== 'undefined') {
+    // Import cart store after pinia is initialized
+    import('./store/cart').then(({ useCartStore }) => {
+        const cartStore = useCartStore()
+        cartStore.loadFromStorage()
+    })
+}

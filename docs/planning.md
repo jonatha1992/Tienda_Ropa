@@ -47,7 +47,16 @@ The Tienda_Ropa project is an active e-commerce clothing store management system
 - [ ] Finalize Firebase user synchronization endpoint (`/users/sync`)
 - [ ] Document all API endpoints with request/response examples
 
-### Phase 5: System Optimization & Documentation
+### Phase 5: Store Optimization & Data Caching
+**Priority: Medium** | **Status: Recommended**
+
+- [ ] Create `useProductsStore()` for centralized product and master data management
+- [ ] Implement intelligent caching for frequently accessed data (products, colors, categories)
+- [ ] Centralize loading states across all API calls
+- [ ] Optimize repeated API calls in components (currently calling same endpoints multiple times)
+- [ ] Add search and filter functionality to products store
+
+### Phase 6: System Optimization & Documentation
 **Priority: Medium** | **Status: Ongoing**
 
 - [ ] Synchronize dependencies across `requirements.txt`, `package.json`
@@ -116,6 +125,15 @@ The Tienda_Ropa project is an active e-commerce clothing store management system
 - Dead code removal according to project policies
 - Code structure documentation and guidelines
 - Project planning and technical documentation
+
+### Frontend Architecture Reorganization ✅
+**Completed: August 15, 2025**
+- Centralized configuration in `src/config/` folder
+- Modular organization: API, Firebase, and app config separated
+- Unified import patterns across all components
+- Context documentation with `src/index.ts` project map
+- TypeScript error resolution and import cleanup
+- Pinia store analysis and optimization recommendations
 
 ## Development Guidelines
 

@@ -11,13 +11,21 @@
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
-      <button
-        @click="loadUsers"
-        :disabled="loading"
-        class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-      >
-        {{ loading ? 'Cargando...' : 'Actualizar Lista' }}
-      </button>
+      <div class="flex gap-2">
+        <button
+          @click="showAddUserModal = true"
+          class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
+        >
+          + Agregar Usuario
+        </button>
+        <button
+          @click="loadUsers"
+          :disabled="loading"
+          class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+        >
+          {{ loading ? 'Cargando...' : 'Actualizar Lista' }}
+        </button>
+      </div>
     </div>
 
     <!-- Alert Messages -->
@@ -108,7 +116,7 @@
 
     <!-- Role Management Modal -->
     <div v-if="showRoleModal" class="fixed inset-0 z-50 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
-      <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-1/2">
+      <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-3/5 xl:w-1/2">
         <div class="mt-3">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-bold text-gray-900">
@@ -152,12 +160,13 @@
           <div class="mb-4">
             <h4 class="mb-2 text-sm font-medium text-gray-700">Agregar Rol</h4>
             <div class="flex gap-2">
-              <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 border border-gray-300 rounded-md">
+              <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
                 <option value="">Seleccionar rol</option>
                 <option
                   v-for="role in availableRoles"
                   :key="role.id"
                   :value="role.id"
+                  class="text-sm"
                 >
                   {{ role.name.toUpperCase() }} - {{ role.description }}
                 </option>
@@ -174,13 +183,121 @@
         </div>
       </div>
     </div>
+
+    <!-- Add User Modal -->
+    <div v-if="showAddUserModal" class="fixed inset-0 z-50 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
+      <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-1/2">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-900">
+              Agregar Nuevo Usuario
+            </h3>
+            <button
+              @click="closeAddUserModal"
+              class="text-gray-400 hover:text-gray-600"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- User Form -->
+          <form @submit.prevent="addNewUser" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                v-model="newUserForm.email"
+                type="email"
+                required
+                placeholder="usuario@ejemplo.com"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario (opcional)</label>
+              <input
+                v-model="newUserForm.username"
+                type="text"
+                placeholder="Nombre de usuario"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña Temporal</label>
+              <div class="relative">
+                <input
+                  v-model="newUserForm.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  required
+                  placeholder="Contraseña temporal (min. 6 caracteres)"
+                  minlength="6"
+                  class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
+                >
+                  <svg v-if="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L7.05 7.05M9.878 9.878a3 3 0 013.242 3.242m4.242 4.242L19.95 19.95M14.12 14.12l4.243 4.242M14.12 14.12a3 3 0 01-4.243-4.243m0 0L7.05 7.05"></path>
+                  </svg>
+                  <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Rol Inicial</label>
+              <select
+                v-model="newUserForm.roleId"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
+              >
+                <option value="">Seleccionar rol</option>
+                <option
+                  v-for="role in adminRoles"
+                  :key="role.id"
+                  :value="role.id"
+                  class="text-sm"
+                >
+                  {{ role.name.toUpperCase() }} - {{ role.description }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="flex gap-2 pt-4">
+              <button
+                type="button"
+                @click="closeAddUserModal"
+                class="flex-1 px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                :disabled="loading"
+                class="flex-1 px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400"
+              >
+                {{ loading ? 'Creando...' : 'Crear Usuario' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
-import { rolesApi, usersApi } from '../api'
+import { rolesApi, usersApi } from '../config'
 import type { Role, UserWithRoles } from '../types'
 
 const toast = useToast()
@@ -193,6 +310,14 @@ const searchQuery = ref('')
 const showRoleModal = ref(false)
 const selectedUser = ref<UserWithRoles | null>(null)
 const selectedRoleToAdd = ref<number | ''>('')
+const showAddUserModal = ref(false)
+const newUserForm = ref({
+  email: '',
+  username: '',
+  password: '',
+  roleId: '' as number | ''
+})
+const showPassword = ref(false)
 
 // Computed
 const filteredUsers = computed(() => {
@@ -208,14 +333,26 @@ const availableRoles = computed(() => {
   return roles.value.filter(role => !userRoleIds.includes(role.id))
 })
 
+const adminRoles = computed(() => {
+  return roles.value.filter(role => 
+    ['admin', 'manager', 'employee'].includes(role.name.toLowerCase())
+  )
+})
+
 // Methods
 const loadUsers = async () => {
   try {
     loading.value = true
-    // Obtener todos los usuarios desde el endpoint correcto
-  const allUsers = await usersApi.getAllUsers()
-  users.value = Array.isArray(allUsers) ? allUsers : []
-    toast.success('👥 Usuarios cargados correctamente')
+    const allUsers = await usersApi.getAllUsers()
+    // Filtrar usuarios que tengan al menos un rol de manager, admin o employee
+    const filteredUsers = allUsers.filter(user => {
+      if (!user.roles || user.roles.length === 0) return false
+      return user.roles.some(role => 
+        ['admin', 'manager', 'employee'].includes(role.name.toLowerCase())
+      )
+    })
+    users.value = filteredUsers
+    toast.success(`👥 ${filteredUsers.length} usuarios con roles cargados correctamente`)
   } catch (error: any) {
     console.error('Error loading users:', error)
     const errorMessage = error.response?.data?.detail || 'Error al cargar usuarios'
@@ -317,6 +454,52 @@ const getRoleBadgeClass = (roleName: string) => {
     user: 'bg-gray-100 text-gray-800'
   }
   return classes[roleName as keyof typeof classes] || 'bg-gray-100 text-gray-800'
+}
+
+const closeAddUserModal = () => {
+  showAddUserModal.value = false
+  showPassword.value = false
+  newUserForm.value = {
+    email: '',
+    username: '',
+    password: '',
+    roleId: ''
+  }
+}
+
+const addNewUser = async () => {
+  try {
+    loading.value = true
+    
+    // Validar que se haya seleccionado un rol
+    if (!newUserForm.value.roleId) {
+      toast.error('❌ Debe seleccionar un rol para el usuario')
+      return
+    }
+    
+    // Crear usuario usando la API
+    const result = await usersApi.createUser({
+      email: newUserForm.value.email,
+      password: newUserForm.value.password,
+      username: newUserForm.value.username || undefined,
+      role_id: newUserForm.value.roleId as number
+    })
+    
+    toast.success(`✅ ${result.message}`)
+    
+    // Cerrar modal y resetear formulario
+    closeAddUserModal()
+    
+    // Recargar la lista de usuarios
+    await loadUsers()
+    
+  } catch (error: any) {
+    console.error('Error creating user:', error)
+    const errorMessage = error.response?.data?.detail || 'Error al crear usuario'
+    toast.error(`❌ ${errorMessage}`)
+  } finally {
+    loading.value = false
+  }
 }
 
 // Lifecycle

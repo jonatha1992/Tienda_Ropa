@@ -9,17 +9,20 @@ from dotenv import load_dotenv
 
 # Multi-environment loading aligned with app.core.config
 import base64
-RAW_ENV = os.getenv("ENVIRONMENT", "development").lower()
+
+RAW_ENV = os.getenv("ENVIRONMENT", "dev").lower()
 ENV_FILE_MAP = {
-    "development": ".env.dev",
+    "dev": ".env.dev",
     "test": ".env.test",
-    "production": ".env.production",
+    "pro": ".env.pro",
 }
 candidate = ENV_FILE_MAP.get(RAW_ENV)
-if candidate and os.path.isfile(os.path.join(os.path.dirname(__file__), '..', candidate)):
-    load_dotenv(os.path.join(os.path.dirname(__file__), '..', candidate))
-elif os.path.isfile(os.path.join(os.path.dirname(__file__), '..', '.env')):
-    load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+if candidate and os.path.isfile(
+    os.path.join(os.path.dirname(__file__), "..", candidate)
+):
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", candidate))
+elif os.path.isfile(os.path.join(os.path.dirname(__file__), "..", ".env")):
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -45,6 +48,7 @@ from app.core.config import settings
 # Use unified settings for the database URL
 database_url = settings.DATABASE_URL
 
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
     url = database_url
@@ -64,7 +68,7 @@ def run_migrations_online() -> None:
     # Override the sqlalchemy.url in the config
     configuration = config.get_section(config.config_ini_section, {})
     configuration["sqlalchemy.url"] = database_url
-    
+
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",
@@ -72,7 +76,9 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata, render_as_batch=True)
+        context.configure(
+            connection=connection, target_metadata=target_metadata, render_as_batch=True
+        )
 
         with context.begin_transaction():
             context.run_migrations()

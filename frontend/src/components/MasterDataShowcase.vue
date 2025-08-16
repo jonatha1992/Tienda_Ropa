@@ -105,7 +105,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { masterDataApi } from '../api';
+import { masterDataApi } from '../config';
 import type { Category, Color, Size } from '../types';
 
 const categories = ref<Category[]>([]);

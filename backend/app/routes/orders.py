@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Body
@@ -6,24 +6,44 @@ from app.core.security import get_current_user
 from sqlmodel import Session, select
 
 from app.db.session import get_session
-from app.models.order import Order
+from app.models.order import Order, PaymentMethod, PaymentStatus
 from app.models.customer import Customer
+from app.controllers.payments_controller import payments_controller
 
 router = APIRouter()
 
 
-@router.post("/orders/", response_model=Order)
+@router.post("/orders/")
 def create_order(session: Session = Depends(get_session), order: Order = Body(...), user=Depends(get_current_user)):
     # Verificar que el customer existe
     customer = session.get(Customer, order.customer_id)
     if not customer:
         raise HTTPException(status_code=422, detail="Customer not found")
     
+    # Crear la orden con estado inicial según método de pago
     db_order = Order.model_validate(order)
+    
+    # Establecer estado inicial según método de pago
+    if db_order.payment_method == PaymentMethod.MERCADOPAGO:
+        db_order.payment_status = PaymentStatus.PENDING_PAYMENT
+    else:
+        db_order.payment_status = PaymentStatus.PENDING
+    
     session.add(db_order)
     session.commit()
     session.refresh(db_order)
-    return db_order
+    
+    # Si es MercadoPago, crear preferencia automáticamente
+    response = {"order": db_order}
+    if db_order.payment_method == PaymentMethod.MERCADOPAGO:
+        try:
+            preference_data = payments_controller.create_preference(db_order.id, session)
+            response["payment_preference"] = preference_data
+        except Exception as e:
+            # Si falla la creación de preferencia, mantener la orden pero informar el error
+            response["payment_error"] = str(e)
+    
+    return response
 
 
 @router.get("/orders/", response_model=List[Order])

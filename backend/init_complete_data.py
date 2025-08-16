@@ -29,23 +29,44 @@ def init_complete_data():
         print("✅ Roles inicializados")
         
         # === COLORES ===
-        print("\n📋 Creando colores...")
+        print("\n📋 Creando colores estéticos...")
         colors_data = [
+            # Neutros sofisticados
             ColorCreate(name="Blanco", hex_code="#FFFFFF"),
-            ColorCreate(name="Rojo", hex_code="#FF0000"),
-            ColorCreate(name="Negro", hex_code="#000000"),
-            ColorCreate(name="Azul", hex_code="#0000FF"),
-            ColorCreate(name="Amarillo", hex_code="#FFFF00"),
-            ColorCreate(name="Violeta", hex_code="#8A2BE2"),
-            ColorCreate(name="Marrón", hex_code="#8B4513"),
-            ColorCreate(name="Gris", hex_code="#808080"),
-            ColorCreate(name="Verde", hex_code="#008000"),
-            ColorCreate(name="Lila", hex_code="#C8A2C8"),
-            ColorCreate(name="Mostaza", hex_code="#FFDB58"),
-            ColorCreate(name="Rosa", hex_code="#FFC0CB"),
-            ColorCreate(name="Fucsia", hex_code="#FF1493"),
-            ColorCreate(name="Celeste", hex_code="#87CEEB"),
-            ColorCreate(name="Petroleo", hex_code="#2E8B57"),
+            ColorCreate(name="Negro", hex_code="#1C1C1C"),
+            ColorCreate(name="Gris Claro", hex_code="#F5F5F5"),
+            ColorCreate(name="Gris", hex_code="#9CA3AF"),
+            ColorCreate(name="Gris Oscuro", hex_code="#374151"),
+            ColorCreate(name="Beige", hex_code="#F5F5DC"),
+            ColorCreate(name="Crema", hex_code="#F7F3E9"),
+            
+            # Azules elegantes
+            ColorCreate(name="Azul Marino", hex_code="#1E3A8A"),
+            ColorCreate(name="Azul Cielo", hex_code="#87CEEB"),
+            ColorCreate(name="Azul Denim", hex_code="#4F46E5"),
+            ColorCreate(name="Azul Petroleo", hex_code="#0891B2"),
+            
+            # Rojos sofisticados
+            ColorCreate(name="Rojo Borgoña", hex_code="#800020"),
+            ColorCreate(name="Rojo Coral", hex_code="#FF6B6B"),
+            ColorCreate(name="Rosa Polvo", hex_code="#F8BBD9"),
+            ColorCreate(name="Rosa Nude", hex_code="#E8B4B8"),
+            
+            # Verdes naturales
+            ColorCreate(name="Verde Oliva", hex_code="#6B7280"),
+            ColorCreate(name="Verde Salvia", hex_code="#87A96B"),
+            ColorCreate(name="Verde Menta", hex_code="#B8E6B8"),
+            ColorCreate(name="Verde Militar", hex_code="#4A5D23"),
+            
+            # Otros colores trendy
+            ColorCreate(name="Amarillo Mostaza", hex_code="#FFDB58"),
+            ColorCreate(name="Naranja Terracota", hex_code="#E07A5F"),
+            ColorCreate(name="Lavanda", hex_code="#E6E6FA"),
+            ColorCreate(name="Morado Uva", hex_code="#6F2DA8"),
+            ColorCreate(name="Marrón Chocolate", hex_code="#7B3F00"),
+            ColorCreate(name="Camel", hex_code="#C19A6B"),
+            ColorCreate(name="Coral Living", hex_code="#FF6F61"),
+            ColorCreate(name="Azul Serenity", hex_code="#88B0D1"),
         ]
         
         created_colors = create_colors_bulk(db, colors_data)

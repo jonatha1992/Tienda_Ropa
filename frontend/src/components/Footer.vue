@@ -80,7 +80,7 @@
             <li><router-link to="/shop?category=camisetas" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Camisetas</router-link></li>
             <li><router-link to="/shop?category=pantalones" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Pantalones</router-link></li>
             <li><router-link to="/shop?category=accesorios" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Accesorios</router-link></li>
-            <li><router-link to="/shop?sort=newest" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Nuevos Arrivals</router-link></li>
+            <li><router-link to="/shop?sort=newest" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Nuevos Arribos</router-link></li>
           </ul>
         </div>
 

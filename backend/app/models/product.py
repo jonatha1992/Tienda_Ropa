@@ -14,6 +14,9 @@ class ProductBase(SQLModel):
     color: Optional[str] = None
     talle: Optional[str] = None
     stock: Optional[int] = None
+    # Discount fields
+    has_discount: bool = Field(default=False, description="True if product has a discount")
+    discount_percentage: Optional[float] = Field(default=None, ge=0, le=100, description="Discount percentage (0-100)")
 
 class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -65,6 +68,16 @@ class ProductCreate(ProductBase):
             self.color = None
             self.talle = None
             self.stock = None
+        
+        # Validate discount fields
+        if self.has_discount:
+            if self.discount_percentage is None:
+                raise ValueError("Products with discount must have a discount percentage specified")
+            if self.discount_percentage <= 0 or self.discount_percentage > 100:
+                raise ValueError("Discount percentage must be between 1 and 100")
+        else:
+            # If no discount, clear the percentage
+            self.discount_percentage = None
 
 class ProductVariantCreate(SQLModel):
     color: Optional[str] = None
@@ -94,3 +107,18 @@ class ProductRead(ProductBase):
             return self.stock or 0
         else:
             return sum(variant.stock for variant in self.variants)
+    
+    @property
+    def discounted_price(self) -> float:
+        """Return price with discount applied if applicable"""
+        if self.has_discount and self.discount_percentage:
+            discount_amount = self.price * (self.discount_percentage / 100)
+            return round(self.price - discount_amount, 2)
+        return self.price
+    
+    @property
+    def discount_amount(self) -> float:
+        """Return the discount amount in currency"""
+        if self.has_discount and self.discount_percentage:
+            return round(self.price * (self.discount_percentage / 100), 2)
+        return 0.0

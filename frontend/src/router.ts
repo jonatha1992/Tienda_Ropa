@@ -1,13 +1,17 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from './views/HomeView.vue';
-import CollectionView from './views/CollectionView.vue';
-import ProductDetail from './components/ProductDetail.vue';
-import ShoppingCart from './components/ShoppingCart.vue';
-import AdminUserManagementView from './views/AdminUserManagementView.vue';
-import AuthView from './views/AuthView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from './views/HomeView.vue'
+import ShopView from './views/ShopView.vue'
+import ProductView from './views/ProductView.vue'
+import CartView from './views/CartView.vue'
+import CheckoutView from './views/CheckoutView.vue'
+import LoginView from './views/LoginView.vue'
+import RegisterView from './views/RegisterView.vue'
+import AdminView from './views/AdminView.vue'
+import PaymentSuccessView from './views/PaymentSuccessView.vue'
+import PaymentFailureView from './views/PaymentFailureView.vue'
+import PaymentPendingView from './views/PaymentPendingView.vue'
 import { useAuthStore } from './store/auth';
-import { auth } from './firebase'; // Importar auth
-import AdminView from './views/AdminView.vue';
+import { auth } from './config/index'; // Importar auth
 import ContactView from './views/ContactView.vue';
 import HowToShopView from './views/HowToShopView.vue';
 import ShippingView from './views/ShippingView.vue';
@@ -16,24 +20,24 @@ import PrivacyView from './views/PrivacyView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
-  { path: '/shop', component: CollectionView },
-  { path: '/collection', component: CollectionView },
-  { path: '/product/:id', component: ProductDetail },
-  { path: '/cart', component: ShoppingCart },
-  { path: '/auth', component: AuthView },
+  { path: '/shop', component: ShopView },
+  { path: '/product/:id', component: ProductView },
+  { path: '/cart', component: CartView },
+  { path: '/checkout', component: CheckoutView },
+  { path: '/login', component: LoginView },
+  { path: '/register', component: RegisterView },
   { path: '/contact', component: ContactView },
   { path: '/how-to-shop', component: HowToShopView },
   { path: '/shipping', component: ShippingView },
   { path: '/terms', component: TermsView },
   { path: '/privacy', component: PrivacyView },
+  // Payment result routes
+  { path: '/payment/success', component: PaymentSuccessView },
+  { path: '/payment/failure', component: PaymentFailureView },
+  { path: '/payment/pending', component: PaymentPendingView },
   {
-    path: '/admin/products',
+    path: '/admin',
     component: AdminView,
-    meta: { requiresAuth: true, requiresAdmin: true }
-  },
-  {
-    path: '/admin/users',
-    component: AdminUserManagementView,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
 ];

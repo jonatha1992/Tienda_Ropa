@@ -59,26 +59,45 @@ Tienda_Ropa/
 │   ├── public/                 # Static assets
 │   ├── src/
 │   │   ├── components/         # Reusable Vue components
+│   │   │   ├── Chatbot.vue
+│   │   │   ├── ConfirmationModal.vue
 │   │   │   ├── Footer.vue
 │   │   │   ├── HeroBanner.vue
+│   │   │   ├── LoadingSpinner.vue
 │   │   │   ├── MasterDataShowcase.vue
 │   │   │   ├── Navbar.vue
 │   │   │   ├── ProductCard.vue
+│   │   │   ├── ProductDetail.vue
 │   │   │   ├── ProductGrid.vue
+│   │   │   ├── RoleManagement.vue
+│   │   │   ├── ShoppingCart.vue
 │   │   │   └── UserManagement.vue
 │   │   ├── views/              # Page-level components
 │   │   │   ├── AdminView.vue
+│   │   │   ├── AdminUserManagementView.vue
 │   │   │   ├── AuthView.vue
+│   │   │   ├── CheckoutView.vue
+│   │   │   ├── CollectionView.vue
+│   │   │   ├── ContactView.vue
 │   │   │   ├── HomeView.vue
-│   │   │   └── ...
+│   │   │   ├── HowToShopView.vue
+│   │   │   ├── PrivacyView.vue
+│   │   │   ├── ProductDetailView.vue
+│   │   │   ├── ShippingView.vue
+│   │   │   └── TermsView.vue
+│   │   ├── config/             # Centralized configuration
+│   │   │   ├── index.ts        # Re-exports for easy importing
+│   │   │   ├── app.ts          # Application configuration
+│   │   │   ├── api.ts          # API client and endpoints
+│   │   │   └── firebase.ts     # Firebase configuration
 │   │   ├── store/              # Pinia state management
-│   │   │   ├── auth.ts
-│   │   │   └── cart.ts
+│   │   │   ├── auth.ts         # Authentication store
+│   │   │   └── cart.ts         # Shopping cart store
+│   │   ├── composables/        # Vue composables (reusable logic)
+│   │   │   └── useLoading.ts   # Loading state management
 │   │   ├── types.ts            # TypeScript type definitions
 │   │   ├── router.ts           # Vue Router configuration
-│   │   ├── api.ts              # API client configuration
-│   │   ├── config.ts           # Frontend configuration
-│   │   ├── firebase.ts         # Firebase configuration
+│   │   ├── index.ts            # Project context and re-exports
 │   │   ├── App.vue             # Root component
 │   │   └── main.ts             # Application entry point
 │   ├── .env.dev                # Frontend development variables
@@ -111,9 +130,11 @@ Tienda_Ropa/
 ### Frontend Structure
 - **Components**: Reusable UI components using Vue 3 Composition API
 - **Views**: Page-level components for routing
-- **Store**: Pinia stores for global state management
-- **Types**: Centralized TypeScript interfaces
-- **API**: Axios-based API client with authentication
+- **Config**: Centralized configuration for API, Firebase, and app settings
+- **Store**: Pinia stores for global state management (auth, cart)
+- **Composables**: Reusable Vue logic (loading states, etc.)
+- **Types**: Centralized TypeScript interfaces and type definitions
+- **Context**: `index.ts` provides project-wide re-exports and documentation
 
 ### Database Architecture
 - Development: SQLite (app.db)

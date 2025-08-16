@@ -40,27 +40,36 @@
                 style="top: 100%; left: 0; min-width: 200px;">
                 <div class="py-1" role="menu" aria-orientation="vertical">
                   <router-link to="/admin/products" @click="closeMenus"
-                    class="block px-4 py-2 text-sm text-primary hover:bg-gray-100" role="menuitem">
+                    class="block px-4 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase hover:bg-gray-100" role="menuitem">
                     Gestionar Productos
                   </router-link>
                   <router-link to="/admin/users" @click="closeMenus"
-                    class="block px-4 py-2 text-sm text-primary hover:bg-gray-100" role="menuitem">
+                    class="block px-4 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase hover:bg-gray-100" role="menuitem">
                     Gestionar Usuarios
                   </router-link>
                 </div>
               </div>
             </div>
             
-            <router-link to="/contact" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CONTACT</router-link>
-            <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">HOW TO SHOP</router-link>
+            <router-link to="/contact" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CONTACTO</router-link>
+            <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CÓMO COMPRAR</router-link>
             <router-link to="/shipping" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">ENVÍOS</router-link>
           </div>
 
           <!-- Desktop Auth & Cart -->
           <div class="flex items-center space-x-4">
-            <router-link to="/cart" class="p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
+            <router-link to="/cart" class="relative p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
               <span class="sr-only">Carrito</span>
-              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <!-- Cart Badge -->
+              <span 
+                v-if="cartStore.itemCount > 0" 
+                class="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 font-medium"
+              >
+                {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
+              </span>
             </router-link>
             <div v-if="authStore.isAuthenticated" class="flex items-center space-x-2">
               <button @click="handleLogout" class="px-3 py-2 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">Cerrar Sesión</button>
@@ -71,7 +80,19 @@
 
         <!-- Mobile Menu Button -->
         <div class="flex items-center md:hidden">
-          <router-link to="/cart" class="p-2 mr-4 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none"><span class="sr-only">Carrito</span><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg></router-link>
+          <router-link to="/cart" class="relative p-2 mr-4 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
+            <span class="sr-only">Carrito</span>
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <!-- Mobile Cart Badge -->
+            <span 
+              v-if="cartStore.itemCount > 0" 
+              class="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 font-medium"
+            >
+              {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
+            </span>
+          </router-link>
           <button @click.stop="toggleMobileMenu" class="inline-flex items-center justify-center p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
             <span class="sr-only">Open main menu</span>
             <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
@@ -95,13 +116,13 @@
         <div v-if="authStore.hasAdminAccess">
           <button @click.stop="toggleMobileAdminMenu" class="block w-full px-3 py-3 text-sm font-medium tracking-wide text-left text-gray-900 uppercase transition-colors hover:text-gray-600">ADMIN</button>
           <div v-if="isMobileAdminMenuOpen" class="pl-4 space-y-1">
-            <router-link to="/admin/products" @click="closeMenus" class="block px-3 py-2 text-sm text-gray-700 transition-colors hover:text-gray-900">- Gestionar Productos</router-link>
-            <router-link to="/admin/users" @click="closeMenus" class="block px-3 py-2 text-sm text-gray-700 transition-colors hover:text-gray-900">- Gestionar Usuarios</router-link>
+            <router-link to="/admin/products" @click="closeMenus" class="block px-3 py-2 text-sm font-medium tracking-wide text-gray-700 uppercase transition-colors hover:text-gray-900">- Gestionar Productos</router-link>
+            <router-link to="/admin/users" @click="closeMenus" class="block px-3 py-2 text-sm font-medium tracking-wide text-gray-700 uppercase transition-colors hover:text-gray-900">- Gestionar Usuarios</router-link>
           </div>
         </div>
         
-        <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CONTACT</router-link>
-        <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">HOW TO SHOP</router-link>
+        <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CONTACTO</router-link>
+        <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">CÓMO COMPRAR</router-link>
         <router-link to="/shipping" @click="closeMenus" class="block px-3 py-3 text-sm font-medium tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">ENVÍOS</router-link>
         
         <div class="pt-4 mt-4 border-t border-gray-200">
@@ -124,8 +145,9 @@
 <script setup lang="ts">
 import { ref,  onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../store/auth';
+import { useCartStore } from '../store/cart';
 import { useRouter } from 'vue-router';
-import { masterDataApi } from '../api';
+import { masterDataApi } from '../config';
 import type { Category } from '../types';
 
 const isShopMenuOpen = ref(false);
@@ -134,6 +156,7 @@ const isMobileShopMenuOpen = ref(false);
 const isAdminMenuOpen = ref(false);
 const isMobileAdminMenuOpen = ref(false);
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 const router = useRouter();
 const categories = ref<Category[]>([]);
 

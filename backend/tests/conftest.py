@@ -73,12 +73,16 @@ def setup_database():
         from sqlmodel import select
         
         try:
-            # Inicializar datos de prueba
+            # Inicializar datos de prueba con colores más estéticos
             colors = [
                 Color(name="BLANCO", hex_code="#FFFFFF", is_active=True),
-                Color(name="NEGRO", hex_code="#000000", is_active=True), 
-                Color(name="ROJO", hex_code="#FF0000", is_active=True),
-                Color(name="AZUL", hex_code="#0000FF", is_active=True),
+                Color(name="NEGRO", hex_code="#1C1C1C", is_active=True), 
+                Color(name="ROJO BORGOÑA", hex_code="#800020", is_active=True),
+                Color(name="AZUL MARINO", hex_code="#1E3A8A", is_active=True),
+                Color(name="VERDE OLIVA", hex_code="#6B7280", is_active=True),
+                Color(name="BEIGE", hex_code="#F5F5DC", is_active=True),
+                Color(name="CORAL LIVING", hex_code="#FF6F61", is_active=True),
+                Color(name="AZUL SERENITY", hex_code="#88B0D1", is_active=True),
             ]
             for color in colors:
                 db.add(color)

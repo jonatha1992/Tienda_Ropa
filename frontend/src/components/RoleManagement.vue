@@ -178,7 +178,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
-import { rolesApi } from '../api'
+import { rolesApi } from '../config'
 import type { Role, RoleType, User } from '../types'
 
 const toast = useToast()

@@ -72,6 +72,14 @@ class Settings(BaseSettings):
     # Alternativa: lista separada por comas, tiene prioridad si se define
     CORS_ORIGINS: Optional[str] = None
 
+    # MercadoPago Configuration
+    MERCADOPAGO_ACCESS_TOKEN: str = ""
+    MERCADOPAGO_PUBLIC_KEY: str = ""
+    MERCADOPAGO_WEBHOOK_SECRET: str = ""
+    MERCADOPAGO_SUCCESS_URL: str = "http://localhost:5173/payment/success"
+    MERCADOPAGO_FAILURE_URL: str = "http://localhost:5173/payment/failure"
+    MERCADOPAGO_PENDING_URL: str = "http://localhost:5173/payment/pending"
+
     class Config:
         # (doc) Configuración de pydantic BaseSettings.
         # Permite que BaseSettings también intente leer el archivo específico

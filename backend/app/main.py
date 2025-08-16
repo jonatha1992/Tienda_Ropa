@@ -8,6 +8,7 @@ from app.routes.order_items import router as order_items_router
 from app.routes.users import router as users_router
 from app.routes.roles import router as roles_router
 from app.routes.master_data import router as master_data_router
+from app.routes.payments import router as payments_router
 from app.core.config import settings
 from fastapi import Depends
 from app.db.session import get_session
@@ -66,6 +67,7 @@ app.include_router(order_items_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
 app.include_router(roles_router, prefix="/api/v1")
 app.include_router(master_data_router, prefix="/api/v1")
+app.include_router(payments_router, prefix="/api/v1")
 
 
 @app.get("/health")

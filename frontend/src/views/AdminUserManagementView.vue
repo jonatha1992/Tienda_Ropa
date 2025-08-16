@@ -102,8 +102,7 @@
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '../store/auth'
-import { rolesApi, usersApi } from '../api'
-import apiClient from '../api'
+import { rolesApi, usersApi, apiClient } from '../config/index'
 import RoleManagement from '../components/RoleManagement.vue'
 import UserManagement from '../components/UserManagement.vue'
 
