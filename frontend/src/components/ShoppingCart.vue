@@ -157,13 +157,29 @@
             </div>
           </div>
 
+          <!-- Auth Notice -->
+          <div v-if="!authStore.isAuthenticated" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-blue-700">
+                  Necesitas <strong>iniciar sesión</strong> para proceder con la compra.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- Checkout Button -->
           <div class="mt-6">
             <button
               @click="proceedToCheckout"
               class="w-full bg-black text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 transition-colors"
             >
-              Proceder al checkout
+              {{ authStore.isAuthenticated ? 'Proceder al checkout' : 'Iniciar sesión y continuar' }}
             </button>
           </div>
 
@@ -203,9 +219,11 @@
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore, type CartItem } from '../store/cart';
+import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -244,7 +262,14 @@ const proceedToCheckout = () => {
     return;
   }
   
-  // Navigate to checkout page (to be implemented)
+  // Check if user is authenticated
+  if (!authStore.isAuthenticated) {
+    toast.warning('Debes iniciar sesión para continuar con la compra');
+    router.push('/auth');
+    return;
+  }
+  
+  // Navigate to checkout page
   router.push('/checkout');
 };
 </script>

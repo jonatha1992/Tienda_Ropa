@@ -325,6 +325,13 @@ const checkoutForm = ref({
 });
 
 onMounted(() => {
+  // Check authentication first
+  if (!authStore.isAuthenticated) {
+    toast.warning('Debes iniciar sesión para acceder al checkout');
+    router.push('/auth');
+    return;
+  }
+  
   // Load cart from localStorage
   cartStore.loadFromStorage();
   
@@ -349,6 +356,13 @@ onMounted(() => {
 });
 
 const processOrder = async () => {
+  // Double-check authentication
+  if (!authStore.isAuthenticated) {
+    toast.error('Debes iniciar sesión para completar la compra');
+    router.push('/auth');
+    return;
+  }
+  
   if (cartStore.isEmpty) {
     toast.error('Tu carrito está vacío');
     return;

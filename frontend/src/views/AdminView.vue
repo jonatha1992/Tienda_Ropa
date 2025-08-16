@@ -5,10 +5,34 @@
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center justify-between py-6">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Administración de Productos</h1>
-            <p class="mt-1 text-sm text-gray-500">Gestiona el catálogo de productos y sus variantes</p>
+            <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
+            <p class="mt-1 text-sm text-gray-500">Gestiona productos, usuarios y configuraciones del sistema</p>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-gray-200">
+      <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <nav class="flex -mb-px space-x-8">
+          <router-link
+            to="/admin/products"
+            class="py-4 px-1 border-b-2 font-medium text-sm"
+            active-class="border-blue-500 text-blue-600"
+            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          >
+            Gestión de Productos
+          </router-link>
+          <router-link
+            to="/admin/users"
+            class="py-4 px-1 border-b-2 font-medium text-sm"
+            active-class="border-blue-500 text-blue-600"
+            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          >
+            Gestión de Usuarios
+          </router-link>
+        </nav>
       </div>
     </div>
 

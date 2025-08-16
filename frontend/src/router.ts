@@ -3,8 +3,10 @@ import HomeView from './views/HomeView.vue'
 import CollectionView from './views/CollectionView.vue'
 import ProductDetailView from './views/ProductDetailView.vue'
 import CheckoutView from './views/CheckoutView.vue'
+import CartView from './views/CartView.vue'
 import AuthView from './views/AuthView.vue'
 import AdminView from './views/AdminView.vue'
+import AdminUserManagementView from './views/AdminUserManagementView.vue'
 import PaymentSuccessView from './views/PaymentSuccessView.vue'
 import PaymentFailureView from './views/PaymentFailureView.vue'
 import PaymentPendingView from './views/PaymentPendingView.vue'
@@ -20,7 +22,8 @@ const routes = [
   { path: '/', component: HomeView },
   { path: '/shop', component: CollectionView },
   { path: '/product/:id', component: ProductDetailView },
-  { path: '/checkout', component: CheckoutView },
+  { path: '/cart', component: CartView },
+  { path: '/checkout', component: CheckoutView, meta: { requiresAuth: true } },
   { path: '/auth', component: AuthView },
   { path: '/contact', component: ContactView },
   { path: '/how-to-shop', component: HowToShopView },
@@ -33,7 +36,16 @@ const routes = [
   { path: '/payment/pending', component: PaymentPendingView },
   {
     path: '/admin',
+    redirect: '/admin/products'
+  },
+  {
+    path: '/admin/products',
     component: AdminView,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/users',
+    component: AdminUserManagementView,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
 ];

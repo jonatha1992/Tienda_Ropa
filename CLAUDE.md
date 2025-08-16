@@ -279,6 +279,55 @@ alembic downgrade -1
 - `test_inventory_module.py` - Stock adjustments, low stock alerts
 - `test_integration_complete.py` - End-to-end user flows (register → browse → order)
 
+## MercadoPago Integration
+
+### Payment Configuration
+The application integrates with MercadoPago for payment processing:
+
+**Environment Variables Required:**
+- `MERCADOPAGO_ACCESS_TOKEN`: MercadoPago private access token
+- `MERCADOPAGO_PUBLIC_KEY`: MercadoPago public key (for frontend)
+- `MERCADOPAGO_WEBHOOK_SECRET`: Secret for webhook validation
+- `FRONTEND_URL`: Frontend URL for payment redirects
+
+**Payment Flow:**
+1. **Create Preference**: POST `/api/v1/payments/create-preference`
+2. **Process Payment**: User redirected to MercadoPago
+3. **Webhook Notification**: POST `/api/v1/payments/webhook`
+4. **Payment Status**: GET `/api/v1/payments/status/{order_id}`
+
+**Order Payment States:**
+- `payment_method`: transfer | mercadopago | cash
+- `payment_status`: pending | pending_payment | approved | rejected | cancelled
+- `mercadopago_payment_id`: MercadoPago payment ID (nullable)
+- `mercadopago_preference_id`: MercadoPago preference ID (nullable)
+
+### Payment Result Pages
+Frontend handles payment results with specific routes:
+- `/payment/success` - Successful payment
+- `/payment/failure` - Failed payment  
+- `/payment/pending` - Pending payment
+
+## Dependencies and Packages
+
+### Backend Key Dependencies
+- `fastapi==0.116.1` - Web framework
+- `sqlmodel==0.0.24` - Type-safe SQL models
+- `alembic==1.16.4` - Database migrations
+- `firebase-admin==6.6.0` - Firebase integration
+- `mercadopago==2.3.0` - Payment processing
+- `pytest==8.4.1` - Testing framework
+
+### Frontend Key Dependencies
+- `vue@^3.5.18` - Frontend framework
+- `typescript@~5.8.3` - Type safety
+- `vite@^7.0.4` - Build tool
+- `tailwindcss@^3.4.0` - CSS framework
+- `pinia@^3.0.3` - State management
+- `axios@^1.11.0` - HTTP client
+- `firebase@^12.0.0` - Firebase SDK
+- `vitest@^2.0.4` - Testing framework
+
 ## Documentation Maintenance Policy
 
 **CRITICAL: Always update documentation when making changes**
