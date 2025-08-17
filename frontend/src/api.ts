@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import { auth } from './firebase';
-import { config } from './config';
+import { config } from './config/index';
 import type { Role, RoleType, User, Color, Category, Size } from './types';
 import type { Product } from './types';
 

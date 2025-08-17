@@ -32,6 +32,7 @@ class PaymentsController:
         """
         Obtiene los items detallados de una orden para MercadoPago
         Implementa recomendaciones: items.id, items.description, items.category_id
+        Incluye número de orden en el título para mejor referencia
         """
         order_items = session.exec(
             select(OrderItem).where(OrderItem.order_id == order_id)
@@ -43,7 +44,7 @@ class PaymentsController:
             if product:
                 items_data.append({
                     "id": f"PROD_{product.id}",                                    # ✅ items.id
-                    "title": product.name,
+                    "title": f"Orden #{order_id} - {product.name}",
                     "description": get_product_description(product.name, product.categoria),  # ✅ items.description
                     "category_id": get_mercadopago_category(product.categoria),    # ✅ items.category_id
                     "quantity": order_item.quantity,
@@ -56,7 +57,7 @@ class PaymentsController:
             order = session.get(Order, order_id)
             items_data = [{
                 "id": f"ORD_{order.id}",
-                "title": f"Orden #{order.id}",
+                "title": f"Orden #{order.id} - Productos de ropa vintage",
                 "description": "Productos de ropa vintage de calidad premium",
                 "category_id": "fashion_clothes",
                 "quantity": 1,

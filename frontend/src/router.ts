@@ -20,6 +20,8 @@ import HowToShopView from './views/HowToShopView.vue';
 import ShippingView from './views/ShippingView.vue';
 import TermsView from './views/TermsView.vue';
 import PrivacyView from './views/PrivacyView.vue';
+import OrdersView from './views/OrdersView.vue';
+import OrderDetailView from './views/OrderDetailView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
@@ -33,6 +35,9 @@ const routes = [
   { path: '/shipping', component: ShippingView },
   { path: '/terms', component: TermsView },
   { path: '/privacy', component: PrivacyView },
+  // Orders routes
+  { path: '/orders', component: OrdersView, meta: { requiresAuth: true } },
+  { path: '/orders/:id', component: OrderDetailView, meta: { requiresAuth: true } },
   // Payment result routes
   { path: '/payment/success', component: PaymentSuccessView },
   { path: '/payment/failure', component: PaymentFailureView },

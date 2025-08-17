@@ -21,7 +21,7 @@
         />
         
         <!-- Product Labels -->
-        <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-2 top-3 left-3">
+        <div v-if="product.is_new || product.is_sale || product.has_discount || isOutOfStock" class="absolute space-y-2 top-3 left-3">
           <span v-if="product.is_new" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-black">
             New
           </span>
@@ -31,10 +31,20 @@
           <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-orange-500">
             -{{ product.discount_percentage }}%
           </span>
+          <span v-if="isOutOfStock" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-gray-800">
+            Sin Stock
+          </span>
+        </div>
+        
+        <!-- Sin Stock Overlay -->
+        <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div class="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
+            <span class="text-lg font-semibold text-gray-800">Sin Stock</span>
+          </div>
         </div>
         
         <!-- Quick Add Button (appears on hover) -->
-        <div class="absolute inset-x-0 px-4 transition-opacity duration-300 opacity-0 bottom-4 group-hover:opacity-100">
+        <div v-if="!isOutOfStock" class="absolute inset-x-0 px-4 transition-opacity duration-300 opacity-0 bottom-4 group-hover:opacity-100">
           <button @click.stop="quickAdd" class="w-full text-center btn-minimal btn-dark">
             Agregar
           </button>
@@ -98,6 +108,22 @@ const imageToShow = computed(() => {
   });
   
   return props.product.images && props.product.images[0] ? props.product.images[0].image_url : defaultImage;
+});
+
+// Determinar si el producto está sin stock
+const isOutOfStock = computed(() => {
+  // Para productos únicos (is_unique = true), verificar el stock directo
+  if (props.product.is_unique) {
+    return props.product.stock === 0 || props.product.stock === null;
+  }
+  
+  // Para productos con variantes, verificar si todas las variantes tienen stock 0
+  if (props.product.variants && props.product.variants.length > 0) {
+    return props.product.variants.every(variant => variant.stock === 0);
+  }
+  
+  // Si no hay variantes y no es único, asumir que está disponible
+  return false;
 });
 
 // Quick add function (placeholder)

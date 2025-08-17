@@ -24,6 +24,11 @@
           </ol>
         </nav>
         <h1 class="mt-4 text-3xl font-light text-gray-900">Finalizar compra</h1>
+        
+        <!-- Delivery Progress -->
+        <div class="mt-6">
+          <DeliveryProgress :current-step="currentStep" />
+        </div>
       </div>
 
       <!-- Content -->
@@ -346,13 +351,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { ordersApi, customersApi, orderItemsApi } from '../config/api';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
+import DeliveryProgress from '../components/DeliveryProgress.vue';
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
@@ -375,6 +381,28 @@ const checkoutForm = ref({
   deliveryNotes: '',
   preferredDeliveryTime: 'cualquiera',
   paymentMethod: 'transfer'
+});
+
+// Determine current step based on form completion
+const currentStep = computed(() => {
+  // Step 1: Carrito (always completed if we're in checkout)
+  // Step 2: Entrega (delivery info completed)
+  const hasDeliveryInfo = checkoutForm.value.firstName && 
+                         checkoutForm.value.lastName && 
+                         checkoutForm.value.email && 
+                         checkoutForm.value.phone && 
+                         checkoutForm.value.address && 
+                         checkoutForm.value.city && 
+                         checkoutForm.value.postalCode;
+  
+  // Step 3: Pago (payment method selected and processing)
+  if (processing.value) {
+    return 3;
+  } else if (hasDeliveryInfo) {
+    return 2;
+  } else {
+    return 2; // We're in the delivery step by default in checkout
+  }
 });
 
 onMounted(() => {

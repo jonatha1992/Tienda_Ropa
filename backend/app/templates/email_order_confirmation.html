@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pedido - {{ app_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .order-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .order-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .products-table th {
+            background-color: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .products-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .products-table tr:last-child td {
+            border-bottom: none;
+        }
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .product-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .total-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 5px 0;
+        }
+        .total-row.final {
+            border-top: 2px solid #34495e;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            padding-top: 15px;
+        }
+        .shipping-info {
+            background-color: #e8f4f8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .shipping-info h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #bdc3c7;
+            font-size: 18px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .products-table {
+                font-size: 14px;
+            }
+            .products-table th,
+            .products-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <div class="header">
+            <img src="{{ app_url }}/logo.jpg" alt="{{ app_name }} Logo" class="logo">
+            <h1>¡Gracias por tu compra!</h1>
+            <p>Tu pedido ha sido confirmado exitosamente</p>
+        </div>
+
+        <div class="content">
+            <!-- Order Information -->
+            <div class="order-info">
+                <div class="order-number">Pedido #{{ order_number }}</div>
+                <p><strong>Fecha:</strong> {{ order_date }}</p>
+                <p><strong>Estado:</strong> <span style="color: #27ae60;">Confirmado</span></p>
+            </div>
+
+            <h2 style="color: #2c3e50;">Resumen de tu pedido</h2>
+
+            <!-- Products Table -->
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                {% if item.product_image %}
+                                <img src="{{ item.product_image }}" alt="{{ item.product_name }}" class="product-image" style="margin-right: 15px;">
+                                {% endif %}
+                                <div>
+                                    <div class="product-name">{{ item.product_name }}</div>
+                                    {% if item.variant_info %}
+                                    <div class="product-details">{{ item.variant_info }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td class="price">${{ "{:,.0f}".format(item.price) }}</td>
+                        <td class="price">${{ "{:,.0f}".format(item.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Total Section -->
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span>${{ "{:,.0f}".format(subtotal) }}</span>
+                </div>
+                {% if discount > 0 %}
+                <div class="total-row" style="color: #e74c3c;">
+                    <span>Descuento:</span>
+                    <span>-${{ "{:,.0f}".format(discount) }}</span>
+                </div>
+                {% endif %}
+                <div class="total-row">
+                    <span>Envío:</span>
+                    <span>{{ "Gratis" if shipping_cost == 0 else "$" + "{:,.0f}".format(shipping_cost) }}</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total:</span>
+                    <span>${{ "{:,.0f}".format(total) }}</span>
+                </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="shipping-info">
+                <h3>Información de envío</h3>
+                <p><strong>{{ customer_name }}</strong></p>
+                <p>{{ shipping_address }}</p>
+                <p>{{ shipping_city }}, {{ shipping_postal_code }}</p>
+                {% if delivery_notes %}
+                <p><strong>Notas:</strong> {{ delivery_notes }}</p>
+                {% endif %}
+                <a href="{{ app_url }}/orders/{{ order_number }}" style="display: inline-block; padding: 12px 24px; background-color: #1f2937; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 20px;">
+                    Ver detalles del pedido
+                </a>
+            </div>
+
+            <!-- Payment Information -->
+            <div style="background-color: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <h3 style="margin-top: 0; color: #856404;">Método de pago</h3>
+                <p><strong>{{ payment_method_text }}</strong></p>
+                {% if payment_instructions %}
+                <p>{{ payment_instructions | safe }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Action Button -->
+            <div style="text-align: center;">
+                <a href="{{ app_url }}/orders/{{ order_number }}" class="button">Ver detalles del pedido</a>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p><strong>¿Tienes preguntas?</strong></p>
+                <p>Contáctanos en <a href="mailto:info@m-vintage.com" style="color: #3498db;">info@m-vintage.com</a> o visita nuestro <a href="{{ app_url }}/contact" style="color: #3498db;">centro de ayuda</a>.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3>{{ app_name }}</h3>
+            <p>Moda vintage única y sostenible</p>
+            
+            <div class="social-links">
+                <a href="#" title="Facebook">📘</a>
+                <a href="#" title="Instagram">📷</a>
+                <a href="#" title="Twitter">🐦</a>
+            </div>
+            
+            <p>
+                <a href="{{ app_url }}">{{ app_url }}</a><br>
+                © 2024 {{ app_name }}. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

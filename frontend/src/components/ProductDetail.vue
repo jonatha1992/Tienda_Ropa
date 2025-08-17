@@ -6,13 +6,19 @@
         <!-- Left Side - Images (más compacto) -->
         <div class="flex gap-4 flex-shrink-0">
           <!-- Main Image (más grande) -->
-          <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200">
+          <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative">
             <img 
               :src="mainImage" 
               :alt="product.name" 
               loading="eager"
               class="object-cover object-center w-full h-full"
             />
+            <!-- Sin Stock Overlay Desktop -->
+            <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+              <div class="bg-white bg-opacity-90 px-6 py-3 rounded-lg">
+                <span class="text-xl font-semibold text-gray-800">Sin Stock</span>
+              </div>
+            </div>
           </div>
           
           <!-- Thumbnail Images (más grandes) -->
@@ -156,13 +162,19 @@
       <div class="lg:hidden">
         <!-- Mobile Images -->
         <div class="px-4 py-6">
-          <div class="mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square">
+          <div class="mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square relative">
             <img 
               :src="mainImage" 
               :alt="product.name" 
               loading="eager"
               class="object-cover object-center w-full h-full"
             />
+            <!-- Sin Stock Overlay Mobile -->
+            <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+              <div class="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
+                <span class="text-lg font-semibold text-gray-800">Sin Stock</span>
+              </div>
+            </div>
           </div>
           
           <!-- Mobile Thumbnail Scroll -->
@@ -467,6 +479,24 @@ const buttonText = computed(() => {
   }
   
   return 'No disponible';
+});
+
+// Determinar si el producto está sin stock
+const isOutOfStock = computed(() => {
+  if (!product.value) return false;
+  
+  // Para productos únicos (is_unique = true), verificar el stock directo
+  if (product.value.is_unique) {
+    return (product.value.stock ?? 0) === 0;
+  }
+  
+  // Para productos con variantes, verificar si todas las variantes tienen stock 0
+  if (product.value.variants && product.value.variants.length > 0) {
+    return product.value.variants.every(variant => variant.stock === 0);
+  }
+  
+  // Si no hay variantes y no es único, asumir que está disponible
+  return false;
 });
 
 // Quantity functions

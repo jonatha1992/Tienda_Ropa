@@ -80,6 +80,15 @@ class Settings(BaseSettings):
     MERCADOPAGO_FAILURE_URL: str = "http://localhost:5173/payment/failure"
     MERCADOPAGO_PENDING_URL: str = "http://localhost:5173/payment/pending"
 
+    # Email Configuration
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASS: str = ""
+    MAIL_FROM: str = ""
+    APP_NAME: str = "M-Vintage"
+    APP_URL: str = "https://m-vintage.web.app"
+
     class Config:
         # (doc) Configuración de pydantic BaseSettings.
         # Permite que BaseSettings también intente leer el archivo específico

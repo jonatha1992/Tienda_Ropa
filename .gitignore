@@ -1,49 +1,227 @@
-# Ignorar cachés de Python (backend)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-backend/.mypy_cache/
-backend/.pytest_cache/
-backend/.venv/
+# =============================================================================
+# PYTHON / FASTAPI BACKEND
+# =============================================================================
 
-key.json
-# Ignorar cachés de Node/Vite/Vue (frontend)
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+backend/.venv/
+backend/venv/
+backend/env/
+backend/ENV/
+.venv/
+venv/
+env/
+ENV/
+
+# Testing
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/coverage.xml
+backend/coverage.json
+backend/.mypy_cache/
+backend/.dmypy.json
+backend/dmypy.json
+
+# Database
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+backend/database.db
+backend/test.db
+
+# Logs
+backend/logs/
+backend/*.log
+
+# Alembic
+backend/alembic.ini
+backend/alembic/versions/*.pyc
+
+# =============================================================================
+# NODE.JS / VUE.JS FRONTEND  
+# =============================================================================
+
+# Dependencies
 frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# Build outputs
 frontend/dist/
+frontend/dist-ssr/
 frontend/.vite/
 frontend/.cache/
-firebase_service_account.json
-# Ignorar cachés globales
-.cache/
-.mypy_cache/
-.pytest_cache/
 
-## Environment files (never commit real secrets)
-# Generic patterns
+# Editor directories and files
+frontend/.vscode/*
+!frontend/.vscode/extensions.json
+frontend/.idea
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln
+frontend/*.sw?
+
+# OS generated files
+frontend/.DS_Store
+frontend/.DS_Store?
+frontend/._*
+frontend/.Spotlight-V100
+frontend/.Trashes
+frontend/ehthumbs.db
+frontend/Thumbs.db
+
+# =============================================================================
+# ENVIRONMENT VARIABLES & SECRETS
+# =============================================================================
+
+# Environment files (NEVER commit real secrets)
 *.env
 .env*
+!.env.example
+!.env.template
 
-# Backend explicit
+# Backend environment files
 backend/.env
 backend/.env.*
 backend/*.env
 !backend/.env.example
+!backend/.env.dev
+!backend/.env.test
 
-# Frontend explicit
+# Frontend environment files  
 frontend/.env
 frontend/.env.*
 frontend/*.env
 !frontend/.env.example
 
-# Allow sample files if needed (add them explicitly with ! pattern)
+# Firebase credentials
+firebase_service_account.json
+key.json
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
 
-# Ignorar archivos de Alembic autogenerados y configuración de base de datos
-backend/alembic/versions/*.pyc
-backend/alembic.ini
+# =============================================================================
+# FIREBASE
+# =============================================================================
 
-# Ignorar cachés y configuración de Firebase
-frontend/.firebase/
 .firebase/
+frontend/.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log
 
+# =============================================================================
+# DEPLOYMENT & CI/CD
+# =============================================================================
+
+# Railway
+railway.json
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# =============================================================================
+# DEVELOPMENT TOOLS
+# =============================================================================
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Cache directories
+.cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+node_modules/
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+
+# Test files temporales
+test_*.py
+*_test_temp.py
+
+# Claude Code artifacts
 .claude/
+
+# Documentación temporal
+temp_docs/
+*.md.bak
+
+# Uploads de testing
+uploads/test/
+test_uploads/
+
+# =============================================================================
+# SECURITY & SENSITIVE DATA
+# =============================================================================
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.cert
+
+# Database backups
+*.sql
+*.dump
+
+# Application secrets
+secrets.json
+config.production.json
+
+**/.env.**

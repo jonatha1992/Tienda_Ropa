@@ -136,6 +136,9 @@ export interface Order {
   
   // Datos del customer incluidos
   customer?: Customer;
+  
+  // Order items
+  items?: OrderItem[];
 }
 
 export interface Customer {
@@ -186,6 +189,7 @@ export interface OrderItem {
   product_id: number;
   quantity: number;
   price: number;
+  product?: Product;
 }
 
 // Customer creation interface
