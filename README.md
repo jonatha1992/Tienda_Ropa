@@ -1,20 +1,46 @@
-# Inventario + Tienda Online
+# M-Vintage - Tienda de Ropa Online
 
-Aplicación que combina **sistema de control de stock** e **e‑commerce**: permite gestionar productos, inventarios, ventas y pedidos tanto en la tienda física como en línea.
+**M-Vintage** es una aplicación completa de e-commerce especializada en ropa vintage, que combina un sistema robusto de gestión de productos con una experiencia de compra moderna y fluida.
 
-## Objetivos
-- Control de stock: altas, bajas, ajustes y alertas de bajo inventario.
-- E‑commerce: catálogo, carrito, checkout y gestión de pedidos.
-- Unificación de gestión física/online con una única base de datos.
+## ✨ Características Principales
 
-## Arquitectura general (resumen)
-- **Frontend:** Vue 3 + TypeScript (Vite). Se despliega en **Firebase Hosting**; activos estáticos y SPA.
-- **Backend:** FastAPI (Python). Se despliega en **Railway**. Expone API REST.
-- **Base de datos:** PostgreSQL (Railway u otro proveedor).
-- **Storage:** Firebase Storage para imágenes de productos u otros archivos.
-- **Contenedores:** Docker por servicio; docker‑compose para entorno local.
+### 🛍️ **E-commerce Completo**
+- Catálogo de productos con filtros avanzados
+- Carrito de compras inteligente
+- Sistema de checkout con múltiples métodos de pago
+- Gestión de pedidos y seguimiento de entregas
 
-> Ver detalles ampliados en [`docs/structure.md`](docs/structure.md) y [`docs/tech-stack.md`](docs/tech-stack.md).
+### 💳 **Pagos Integrados**
+- **MercadoPago**: Pagos con tarjeta, efectivo y transferencias
+- **Transferencias bancarias**: Con comprobante y verificación
+- **Pago en efectivo**: Con entrega a domicilio
+
+### 📧 **Sistema de Emails Automáticos**
+- Confirmación de pedidos con enlaces directos
+- Formulario de contacto integrado
+- Notificaciones de estado de pedidos
+- Gmail SMTP configurado
+
+### 👤 **Autenticación y Roles**
+- Firebase Authentication
+- Sistema de roles (admin, usuario)
+- Vistas personalizadas por rol
+- Historial de pedidos por usuario
+
+### 📱 **Interfaz Moderna**
+- Diseño responsive (móvil y desktop)
+- Vue 3 + TypeScript
+- Tailwind CSS para estilos
+- Componentes reutilizables
+
+## 🏗️ Arquitectura
+
+- **Frontend:** Vue 3 + TypeScript + Vite → Firebase Hosting
+- **Backend:** FastAPI (Python) → Railway
+- **Base de datos:** PostgreSQL
+- **Storage:** Firebase Storage (imágenes)
+- **Emails:** Gmail SMTP
+- **Pagos:** MercadoPago API
 
 ---
 
@@ -129,36 +155,259 @@ Variable única para backend: `VITE_BACKEND_URL`.
 
 ---
 
-## API Endpoints
+## 🔧 Configuración Requerida
 
-### Productos
-- `GET /api/v1/products` - Listar productos
-- `POST /api/v1/products` - Crear producto
+### Variables de Entorno Backend (.env.test/.env.pro)
+```env
+# Base
+ENVIRONMENT=test
+SECRET_KEY=tu_secret_key_seguro
+DATABASE_URL=postgresql://user:pass@host:port/db
+
+# Firebase
+FIREBASE_PROJECT_ID=m-vintage
+FIREBASE_PRIVATE_KEY_ID=tu_key_id
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-...@m-vintage.iam.gserviceaccount.com
+
+# MercadoPago
+MERCADOPAGO_ACCESS_TOKEN=APP_USR-...
+MERCADOPAGO_PUBLIC_KEY=APP_USR-...
+MERCADOPAGO_WEBHOOK_SECRET=tu_webhook_secret
+
+# Gmail SMTP
+SMTP_USER=tu_email@gmail.com
+SMTP_PASS=tu_app_password
+MAIL_FROM=Soporte <tu_email@gmail.com>
+APP_NAME=M-Vintage
+APP_URL=https://m-vintage-test.web.app
+```
+
+### Variables de Entorno Frontend (.env.test/.env.pro)
+```env
+ENVIRONMENT=test
+VITE_BACKEND_URL=https://tu-backend.railway.app/api/v1
+
+# Firebase
+VITE_API_KEY=AIzaSy...
+VITE_AUTH_DOMAIN=m-vintage.firebaseapp.com
+VITE_PROJECT_ID=m-vintage
+VITE_STORAGE_BUCKET=m-vintage.firebasestorage.app
+VITE_MESSAGING_SENDER_ID=123456789
+VITE_APP_ID=1:123456789:web:...
+
+# MercadoPago (opcional para frontend)
+VITE_MERCADOPAGO_PUBLIC_KEY=APP_USR-...
+```
+
+### Configuración Firebase Console
+1. **Authentication**: Habilitar Email/Password
+2. **Storage**: Crear bucket y configurar reglas
+3. **Hosting**: Configurado automáticamente
+
+---
+
+## 📋 API Endpoints
+
+### 🛍️ Productos
+- `GET /api/v1/products` - Listar productos con filtros
+- `POST /api/v1/products` - Crear producto (admin)
 - `GET /api/v1/products/{id}` - Obtener producto por ID
-- `PUT /api/v1/products/{id}` - Actualizar producto
-- `DELETE /api/v1/products/{id}` - Eliminar producto
+- `PUT /api/v1/products/{id}` - Actualizar producto (admin)
+- `DELETE /api/v1/products/{id}` - Eliminar producto (admin)
 
-### Clientes
-- `GET /api/v1/customers` - Listar clientes
+### 👥 Clientes
+- `GET /api/v1/customers` - Listar clientes (admin)
 - `POST /api/v1/customers` - Crear cliente
 - `GET /api/v1/customers/{id}` - Obtener cliente por ID
 - `PUT /api/v1/customers/{id}` - Actualizar cliente
-- `DELETE /api/v1/customers/{id}` - Eliminar cliente
+- `DELETE /api/v1/customers/{id}` - Eliminar cliente (admin)
 
-### Pedidos
-- `GET /api/v1/orders` - Listar pedidos
+### 📦 Pedidos
+- `GET /api/v1/orders` - Listar pedidos (filtros por usuario/admin)
 - `POST /api/v1/orders` - Crear pedido
 - `GET /api/v1/orders/{id}` - Obtener pedido por ID
 - `PUT /api/v1/orders/{id}` - Actualizar pedido
-- `DELETE /api/v1/orders/{id}` - Eliminar pedido
+- `GET /api/v1/orders/user/{user_id}` - Pedidos de usuario específico
 
-### Inventario
-- `GET /api/v1/inventory` - Consultar inventario
-- `POST /api/v1/inventory/adjust` - Ajustar stock
-- `GET /api/v1/inventory/low-stock` - Productos con stock bajo
+### 💳 Pagos
+- `POST /api/v1/payments/mercadopago/create` - Crear preferencia MercadoPago
+- `GET /api/v1/payments/{order_id}/status` - Estado de pago
+- `POST /api/v1/payments/webhook` - Webhook MercadoPago
+- `GET /api/v1/payments/{order_id}/transfer-info` - Info transferencia
+- `GET /api/v1/payments/{order_id}/delivery-info` - Info entrega
 
-### Salud del sistema
-- `GET /health` - Verificar estado del backend
-- `GET /debug/auth` - Debug de configuración Firebase
+### 📧 Emails
+- `POST /api/v1/emails/contact` - Enviar mensaje de contacto
+- `POST /api/v1/emails/order-confirmation` - Email confirmación pedido
+- `POST /api/v1/emails/welcome` - Email bienvenida
+- `POST /api/v1/emails/notify` - Email notificación
 
-> **Nota:** La documentación interactiva de la API está disponible en `/docs` (Swagger UI) y `/redoc` (ReDoc) cuando el backend está ejecutándose.
+### 🔐 Autenticación
+- `POST /api/v1/auth/register` - Registro de usuario
+- `POST /api/v1/auth/login` - Login de usuario
+- `GET /api/v1/auth/me` - Perfil usuario actual
+- `POST /api/v1/auth/roles` - Gestión de roles (admin)
+
+### 🏥 Sistema
+- `GET /health` - Estado del backend
+- `GET /debug/auth` - Debug configuración Firebase
+
+> **Documentación interactiva:** `/docs` (Swagger) y `/redoc` (ReDoc)
+
+---
+
+## 🚀 Guía de Inicio Rápido
+
+### 1. Clonar y Configurar
+```bash
+git clone https://github.com/tu-usuario/m-vintage.git
+cd m-vintage
+```
+
+### 2. Backend
+```bash
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1  # Windows
+pip install -r requirements.txt
+
+# Crear archivo de entorno
+cp .env.example .env.dev
+# Editar .env.dev con tus credenciales
+
+# Ejecutar
+uvicorn app.main:app --reload
+```
+
+### 3. Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 4. Acceder
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **Documentación**: http://localhost:8000/docs
+
+---
+
+## 🛠️ Comandos Útiles
+
+### Desarrollo
+```bash
+# Backend con recarga automática
+cd backend && uvicorn app.main:app --reload
+
+# Frontend con hot reload
+cd frontend && npm run dev
+
+# Tests backend
+cd backend && python -m pytest
+
+# Build frontend
+cd frontend && npm run build
+```
+
+### Docker
+```bash
+# Levantar todo el stack
+docker-compose up -d
+
+# Solo base de datos
+docker-compose up -d db
+
+# Logs
+docker-compose logs -f
+```
+
+### Migraciones
+```bash
+# Crear migración
+cd backend && alembic revision --autogenerate -m "descripcion"
+
+# Aplicar migraciones
+cd backend && alembic upgrade head
+```
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+m-vintage/
+├── backend/                 # FastAPI backend
+│   ├── app/
+│   │   ├── api/            # Endpoints API
+│   │   ├── controllers/    # Lógica de negocio
+│   │   ├── core/          # Configuración y utilidades
+│   │   ├── models/        # Modelos SQLAlchemy
+│   │   └── main.py        # Aplicación principal
+│   ├── alembic/           # Migraciones DB
+│   └── tests/             # Tests backend
+├── frontend/              # Vue 3 frontend
+│   ├── src/
+│   │   ├── components/    # Componentes Vue
+│   │   ├── views/         # Páginas/vistas
+│   │   ├── services/      # Servicios API
+│   │   ├── composables/   # Composables Vue
+│   │   └── types.ts       # Tipos TypeScript
+│   └── public/            # Assets estáticos
+├── docs/                  # Documentación
+├── scripts/               # Scripts de utilidad
+└── docker-compose.yml     # Configuración Docker
+```
+
+---
+
+## 🔍 Solución de Problemas
+
+### Backend no inicia
+- Verificar variables de entorno en `.env.dev`
+- Comprobar conexión a base de datos
+- Revisar logs: `uvicorn app.main:app --reload --log-level debug`
+
+### Frontend no conecta con backend
+- Verificar `VITE_BACKEND_URL` en `.env.dev`
+- Comprobar CORS en backend
+- Revisar consola del navegador
+
+### Errores de Firebase
+- Verificar configuración en `firebase.ts`
+- Comprobar credenciales en Firebase Console
+- Revisar reglas de Storage y Authentication
+
+### Problemas de pagos
+- Verificar credenciales MercadoPago
+- Comprobar webhook URL en MercadoPago
+- Revisar logs de transacciones
+
+---
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
+3. Commit cambios: `git commit -m 'Agregar nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Abrir Pull Request
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
+
+---
+
+## 📞 Soporte
+
+- **Email**: soporte@m-vintage.com
+- **GitHub Issues**: [Reportar problema](https://github.com/tu-usuario/m-vintage/issues)
+- **Documentación**: [Wiki del proyecto](https://github.com/tu-usuario/m-vintage/wiki)
+
+---
+
+**M-Vintage** - Desarrollado con ❤️ para la comunidad vintage
