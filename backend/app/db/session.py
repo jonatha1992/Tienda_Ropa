@@ -3,13 +3,13 @@ from app.core.config import settings
 
 # Use DATABASE_URL from environment, fallback to SQLite for development
 DATABASE_URL = settings.DATABASE_URL
-
+print("DATABASE_URL", DATABASE_URL)
 # Configure engine based on database type
 if DATABASE_URL.startswith("postgresql"):
     # PostgreSQL configuration for Railway
     engine = create_engine(
         DATABASE_URL,
-        echo=settings.ENVIRONMENT == "development",
+        echo=settings.ENVIRONMENT == "dev",
         pool_pre_ping=True,  # Verify connections before use
         pool_recycle=300,    # Recycle connections every 5 minutes
     )

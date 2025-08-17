@@ -22,7 +22,7 @@ Archivos sugeridos (solo locales, nunca subir secretos reales):
 """
 
 # Determinar entorno temprano (valores soportados: dev, test, pro)
-RAW_ENV = os.getenv("ENVIRONMENT", "dev").lower()
+RAW_ENV = os.getenv("ENVIRONMENT", "test").lower()
 ENV_FILE_MAP = {
     "dev": ".env.dev",
     "test": ".env.test",
