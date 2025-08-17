@@ -127,8 +127,6 @@ class Settings(BaseSettings):
             items = [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
             return items or [self.FRONTEND_URL]
         origins = [self.FRONTEND_URL]
-        if self.ENVIRONMENT == "pro" and self.PRODUCTION_FRONTEND_URL:
-            origins.append(self.PRODUCTION_FRONTEND_URL)
         return origins
 
     @property

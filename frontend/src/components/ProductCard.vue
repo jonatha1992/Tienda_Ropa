@@ -1,15 +1,21 @@
 <template>
   <router-link :to="`/product/${product.id}`" class="block cursor-pointer">
     <div class="relative product-card group">
-      <!-- Product Images Container -->
-      <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
-        <!-- Primary Image -->
-        <img 
-          :src="imageToShow" 
-          :alt="product.name"
-          loading="eager"
-          class="object-cover w-full h-full transition-opacity duration-300 primary-image"
-        />
+        <!-- Stock Indicator Above Image -->
+        <div v-if="isOutOfStock" class="absolute -top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-600 text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
+          SIN STOCK
+        </div>
+        
+        <!-- Product Images Container -->
+        <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
+          <!-- Primary Image -->
+          <img 
+            :src="imageToShow" 
+            :alt="product.name"
+            loading="eager"
+            class="object-cover w-full h-full transition-opacity duration-300 primary-image"
+            @error="handleImageError"
+          />
         
         <!-- Secondary Image (hover effect) -->
         <img 
@@ -21,7 +27,7 @@
         />
         
         <!-- Product Labels -->
-        <div v-if="product.is_new || product.is_sale || product.has_discount || isOutOfStock" class="absolute space-y-2 top-3 left-3">
+        <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-2 top-3 left-3">
           <span v-if="product.is_new" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-black">
             New
           </span>
@@ -30,9 +36,6 @@
           </span>
           <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-orange-500">
             -{{ product.discount_percentage }}%
-          </span>
-          <span v-if="isOutOfStock" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-gray-800">
-            Sin Stock
           </span>
         </div>
         
@@ -71,7 +74,7 @@
           <!-- Precio original legacy (mantenemos para compatibilidad) -->
           <span v-if="!product.has_discount && product.original_price && product.original_price > product.price" 
                 class="text-sm text-gray-500 line-through">
-            ${{ product.original_price }}
+            ${{ product.original_price.toFixed(2) }}
           </span>
         </div>
         
@@ -87,7 +90,7 @@
 <script setup lang="ts">
 
 
-import { defineProps, computed } from 'vue';
+import { defineProps, computed, ref } from 'vue';
 import type { Product } from '../types';
 
 const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a';
@@ -96,19 +99,27 @@ const props = defineProps<{
   product: Product;
 }>();
 
-// Debug para ver qué está pasando con las imágenes
+const imageError = ref(false);
+
+// Improved image handling with error fallback
 const imageToShow = computed(() => {
-  console.log('🖼️ ProductCard Debug:', {
-    productName: props.product.name,
-    hasImages: !!props.product.images,
-    imagesLength: props.product.images?.length || 0,
-    firstImage: props.product.images?.[0],
-    defaultImage: defaultImage,
-    willUseDefault: !(props.product.images && props.product.images[0])
-  });
+  if (imageError.value) {
+    return defaultImage;
+  }
   
-  return props.product.images && props.product.images[0] ? props.product.images[0].image_url : defaultImage;
+  // Check if product has images and first image exists
+  if (props.product.images && props.product.images[0] && props.product.images[0].image_url) {
+    return props.product.images[0].image_url;
+  }
+  
+  return defaultImage;
 });
+
+// Handle image load errors
+const handleImageError = () => {
+  console.warn(`Failed to load image for product: ${props.product.name}`);
+  imageError.value = true;
+};
 
 // Determinar si el producto está sin stock
 const isOutOfStock = computed(() => {
@@ -119,7 +130,7 @@ const isOutOfStock = computed(() => {
   
   // Para productos con variantes, verificar si todas las variantes tienen stock 0
   if (props.product.variants && props.product.variants.length > 0) {
-    return props.product.variants.every(variant => variant.stock === 0);
+    return props.product.variants.every((variant: any) => variant.stock === 0);
   }
   
   // Si no hay variantes y no es único, asumir que está disponible

@@ -17,6 +17,8 @@ export interface CartItem {
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],
+    lastSaved: null as number | null, // Timestamp when cart was last saved
+    sessionTimeout: 20 * 60 * 1000, // 20 minutes in milliseconds
   }),
   
   getters: {
@@ -74,6 +76,11 @@ export const useCartStore = defineStore('cart', {
       variantInfo?: { variant: ProductVariant; color: Color; size: Size },
       uniqueProductInfo?: { color?: Color; size?: Size }
     ) {
+      // Check session validity before adding
+      if (!this.isSessionValid()) {
+        console.log('⏰ Cart session expired, clearing before adding new item');
+        this.clearCart();
+      }
       let cartItemId: string;
       
       if (product.is_unique) {
@@ -142,7 +149,12 @@ export const useCartStore = defineStore('cart', {
     // Persistence methods
     saveToStorage() {
       if (typeof window !== 'undefined') {
-        localStorage.setItem('cart', JSON.stringify(this.items));
+        const cartData = {
+          items: this.items,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('cart', JSON.stringify(cartData));
+        this.lastSaved = Date.now();
       }
     },
     
@@ -151,34 +163,47 @@ export const useCartStore = defineStore('cart', {
         const saved = localStorage.getItem('cart');
         if (saved) {
           try {
-            const parsedItems = JSON.parse(saved);
+            const cartData = JSON.parse(saved);
             
-            // Validate that items is an array and filter out invalid items
-            if (Array.isArray(parsedItems)) {
-              // Filter out items that don't have required properties
-              this.items = parsedItems.filter(item => 
-                item && 
-                typeof item === 'object' && 
-                item.id && 
-                item.product && 
-                typeof item.quantity === 'number' && 
-                item.quantity > 0
-              );
+            // Handle legacy format (just items array)
+            if (Array.isArray(cartData)) {
+              console.log('🔄 Converting legacy cart format');
+              this.items = this.validateCartItems(cartData);
+              this.saveToStorage(); // Save in new format
+              return;
+            }
+            
+            // Handle new format with timestamp
+            if (cartData && typeof cartData === 'object' && cartData.items) {
+              const now = Date.now();
+              const timeDiff = now - (cartData.timestamp || 0);
+              
+              // Check if cart has expired (20 minutes)
+              if (timeDiff > this.sessionTimeout) {
+                console.log('⏰ Cart session expired, clearing cart');
+                this.clearStorage();
+                this.items = [];
+                return;
+              }
+              
+              // Load valid cart
+              this.items = this.validateCartItems(cartData.items);
+              this.lastSaved = cartData.timestamp;
               
               // If we filtered out invalid items, save the cleaned cart
-              if (this.items.length !== parsedItems.length) {
+              if (this.items.length !== cartData.items.length) {
                 console.log('🧹 Cleaned invalid cart items');
                 this.saveToStorage();
               }
             } else {
               console.log('🗑️ Invalid cart data format, clearing...');
-              this.items = [];
               this.clearStorage();
+              this.items = [];
             }
           } catch (error) {
             console.error('Error loading cart from storage:', error);
-            this.items = [];
             this.clearStorage();
+            this.items = [];
           }
         } else {
           this.items = [];
@@ -235,11 +260,50 @@ export const useCartStore = defineStore('cart', {
       console.log('LocalStorage cart:', localStorage.getItem('cart'));
     },
     
+    // Validate cart items helper method
+    validateCartItems(items: any[]): CartItem[] {
+      if (!Array.isArray(items)) return [];
+      
+      return items.filter(item => 
+        item && 
+        typeof item === 'object' && 
+        item.id && 
+        item.product && 
+        typeof item.quantity === 'number' && 
+        item.quantity > 0
+      );
+    },
+    
+    // Check if cart session is still valid
+    isSessionValid(): boolean {
+      if (!this.lastSaved) return true; // No timestamp means fresh session
+      
+      const now = Date.now();
+      const timeDiff = now - this.lastSaved;
+      return timeDiff <= this.sessionTimeout;
+    },
+    
     // Clear localStorage cart data
     clearStorage() {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('cart');
+        this.lastSaved = null;
         console.log('🗑️ Cart localStorage cleared');
+      }
+    },
+    
+    // Initialize cart - call this on app startup
+    initializeCart() {
+      this.loadFromStorage();
+      
+      // Set up periodic session validation (every 5 minutes)
+      if (typeof window !== 'undefined') {
+        setInterval(() => {
+          if (!this.isSessionValid() && !this.isEmpty) {
+            console.log('⏰ Cart session expired during use, clearing cart');
+            this.clearCart();
+          }
+        }, 5 * 60 * 1000); // Check every 5 minutes
       }
     }
   },
