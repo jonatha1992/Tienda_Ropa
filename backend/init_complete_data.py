@@ -161,17 +161,34 @@ def init_complete_data():
 
         # === USUARIO ADMIN INICIAL ===
 
-        print("\n👤 Creando usuario admin inicial...")
+        print("\n👤 Verificando usuario admin inicial...")
 
-        admin_user_data = UserCreate(
-            email="jonicorrea1992@gmail.com",
-            uid="NDXokx50A5QpVyg1saO4bP669An2",
-            is_active=True
-        )
-        admin_role = "admin"
+        # Verificar si ya existe el usuario admin
+        from sqlmodel import select
+        existing_admin = db.exec(select(User).where(User.email == "jonicorrea1992@gmail.com")).first()
+        
+        if existing_admin:
+            print(f"✅ Usuario admin ya existe: {existing_admin.email}")
+            # Verificar que tenga rol de admin
+            from app.controllers.role_controller import get_user_roles
+            user_roles = get_user_roles(db, existing_admin.id)
+            has_admin = any(role.name == "admin" for role in user_roles)
+            if not has_admin:
+                from app.controllers.role_controller import assign_role_to_user
+                admin_role = db.exec(select(Role).where(Role.name == "admin")).first()
+                if admin_role:
+                    assign_role_to_user(db, existing_admin.id, admin_role.id, None)
+                    print(f"✅ Rol admin asignado al usuario existente")
+        else:
+            admin_user_data = UserCreate(
+                email="jonicorrea1992@gmail.com",
+                uid="NDXokx50A5QpVyg1saO4bP669An2",
+                is_active=True
+            )
+            admin_role = "admin"
 
-        created_user = create_user_with_role(db, admin_user_data, admin_role)
-        print(f"✅ Usuario admin creado: {created_user.email} (role: {admin_role})")
+            created_user = create_user_with_role(db, admin_user_data, admin_role)
+            print(f"✅ Usuario admin creado: {created_user.email} (role: {admin_role})")
     except Exception as e:
         print(f"❌ Error: {e}")
         db.rollback()

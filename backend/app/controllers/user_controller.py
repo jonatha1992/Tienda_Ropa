@@ -10,6 +10,7 @@ from sqlalchemy import or_, func
 from app.core.mailer import send_email, render_template
 from app.core.config import settings
 from app.models.email_verification import EmailVerificationToken
+from fastapi import HTTPException
 
 
 def send_welcome_email_async(user_email: str, display_name: str = None):
@@ -134,6 +135,27 @@ def get_user_by_firebase_uid(db: Session, firebase_uid: str) -> Optional[User]:
     return db.exec(select(User).where(User.firebase_uid == firebase_uid)).first()
 
 def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
+    # Verificar si ya existe un usuario con este email
+    existing_user = get_user_by_email(db, firebase_user['email'])
+    if existing_user:
+        # Si existe pero sin firebase_uid, actualizar el registro
+        if not existing_user.firebase_uid:
+            existing_user.firebase_uid = firebase_user['uid']
+            existing_user.nombre = firebase_user.get('name') or existing_user.nombre
+            if firebase_user.get('email_verified', False):
+                existing_user.email_verified = True
+                existing_user.email_verified_at = datetime.utcnow()
+            db.add(existing_user)
+            db.commit()
+            db.refresh(existing_user)
+            return existing_user
+        else:
+            # Si ya tiene firebase_uid diferente, es un conflicto
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Email {firebase_user['email']} already exists with different Firebase account"
+            )
+    
     # Verificar si es el primer usuario en el sistema
     user_count = db.exec(select(func.count(User.id))).first()
     is_first_user = user_count == 0
