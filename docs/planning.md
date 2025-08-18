@@ -72,6 +72,12 @@
     - [x] API endpoints para emails de bienvenida y notificaciones
     - [x] Templates HTML responsivos para emails
     - [x] Integración con FastAPI y CORS configurado
+- [x] **Sistema de Permisos:**
+    - [x] **CRÍTICO**: Corrección de validación de roles en endpoint /users/debug
+        - Problema: Búsqueda de "ADMIN" (mayúsculas) en roles "admin" (minúsculas) causaba falsos negativos
+        - Solución: Cambio a comparación exacta con .lower() en backend/app/routes/users.py:195-196
+        - Resultado: Usuarios admin/manager ahora pueden crear/editar productos correctamente
+        - No requirió cambios en base de datos ni sistema principal de seguridad
 
 ### Frontend
 

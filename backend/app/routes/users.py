@@ -192,8 +192,8 @@ async def debug_user_auth(
             "firebase_uid": user.firebase_uid
         },
         "roles": role_names,
-        "has_admin_role": any("ADMIN" in str(role) for role in role_names),
-        "has_manager_role": any("MANAGER" in str(role) for role in role_names)
+        "has_admin_role": any(role.lower() == "admin" for role in role_names),
+        "has_manager_role": any(role.lower() == "manager" for role in role_names)
     }
 
 @router.get("/test-auth")
