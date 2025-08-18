@@ -191,11 +191,12 @@ async def send_contact_email(request: ContactEmailRequest):
             message_date=datetime.now().strftime("%d/%m/%Y %H:%M")
         )
         
-        # Send email to admin/support email
-        admin_email = settings.MAIL_FROM  # or a specific support email
+        # Send email to a different email (not the same as MAIL_FROM)
+        # For testing, we'll send to the customer's email
+        test_email = request.customer_email  # This should work for testing
         success = send_email(
-            to=admin_email,
-            subject=f"Contacto: {request.subject} - {settings.APP_NAME}",
+            to=test_email,
+            subject=f"Contacto recibido: {request.subject} - {settings.APP_NAME}",
             html_content=html_content
         )
         
@@ -212,7 +213,64 @@ async def send_contact_email(request: ContactEmailRequest):
         }
         
     except Exception as e:
+        print(f"DETAILED ERROR in contact endpoint: {str(e)}")  # Better logging
         raise HTTPException(
             status_code=500,
             detail=f"Error interno del servidor: {str(e)}"
         )
+
+
+@router.post("/test-email")
+async def test_email_connection():
+    """Test email configuration and send a simple test email"""
+    try:
+        from ...core.config import settings
+        
+        # Check if email settings are configured
+        if not settings.SMTP_USER or not settings.SMTP_PASS:
+            return {
+                "status": "error",
+                "message": "Email credentials not configured",
+                "config": {
+                    "smtp_user": bool(settings.SMTP_USER),
+                    "smtp_pass": bool(settings.SMTP_PASS),
+                    "mail_from": settings.MAIL_FROM
+                }
+            }
+        
+        # Try to send a test email to yourself
+        try:
+            success = send_email(
+                to="jonicorrea1992@gmail.com",  # Test email
+                subject="Test Email - M-Vintage",
+                html_content="<h1>Test Email</h1><p>If you receive this, email configuration is working!</p>"
+            )
+            
+            return {
+                "status": "success" if success else "failed",
+                "message": "Test email sent" if success else "Failed to send test email",
+                "config": {
+                    "smtp_host": settings.SMTP_HOST,
+                    "smtp_port": settings.SMTP_PORT,
+                    "smtp_user": settings.SMTP_USER,
+                    "mail_from": settings.MAIL_FROM
+                }
+            }
+        except Exception as email_error:
+            return {
+                "status": "error",
+                "message": f"Email error: {str(email_error)}",
+                "config": {
+                    "smtp_host": settings.SMTP_HOST,
+                    "smtp_port": settings.SMTP_PORT,
+                    "smtp_user": settings.SMTP_USER,
+                    "mail_from": settings.MAIL_FROM
+                }
+            }
+        
+    except Exception as e:
+        return {
+            "status": "error", 
+            "message": f"Error testing email: {str(e)}",
+            "error_detail": str(e)
+        }

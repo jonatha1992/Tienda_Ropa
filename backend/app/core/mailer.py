@@ -34,18 +34,45 @@ class Mailer:
             html_part = MIMEText(html_content, 'html')
             msg.attach(html_part)
             
-            # Connect to Gmail SMTP
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+            print(f"Attempting to send email to {to} via {settings.SMTP_HOST}:{settings.SMTP_PORT}")
+            print(f"Using SMTP user: {settings.SMTP_USER}")
+            
+            # Connect to Gmail SMTP with timeout
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+                print("Connected to SMTP server")
+                
+                # Enable debug output
+                server.set_debuglevel(1)
+                
+                # Start TLS encryption
                 server.starttls()
+                print("TLS started")
+                
+                # Login with credentials
+                print("Attempting to login...")
                 server.login(settings.SMTP_USER, settings.SMTP_PASS)
+                print("Successfully logged in")
+                
+                # Send the email
                 server.send_message(msg)
+                print(f"Email sent successfully to {to}")
             
             return True
             
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"Authentication Error: {str(e)}")
+            print(f"SMTP Server: {settings.SMTP_HOST}:{settings.SMTP_PORT}")
+            print(f"Username: {settings.SMTP_USER}")
+            print("Note: Make sure you're using an App Password instead of your Gmail password")
+            print("and that 2-Step Verification is enabled in your Google Account.")
+            return False
+            
         except Exception as e:
             print(f"Error sending email to {to}: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
-
+    
 
 # Singleton instance
 mailer = Mailer()
