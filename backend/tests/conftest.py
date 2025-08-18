@@ -61,6 +61,7 @@ def setup_database():
     from app.models.order import Order
     from app.models.order_item import OrderItem
     from app.models.inventory import Inventory
+    from app.models.email_verification import EmailVerificationToken
     
     # Eliminar todas las tablas primero para asegurar un estado limpio
     SQLModel.metadata.drop_all(bind=engine)

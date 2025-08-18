@@ -300,9 +300,9 @@ export const emailService = {
   isReady: () => false,
   getConfig: () => ({ isConfigured: false }),
   // Métodos stub para compatibilidad
-  sendPaymentSuccessEmail: async () => false,
-  sendPaymentFailedEmail: async () => false,
-  sendOrderConfirmationEmail: async () => false,
-  sendTransferInstructionsEmail: async () => false,
-  sendDeliveryScheduledEmail: async () => false
+  sendPaymentSuccessEmail: async (data: EmailData) => false,
+  sendPaymentFailedEmail: async (data: EmailData) => false,
+  sendOrderConfirmationEmail: async (data: EmailData) => false,
+  sendTransferInstructionsEmail: async (data: TransferEmailData) => false,
+  sendDeliveryScheduledEmail: async (data: DeliveryEmailData) => false
 };

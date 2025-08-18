@@ -9,7 +9,7 @@ class EmailVerificationToken(SQLModel, table=True):
     __tablename__ = "email_verification_tokens"
     
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="users.id", index=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
     email: str = Field(index=True)
     token: str = Field(unique=True, index=True)
     code: str = Field(index=True)  # 6-digit code for user-friendly verification

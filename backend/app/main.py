@@ -10,8 +10,7 @@ from app.routes.roles import router as roles_router
 from app.routes.master_data import router as master_data_router
 from app.routes.payments import router as payments_router
 from app.routes.admin_payments import router as admin_payments_router
-from app.api.v1.emails import router as emails_router
-from app.api.v1.email_verification import router as email_verification_router
+# Email functionality moved to /routes/ (standard approach)
 from app.core.config import settings
 from fastapi import Depends
 from app.db.session import get_session
@@ -73,8 +72,9 @@ app.include_router(roles_router, prefix="/api/v1")
 app.include_router(master_data_router, prefix="/api/v1")
 app.include_router(payments_router, prefix="/api/v1")
 app.include_router(admin_payments_router, prefix="/api/v1", tags=["admin"])
-app.include_router(emails_router, prefix="/api/v1/emails", tags=["emails"])
-app.include_router(email_verification_router, prefix="/api/v1/email-verification", tags=["email-verification"])
+# Email routers removed - functionality moved to standard /routes/
+# app.include_router(emails_router, prefix="/api/v1/emails", tags=["emails"])
+# app.include_router(email_verification_router, prefix="/api/v1/email-verification", tags=["email-verification"])
 
 
 @app.get("/health")
