@@ -1,0 +1,48 @@
+name: Deploy Frontend to Test
+
+on:
+  push:
+    branches: [ test ]
+  pull_request:
+    branches: [ test ]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ./frontend
+        run: npm run test
+
+      - name: TypeScript type check
+        working-directory: ./frontend
+        run: npx vue-tsc -b
+
+      - name: Build for test environment
+        working-directory: ./frontend
+        run: npm run build:test
+
+      - name: Deploy to Firebase Hosting
+        if: github.ref == 'refs/heads/test'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_M_VINTAGE_TEST }}'
+          projectId: m-vintage
+          channelId: live
+          entryPoint: './frontend'
