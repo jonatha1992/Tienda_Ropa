@@ -263,7 +263,9 @@ def create_user_with_role(db: Session, user_create: UserCreate, role_name: str) 
         firebase_uid=user_create.uid,
         email=user_create.email,
         username=user_create.username if user_create.username else None,
-        is_active=user_create.is_active if user_create.is_active is not None else True
+        is_active=user_create.is_active if user_create.is_active is not None else True,
+        email_verified=True,  # Usuario admin inicial tiene email verificado
+        email_verified_at=datetime.utcnow()
     )
     db.add(new_user)
     db.commit()

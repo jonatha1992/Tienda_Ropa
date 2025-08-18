@@ -1,8 +1,8 @@
-"""Simplified models with string fields instead of enums
+"""Recreate all tables with email verification fields
 
-Revision ID: 7101d0d316bf
+Revision ID: 4a7b6872410e
 Revises:
-Create Date: 2025-08-17 22:15:12.820061
+Create Date: 2025-08-18 19:26:11.961664
 
 """
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision = "7101d0d316bf"
+revision = "4a7b6872410e"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -131,6 +131,8 @@ def upgrade() -> None:
         sa.Column("nombre", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("hashed_password", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+        sa.Column("email_verified", sa.Boolean(), nullable=False),
+        sa.Column("email_verified_at", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     with op.batch_alter_table("user", schema=None) as batch_op:
@@ -139,6 +141,28 @@ def upgrade() -> None:
             batch_op.f("ix_user_firebase_uid"), ["firebase_uid"], unique=True
         )
         batch_op.create_index(batch_op.f("ix_user_username"), ["username"], unique=True)
+
+    op.create_table(
+        "email_verification_tokens",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("email", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("token", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("code", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("expires_at", sa.DateTime(), nullable=False),
+        sa.Column("used_at", sa.DateTime(), nullable=True),
+        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    with op.batch_alter_table("email_verification_tokens", schema=None) as batch_op:
+        batch_op.create_index(batch_op.f("ix_email_verification_tokens_user_id"), ["user_id"], unique=False)
+        batch_op.create_index(batch_op.f("ix_email_verification_tokens_email"), ["email"], unique=False)
+        batch_op.create_index(batch_op.f("ix_email_verification_tokens_token"), ["token"], unique=True)
+        batch_op.create_index(batch_op.f("ix_email_verification_tokens_code"), ["code"], unique=False)
 
     op.create_table(
         "inventory",
@@ -277,6 +301,13 @@ def downgrade() -> None:
     op.drop_table("productimage")
     op.drop_table("order")
     op.drop_table("inventory")
+    with op.batch_alter_table("email_verification_tokens", schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_code"))
+        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_token"))
+        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_email"))
+        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_user_id"))
+
+    op.drop_table("email_verification_tokens")
     with op.batch_alter_table("user", schema=None) as batch_op:
         batch_op.drop_index(batch_op.f("ix_user_username"))
         batch_op.drop_index(batch_op.f("ix_user_firebase_uid"))
