@@ -65,6 +65,8 @@ export type User = {
   id: number
   email: string
   name: string
+  email_verified?: boolean
+  email_verified_at?: string
 }
 
 // Role types
