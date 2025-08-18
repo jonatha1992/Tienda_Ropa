@@ -54,7 +54,7 @@ class EmailService {
 
   private initializeEmailJS(): void {
     if (!EMAIL_CONFIG.serviceId || !EMAIL_CONFIG.publicKey) {
-      console.warn('⚠️ EmailJS no configurado. Variables de entorno faltantes.');
+      // console.warn('⚠️ EmailJS no configurado. Variables de entorno faltantes.');
       this.isConfigured = false;
       return;
     }
@@ -294,5 +294,15 @@ class EmailService {
   }
 }
 
-// Exportar instancia única del servicio
-export const emailService = new EmailService();
+// Exportar instancia única del servicio (deshabilitado temporalmente)
+// export const emailService = new EmailService();
+export const emailService = {
+  isReady: () => false,
+  getConfig: () => ({ isConfigured: false }),
+  // Métodos stub para compatibilidad
+  sendPaymentSuccessEmail: async () => false,
+  sendPaymentFailedEmail: async () => false,
+  sendOrderConfirmationEmail: async () => false,
+  sendTransferInstructionsEmail: async () => false,
+  sendDeliveryScheduledEmail: async () => false
+};

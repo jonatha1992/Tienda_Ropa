@@ -14,7 +14,10 @@
                ],
                "cwd": "${workspaceFolder}/backend",
                "console": "integratedTerminal",
-               "justMyCode": false
+               "justMyCode": false,
+               "env": {
+                    "ENVIRONMENT": "test"
+               }
           },
      ]
 }
