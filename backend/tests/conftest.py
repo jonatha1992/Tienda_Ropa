@@ -153,7 +153,7 @@ def auth_cookie(client, db_session):
     # En lugar de hacer login tradicional, devolvemos headers de autorización
     from app.core.auth_firebase import verify_firebase_token
     from app.models.user import User
-    from app.models.role import Role, RoleType
+    from app.models.role import Role
     from app.models.user_role import UserRole
     
     # Mock Firebase user para las pruebas
@@ -168,9 +168,9 @@ def auth_cookie(client, db_session):
     existing_user = db_session.query(User).filter(User.firebase_uid == mock_firebase_user['uid']).first()
     if not existing_user:
         # Crear roles si no existen
-        admin_role = db_session.query(Role).filter(Role.name == RoleType.ADMIN).first()
+        admin_role = db_session.query(Role).filter(Role.name == "admin").first()
         if not admin_role:
-            admin_role = Role(name=RoleType.ADMIN, description="Administrator role")
+            admin_role = Role(name="admin", description="Administrator role")
             db_session.add(admin_role)
             db_session.commit()
             db_session.refresh(admin_role)

@@ -1,18 +1,11 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
-from enum import Enum
 
 if TYPE_CHECKING:
     from .user_role import UserRole
 
-class RoleType(str, Enum):
-    ADMIN = "admin"
-    MANAGER = "manager"
-    EMPLOYEE = "employee"
-    USER = "user"
-
 class RoleBase(SQLModel):
-    name: RoleType = Field(index=True)
+    name: str = Field(max_length=50, index=True)
     description: Optional[str] = Field(default=None)
     is_active: bool = Field(default=True)
 
@@ -29,6 +22,6 @@ class RoleRead(RoleBase):
     id: int
 
 class RoleUpdate(SQLModel):
-    name: Optional[RoleType] = None
+    name: Optional[str] = None
     description: Optional[str] = None
     is_active: Optional[bool] = None

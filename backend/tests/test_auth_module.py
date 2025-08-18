@@ -96,7 +96,7 @@ class TestRoleManagement:
     def test_user_has_admin_role(self, client, auth_cookie, db_session):
         """Test que el usuario de test tenga rol de administrador"""
         from app.models.user import User
-        from app.models.role import Role, RoleType
+        from app.models.role import Role
         from app.models.user_role import UserRole
         
         # Obtener el usuario de test
@@ -104,7 +104,7 @@ class TestRoleManagement:
         assert user is not None
         
         # Verificar que tiene rol de administrador
-        admin_role = db_session.query(Role).filter(Role.name == RoleType.ADMIN).first()
+        admin_role = db_session.query(Role).filter(Role.name == "admin").first()
         assert admin_role is not None
         
         user_role = db_session.query(UserRole).filter(

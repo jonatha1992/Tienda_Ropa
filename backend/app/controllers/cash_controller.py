@@ -10,7 +10,7 @@ from typing import Dict, Any, Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from app.models.order import Order, PaymentStatus
+from app.models.order import Order
 from app.models.customer import Customer
 from app.models.payment_config import PaymentConfig
 
@@ -216,7 +216,7 @@ class CashController:
             order.delivery_zone = delivery_info["zone_code"]
             order.delivery_status = "pending"
             order.verification_required = True  # Requiere coordinación manual
-            order.payment_status = PaymentStatus.PENDING  # Pendiente de entrega
+            order.payment_status = "pending"  # Pendiente de entrega
             
             # Actualizar total si hay costo de envío
             original_total = order.total
@@ -325,7 +325,7 @@ class CashController:
             
             # Actualizar estado
             order.delivery_status = "delivered"
-            order.payment_status = PaymentStatus.APPROVED  # Pago completado
+            order.payment_status = "approved"  # Pago completado
             order.delivery_notes = delivery_notes
             order.admin_notes = f"Entregado el {datetime.now().strftime('%d/%m/%Y %H:%M')}"
             

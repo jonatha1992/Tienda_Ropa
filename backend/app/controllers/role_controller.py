@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlmodel import Session, select
-from app.models.role import Role, RoleCreate, RoleUpdate, RoleType
+from app.models.role import Role, RoleCreate, RoleUpdate
 from app.models.user_role import UserRole, UserRoleCreate
 from app.models.user import User
 
@@ -16,7 +16,7 @@ def get_role_by_id(db: Session, role_id: int) -> Optional[Role]:
     """Obtener un rol por ID"""
     return db.get(Role, role_id)
 
-def get_role_by_name(db: Session, name: RoleType) -> Optional[Role]:
+def get_role_by_name(db: Session, name: str) -> Optional[Role]:
     """Obtener un rol por nombre"""
     return db.exec(select(Role).where(Role.name == name)).first()
 
@@ -122,7 +122,7 @@ def get_users_with_role(db: Session, role_id: int) -> List[User]:
     
     return db.exec(select(User).where(User.id.in_(user_ids))).all()
 
-def user_has_role(db: Session, user_id: int, role_name: RoleType) -> bool:
+def user_has_role(db: Session, user_id: int, role_name: str) -> bool:
     """Verificar si un usuario tiene un rol específico"""
     user_role = db.exec(
         select(UserRole)
@@ -140,10 +140,10 @@ def user_has_role(db: Session, user_id: int, role_name: RoleType) -> bool:
 def initialize_default_roles(db: Session):
     """Inicializar los roles por defecto si no existen"""
     default_roles = [
-        {"name": RoleType.ADMIN, "description": "Administrador del sistema con acceso completo"},
-        {"name": RoleType.MANAGER, "description": "Manager con acceso a gestión de productos e inventario"},
-        {"name": RoleType.EMPLOYEE, "description": "Empleado con acceso limitado"},
-        {"name": RoleType.USER, "description": "Usuario regular de la tienda"}
+        {"name": "admin", "description": "Administrador del sistema con acceso completo"},
+        {"name": "manager", "description": "Manager con acceso a gestión de productos e inventario"},
+        {"name": "employee", "description": "Empleado con acceso limitado"},
+        {"name": "user", "description": "Usuario regular de la tienda"}
     ]
     
     for role_data in default_roles:

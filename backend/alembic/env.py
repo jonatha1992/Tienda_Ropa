@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # Multi-environment loading aligned with app.core.config
 import base64
 
-RAW_ENV = os.getenv("ENVIRONMENT", "dev").lower()
+RAW_ENV = os.getenv("ENVIRONMENT", "test").lower()
 ENV_FILE_MAP = {
     "dev": ".env.dev",
     "test": ".env.test",

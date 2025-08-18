@@ -9,7 +9,7 @@ from sqlmodel.pool import StaticPool
 
 from app.main import app
 from app.db.session import get_session
-from app.models.order import Order, PaymentMethod, PaymentStatus
+from app.models.order import Order
 from app.models.customer import Customer
 from app.controllers.payments_controller import PaymentsController
 
@@ -57,8 +57,8 @@ def sample_order(session: Session, sample_customer: Customer):
     order = Order(
         customer_id=sample_customer.id,
         total=1500.0,
-        payment_method=PaymentMethod.MERCADOPAGO,
-        payment_status=PaymentStatus.PENDING
+        payment_method="mercadopago",
+        payment_status="pending"
     )
     session.add(order)
     session.commit()
@@ -108,7 +108,7 @@ class TestPaymentsController:
         # Verificar que la orden se actualizó
         session.refresh(sample_order)
         assert sample_order.mercadopago_preference_id == "test_preference_id"
-        assert sample_order.payment_status == PaymentStatus.PENDING_PAYMENT
+        assert sample_order.payment_status == "pending_payment"
     
     def test_create_preference_no_sdk(self, session: Session, sample_order: Order):
         """Test creación de preferencia sin SDK configurado"""
@@ -161,7 +161,7 @@ class TestPaymentsController:
         
         # Verificar que la orden se actualizó
         session.refresh(sample_order)
-        assert sample_order.payment_status == PaymentStatus.APPROVED
+        assert sample_order.payment_status == "approved"
         assert sample_order.mercadopago_payment_id == "test_payment_id"
     
     def test_process_webhook_invalid_type(self, session: Session):

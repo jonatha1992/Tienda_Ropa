@@ -10,7 +10,7 @@ from app.core.auth_firebase import verify_firebase_token
 from app.db.session import get_session
 from app.controllers.user_controller import get_user_by_firebase_uid
 from app.controllers.role_controller import user_has_role, get_user_roles
-from app.models.role import RoleType
+# Removed RoleType import - now using strings
 from app.models.user import User
 from typing import List
 
@@ -71,7 +71,7 @@ def get_current_db_user(
     return user
 
 
-def require_role(required_role: RoleType):
+def require_role(required_role: str):
     """
     Dependency factory to require a specific role.
     
@@ -97,7 +97,7 @@ def require_role(required_role: RoleType):
 
 def require_admin():
     """Dependency to require admin role"""
-    return require_role(RoleType.ADMIN)
+    return require_role("admin")
 
 
 def require_manager_or_admin():
@@ -106,8 +106,8 @@ def require_manager_or_admin():
         current_user: User = Depends(get_current_db_user),
         db: Session = Depends(get_session)
     ):
-        if not (user_has_role(db, current_user.id, RoleType.ADMIN) or 
-                user_has_role(db, current_user.id, RoleType.MANAGER)):
+        if not (user_has_role(db, current_user.id, "admin") or 
+                user_has_role(db, current_user.id, "manager")):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Admin or Manager role required"
@@ -117,7 +117,7 @@ def require_manager_or_admin():
     return check_role
 
 
-def get_user_permissions(user: User, db: Session) -> List[RoleType]:
+def get_user_permissions(user: User, db: Session) -> List[str]:
     """
     Get all roles/permissions for a user.
     

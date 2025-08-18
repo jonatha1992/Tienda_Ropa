@@ -10,7 +10,7 @@ from sqlmodel import Session, select, func
 
 from app.db.session import get_session
 from app.core.security import get_current_user, require_admin
-from app.models.order import Order, PaymentMethod, PaymentStatus
+from app.models.order import Order
 from app.models.customer import Customer
 from app.controllers.transfer_controller import transfer_controller
 from app.controllers.cash_controller import cash_controller

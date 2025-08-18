@@ -6,7 +6,7 @@ from app.core.security import get_current_user
 from sqlmodel import Session, select
 
 from app.db.session import get_session
-from app.models.order import Order, PaymentMethod, PaymentStatus
+from app.models.order import Order
 from app.models.customer import Customer
 from app.controllers.payments_controller import payments_controller
 from app.controllers.transfer_controller import transfer_controller
@@ -26,10 +26,10 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     db_order = Order.model_validate(order)
     
     # Establecer estado inicial según método de pago
-    if db_order.payment_method == PaymentMethod.MERCADOPAGO:
-        db_order.payment_status = PaymentStatus.PENDING_PAYMENT
+    if db_order.payment_method == "mercadopago":
+        db_order.payment_status = "pending_payment"
     else:
-        db_order.payment_status = PaymentStatus.PENDING
+        db_order.payment_status = "pending"
     
     session.add(db_order)
     session.commit()
@@ -39,17 +39,17 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     response = {"order": db_order}
     
     try:
-        if db_order.payment_method == PaymentMethod.MERCADOPAGO:
+        if db_order.payment_method == "mercadopago":
             # MercadoPago: Crear preferencia automáticamente
             preference_data = payments_controller.create_preference(db_order.id, session)
             response["payment_preference"] = preference_data
             
-        elif db_order.payment_method == PaymentMethod.TRANSFER:
+        elif db_order.payment_method == "transfer":
             # Transferencia: Configurar y obtener datos bancarios
             transfer_data = transfer_controller.create_transfer_order(db_order.id, session)
             response["transfer_info"] = transfer_data
             
-        elif db_order.payment_method == PaymentMethod.CASH:
+        elif db_order.payment_method == "cash":
             # Efectivo: Calcular entrega y costos
             cash_data = cash_controller.create_cash_order(db_order.id, session)
             response["delivery_info"] = cash_data

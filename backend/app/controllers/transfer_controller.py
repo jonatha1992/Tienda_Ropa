@@ -10,7 +10,7 @@ from typing import Dict, Any, Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from app.models.order import Order, PaymentStatus
+from app.models.order import Order
 from app.models.customer import Customer
 from app.models.payment_config import PaymentConfig
 
@@ -89,7 +89,7 @@ class TransferController:
             
             # Actualizar orden con información de transferencia
             order.bank_account_info = json.dumps(bank_info)
-            order.payment_status = PaymentStatus.PENDING_PAYMENT
+            order.payment_status = "pending_payment"
             order.verification_required = True  # Requiere verificación manual
             
             session.add(order)
@@ -188,10 +188,10 @@ class TransferController:
             
             # Actualizar estado de pago según verificación
             if verified:
-                order.payment_status = PaymentStatus.APPROVED
+                order.payment_status = "approved"
                 logger.info(f"Transferencia APROBADA para orden {order_id}")
             else:
-                order.payment_status = PaymentStatus.REJECTED
+                order.payment_status = "rejected"
                 logger.info(f"Transferencia RECHAZADA para orden {order_id}")
             
             session.add(order)

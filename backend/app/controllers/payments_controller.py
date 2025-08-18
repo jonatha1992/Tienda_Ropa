@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from app.core.config import settings
-from app.models.order import Order, PaymentStatus, PaymentMethod
+from app.models.order import Order
 from app.models.customer import Customer
 from app.models.order_item import OrderItem
 from app.models.product import Product
@@ -138,7 +138,7 @@ class PaymentsController:
                 
                 # Actualizar orden con preference_id
                 order.mercadopago_preference_id = preference["id"]
-                order.payment_status = PaymentStatus.PENDING_PAYMENT
+                order.payment_status = "pending_payment"
                 session.add(order)
                 session.commit()
                 session.refresh(order)
@@ -207,15 +207,15 @@ class PaymentsController:
             payment_status = payment_data.get("status")
             
             if payment_status == "approved":
-                order.payment_status = PaymentStatus.APPROVED
+                order.payment_status = "approved"
             elif payment_status == "rejected":
-                order.payment_status = PaymentStatus.REJECTED
+                order.payment_status = "rejected"
             elif payment_status == "cancelled":
-                order.payment_status = PaymentStatus.CANCELLED
+                order.payment_status = "cancelled"
             elif payment_status in ["pending", "in_process"]:
-                order.payment_status = PaymentStatus.PENDING_PAYMENT
+                order.payment_status = "pending_payment"
             else:
-                order.payment_status = PaymentStatus.PENDING
+                order.payment_status = "pending"
             
             # Guardar payment_id de MercadoPago
             order.mercadopago_payment_id = str(payment_id)

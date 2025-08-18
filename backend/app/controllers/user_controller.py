@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlmodel import Session, select
 from app.models.user import User, UserCreate
-from app.models.role import Role, RoleType
+from app.models.role import Role
 from app.models.user_role import UserRole
 from sqlalchemy import or_, func
 
@@ -31,7 +31,7 @@ def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
     
     # Si es el primer usuario, asignarle automáticamente el rol de admin
     if is_first_user:
-        admin_role = db.exec(select(Role).where(Role.name == RoleType.ADMIN)).first()
+        admin_role = db.exec(select(Role).where(Role.name == "admin")).first()
         if admin_role:
             user_role = UserRole(
                 user_id=new_user.id,
@@ -45,7 +45,7 @@ def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
             print("⚠️ Rol de admin no encontrado. Ejecute primero la inicialización de roles.")
     else:
         # Para todos los demás usuarios, asignar el rol de USER por defecto
-        user_role_def = db.exec(select(Role).where(Role.name == RoleType.USER)).first()
+        user_role_def = db.exec(select(Role).where(Role.name == "user")).first()
         if user_role_def:
             user_role = UserRole(
                 user_id=new_user.id,
@@ -90,7 +90,7 @@ def make_user_admin(db: Session, user_id: int, assigned_by_id: Optional[int] = N
     if not user:
         return False
     
-    admin_role = db.exec(select(Role).where(Role.name == RoleType.ADMIN)).first()
+    admin_role = db.exec(select(Role).where(Role.name == "admin")).first()
     if not admin_role:
         return False
     
