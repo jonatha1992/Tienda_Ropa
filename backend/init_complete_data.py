@@ -13,7 +13,8 @@ from app.controllers.master_data_controller import (
 from app.controllers.role_controller import initialize_default_roles
 from app.models.master_data import ColorCreate, CategoryCreate, SizeCreate
 from app.controllers.user_controller import create_user_with_role
-from app.models.user import UserCreate
+from app.models.user import UserCreate, User
+from app.models.role import Role
 import sqlmodel
 
 def init_complete_data():

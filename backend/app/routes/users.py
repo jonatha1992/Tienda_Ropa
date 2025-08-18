@@ -202,17 +202,31 @@ async def get_or_create_me(
     Obtiene el usuario actual a partir del token de Firebase.
     Si el usuario no existe en la base de datos, lo crea.
     """
+    import logging
+    logger = logging.getLogger(__name__)
+    
     if not firebase_user:
+        logger.error("No Firebase user provided to /users/me")
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-    # Buscar usuario por Firebase UID
-    user = get_user_by_firebase_uid(db, firebase_user['uid'])
+    logger.info(f"Getting user for Firebase UID: {firebase_user.get('uid')}")
 
-    # Si no existe, crearlo
-    if not user:
-        user = create_user_from_firebase(db, firebase_user)
-    
-    return UserRead.from_user(user)
+    try:
+        # Buscar usuario por Firebase UID
+        user = get_user_by_firebase_uid(db, firebase_user['uid'])
+
+        # Si no existe, crearlo
+        if not user:
+            logger.info(f"User not found, creating new user for UID: {firebase_user.get('uid')}")
+            user = create_user_from_firebase(db, firebase_user)
+            logger.info(f"User created successfully: {user.id}")
+        else:
+            logger.info(f"Existing user found: {user.id}")
+        
+        return UserRead.from_user(user)
+    except Exception as e:
+        logger.error(f"Error in /users/me for UID {firebase_user.get('uid')}: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error processing user: {str(e)}")
 
 @router.get("/debug", response_model=dict)
 async def debug_user_auth(

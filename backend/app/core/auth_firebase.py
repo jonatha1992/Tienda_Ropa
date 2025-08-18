@@ -83,13 +83,35 @@ def initialize_firebase():
 initialize_firebase()
 
 def verify_firebase_token(credentials: HTTPAuthorizationCredentials = Security(security)):
+    import logging
+    logger = logging.getLogger(__name__)
+    
     if not credentials:
+        logger.error("No authorization header provided")
         raise HTTPException(status_code=401, detail="No authorization header")
     
     token = credentials.credentials
     
     try:
+        # Check if Firebase is initialized
+        try:
+            firebase_admin.get_app()
+        except ValueError:
+            logger.error("Firebase not initialized when verifying token")
+            raise HTTPException(status_code=500, detail="Firebase not initialized")
+        
         decoded_token = auth.verify_id_token(token)
+        logger.info(f"Token verified successfully for UID: {decoded_token.get('uid')}")
         return decoded_token
+    except auth.InvalidIdTokenError as e:
+        logger.error(f"Invalid Firebase token: {str(e)}")
+        raise HTTPException(status_code=401, detail=f"Invalid Firebase token: {str(e)}")
+    except auth.ExpiredIdTokenError as e:
+        logger.error(f"Expired Firebase token: {str(e)}")
+        raise HTTPException(status_code=401, detail="Firebase token has expired")
+    except auth.RevokedIdTokenError as e:
+        logger.error(f"Revoked Firebase token: {str(e)}")
+        raise HTTPException(status_code=401, detail="Firebase token has been revoked")
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid Firebase token")
+        logger.error(f"Unexpected error verifying Firebase token: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Token verification error: {str(e)}")
