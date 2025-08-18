@@ -126,7 +126,23 @@ class Settings(BaseSettings):
         if self.CORS_ORIGINS:
             items = [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
             return items or [self.FRONTEND_URL]
+        
+        # Default origins based on environment
         origins = [self.FRONTEND_URL]
+        
+        # Always add common development and production origins
+        common_origins = [
+            "http://localhost:5173",
+            "http://localhost:3000", 
+            "https://m-vintage-test.web.app",
+            "https://m-vintage.web.app",
+            "https://mvintage-frontend.vercel.app"
+        ]
+        
+        for origin in common_origins:
+            if origin not in origins:
+                origins.append(origin)
+                
         return origins
 
     @property
