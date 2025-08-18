@@ -136,6 +136,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
+import { ordersApi } from '../config/api';
 
 const route = useRoute();
 const router = useRouter();
@@ -161,15 +162,13 @@ onMounted(async () => {
 const loadOrderDetails = async () => {
   try {
     loading.value = true;
-    // TODO: Implement API call to get order details
-    // const response = await ordersApi.getOrderById(orderId.value);
-    // order.value = response.data;
-    
-    // Mock data for now
-    order.value = null;
+    console.log('🔄 Cargando detalles del pedido:', orderId.value);
+    order.value = await ordersApi.getOrder(parseInt(orderId.value));
+    console.log('✅ Detalles del pedido cargados:', order.value);
   } catch (error) {
-    console.error('Error loading order details:', error);
+    console.error('❌ Error loading order details:', error);
     toast.error('Error al cargar los detalles del pedido');
+    order.value = null;
   } finally {
     loading.value = false;
   }
@@ -188,12 +187,12 @@ const getStatusClass = (status: string) => {
   switch (status) {
     case 'pending':
       return 'bg-yellow-100 text-yellow-800';
-    case 'confirmed':
-      return 'bg-blue-100 text-blue-800';
-    case 'shipped':
-      return 'bg-purple-100 text-purple-800';
-    case 'delivered':
+    case 'pending_payment':
+      return 'bg-orange-100 text-orange-800';
+    case 'approved':
       return 'bg-green-100 text-green-800';
+    case 'rejected':
+      return 'bg-red-100 text-red-800';
     case 'cancelled':
       return 'bg-red-100 text-red-800';
     default:
@@ -205,12 +204,12 @@ const getStatusText = (status: string) => {
   switch (status) {
     case 'pending':
       return 'Pendiente';
-    case 'confirmed':
-      return 'Confirmado';
-    case 'shipped':
-      return 'Enviado';
-    case 'delivered':
-      return 'Entregado';
+    case 'pending_payment':
+      return 'Esperando Pago';
+    case 'approved':
+      return 'Aprobado';
+    case 'rejected':
+      return 'Rechazado';
     case 'cancelled':
       return 'Cancelado';
     default:

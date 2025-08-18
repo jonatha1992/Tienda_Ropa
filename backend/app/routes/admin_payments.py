@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select, func
 
 from app.db.session import get_session
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_admin
 from app.models.order import Order, PaymentMethod, PaymentStatus
 from app.models.customer import Customer
 from app.controllers.transfer_controller import transfer_controller
@@ -18,13 +18,11 @@ from app.controllers.cash_controller import cash_controller
 router = APIRouter()
 
 
-def get_current_admin_user(user=Depends(get_current_user)):
+def get_current_admin_user(user=Depends(require_admin())):
     """
     Dependencia para verificar que el usuario tiene permisos de administrador.
-    TODO: Implementar verificación real de roles cuando esté disponible.
+    Solo usuarios con rol ADMIN pueden acceder a estas rutas.
     """
-    # Por ahora permitir a todos los usuarios autenticados
-    # En el futuro agregar verificación de roles de administrador
     return user
 
 

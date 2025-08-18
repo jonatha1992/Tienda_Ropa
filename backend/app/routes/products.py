@@ -15,7 +15,7 @@ router = APIRouter()
 def create_product(
     session: Session = Depends(get_session), 
     product: ProductCreate = Body(...), 
-    user=Depends(require_manager_or_admin())
+    current_user=Depends(require_manager_or_admin())
 ):
     # Validate product data based on type
     try:
@@ -60,7 +60,7 @@ def update_product(
     product_id: int, 
     session: Session = Depends(get_session), 
     product: ProductCreate = Body(...), 
-    user=Depends(require_manager_or_admin())
+    current_user=Depends(require_manager_or_admin())
 ):
     db_product = session.get(Product, product_id)
     if not db_product:
@@ -98,7 +98,7 @@ def update_product(
     return db_product
 
 @router.delete("/products/{product_id}")
-def delete_product(product_id: int, session: Session = Depends(get_session), user=Depends(require_manager_or_admin())):
+def delete_product(product_id: int, session: Session = Depends(get_session), current_user=Depends(require_manager_or_admin())):
     """Eliminar un producto y todos sus datos relacionados"""
     from sqlmodel import select
     

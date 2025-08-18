@@ -69,6 +69,59 @@ def read_orders(
     return orders
 
 
+@router.get("/orders/customer/{customer_id}", response_model=List[Order])
+def read_customer_orders(
+    customer_id: int, 
+    session: Session = Depends(get_session), 
+    skip: int = 0, 
+    limit: int = 100, 
+    user=Depends(get_current_user)
+):
+    """Obtener todos los pedidos de un cliente específico"""
+    orders = session.exec(
+        select(Order)
+        .where(Order.customer_id == customer_id)
+        .order_by(Order.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    ).all()
+    return orders
+
+
+@router.get("/orders/my-orders", response_model=List[Order])
+def read_my_orders(
+    session: Session = Depends(get_session), 
+    skip: int = 0, 
+    limit: int = 100, 
+    firebase_user: dict = Depends(get_current_user)
+):
+    """Obtener todos los pedidos del usuario autenticado"""
+    # Buscar customers que coincidan con el email del usuario autenticado
+    user_email = firebase_user.get('email')
+    if not user_email:
+        return []
+    
+    # Encontrar todos los customers con este email
+    customers = session.exec(
+        select(Customer).where(Customer.email == user_email)
+    ).all()
+    
+    if not customers:
+        return []
+    
+    # Obtener pedidos de todos los customers con este email
+    customer_ids = [customer.id for customer in customers]
+    orders = session.exec(
+        select(Order)
+        .where(Order.customer_id.in_(customer_ids))
+        .order_by(Order.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    ).all()
+    
+    return orders
+
+
 @router.get("/orders/{order_id}", response_model=Order)
 def read_order(*, session: Session = Depends(get_session), order_id: int, user=Depends(get_current_user)):
     order = session.get(Order, order_id)

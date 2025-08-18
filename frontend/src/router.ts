@@ -63,6 +63,11 @@ const routes = [
     component: AdminPaymentsView,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
+  {
+    path: '/admin/orders',
+    component: AdminPaymentsView, // Reutilizamos AdminPaymentsView que ya tiene la gestión de pedidos
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
 ];
 
 const router = createRouter({

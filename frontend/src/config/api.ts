@@ -242,6 +242,18 @@ export const ordersApi = {
     await apiClient.delete(`/orders/${id}`);
   },
 
+  // Get orders for a specific customer
+  async getCustomerOrders(customerId: number): Promise<any[]> {
+    const response = await apiClient.get(`/orders/customer/${customerId}`);
+    return response.data;
+  },
+
+  // Get orders for the authenticated user
+  async getMyOrders(): Promise<any[]> {
+    const response = await apiClient.get('/orders/my-orders');
+    return response.data;
+  },
+
   // Admin functions
   // Get orders with filters for admin panel
   async getOrdersWithFilters(filters: any): Promise<any[]> {

@@ -32,6 +32,14 @@
           >
             Gestión de Usuarios
           </router-link>
+          <router-link
+            to="/admin/orders"
+            class="py-4 px-1 border-b-2 font-medium text-sm"
+            active-class="border-blue-500 text-blue-600"
+            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          >
+            Gestión de Pedidos
+          </router-link>
         </nav>
       </div>
     </div>
