@@ -98,8 +98,6 @@ class EmailService {
   }
 }
 
-}
-
 // Email Verification Service
 export interface VerifyEmailRequest {
   token?: string;
