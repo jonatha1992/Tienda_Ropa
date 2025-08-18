@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifica tu email - {{ app_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .verification-info {
+            background-color: #e8f4f8;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .verification-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            letter-spacing: 4px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #3498db;
+        }
+        .content {
+            padding: 30px;
+        }
+        .verify-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .verify-button:hover {
+            transform: translateY(-2px);
+        }
+        .security-info {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .expire-notice {
+            color: #e74c3c;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .verification-code {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <div class="header">
+            <img src="{{ app_url }}/logo.jpg" alt="{{ app_name }} Logo" class="logo">
+            <h1>Verifica tu Email</h1>
+            <p>Solo un paso más para completar tu registro</p>
+        </div>
+
+        <div class="content">
+            <!-- Verification Information -->
+            <div class="verification-info">
+                <h3 style="margin-top: 0; color: #2c3e50;">¡Hola {{ display_name }}!</h3>
+                <p>Gracias por registrarte en <strong>{{ app_name }}</strong>. Para completar tu registro y comenzar a disfrutar de nuestras prendas vintage únicas, necesitamos verificar tu dirección de email.</p>
+            </div>
+
+            <h2 style="color: #2c3e50; text-align: center;">Código de Verificación</h2>
+            
+            <!-- Verification Code -->
+            <div class="verification-code">{{ verification_code }}</div>
+            
+            <p style="text-align: center; margin-bottom: 30px;">Ingresa este código en la página de verificación o haz clic en el botón de abajo:</p>
+
+            <!-- Verify Button -->
+            <div style="text-align: center;">
+                <a href="{{ verification_url }}" class="verify-button">Verificar mi Email</a>
+            </div>
+
+            <div class="expire-notice">⏰ Este código expira en {{ expire_hours }} horas</div>
+
+            <!-- Security Information -->
+            <div class="security-info">
+                <h4 style="margin-top: 0; color: #856404;">🔒 Información de Seguridad</h4>
+                <ul style="margin: 0; color: #856404;">
+                    <li>Este código es único y personal</li>
+                    <li>No lo compartas con nadie</li>
+                    <li>Si no solicitaste este registro, ignora este email</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p><strong>¿Problemas para verificar?</strong></p>
+                <p>Si tienes problemas, copia y pega este enlace en tu navegador:</p>
+                <p style="word-break: break-all; color: #3498db; font-size: 14px;">{{ verification_url }}</p>
+                <p>O contáctanos en <a href="mailto:{{ support_email }}" style="color: #3498db;">{{ support_email }}</a></p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3>{{ app_name }}</h3>
+            <p>Moda vintage única y sostenible</p>
+            
+            <div style="margin: 20px 0;">
+                <a href="#" title="Facebook" style="margin: 0 10px; color: #bdc3c7; font-size: 18px;">📘</a>
+                <a href="#" title="Instagram" style="margin: 0 10px; color: #bdc3c7; font-size: 18px;">📷</a>
+                <a href="#" title="Twitter" style="margin: 0 10px; color: #bdc3c7; font-size: 18px;">🐦</a>
+            </div>
+            
+            <p>
+                <a href="{{ app_url }}">{{ app_url }}</a><br>
+                © 2024 {{ app_name }}. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

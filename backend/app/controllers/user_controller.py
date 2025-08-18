@@ -1,9 +1,128 @@
 from typing import List, Optional
+import threading
+import asyncio
+from datetime import datetime
 from sqlmodel import Session, select
 from app.models.user import User, UserCreate
 from app.models.role import Role
 from app.models.user_role import UserRole
 from sqlalchemy import or_, func
+from app.core.mailer import send_email, render_template
+from app.core.config import settings
+from app.models.email_verification import EmailVerificationToken
+
+
+def send_welcome_email_async(user_email: str, display_name: str = None):
+    """Send welcome email asynchronously in background"""
+    try:
+        # Render welcome email template
+        html_content = render_template(
+            'email_welcome.html',
+            display_name=display_name,
+            app_name=settings.APP_NAME,
+            app_url=settings.APP_URL
+        )
+        
+        # Send email
+        success = send_email(
+            to=user_email,
+            subject=f'¡Bienvenido a {settings.APP_NAME}!',
+            html_content=html_content
+        )
+        
+        if success:
+            print(f"✅ Email de bienvenida enviado a {user_email}")
+        else:
+            print(f"❌ Error enviando email de bienvenida a {user_email}")
+            
+    except Exception as e:
+        print(f"❌ Error procesando email de bienvenida: {str(e)}")
+
+
+def trigger_welcome_email(user_email: str, display_name: str = None):
+    """Trigger welcome email in background thread"""
+    try:
+        email_thread = threading.Thread(
+            target=send_welcome_email_async,
+            args=(user_email, display_name)
+        )
+        email_thread.start()
+    except Exception as e:
+        print(f"❌ Error iniciando envío de email de bienvenida: {str(e)}")
+
+
+def send_verification_email_async(user_id: int, user_email: str, display_name: str = None):
+    """Send verification email asynchronously in background"""
+    try:
+        from app.db.session import get_session
+        
+        # We need to create a new session for the thread
+        db = next(get_session())
+        
+        # Invalidate existing tokens
+        existing_tokens = db.exec(
+            select(EmailVerificationToken).where(
+                EmailVerificationToken.email == user_email,
+                EmailVerificationToken.used_at.is_(None)
+            )
+        ).all()
+        
+        for token in existing_tokens:
+            token.mark_as_used()
+            db.add(token)
+        
+        # Generate new verification token
+        verification_token = EmailVerificationToken.generate_verification_token(
+            user_id=user_id,
+            email=user_email
+        )
+        db.add(verification_token)
+        db.commit()
+        db.refresh(verification_token)
+        
+        # Create verification URL
+        verification_url = f"{settings.FRONTEND_URL}/verify-email?token={verification_token.token}"
+        
+        # Render verification email template
+        html_content = render_template(
+            'email_verification.html',
+            display_name=display_name,
+            app_name=settings.APP_NAME,
+            app_url=settings.APP_URL,
+            verification_code=verification_token.code,
+            verification_url=verification_url,
+            expire_hours=24,
+            support_email=settings.MAIL_FROM
+        )
+        
+        # Send email
+        success = send_email(
+            to=user_email,
+            subject=f'Verifica tu email - {settings.APP_NAME}',
+            html_content=html_content
+        )
+        
+        if success:
+            print(f"✅ Email de verificación enviado a {user_email}")
+        else:
+            print(f"❌ Error enviando email de verificación a {user_email}")
+        
+        db.close()
+            
+    except Exception as e:
+        print(f"❌ Error procesando email de verificación: {str(e)}")
+
+
+def trigger_verification_email(user_id: int, user_email: str, display_name: str = None):
+    """Trigger verification email in background thread"""
+    try:
+        email_thread = threading.Thread(
+            target=send_verification_email_async,
+            args=(user_id, user_email, display_name)
+        )
+        email_thread.start()
+    except Exception as e:
+        print(f"❌ Error iniciando envío de email de verificación: {str(e)}")
 
 def get_user_by_username(db: Session, username: str) -> Optional[User]:
     return db.exec(select(User).where(User.username == username)).first()
@@ -57,6 +176,27 @@ def create_user_from_firebase(db: Session, firebase_user: dict) -> User:
             print(f"✅ Nuevo usuario '{new_user.email}' asignado con rol por defecto 'USER'.")
         else:
             print(f"⚠️ Rol 'USER' no encontrado para el usuario '{new_user.email}'. Ejecute la inicialización de roles.")
+
+    # For Google users, mark email as verified since Google already verified it
+    if firebase_user.get('email_verified', False):
+        new_user.email_verified = True
+        new_user.email_verified_at = datetime.utcnow()
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        
+        # Send welcome email to verified users
+        trigger_welcome_email(
+            user_email=new_user.email,
+            display_name=firebase_user.get('name') or firebase_user.get('email', '').split('@')[0]
+        )
+    else:
+        # For email/password users, send verification email
+        trigger_verification_email(
+            user_id=new_user.id,
+            user_email=new_user.email,
+            display_name=firebase_user.get('name') or firebase_user.get('email', '').split('@')[0]
+        )
 
     return new_user
     

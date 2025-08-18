@@ -9,6 +9,7 @@
           :class="getStepClasses(1)"
         >
           <CheckIcon v-if="currentStep > 1" class="w-4 h-4" />
+          <ShoppingCartIcon v-else-if="currentStep === 1" class="w-4 h-4" />
           <span v-else>1</span>
         </div>
         <span class="text-xs mt-2 text-gray-600">Carrito</span>
@@ -29,6 +30,7 @@
           :class="getStepClasses(2)"
         >
           <CheckIcon v-if="currentStep > 2" class="w-4 h-4" />
+          <TruckIcon v-else-if="currentStep === 2" class="w-4 h-4" />
           <span v-else>2</span>
         </div>
         <span class="text-xs mt-2 text-gray-600">Entrega</span>
@@ -49,6 +51,7 @@
           :class="getStepClasses(3)"
         >
           <CheckIcon v-if="currentStep > 3" class="w-4 h-4" />
+          <CreditCardIcon v-else-if="currentStep === 3" class="w-4 h-4" />
           <span v-else>3</span>
         </div>
         <span class="text-xs mt-2 text-gray-600">Pago</span>
@@ -58,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { CheckIcon } from '@heroicons/vue/24/solid'
+import { CheckIcon, ShoppingCartIcon, TruckIcon, CreditCardIcon } from '@heroicons/vue/24/solid'
 
 interface Props {
   currentStep: number

@@ -208,11 +208,14 @@
               <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
                 v-model="newUserForm.email"
+                @blur="checkEmailExists"
                 type="email"
                 required
                 placeholder="usuario@ejemplo.com"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                :class="{ 'border-red-500': emailError }"
               />
+              <p v-if="emailError" class="mt-1 text-sm text-red-600">{{ emailError }}</p>
             </div>
             
             <div>
@@ -318,6 +321,7 @@ const newUserForm = ref({
   roleId: '' as number | ''
 })
 const showPassword = ref(false)
+const emailError = ref('')
 
 // Computed
 const filteredUsers = computed(() => {
@@ -459,11 +463,29 @@ const getRoleBadgeClass = (roleName: string) => {
 const closeAddUserModal = () => {
   showAddUserModal.value = false
   showPassword.value = false
+  emailError.value = ''
   newUserForm.value = {
     email: '',
     username: '',
     password: '',
     roleId: ''
+  }
+}
+
+const checkEmailExists = () => {
+  emailError.value = ''
+  
+  if (!newUserForm.value.email) return
+  
+  // Verificar si el email ya existe en la lista de usuarios cargados
+  const existingUser = users.value.find(user => 
+    user.email.toLowerCase() === newUserForm.value.email.toLowerCase()
+  )
+  
+  if (existingUser) {
+    emailError.value = 'Este email ya está registrado en el sistema'
+  } else {
+    emailError.value = ''
   }
 }
 
@@ -477,13 +499,40 @@ const addNewUser = async () => {
       return
     }
     
-    // Crear usuario usando la API
-    const result = await usersApi.createUser({
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(newUserForm.value.email)) {
+      toast.error('❌ Por favor ingrese un email válido')
+      return
+    }
+    
+    // Verificar email duplicado
+    checkEmailExists()
+    if (emailError.value) {
+      toast.error(`❌ ${emailError.value}`)
+      return
+    }
+    
+    // Validar longitud de contraseña
+    if (newUserForm.value.password.length < 6) {
+      toast.error('❌ La contraseña debe tener al menos 6 caracteres')
+      return
+    }
+    
+    // Log del payload que se está enviando para debug
+    const requestPayload = {
       email: newUserForm.value.email,
       password: newUserForm.value.password,
       username: newUserForm.value.username || undefined,
       role_id: newUserForm.value.roleId as number
+    }
+    console.log('🔍 Creating user with payload:', { 
+      ...requestPayload, 
+      password: '[HIDDEN]' 
     })
+    
+    // Crear usuario usando la API
+    const result = await usersApi.createUser(requestPayload)
     
     toast.success(`✅ ${result.message}`)
     
@@ -495,7 +544,45 @@ const addNewUser = async () => {
     
   } catch (error: any) {
     console.error('Error creating user:', error)
-    const errorMessage = error.response?.data?.detail || 'Error al crear usuario'
+    
+    // Log detallado del error para debugging
+    console.log('🔍 Full error response:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        data: error.config?.data ? JSON.parse(error.config.data) : null
+      }
+    })
+    
+    // Extraer mensaje de error específico
+    let errorMessage = 'Error al crear usuario'
+    
+    if (error.response?.status === 400) {
+      const detail = error.response.data?.detail
+      if (typeof detail === 'string') {
+        if (detail.includes('email ya está registrado')) {
+          errorMessage = 'El email ya está registrado en el sistema'
+        } else if (detail.includes('contraseña es muy débil') || detail.includes('WeakPasswordError')) {
+          errorMessage = 'La contraseña es muy débil. Use al menos 6 caracteres con mayúsculas, minúsculas y números'
+        } else if (detail.includes('Firebase')) {
+          errorMessage = `Error de Firebase: ${detail}`
+        } else {
+          errorMessage = detail
+        }
+      } else {
+        errorMessage = 'Error de validación. Verifique los datos ingresados'
+      }
+    } else if (error.response?.status === 500) {
+      errorMessage = 'Error interno del servidor. Intente nuevamente'
+    } else if (error.code === 'NETWORK_ERROR') {
+      errorMessage = 'Error de conexión. Verifique su conexión a internet'
+    } else {
+      errorMessage = error.response?.data?.detail || error.message || 'Error al crear usuario'
+    }
+    
     toast.error(`❌ ${errorMessage}`)
   } finally {
     loading.value = false

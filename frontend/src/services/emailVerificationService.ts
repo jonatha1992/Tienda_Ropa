@@ -98,6 +98,67 @@ class EmailService {
   }
 }
 
-// Export singleton instance
+}
+
+// Email Verification Service
+export interface VerifyEmailRequest {
+  token?: string;
+  code?: string;
+  email: string;
+}
+
+export interface VerifyEmailResponse {
+  success: boolean;
+  message: string;
+  verified?: boolean;
+}
+
+export interface ResendVerificationRequest {
+  email: string;
+}
+
+class EmailVerificationService {
+  /**
+   * Verify email using token or code
+   */
+  async verifyEmail(request: VerifyEmailRequest): Promise<VerifyEmailResponse> {
+    try {
+      const response = await api.post('/email-verification/verify', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error verifying email:', error);
+      throw new Error('Error al verificar email');
+    }
+  }
+
+  /**
+   * Resend verification email
+   */
+  async resendVerificationEmail(request: ResendVerificationRequest): Promise<EmailResponse> {
+    try {
+      const response = await api.post('/email-verification/resend-verification', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error resending verification email:', error);
+      throw new Error('Error al reenviar email de verificación');
+    }
+  }
+
+  /**
+   * Get verification status for a user
+   */
+  async getVerificationStatus(userId: number): Promise<any> {
+    try {
+      const response = await api.get(`/email-verification/status/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting verification status:', error);
+      throw new Error('Error obteniendo estado de verificación');
+    }
+  }
+}
+
+// Export singleton instances
 export const emailService = new EmailService();
+export const emailVerificationService = new EmailVerificationService();
 export default emailService;

@@ -279,34 +279,37 @@
               <h3 class="text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
               
               <div class="space-y-3">
-                <label class="flex items-center">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="transfer"
                     class="focus:ring-black h-4 w-4 text-black border-gray-300"
                   >
-                  <span class="ml-3 text-sm">Transferencia bancaria</span>
+                  <BanknotesIcon class="ml-3 h-5 w-5 text-blue-600" />
+                  <span class="ml-2 text-sm">Transferencia bancaria</span>
                 </label>
                 
-                <label class="flex items-center">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="mercadopago"
                     class="focus:ring-black h-4 w-4 text-black border-gray-300"
                   >
-                  <span class="ml-3 text-sm">MercadoPago</span>
+                  <CreditCardIcon class="ml-3 h-5 w-5 text-purple-600" />
+                  <span class="ml-2 text-sm">MercadoPago</span>
                 </label>
                 
-                <label class="flex items-center">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="cash"
                     class="focus:ring-black h-4 w-4 text-black border-gray-300"
                   >
-                  <span class="ml-3 text-sm">Efectivo contra entrega</span>
+                  <CurrencyDollarIcon class="ml-3 h-5 w-5 text-green-600" />
+                  <span class="ml-2 text-sm">Efectivo contra entrega</span>
                 </label>
               </div>
             </div>
@@ -359,6 +362,7 @@ import { useToast } from 'vue-toastification';
 import { ordersApi, customersApi, orderItemsApi } from '../config/api';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 import DeliveryProgress from '../components/DeliveryProgress.vue';
+import { BanknotesIcon, CreditCardIcon, CurrencyDollarIcon } from '@heroicons/vue/24/outline';
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
@@ -396,7 +400,11 @@ const currentStep = computed(() => {
                          checkoutForm.value.postalCode;
   
   // Step 3: Pago (payment method selected and processing)
+  const hasPaymentMethod = checkoutForm.value.paymentMethod;
+  
   if (processing.value) {
+    return 3;
+  } else if (hasDeliveryInfo && hasPaymentMethod) {
     return 3;
   } else if (hasDeliveryInfo) {
     return 2;

@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
+from datetime import datetime
 from .role import RoleRead
 
 class UserBase(SQLModel):
@@ -12,6 +13,10 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     hashed_password: Optional[str] = Field(default=None)
+    
+    # Email verification fields
+    email_verified: bool = Field(default=False)
+    email_verified_at: Optional[datetime] = Field(default=None)
     
     # Relación con UserRole (many-to-many through user_roles)
     user_roles: List["UserRole"] = Relationship(
@@ -36,6 +41,8 @@ class UserLogin(SQLModel):
 class UserRead(UserBase):
     id: int
     name: Optional[str] = None  # Alias para nombre
+    email_verified: bool = False
+    email_verified_at: Optional[datetime] = None
     
     @classmethod
     def from_user(cls, user: "User") -> "UserRead":
@@ -47,7 +54,9 @@ class UserRead(UserBase):
             username=user.username,
             firebase_uid=user.firebase_uid,
             nombre=user.nombre,
-            name=user.nombre  # Alias
+            name=user.nombre,  # Alias
+            email_verified=user.email_verified,
+            email_verified_at=user.email_verified_at
         )
 
 class UserWithRoles(UserRead):

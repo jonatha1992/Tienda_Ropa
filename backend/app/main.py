@@ -11,6 +11,7 @@ from app.routes.master_data import router as master_data_router
 from app.routes.payments import router as payments_router
 from app.routes.admin_payments import router as admin_payments_router
 from app.api.v1.emails import router as emails_router
+from app.api.v1.email_verification import router as email_verification_router
 from app.core.config import settings
 from fastapi import Depends
 from app.db.session import get_session
@@ -24,6 +25,7 @@ from app.models.customer import Customer
 from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.models.inventory import Inventory
+from app.models.email_verification import EmailVerificationToken
 import logging
 
 logger = logging.getLogger(__name__)
@@ -72,6 +74,7 @@ app.include_router(master_data_router, prefix="/api/v1")
 app.include_router(payments_router, prefix="/api/v1")
 app.include_router(admin_payments_router, prefix="/api/v1", tags=["admin"])
 app.include_router(emails_router, prefix="/api/v1/emails", tags=["emails"])
+app.include_router(email_verification_router, prefix="/api/v1/email-verification", tags=["email-verification"])
 
 
 @app.get("/health")

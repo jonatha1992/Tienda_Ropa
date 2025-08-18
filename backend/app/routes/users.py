@@ -77,15 +77,30 @@ def create_new_user(
     current_user= Depends(require_manager_or_admin())
 ):
     """Crear un nuevo usuario en Firebase Auth y en la base de datos local con rol específico."""
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Log del intento de creación (sin password)
+    logger.info(f"Attempting to create user: email={user_data.email}, username={user_data.username}, role_id={user_data.role_id}")
+    
     try:
+        # Verificar si el email ya existe en la base de datos local
+        existing_user = db.exec(select(User).where(User.email == user_data.email)).first()
+        if existing_user:
+            logger.warning(f"User creation failed: Email {user_data.email} already exists in local database")
+            raise HTTPException(status_code=400, detail="El email ya está registrado en la base de datos")
+        
         # 1. Crear usuario en Firebase Auth
+        logger.info(f"Creating Firebase user for email: {user_data.email}")
         firebase_user = firebase_auth.create_user(
             email=user_data.email,
             password=user_data.password,
             display_name=user_data.username
         )
+        logger.info(f"Firebase user created successfully: uid={firebase_user.uid}")
         
         # 2. Crear usuario en la base de datos local
+        logger.info(f"Creating local database user for Firebase UID: {firebase_user.uid}")
         new_user = User(
             firebase_uid=firebase_user.uid,
             email=user_data.email,
@@ -95,23 +110,64 @@ def create_new_user(
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        logger.info(f"Local user created successfully: id={new_user.id}")
         
         # 3. Asignar el rol especificado
+        logger.info(f"Assigning role {user_data.role_id} to user {new_user.id}")
         assign_role_to_user(db, new_user.id, user_data.role_id, current_user.id)
+        logger.info(f"Role assigned successfully to user {new_user.id}")
         
-        return {
+        # 4. Send welcome email
+        try:
+            from app.controllers.user_controller import trigger_welcome_email
+            trigger_welcome_email(
+                user_email=new_user.email,
+                display_name=user_data.username or user_data.email.split('@')[0]
+            )
+            logger.info(f"Welcome email triggered for user {new_user.email}")
+        except Exception as email_error:
+            logger.error(f"Failed to send welcome email to {new_user.email}: {email_error}")
+            # Don't fail user creation if email fails
+        
+        result = {
             "success": True,
             "message": f"Usuario {user_data.email} creado exitosamente",
             "user_id": new_user.id,
             "firebase_uid": firebase_user.uid
         }
+        logger.info(f"User creation completed successfully: {result}")
+        return result
         
-    except firebase_auth.EmailAlreadyExistsError:
+    except firebase_auth.EmailAlreadyExistsError as e:
+        logger.error(f"Firebase email already exists: {user_data.email}")
         raise HTTPException(status_code=400, detail="El email ya está registrado en Firebase")
-    except firebase_auth.WeakPasswordError:
-        raise HTTPException(status_code=400, detail="La contraseña es muy débil")
-    except Exception as e:
+    except firebase_auth.WeakPasswordError as e:
+        logger.error(f"Firebase weak password error for email: {user_data.email}")
+        raise HTTPException(status_code=400, detail="La contraseña es muy débil. Debe tener al menos 6 caracteres")
+    except HTTPException:
+        # Re-raise HTTPExceptions (como el check de email duplicado)
+        raise
+    except IntegrityError as e:
+        logger.error(f"Database integrity error: {str(e)}")
         db.rollback()
+        # Si Firebase user fue creado pero falla la DB, debemos limpiarlo
+        try:
+            if 'firebase_user' in locals():
+                firebase_auth.delete_user(firebase_user.uid)
+                logger.info(f"Cleaned up Firebase user {firebase_user.uid} due to DB error")
+        except Exception as cleanup_error:
+            logger.error(f"Failed to cleanup Firebase user: {cleanup_error}")
+        raise HTTPException(status_code=400, detail="Error de integridad en la base de datos. El usuario podría ya existir")
+    except Exception as e:
+        logger.error(f"Unexpected error creating user {user_data.email}: {str(e)}", exc_info=True)
+        db.rollback()
+        # Si Firebase user fue creado pero falla algo más, debemos limpiarlo
+        try:
+            if 'firebase_user' in locals():
+                firebase_auth.delete_user(firebase_user.uid)
+                logger.info(f"Cleaned up Firebase user {firebase_user.uid} due to unexpected error")
+        except Exception as cleanup_error:
+            logger.error(f"Failed to cleanup Firebase user: {cleanup_error}")
         raise HTTPException(status_code=500, detail=f"Error al crear usuario: {str(e)}")
 
 @router.get("/", response_model=list[UserWithRoles])

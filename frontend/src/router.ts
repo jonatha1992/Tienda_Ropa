@@ -22,6 +22,7 @@ import TermsView from './views/TermsView.vue';
 import PrivacyView from './views/PrivacyView.vue';
 import OrdersView from './views/OrdersView.vue';
 import OrderDetailView from './views/OrderDetailView.vue';
+import VerifyEmailView from './views/VerifyEmailView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
@@ -30,6 +31,7 @@ const routes = [
   { path: '/cart', component: CartView },
   { path: '/checkout', component: CheckoutView, meta: { requiresAuth: true } },
   { path: '/auth', component: AuthView },
+  { path: '/verify-email', component: VerifyEmailView },
   { path: '/contact', component: ContactView },
   { path: '/how-to-shop', component: HowToShopView },
   { path: '/shipping', component: ShippingView },
