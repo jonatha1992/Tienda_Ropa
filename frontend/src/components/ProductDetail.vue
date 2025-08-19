@@ -4,7 +4,7 @@
       <!-- Desktop Layout -->
       <div class="hidden lg:flex lg:gap-x-12 lg:px-8 lg:py-8 lg:max-w-6xl lg:mx-auto">
         <!-- Left Side - Images (más compacto) -->
-        <div class="flex gap-4 flex-shrink-0">
+        <div class="flex flex-shrink-0 gap-4">
           <!-- Main Image (más grande) -->
           <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative">
             <OptimizedImage
@@ -16,15 +16,15 @@
               image-class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Desktop -->
-            <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
-              <div class="bg-white bg-opacity-90 px-6 py-3 rounded-lg">
-                <span class="text-xl font-heading font-semibold text-gray-800">Sin Stock</span>
+            <div v-if="isOutOfStock" class="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40">
+              <div class="px-6 py-3 bg-white rounded-lg bg-opacity-90">
+                <span class="text-xl font-semibold text-gray-800 font-heading">Sin Stock</span>
               </div>
             </div>
           </div>
           
           <!-- Thumbnail Images (más grandes) -->
-          <div class="flex flex-col gap-2 w-20">
+          <div class="flex flex-col w-20 gap-2">
             <div 
               v-for="(image, index) in product.images" 
               :key="index"
@@ -47,16 +47,16 @@
         <!-- Right Side - Product Info (más cerca) -->
         <div class="flex-1 pl-6">
           <!-- Product Title -->
-          <h1 class="mb-2 text-2xl font-heading font-light text-gray-900">{{ product.name }}</h1>
+          <h1 class="mb-2 text-2xl font-light text-gray-900 font-heading">{{ product.name }}</h1>
           
           <!-- Price -->
           <div class="mb-6">
-            <span class="text-2xl font-body font-light text-gray-900">${{ product.price.toLocaleString() }}</span>
+            <span class="text-2xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
           </div>
 
           <!-- Color Selection -->
           <div v-if="availableColors.length > 0" class="mb-6">
-            <h3 class="mb-3 text-sm font-heading font-medium text-gray-900">Color</h3>
+            <h3 class="mb-3 text-sm font-medium text-gray-900 font-heading">Color</h3>
             <div class="flex space-x-3">
               <button
                 v-for="color in availableColors"
@@ -72,13 +72,13 @@
 
           <!-- Size Selection -->
           <div v-if="availableSizes.length > 0" class="mb-6">
-            <h3 class="mb-3 text-sm font-heading font-medium text-gray-900">Talle</h3>
+            <h3 class="mb-3 text-sm font-medium text-gray-900 font-heading">Talle</h3>
             <div class="grid grid-cols-4 gap-3">
               <button
                 v-for="size in availableSizes"
                 :key="size.id"
                 @click="selectedSize = size"
-                class="px-4 py-2 text-sm font-body font-medium transition-colors border rounded-md"
+                class="px-4 py-2 text-sm font-medium transition-colors border rounded-md font-body"
                 :class="selectedSize?.id === size.id 
                   ? 'border-black bg-black text-white' 
                   : 'border-gray-300 bg-white text-gray-900 hover:border-gray-400'"
@@ -90,7 +90,7 @@
 
           <!-- Stock Info -->
           <div v-if="selectedVariant" class="mb-6">
-            <p class="text-sm font-body text-gray-600">
+            <p class="text-sm text-gray-600 font-body">
               Stock disponible: {{ selectedVariant.stock }}
             </p>
           </div>
@@ -99,12 +99,12 @@
           <div class="mb-6">
             <!-- Quantity Selector -->
             <div class="mb-4">
-              <h3 class="mb-2 text-sm font-heading font-medium text-gray-900">Cantidad</h3>
+              <h3 class="mb-2 text-sm font-medium text-gray-900 font-heading">Cantidad</h3>
               <div class="flex items-center w-32 border border-gray-300 rounded-md">
                 <button 
                   @click="decrementQuantity"
                   :disabled="quantity <= 1"
-                  class="px-3 py-2 font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  class="px-3 py-2 text-gray-600 font-body hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                 >
                   -
                 </button>
@@ -113,12 +113,12 @@
                   type="number"
                   min="1"
                   :max="maxQuantity ?? undefined"
-                  class="flex-1 px-2 py-2 font-body text-center border-none focus:ring-0 focus:outline-none"
+                  class="flex-1 px-2 py-2 text-center border-none font-body focus:ring-0 focus:outline-none"
                 />
                 <button 
                   @click="incrementQuantity"
                   :disabled="quantity >= (maxQuantity ?? 1)"
-                  class="px-3 py-2 font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  class="px-3 py-2 text-gray-600 font-body hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                 >
                   +
                 </button>
@@ -129,7 +129,7 @@
             <button 
               @click="addToCart"
               :disabled="!canAddToCart"
-              class="w-full px-6 py-3 text-sm font-body font-medium transition-colors rounded-md"
+              class="w-full px-6 py-3 text-sm font-medium transition-colors rounded-md font-body"
               :class="canAddToCart 
                 ? 'bg-black text-white hover:bg-gray-800' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
@@ -140,23 +140,23 @@
 
           <!-- Product Description -->
           <div class="space-y-4">
-            <h3 class="text-sm font-heading font-medium text-gray-900">Descripción</h3>
-            <div class="text-sm font-body prose text-gray-600" v-html="product.description"></div>
+            <h3 class="text-sm font-medium text-gray-900 font-heading">Descripción</h3>
+            <div class="text-sm prose text-gray-600 font-body" v-html="product.description"></div>
           </div>
 
           <!-- Product Details -->
           <div class="mt-8 space-y-2">
             <div class="flex">
-              <span class="w-24 text-sm font-body font-medium text-gray-900">Categoría:</span>
-              <span class="text-sm font-body text-gray-600">{{ product.categoria }}</span>
+              <span class="w-24 text-sm font-medium text-gray-900 font-body">Categoría:</span>
+              <span class="text-sm text-gray-600 font-body">{{ product.categoria }}</span>
             </div>
             <div class="flex">
-              <span class="w-24 text-sm font-body font-medium text-gray-900">Género:</span>
-              <span class="text-sm font-body text-gray-600">{{ product.genero }}</span>
+              <span class="w-24 text-sm font-medium text-gray-900 font-body">Género:</span>
+              <span class="text-sm text-gray-600 font-body">{{ product.genero }}</span>
             </div>
             <div class="flex">
-              <span class="w-24 text-sm font-body font-medium text-gray-900">Estado:</span>
-              <span class="text-sm font-body text-gray-600">{{ product.estado }}</span>
+              <span class="w-24 text-sm font-medium text-gray-900 font-body">Estado:</span>
+              <span class="text-sm text-gray-600 font-body">{{ product.estado }}</span>
             </div>
           </div>
         </div>
@@ -166,19 +166,17 @@
       <div class="lg:hidden">
         <!-- Mobile Images -->
         <div class="px-4 py-6">
-          <div class="mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square relative">
-            <OptimizedImage
-              :src="mainImage"
-              :alt="product.name"
+          <div class="relative mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square">
+            <img 
+              :src="mainImage" 
+              :alt="product.name" 
               loading="eager"
-              :show-spinner="true"
-              aspect-ratio="square"
-              image-class="object-cover object-center w-full h-full"
+              class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Mobile -->
-            <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
-              <div class="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
-                <span class="text-lg font-heading font-semibold text-gray-800">Sin Stock</span>
+            <div v-if="isOutOfStock" class="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40">
+              <div class="px-4 py-2 bg-white rounded-lg bg-opacity-90">
+                <span class="text-lg font-semibold text-gray-800 font-heading">Sin Stock</span>
               </div>
             </div>
           </div>
@@ -192,13 +190,11 @@
               class="flex-shrink-0 w-16 h-16 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent'"
             >
-              <OptimizedImage
-                :src="image.image_url"
-                :alt="`${product.name} - imagen ${index + 1}`"
-                loading="lazy"
-                aspect-ratio="square"
-                :show-spinner="true"
-                image-class="object-cover object-center w-full h-full"
+              <img 
+                :src="image.image_url" 
+                :alt="`${product.name} - imagen ${index + 1}`" 
+                loading="eager"
+                class="object-cover object-center w-full h-full"
               />
             </div>
           </div>
@@ -206,14 +202,14 @@
 
         <!-- Mobile Product Info -->
         <div class="px-4 pb-8">
-          <h1 class="mb-2 text-xl font-heading font-light text-gray-900">{{ product.name }}</h1>
+          <h1 class="mb-2 text-xl font-light text-gray-900 font-heading">{{ product.name }}</h1>
           <div class="mb-4">
-            <span class="text-xl font-body font-light text-gray-900">${{ product.price.toLocaleString() }}</span>
+            <span class="text-xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
           </div>
 
           <!-- Mobile Color Selection -->
           <div v-if="availableColors.length > 0" class="mb-4">
-            <h3 class="mb-2 text-sm font-heading font-medium text-gray-900">Color</h3>
+            <h3 class="mb-2 text-sm font-medium text-gray-900 font-heading">Color</h3>
             <div class="flex space-x-2">
               <button
                 v-for="color in availableColors"
@@ -228,13 +224,13 @@
 
           <!-- Mobile Size Selection -->
           <div v-if="availableSizes.length > 0" class="mb-4">
-            <h3 class="mb-2 text-sm font-heading font-medium text-gray-900">Talle</h3>
+            <h3 class="mb-2 text-sm font-medium text-gray-900 font-heading">Talle</h3>
             <div class="grid grid-cols-4 gap-2">
               <button
                 v-for="size in availableSizes"
                 :key="size.id"
                 @click="selectedSize = size"
-                class="px-2 py-1 text-xs font-body font-medium transition-colors border rounded"
+                class="px-2 py-1 text-xs font-medium transition-colors border rounded font-body"
                 :class="selectedSize?.id === size.id 
                   ? 'border-black bg-black text-white' 
                   : 'border-gray-300 bg-white text-gray-900'"
@@ -248,12 +244,12 @@
           <div class="mb-4">
             <!-- Mobile Quantity Selector -->
             <div class="mb-3">
-              <h3 class="mb-2 text-sm font-heading font-medium text-gray-900">Cantidad</h3>
+              <h3 class="mb-2 text-sm font-medium text-gray-900 font-heading">Cantidad</h3>
               <div class="flex items-center border border-gray-300 rounded-md w-28">
                 <button 
                   @click="decrementQuantity"
                   :disabled="quantity <= 1"
-                  class="px-2 py-1 text-sm font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  class="px-2 py-1 text-sm text-gray-600 font-body hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                 >
                   -
                 </button>
@@ -262,12 +258,12 @@
                   type="number"
                   min="1"
                   :max="maxQuantity ?? undefined"
-                  class="flex-1 px-1 py-1 text-sm font-body text-center border-none focus:ring-0 focus:outline-none"
+                  class="flex-1 px-1 py-1 text-sm text-center border-none font-body focus:ring-0 focus:outline-none"
                 />
                 <button 
                   @click="incrementQuantity"
                   :disabled="quantity >= (maxQuantity ?? 1)"
-                  class="px-2 py-1 text-sm font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  class="px-2 py-1 text-sm text-gray-600 font-body hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                 >
                   +
                 </button>
@@ -278,7 +274,7 @@
             <button 
               @click="addToCart"
               :disabled="!canAddToCart"
-              class="w-full px-6 py-3 text-sm font-body font-medium transition-colors rounded-md"
+              class="w-full px-6 py-3 text-sm font-medium transition-colors rounded-md font-body"
               :class="canAddToCart 
                 ? 'bg-black text-white' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
@@ -289,8 +285,8 @@
 
           <!-- Mobile Description -->
           <div class="space-y-3">
-            <h3 class="text-sm font-heading font-medium text-gray-900">Descripción</h3>
-            <div class="text-sm font-body text-gray-600" v-html="product.description"></div>
+            <h3 class="text-sm font-medium text-gray-900 font-heading">Descripción</h3>
+            <div class="text-sm text-gray-600 font-body" v-html="product.description"></div>
           </div>
         </div>
       </div>
@@ -298,7 +294,7 @@
       <!-- Productos Similares Section -->
       <div v-if="similarProducts.length > 0" class="px-8 py-12 bg-gray-50">
         <div class="max-w-6xl mx-auto">
-          <h2 class="mb-8 text-2xl font-heading font-light text-gray-900 text-center">Productos Similares</h2>
+          <h2 class="mb-8 text-2xl font-light text-center text-gray-900 font-heading">Productos Similares</h2>
           
           <!-- Desktop Grid -->
           <div class="hidden md:grid md:grid-cols-4 md:gap-6">
@@ -308,26 +304,26 @@
               class="group"
             >
               <router-link :to="`/product/${similarProduct.id}`" class="block">
-                <div class="relative overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="relative overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
                   <!-- Image -->
-                  <div class="aspect-square bg-gray-100 overflow-hidden">
+                  <div class="overflow-hidden bg-gray-100 aspect-square">
                     <img 
                       :src="getSimilarProductImage(similarProduct)" 
                       :alt="similarProduct.name"
                       loading="eager"
-                      class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                      class="object-cover object-center w-full h-full transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                   
                   <!-- Product Info -->
                   <div class="p-4">
-                    <h3 class="text-sm font-heading font-medium text-gray-900 group-hover:text-gray-700 transition-colors">
+                    <h3 class="text-sm font-medium text-gray-900 transition-colors font-heading group-hover:text-gray-700">
                       {{ similarProduct.name }}
                     </h3>
-                    <p class="mt-1 text-sm font-body font-medium text-gray-900">
+                    <p class="mt-1 text-sm font-medium text-gray-900 font-body">
                       ${{ similarProduct.price.toLocaleString() }}
                     </p>
-                    <p v-if="similarProduct.categoria" class="mt-1 text-xs font-body text-gray-500 uppercase tracking-wide">
+                    <p v-if="similarProduct.categoria" class="mt-1 text-xs tracking-wide text-gray-500 uppercase font-body">
                       {{ similarProduct.categoria }}
                     </p>
                   </div>
@@ -338,29 +334,29 @@
 
           <!-- Mobile Scroll -->
           <div class="md:hidden">
-            <div class="flex space-x-4 overflow-x-auto pb-4">
+            <div class="flex pb-4 space-x-4 overflow-x-auto">
               <div 
                 v-for="similarProduct in similarProducts.slice(0, 6)" 
                 :key="similarProduct.id"
                 class="flex-shrink-0 w-48 group"
               >
                 <router-link :to="`/product/${similarProduct.id}`" class="block">
-                  <div class="relative overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div class="relative overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
                     <!-- Image -->
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="overflow-hidden bg-gray-100 aspect-square">
                       <img 
                         :src="getSimilarProductImage(similarProduct)" 
                         :alt="similarProduct.name"
-                        class="w-full h-full object-cover object-center"
+                        class="object-cover object-center w-full h-full"
                       />
                     </div>
                     
                     <!-- Product Info -->
                     <div class="p-3">
-                      <h3 class="text-sm font-heading font-medium text-gray-900 truncate">
+                      <h3 class="text-sm font-medium text-gray-900 truncate font-heading">
                         {{ similarProduct.name }}
                       </h3>
-                      <p class="mt-1 text-sm font-body font-medium text-gray-900">
+                      <p class="mt-1 text-sm font-medium text-gray-900 font-body">
                         ${{ similarProduct.price.toLocaleString() }}
                       </p>
                     </div>
@@ -618,8 +614,6 @@ const addToCart = () => {
     // Reset quantity to 1 after adding to cart
     quantity.value = 1;
     
-    // Show success message
-    toast.success(`¡${product.value.name} agregado al carrito!`);
     
   } catch (error) {
     console.error('Error agregando producto al carrito:', error);
