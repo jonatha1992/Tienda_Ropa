@@ -16,6 +16,7 @@ import CashConfirmationView from './views/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
 import { authCache } from './utils/cache';
+import type { Role } from './types';
 import { useLoading } from './composables/useLoading';
 import { globalProgressBar } from './composables/useProgressBar';
 import ContactView from './views/ContactView.vue';
@@ -92,10 +93,7 @@ router.beforeEach(async (to, from, next) => {
   // Esperar a que se inicialice la autenticación si aún no se ha hecho
   if (authStore.loading) {
     // Verificar si ya hay datos en caché para acelerar
-    const cachedRoles = authCache.get('userRoles')
-    if (cachedRoles) {
-      authStore.userRoles.value = cachedRoles
-    }
+    await authStore.fetchUserRoles(false)
     
     await new Promise(resolve => {
       const unsubscribe = auth.onAuthStateChanged((user: any) => {
