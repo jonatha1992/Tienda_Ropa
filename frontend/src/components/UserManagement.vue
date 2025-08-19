@@ -39,11 +39,11 @@
         </h3>
       </div>
       
-      <div v-if="loading && users.length === 0" class="font-body p-6 text-center text-gray-500">
+      <div v-if="loading && users.length === 0" class="font-body p-6 text-center text-body-text">
         Cargando usuarios...
       </div>
       
-      <div v-else-if="filteredUsers.length === 0" class="font-body p-6 text-center text-gray-500">
+      <div v-else-if="filteredUsers.length === 0" class="font-body p-6 text-center text-body-text">
         {{ searchQuery ? 'No se encontraron usuarios con esa búsqueda' : 'No hay usuarios registrados' }}
       </div>
       
@@ -63,14 +63,14 @@
                 <div class="flex items-center">
                   <div class="flex-shrink-0 w-10 h-10">
                     <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
-                      <span class="font-body text-sm font-medium text-gray-700">
+                      <span class="font-body text-sm font-medium text-body-text">
                         {{ getUserInitials(user.email) }}
                       </span>
                     </div>
                   </div>
                   <div class="ml-4">
-                    <div class="font-body text-sm font-medium text-gray-900">{{ user.email }}</div>
-                    <div class="font-body text-sm text-gray-500">ID: {{ user.id }}</div>
+                    <div class="font-body text-sm font-medium text-body-text">{{ user.email }}</div>
+                    <div class="font-body text-sm text-body-text">ID: {{ user.id }}</div>
                   </div>
                 </div>
               </td>
@@ -84,7 +84,7 @@
                   >
                     {{ role.name.toUpperCase() }}
                   </span>
-                  <span v-if="!user.roles || user.roles.length === 0" class="font-body text-xs text-gray-500">
+                  <span v-if="!user.roles || user.roles.length === 0" class="font-body text-xs text-body-text">
                     Sin roles asignados
                   </span>
                 </div>
@@ -150,7 +150,7 @@
                   ×
                 </button>
               </span>
-              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="font-body text-sm text-gray-500">
+              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="font-body text-sm text-body-text">
                 Sin roles asignados
               </span>
             </div>
@@ -205,7 +205,7 @@
           <!-- User Form -->
           <form @submit.prevent="addNewUser" class="space-y-4">
             <div>
-              <label class="font-body block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label class="font-body block text-sm font-medium text-body-text mb-1">Email</label>
               <input
                 v-model="newUserForm.email"
                 @blur="checkEmailExists"
@@ -219,7 +219,7 @@
             </div>
             
             <div>
-              <label class="font-body block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario (opcional)</label>
+              <label class="font-body block text-sm font-medium text-body-text mb-1">Nombre de Usuario (opcional)</label>
               <input
                 v-model="newUserForm.username"
                 type="text"
@@ -229,7 +229,7 @@
             </div>
             
             <div>
-              <label class="font-body block text-sm font-medium text-gray-700 mb-1">Contraseña Temporal</label>
+              <label class="font-body block text-sm font-medium text-body-text mb-1">Contraseña Temporal</label>
               <div class="relative">
                 <input
                   v-model="newUserForm.password"

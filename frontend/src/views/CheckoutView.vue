@@ -18,7 +18,7 @@
                 <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span class="ml-4 text-sm font-body font-medium text-gray-500">Checkout</span>
+                <span class="ml-4 text-sm font-body font-medium text-body-text">Checkout</span>
               </div>
             </li>
           </ol>
@@ -57,25 +57,25 @@
                       <h3 class="text-sm font-heading font-medium text-gray-900">{{ item.product.name }}</h3>
                       
                       <!-- Variant Info -->
-                      <div v-if="item.variant" class="mt-1 text-sm font-body text-gray-500">
+                      <div v-if="item.variant" class="mt-1 text-sm font-body text-body-text">
                         {{ item.variant.color.name }} • Talle {{ item.variant.size.name }}
                       </div>
                       
                       <!-- Unique Product Info -->
-                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-gray-500">
+                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-body-text">
                         <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
                         <span v-if="item.selectedColor && item.selectedSize" class="font-body"> • </span>
                         <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
                       </div>
                       
-                      <p class="font-body mt-1 text-sm text-gray-500">Cantidad: {{ item.quantity }}</p>
+                      <p class="font-body mt-1 text-sm text-body-text">Cantidad: {{ item.quantity }}</p>
                     </div>
                     
                     <div class="text-right">
-                      <p class="font-body text-sm font-medium text-gray-900">
+                      <p class="font-body text-sm font-medium text-body-text">
                         ${{ cartStore.getItemTotal(item).toLocaleString() }}
                       </p>
-                      <p v-if="item.product.has_discount" class="font-body text-xs text-gray-500 line-through">
+                      <p v-if="item.product.has_discount" class="font-body text-xs text-body-text line-through">
                         ${{ (item.product.price * item.quantity).toLocaleString() }}
                       </p>
                     </div>
@@ -87,8 +87,8 @@
             <!-- Totals -->
             <div class="border-t border-gray-200 pt-4 space-y-2">
               <div class="flex justify-between text-sm">
-                <span class="font-body text-gray-600">Subtotal</span>
-                <span class="font-body text-gray-900">
+                <span class="font-body text-body-text">Subtotal</span>
+                <span class="font-body text-body-text">
                   ${{ (cartStore.totalSavings > 0 ? cartStore.totalOriginalPrice : cartStore.totalPrice).toLocaleString() }}
                 </span>
               </div>
@@ -99,14 +99,14 @@
               </div>
               
               <div class="flex justify-between text-sm">
-                <span class="font-body text-gray-600">Envío</span>
-                <span class="font-body text-gray-900">Gratis</span>
+                <span class="font-body text-body-text">Envío</span>
+                <span class="font-body text-body-text">Gratis</span>
               </div>
               
               <div class="border-t border-gray-200 pt-2">
                 <div class="flex justify-between">
-                  <span class="font-body text-base font-medium text-gray-900">Total</span>
-                  <span class="font-body text-base font-medium text-gray-900">
+                  <span class="font-body text-base font-medium text-body-text">Total</span>
+                  <span class="font-body text-base font-medium text-body-text">
                     ${{ cartStore.totalPrice.toLocaleString() }}
                   </span>
                 </div>
@@ -124,7 +124,7 @@
               
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label for="firstName" class="font-body block text-sm font-medium text-gray-700">Nombre</label>
+                  <label for="firstName" class="font-body block text-sm font-medium text-body-text">Nombre</label>
                   <input
                     v-model="checkoutForm.firstName"
                     type="text"
@@ -135,7 +135,7 @@
                 </div>
                 
                 <div>
-                  <label for="lastName" class="font-body block text-sm font-medium text-gray-700">Apellido</label>
+                  <label for="lastName" class="font-body block text-sm font-medium text-body-text">Apellido</label>
                   <input
                     v-model="checkoutForm.lastName"
                     type="text"
@@ -147,7 +147,7 @@
               </div>
               
               <div class="mt-4">
-                <label for="email" class="font-body block text-sm font-medium text-gray-700">Email</label>
+                <label for="email" class="font-body block text-sm font-medium text-body-text">Email</label>
                 <input
                   v-model="checkoutForm.email"
                   type="email"
@@ -158,7 +158,7 @@
               </div>
               
               <div class="mt-4">
-                <label for="phone" class="font-body block text-sm font-medium text-gray-700">Teléfono</label>
+                <label for="phone" class="font-body block text-sm font-medium text-body-text">Teléfono</label>
                 <input
                   v-model="checkoutForm.phone"
                   type="tel"
@@ -175,7 +175,7 @@
               
               <div class="space-y-4">
                 <div>
-                  <label for="address" class="font-body block text-sm font-medium text-gray-700">Dirección</label>
+                  <label for="address" class="font-body block text-sm font-medium text-body-text">Dirección</label>
                   <input
                     v-model="checkoutForm.address"
                     type="text"
@@ -187,7 +187,7 @@
                 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label for="city" class="font-body block text-sm font-medium text-gray-700">Ciudad</label>
+                    <label for="city" class="font-body block text-sm font-medium text-body-text">Ciudad</label>
                     <input
                       v-model="checkoutForm.city"
                       type="text"
@@ -198,7 +198,7 @@
                   </div>
                   
                   <div>
-                    <label for="postalCode" class="font-body block text-sm font-medium text-gray-700">Código Postal</label>
+                    <label for="postalCode" class="font-body block text-sm font-medium text-body-text">Código Postal</label>
                     <input
                       v-model="checkoutForm.postalCode"
                       type="text"
@@ -211,7 +211,7 @@
                 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label for="province" class="font-body block text-sm font-medium text-gray-700">Provincia</label>
+                    <label for="province" class="font-body block text-sm font-medium text-body-text">Provincia</label>
                     <input
                       v-model="checkoutForm.province"
                       type="text"
@@ -222,7 +222,7 @@
                   </div>
                   
                   <div>
-                    <label for="country" class="font-body block text-sm font-medium text-gray-700">País</label>
+                    <label for="country" class="font-body block text-sm font-medium text-body-text">País</label>
                     <select
                       v-model="checkoutForm.country"
                       id="country"
@@ -237,7 +237,7 @@
                 </div>
                 
                 <div>
-                  <label for="addressReference" class="font-body block text-sm font-medium text-gray-700">Referencias de dirección (opcional)</label>
+                  <label for="addressReference" class="font-body block text-sm font-medium text-body-text">Referencias de dirección (opcional)</label>
                   <input
                     v-model="checkoutForm.addressReference"
                     type="text"
@@ -248,7 +248,7 @@
                 </div>
                 
                 <div>
-                  <label for="deliveryNotes" class="font-body block text-sm font-medium text-gray-700">Notas para la entrega (opcional)</label>
+                  <label for="deliveryNotes" class="font-body block text-sm font-medium text-body-text">Notas para la entrega (opcional)</label>
                   <textarea
                     v-model="checkoutForm.deliveryNotes"
                     id="deliveryNotes"
@@ -259,7 +259,7 @@
                 </div>
                 
                 <div>
-                  <label for="preferredDeliveryTime" class="font-body block text-sm font-medium text-gray-700">Horario preferido de entrega</label>
+                  <label for="preferredDeliveryTime" class="font-body block text-sm font-medium text-body-text">Horario preferido de entrega</label>
                   <select
                     v-model="checkoutForm.preferredDeliveryTime"
                     id="preferredDeliveryTime"
@@ -325,7 +325,7 @@
                 <span class="font-body" v-else>Confirmar pedido</span>
               </button>
               
-              <p class="font-body mt-3 text-xs text-gray-500 text-center">
+              <p class="font-body mt-3 text-xs text-body-text text-center">
                 Al confirmar tu pedido, aceptas nuestros términos y condiciones
               </p>
             </div>
@@ -341,7 +341,7 @@
           </svg>
         </div>
         <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
-        <p class="font-body text-gray-600 mb-6">Agrega algunos productos antes de proceder al checkout</p>
+        <p class="font-body text-body-text mb-6">Agrega algunos productos antes de proceder al checkout</p>
         <router-link
           to="/shop"
           class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"

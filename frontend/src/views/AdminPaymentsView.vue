@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="mb-8">
         <h1 class="font-heading text-3xl font-light text-gray-900">Gestión de Pagos</h1>
-        <p class="font-body mt-2 text-sm text-gray-600">
+        <p class="font-body mt-2 text-sm text-body-text">
           Administra verificaciones de transferencias, entregas y estados de pago
         </p>
       </div>
@@ -45,8 +45,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Pendientes de verificación</dt>
-                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.pending_verification }}</dd>
+                  <dt class="font-body text-sm font-medium text-body-text truncate">Pendientes de verificación</dt>
+                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.pending_verification }}</dd>
                 </dl>
               </div>
             </div>
@@ -63,8 +63,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Entregas pendientes</dt>
-                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.pending_delivery }}</dd>
+                  <dt class="font-body text-sm font-medium text-body-text truncate">Entregas pendientes</dt>
+                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.pending_delivery }}</dd>
                 </dl>
               </div>
             </div>
@@ -81,8 +81,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Entregas programadas</dt>
-                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.scheduled_delivery }}</dd>
+                  <dt class="font-body text-sm font-medium text-body-text truncate">Entregas programadas</dt>
+                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.scheduled_delivery }}</dd>
                 </dl>
               </div>
             </div>
@@ -99,8 +99,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Monto pendiente</dt>
-                  <dd class="font-body text-lg font-medium text-gray-900">${{ stats.total_pending_amount.toLocaleString() }}</dd>
+                  <dt class="font-body text-sm font-medium text-body-text truncate">Monto pendiente</dt>
+                  <dd class="font-body text-lg font-medium text-body-text">${{ stats.total_pending_amount.toLocaleString() }}</dd>
                 </dl>
               </div>
             </div>
@@ -113,7 +113,7 @@
         <h2 class="font-heading text-lg font-medium text-gray-900 mb-4">Filtros</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label for="paymentMethod" class="font-body block text-sm font-medium text-gray-700">Método de pago</label>
+            <label for="paymentMethod" class="font-body block text-sm font-medium text-body-text">Método de pago</label>
             <select
               v-model="filters.payment_method"
               id="paymentMethod"
@@ -128,7 +128,7 @@
           </div>
 
           <div>
-            <label for="paymentStatus" class="font-body block text-sm font-medium text-gray-700">Estado del pago</label>
+            <label for="paymentStatus" class="font-body block text-sm font-medium text-body-text">Estado del pago</label>
             <select
               v-model="filters.payment_status"
               id="paymentStatus"
@@ -144,7 +144,7 @@
           </div>
 
           <div>
-            <label for="verificationRequired" class="font-body block text-sm font-medium text-gray-700">Verificación</label>
+            <label for="verificationRequired" class="font-body block text-sm font-medium text-body-text">Verificación</label>
             <select
               v-model="filters.verification_required"
               id="verificationRequired"
@@ -158,7 +158,7 @@
           </div>
 
           <div>
-            <label for="deliveryStatus" class="font-body block text-sm font-medium text-gray-700">Estado de entrega</label>
+            <label for="deliveryStatus" class="font-body block text-sm font-medium text-body-text">Estado de entrega</label>
             <select
               v-model="filters.delivery_status"
               id="deliveryStatus"
@@ -198,7 +198,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <h3 class="font-heading mt-2 text-sm font-medium text-gray-900">No hay órdenes</h3>
-          <p class="font-body mt-1 text-sm text-gray-500">No se encontraron órdenes con los filtros seleccionados.</p>
+          <p class="font-body mt-1 text-sm text-body-text">No se encontraron órdenes con los filtros seleccionados.</p>
         </div>
 
         <div v-else class="overflow-x-auto">
@@ -217,18 +217,18 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm font-medium text-gray-900">#{{ order.id }}</div>
+                  <div class="font-body text-sm font-medium text-body-text">#{{ order.id }}</div>
                   <div v-if="order.verification_required" class="font-body text-xs text-orange-600">
                     Requiere verificación
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm text-gray-900">{{ order.customer?.name || 'N/A' }}</div>
-                  <div class="font-body text-sm text-gray-500">{{ order.customer?.email || 'N/A' }}</div>
+                  <div class="font-body text-sm text-body-text">{{ order.customer?.name || 'N/A' }}</div>
+                  <div class="font-body text-sm text-body-text">{{ order.customer?.email || 'N/A' }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm font-medium text-gray-900">${{ order.total?.toLocaleString() }}</div>
-                  <div v-if="order.delivery_cost" class="font-body text-xs text-gray-500">
+                  <div class="font-body text-sm font-medium text-body-text">${{ order.total?.toLocaleString() }}</div>
+                  <div v-if="order.delivery_cost" class="font-body text-xs text-body-text">
                     Envío: ${{ order.delivery_cost.toLocaleString() }}
                   </div>
                 </td>
@@ -301,13 +301,13 @@
         <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Verificar Transferencia</h3>
         <div class="space-y-4">
           <div>
-            <p class="font-body text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="font-body text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="font-body text-sm text-gray-600 mb-4">Cliente: {{ selectedOrder?.customer?.name }}</p>
+            <p class="font-body text-sm text-body-text mb-2">Orden #{{ selectedOrder?.id }}</p>
+            <p class="font-body text-sm text-body-text mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="font-body text-sm text-body-text mb-4">Cliente: {{ selectedOrder?.customer?.name }}</p>
           </div>
           
           <div>
-            <label for="adminNotes" class="font-body block text-sm font-medium text-gray-700">Notas de verificación</label>
+            <label for="adminNotes" class="font-body block text-sm font-medium text-body-text">Notas de verificación</label>
             <textarea
               v-model="transferForm.admin_notes"
               id="adminNotes"
@@ -350,13 +350,13 @@
         <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Programar Entrega</h3>
         <div class="space-y-4">
           <div>
-            <p class="font-body text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="font-body text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="font-body text-sm text-gray-600 mb-4">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
+            <p class="font-body text-sm text-body-text mb-2">Orden #{{ selectedOrder?.id }}</p>
+            <p class="font-body text-sm text-body-text mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="font-body text-sm text-body-text mb-4">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
           </div>
           
           <div>
-            <label for="scheduledDate" class="font-body block text-sm font-medium text-gray-700">Fecha de entrega</label>
+            <label for="scheduledDate" class="font-body block text-sm font-medium text-body-text">Fecha de entrega</label>
             <input
               v-model="deliveryForm.scheduled_date"
               type="date"
@@ -368,7 +368,7 @@
           </div>
           
           <div>
-            <label for="timeSlot" class="font-body block text-sm font-medium text-gray-700">Horario</label>
+            <label for="timeSlot" class="font-body block text-sm font-medium text-body-text">Horario</label>
             <select
               v-model="deliveryForm.time_slot"
               id="timeSlot"
@@ -382,7 +382,7 @@
           </div>
           
           <div>
-            <label for="deliveryNotes" class="font-body block text-sm font-medium text-gray-700">Notas para el delivery</label>
+            <label for="deliveryNotes" class="font-body block text-sm font-medium text-body-text">Notas para el delivery</label>
             <textarea
               v-model="deliveryForm.notes"
               id="deliveryNotes"
@@ -429,11 +429,11 @@
           <!-- Address Info -->
           <div v-if="selectedOrder.customer" class="border-t pt-4">
             <h4 class="font-heading font-medium mb-2">Dirección de entrega</h4>
-            <p class="font-body text-sm text-gray-600">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
-            <div v-if="selectedOrder.customer.address_reference" class="font-body text-sm text-gray-600 mt-1">
+            <p class="font-body text-sm text-body-text">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
+            <div v-if="selectedOrder.customer.address_reference" class="font-body text-sm text-body-text mt-1">
               <strong>Ref:</strong> {{ selectedOrder.customer.address_reference }}
             </div>
-            <div v-if="selectedOrder.customer.delivery_notes" class="font-body text-sm text-gray-600 mt-1">
+            <div v-if="selectedOrder.customer.delivery_notes" class="font-body text-sm text-body-text mt-1">
               <strong>Notas:</strong> {{ selectedOrder.customer.delivery_notes }}
             </div>
           </div>
@@ -441,7 +441,7 @@
           <!-- Admin Notes -->
           <div v-if="selectedOrder.admin_notes" class="border-t pt-4">
             <h4 class="font-heading font-medium mb-2">Notas del administrador</h4>
-            <p class="font-body text-sm text-gray-600">{{ selectedOrder.admin_notes }}</p>
+            <p class="font-body text-sm text-body-text">{{ selectedOrder.admin_notes }}</p>
           </div>
         </div>
         

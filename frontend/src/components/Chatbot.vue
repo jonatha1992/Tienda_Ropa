@@ -33,7 +33,7 @@
         <img src="/imagen-portada.svg" alt="M-VINTAGE" class="w-8 h-8" />
         <div>
           <h3 class="font-heading font-medium">M-VINTAGE Assistant</h3>
-          <p class="font-body text-xs text-gray-300">¿En qué puedo ayudarte?</p>
+          <p class="font-body text-xs text-body-text">¿En qué puedo ayudarte?</p>
         </div>
       </div>
 
@@ -105,7 +105,7 @@
 
       <!-- Sugerencias rápidas -->
       <div v-if="showSuggestions" class="p-3 bg-gray-100 border-t border-gray-200">
-        <p class="font-body mb-2 text-xs text-gray-600">Preguntas frecuentes:</p>
+        <p class="font-body mb-2 text-xs text-body-text">Preguntas frecuentes:</p>
         <div class="flex flex-wrap gap-1">
           <button
             v-for="suggestion in quickSuggestions"

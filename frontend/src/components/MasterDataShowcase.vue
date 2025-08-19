@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-8">
         <h2 class="font-heading text-3xl font-extrabold text-gray-900">Explora Nuestra Colección</h2>
-        <p class="font-body mt-4 text-lg text-gray-600">Encuentra exactamente lo que buscas</p>
+        <p class="font-body mt-4 text-lg text-body-text">Encuentra exactamente lo que buscas</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -21,7 +21,7 @@
               <div class="h-4 bg-gray-200 rounded mb-2"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="categories.length === 0" class="font-body text-gray-500 text-sm">
+            <div v-else-if="categories.length === 0" class="font-body text-body-text text-sm">
               No hay categorías disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
@@ -51,14 +51,14 @@
               <div class="h-4 bg-gray-200 rounded mb-2"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="colors.length === 0" class="font-body text-gray-500 text-sm">
+            <div v-else-if="colors.length === 0" class="font-body text-body-text text-sm">
               No hay colores disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
               <span 
                 v-for="color in colors" 
                 :key="color.id"
-                class="font-body inline-flex items-center bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
+                class="font-body inline-flex items-center bg-gray-100 text-body-text px-3 py-1 rounded-full text-sm"
               >
                 <span 
                   class="w-3 h-3 rounded-full mr-2 border border-gray-300" 
@@ -84,14 +84,14 @@
               <div class="h-4 bg-gray-200 rounded mb-2"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="sizes.length === 0" class="font-body text-gray-500 text-sm">
+            <div v-else-if="sizes.length === 0" class="font-body text-body-text text-sm">
               No hay talles disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
               <span 
                 v-for="size in sizes" 
                 :key="size.id"
-                class="font-body inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium"
+                class="font-body inline-block bg-gray-100 text-body-text px-3 py-1 rounded-full text-sm font-medium"
               >
                 {{ size.name }}
               </span>

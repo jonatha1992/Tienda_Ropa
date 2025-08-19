@@ -62,7 +62,7 @@
 
           <!-- Desktop Auth & Cart -->
           <div class="flex items-center space-x-4">
-            <router-link to="/cart" class="relative p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
+            <button @click="openCartModal" class="relative p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
               <span class="sr-only">Carrito</span>
               <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -74,7 +74,7 @@
               >
                 {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
               </span>
-            </router-link>
+            </button>
             <div v-if="authStore.isAuthenticated" class="flex items-center space-x-2">
               <button @click="handleLogout" class="px-3 py-2 text-sm font-body font-normal tracking-wide text-gray-900 uppercase transition-colors hover:text-gray-600">Cerrar Sesión</button>
             </div>
@@ -84,7 +84,7 @@
 
         <!-- Mobile Menu Button -->
         <div class="flex items-center md:hidden">
-          <router-link to="/cart" class="relative p-2 mr-4 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
+          <button @click="openCartModal" class="relative p-2 mr-4 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
             <span class="sr-only">Carrito</span>
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -96,7 +96,7 @@
             >
               {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
             </span>
-          </router-link>
+          </button>
           <button @click.stop="toggleMobileMenu" class="inline-flex items-center justify-center p-2 text-gray-900 transition-colors hover:text-gray-600 focus:outline-none">
             <span class="sr-only">Open main menu</span>
             <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
@@ -151,6 +151,7 @@
 import { ref,  onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../store/auth';
 import { useCartStore } from '../store/cart';
+import { useCartModal } from '../composables/useCartModal';
 import { useRouter } from 'vue-router';
 import { masterDataApi } from '../config/index';
 import type { Category } from '../types';
@@ -163,6 +164,7 @@ const isMobileAdminMenuOpen = ref(false);
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
+const { openCartModal } = useCartModal();
 const categories = ref<Category[]>([]);
 
 const toggleShopMenu = () => {

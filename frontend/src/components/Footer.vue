@@ -239,9 +239,9 @@
             <router-link to="/privacy" class="font-body transition-colors hover:text-white">Política de Privacidad</router-link>
           </div>
           <div class="mt-4 lg:mt-0">
-            <p class="text-xs font-body text-gray-500">
+            <p class="text-xs font-body text-body-text">
               Diseñado con ❤️ por 
-              <a href="mailto:tecnofusion.it@gmail.com" class="font-body underline transition-colors hover:text-gray-400">
+              <a href="mailto:tecnofusion.it@gmail.com" class="font-body underline transition-colors hover:text-body-text">
                 TecnoFusion
               </a>
             </p>

@@ -5,7 +5,7 @@
                 <h2 class="mt-6 text-3xl font-heading font-extrabold text-center text-gray-900">
                     {{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}
                 </h2>
-                <p class="mt-2 text-sm font-body text-center text-gray-600">
+                <p class="mt-2 text-sm font-body text-center text-body-text">
                     Accede a la administración de productos
                 </p>
             </div>
@@ -17,7 +17,7 @@
 
                 <div v-if="loading" class="text-center">
                     <div class="inline-block w-8 h-8 border-b-2 border-indigo-600 rounded-full animate-spin"></div>
-                    <p class="mt-2 text-sm font-body text-gray-600">Procesando...</p>
+                    <p class="mt-2 text-sm font-body text-body-text">Procesando...</p>
                 </div>
 
                 <!-- Login con Google -->
@@ -37,7 +37,7 @@
                 </button>
 
                 <div v-if="!loading" class="text-center">
-                    <p class="font-body text-xs text-gray-500">
+                    <p class="font-body text-xs text-body-text">
                         Se abrirá una nueva página de Google para autenticarte
                     </p>
                 </div>
@@ -47,7 +47,7 @@
                         <div class="w-full border-t border-gray-300" />
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="font-body px-2 text-gray-500 bg-gray-50">O</span>
+                        <span class="font-body px-2 text-body-text bg-gray-50">O</span>
                     </div>
                 </div>
 

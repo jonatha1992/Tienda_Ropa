@@ -6,11 +6,11 @@
              <div class="flex items-center justify-between py-6">
           <div>
             <h1 class="font-heading text-3xl font-bold text-gray-900">Panel de Administración</h1>
-            <p class="font-body mt-1 text-sm text-gray-500">Gestiona usuarios, roles y permisos del sistema</p>
+            <p class="font-body mt-1 text-sm text-body-text">Gestiona usuarios, roles y permisos del sistema</p>
           </div>
           <div class="flex items-center space-x-4">
-            <span class="font-body text-sm text-gray-500">Bienvenido,</span>
-            <span class="font-body text-sm font-medium text-gray-900">{{ userEmail }}</span>
+            <span class="font-body text-sm text-body-text">Bienvenido,</span>
+            <span class="font-body text-sm font-medium text-body-text">{{ userEmail }}</span>
           </div>
         </div>
       </div>

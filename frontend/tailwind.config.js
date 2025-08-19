@@ -47,7 +47,8 @@ export default {
                     700: '#1d4ed8',
                     800: '#1e40af',
                     900: '#1e3a8a',
-                }
+                },
+                'body-text': '#7b7777'
             },
             fontFamily: {
                 sans: ['Lato', 'ui-sans-serif', 'system-ui', 'sans-serif'],

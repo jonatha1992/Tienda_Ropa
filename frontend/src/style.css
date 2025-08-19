@@ -16,6 +16,7 @@
   --h5: 16px;
   --h6: 14px;
   --title-font-weight: 400;
+  --body-font-color: #7b7777;
 }
 
 body {
@@ -39,9 +40,10 @@ h4 { font-size: var(--h4); }
 h5 { font-size: var(--h5); }
 h6 { font-size: var(--h6); }
 
-/* Body text uses Roboto Mono */
+/* Body text uses Roboto Mono with custom color */
 p, span, div, a, button, input, textarea, select {
   font-family: var(--body-font);
+  color: var(--body-font-color);
 }
 
 /* Utility classes */
@@ -51,10 +53,12 @@ p, span, div, a, button, input, textarea, select {
 
 .font-body {
   font-family: var(--body-font);
+  color: var(--body-font-color);
 }
 
 .font-mono {
   font-family: var(--body-font);
+  color: var(--body-font-color);
 }
 
 /* Typography showcase - Bohme style */
@@ -72,14 +76,17 @@ p, span, div, a, button, input, textarea, select {
 
 .typography-showcase p {
   @apply font-body text-base leading-relaxed mb-4;
+  color: var(--body-font-color);
 }
 
 .typography-showcase .price {
   @apply font-body font-medium text-lg;
+  color: var(--body-font-color);
 }
 
 .typography-showcase .button-text {
   @apply font-body text-sm uppercase tracking-wide font-medium;
+  color: var(--body-font-color);
 }
 
 /* Professional Toast Notifications - Matching website branding */
@@ -118,6 +125,7 @@ p, span, div, a, button, input, textarea, select {
 .Vue-Toastification__toast-body {
   @apply font-body text-sm;
   padding: 0.75rem 1rem;
+  color: var(--body-font-color);
 }
 
 .Vue-Toastification__close-button {

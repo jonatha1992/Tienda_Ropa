@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white min-h-screen">
-    <div class="max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+  <div :class="isModal ? 'bg-white h-full' : 'bg-white min-h-screen'">
+    <div :class="isModal ? 'px-4 py-6' : 'max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8'">
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-heading font-light tracking-tight text-gray-900">Carrito de compras</h1>
-        <p v-if="!cartStore.isEmpty" class="mt-2 text-sm font-body text-gray-600">
+        <p v-if="!cartStore.isEmpty" class="mt-2 text-sm font-body text-body-text">
           {{ cartStore.itemCount }} {{ cartStore.itemCount === 1 ? 'producto' : 'productos' }} en tu carrito
         </p>
       </div>
@@ -41,14 +41,14 @@
                       </h3>
                       
                       <!-- Variant Info -->
-                      <div v-if="item.variant" class="mt-1 text-sm font-body text-gray-500">
+                      <div v-if="item.variant" class="mt-1 text-sm font-body text-body-text">
                         <span class="font-body">{{ item.variant.color.name }}</span>
                         <span class="mx-1 font-body">•</span>
                         <span class="font-body">Talle {{ item.variant.size.name }}</span>
                       </div>
                       
                       <!-- Unique Product Info -->
-                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-gray-500">
+                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-body-text">
                         <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
                         <span v-if="item.selectedColor && item.selectedSize" class="mx-1 font-body">•</span>
                         <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
@@ -56,10 +56,10 @@
 
                       <!-- Price -->
                       <div class="mt-2 flex items-center space-x-2">
-                        <span class="text-lg font-body font-medium text-gray-900">
+                        <span class="text-lg font-body font-medium text-body-text">
                           ${{ cartStore.getItemPrice(item).toLocaleString() }}
                         </span>
-                        <span v-if="item.product.has_discount" class="text-sm font-body text-gray-500 line-through">
+                        <span v-if="item.product.has_discount" class="text-sm font-body text-body-text line-through">
                           ${{ item.product.price.toLocaleString() }}
                         </span>
                         <span v-if="item.product.has_discount" class="text-sm font-body text-red-600 font-medium">
@@ -86,7 +86,7 @@
                       <button
                         @click="updateQuantity(item, item.quantity - 1)"
                         :disabled="item.quantity <= 1"
-                        class="px-3 py-1 font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                        class="px-3 py-1 font-body text-body-text hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                       >
                         -
                       </button>
@@ -99,7 +99,7 @@
                       >
                       <button
                         @click="updateQuantity(item, item.quantity + 1)"
-                        class="px-3 py-1 font-body text-gray-600 hover:text-gray-800"
+                        class="px-3 py-1 font-body text-body-text hover:text-gray-800"
                       >
                         +
                       </button>
@@ -107,10 +107,10 @@
 
                     <!-- Item Total -->
                     <div class="text-right">
-                      <p class="text-lg font-body font-medium text-gray-900">
+                      <p class="text-lg font-body font-medium text-body-text">
                         ${{ cartStore.getItemTotal(item).toLocaleString() }}
                       </p>
-                      <p v-if="item.quantity > 1" class="text-sm font-body text-gray-500">
+                      <p v-if="item.quantity > 1" class="text-sm font-body text-body-text">
                         ${{ cartStore.getItemPrice(item).toLocaleString() }} c/u
                       </p>
                     </div>
@@ -216,11 +216,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, withDefaults } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore, type CartItem } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
+
+// Props
+interface Props {
+  isModal?: boolean
+}
+const props = withDefaults(defineProps<Props>(), {
+  isModal: false
+})
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();

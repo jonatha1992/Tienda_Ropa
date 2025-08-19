@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Product, ProductVariant, Color, Size } from '../types';
+import { useCartNotification } from '../composables/useCartNotification';
 
 export interface CartItem {
   id: string; // Unique identifier for cart item
@@ -121,6 +122,14 @@ export const useCartStore = defineStore('cart', {
       
       // Save to localStorage
       this.saveToStorage();
+      
+      // Show notification
+      const { showNotification } = useCartNotification();
+      if (variantInfo) {
+        showNotification(product, quantity, variantInfo.variant);
+      } else {
+        showNotification(product, quantity);
+      }
     },
     
     removeFromCart(cartItemId: string) {

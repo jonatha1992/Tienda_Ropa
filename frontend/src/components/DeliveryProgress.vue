@@ -12,7 +12,7 @@
           <ShoppingCartIcon v-else-if="currentStep === 1" class="w-4 h-4" />
           <span class="font-body" v-else>1</span>
         </div>
-        <span class="font-body text-xs mt-2 text-gray-600">Carrito</span>
+        <span class="font-body text-xs mt-2 text-body-text">Carrito</span>
       </div>
 
       <!-- Progress Line 1 -->
@@ -33,7 +33,7 @@
           <TruckIcon v-else-if="currentStep === 2" class="w-4 h-4" />
           <span class="font-body" v-else>2</span>
         </div>
-        <span class="font-body text-xs mt-2 text-gray-600">Entrega</span>
+        <span class="font-body text-xs mt-2 text-body-text">Entrega</span>
       </div>
 
       <!-- Progress Line 2 -->
@@ -54,7 +54,7 @@
           <CreditCardIcon v-else-if="currentStep === 3" class="w-4 h-4" />
           <span class="font-body" v-else>3</span>
         </div>
-        <span class="font-body text-xs mt-2 text-gray-600">Pago</span>
+        <span class="font-body text-xs mt-2 text-body-text">Pago</span>
       </div>
     </div>
   </div>
