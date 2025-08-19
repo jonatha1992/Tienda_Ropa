@@ -4,6 +4,7 @@ import { auth } from '../config/index'
 import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth'
 import { apiClient, rolesApi } from '../config/index'
 import type { User, Role } from '../types' // Asegúrate de que este tipo coincida con el modelo UserRead del backend
+import { authCache } from '../utils/cache'
 
 export const useAuthStore = defineStore('auth', () => {
     const firebaseUser = ref<FirebaseUser | null>(null)
@@ -15,7 +16,6 @@ export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = computed(() => !!backendUser.value)
 
     const isAdmin = computed(() => {
-        console.log('🔍 Checking admin access. User roles:', userRoles.value);
         return userRoles.value.some(role => ['admin', 'manager'].includes(role.name.toLowerCase()))
     })
 
@@ -25,8 +25,8 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const response = await apiClient.get('/users/me')
             backendUser.value = response.data
-            // También obtener los roles del usuario
-            await fetchUserRoles()
+            // También obtener los roles del usuario (con caché)
+            await fetchUserRoles(false)
         } catch (error) {
             console.error('❌ Error fetching backend user:', error)
             // Si falla, probablemente el token no es válido, desloguear
@@ -34,13 +34,26 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    const fetchUserRoles = async () => {
+    const fetchUserRoles = async (force = false) => {
+        // Verificar caché primero si no es forzado
+        if (!force) {
+            const cached = authCache.get<Role[]>('userRoles')
+            if (cached) {
+                userRoles.value = cached
+                return cached
+            }
+        }
+
         try {
             const roles = await rolesApi.getMyRoles()
             userRoles.value = roles
+            // Guardar en caché por 5 minutos
+            authCache.set('userRoles', roles, 300000)
+            return roles
         } catch (error) {
             console.error('❌ Error fetching user roles:', error)
             userRoles.value = []
+            return []
         }
     }
 
@@ -88,6 +101,8 @@ export const useAuthStore = defineStore('auth', () => {
             backendUser.value = null
             userRoles.value = []
             token.value = null
+            // Limpiar toda la caché de auth
+            authCache.clear()
         }
     }
 

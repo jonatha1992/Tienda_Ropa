@@ -3,9 +3,15 @@
     <Navbar />
     <router-view />
     <Footer />
-    <!-- Loading Spinner Global -->
+    <!-- Progress Bar Global para navegación -->
+    <ProgressBar 
+      :progress="progress" 
+      :is-visible="isVisible"
+    />
+
+    <!-- Loading Spinner para operaciones específicas solamente -->
     <LoadingSpinner 
-      :show="isLoading" 
+      :show="isLoading && !isVisible" 
       :message="loadingMessage || 'Cargando...'" 
       :submessage="loadingSubmessage"
     />
@@ -25,14 +31,28 @@ import { useLoading } from './composables/useLoading'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
+import ProgressBar from './components/ProgressBar.vue'
 import Chatbot from './components/Chatbot.vue'
 import CartModal from './components/CartModal.vue'
 import CartAddedNotification from './components/CartAddedNotification.vue'
+import { globalProgressBar } from './composables/useProgressBar'
 
 const authStore = useAuthStore()
-const { isLoading, loadingMessage, loadingSubmessage } = useLoading()
+const { isLoading, loadingMessage, loadingSubmessage, showSmartLoading } = useLoading()
+const { progress, isVisible } = globalProgressBar
 
 onMounted(async () => {
-  await authStore.initAuth()
+  // Inicialización optimizada con loading inteligente
+  try {
+    // Solo mostrar loading si la inicialización tarda más de 200ms
+    await showSmartLoading(
+      authStore.initAuth(), 
+      'Inicializando aplicación...', 
+      200
+    )
+  } catch (error) {
+    console.error('Error en inicialización de auth:', error)
+    // La aplicación puede funcionar sin auth, no es crítico
+  }
 })
 </script>

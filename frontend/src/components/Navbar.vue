@@ -32,7 +32,7 @@
               </div>
             </div>
             <!-- Admin Menu - Solo visible para administradores -->
-            <div v-if="authStore.hasAdminAccess" class="relative">
+            <div v-if="isAdmin" class="relative">
               <button @click.stop="toggleAdminMenu"
                 class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ADMIN ▼</button>
               <div v-if="isAdminMenuOpen" @click.stop
@@ -117,7 +117,7 @@
           <router-link v-else v-for="category in categories" :key="category.id" :to="`/shop?category=${category.name.toLowerCase()}`" @click="closeMenus" class="block px-3 py-2 text-sm tracking-wide text-gray-700 uppercase transition-colors font-body hover:text-gray-900">- {{ category.name }}</router-link>
         </div>
         <!-- Admin Menu Mobile - Solo visible para administradores -->
-        <div v-if="authStore.hasAdminAccess">
+        <div v-if="isAdmin">
           <button @click.stop="toggleMobileAdminMenu" class="block w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ADMIN</button>
           <div v-if="isMobileAdminMenuOpen" class="pl-4 space-y-1">
             <router-link to="/admin/products" @click="closeMenus" class="block px-3 py-2 text-sm font-normal tracking-wide text-gray-700 uppercase transition-colors font-body hover:text-gray-900">- Productos</router-link>
@@ -148,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,  onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../store/auth';
 import { useCartStore } from '../store/cart';
 import { useCartModal } from '../composables/useCartModal';
@@ -167,6 +167,9 @@ const router = useRouter();
 const { openCartModal } = useCartModal();
 const categories = ref<Category[]>([]);
 
+// Computed memoizado para admin access (evitar múltiples evaluaciones)
+const isAdmin = computed(() => authStore.hasAdminAccess);
+
 const toggleShopMenu = () => {
   isShopMenuOpen.value = !isShopMenuOpen.value;
 };
@@ -180,9 +183,7 @@ const toggleMobileShopMenu = () => {
 }
 
 const toggleAdminMenu = () => {
-  console.log('🔧 toggleAdminMenu clicked, current state:', isAdminMenuOpen.value);
   isAdminMenuOpen.value = !isAdminMenuOpen.value;
-  console.log('🔧 toggleAdminMenu new state:', isAdminMenuOpen.value);
 };
 
 const toggleMobileAdminMenu = () => {
@@ -225,11 +226,6 @@ const closeMenus = () => {
 onMounted(() => {
   loadCategories();
   document.addEventListener('click', closeMenus);
-  
-  // Debug: verificar estado de admin cada segundo
-  setInterval(() => {
-    console.log('🔍 Debug Navbar - hasAdminAccess:', authStore.hasAdminAccess, 'userRoles:', authStore.userRoles);
-  }, 5000);
 });
 
 onUnmounted(() => {

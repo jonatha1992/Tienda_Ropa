@@ -15,7 +15,9 @@ import TransferInstructionsView from './views/TransferInstructionsView.vue'
 import CashConfirmationView from './views/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
+import { authCache } from './utils/cache';
 import { useLoading } from './composables/useLoading';
+import { globalProgressBar } from './composables/useProgressBar';
 import ContactView from './views/ContactView.vue';
 import HowToShopView from './views/HowToShopView.vue';
 import ShippingView from './views/ShippingView.vue';
@@ -82,13 +84,19 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const { showLoading } = useLoading();
-  // Mostrar loading al cambiar de ruta
+  // Mostrar progress bar al cambiar de ruta
   if (to.path !== from.path) {
-    showLoading('Cargando página...', 'Por favor espera');
+    globalProgressBar.start();
   }
 
   // Esperar a que se inicialice la autenticación si aún no se ha hecho
   if (authStore.loading) {
+    // Verificar si ya hay datos en caché para acelerar
+    const cachedRoles = authCache.get('userRoles')
+    if (cachedRoles) {
+      authStore.userRoles.value = cachedRoles
+    }
+    
     await new Promise(resolve => {
       const unsubscribe = auth.onAuthStateChanged((user: any) => {
         unsubscribe();
@@ -100,23 +108,22 @@ router.beforeEach(async (to, from, next) => {
 
   // Para rutas de admin, asegurar que los roles estén cargados
   if (to.meta.requiresAdmin && authStore.isAuthenticated) {
-    console.log('🔍 Verificando permisos de admin...');
+    // Early return si ya tiene acceso admin y roles cargados
+    if (authStore.hasAdminAccess && authStore.userRoles.length > 0) {
+      return next();
+    }
 
-    // Si no hay roles cargados, intentar cargarlos
+    // Si no hay roles cargados, intentar cargarlos (con caché)
     if (authStore.userRoles.length === 0) {
-      console.log('📋 Cargando roles del usuario...');
       try {
-        await authStore.fetchUserRoles();
+        await authStore.fetchUserRoles(false); // false = usar caché si está disponible
       } catch (error) {
         console.error('❌ Error cargando roles:', error);
       }
     }
 
-    console.log('🔐 Roles del usuario:', authStore.userRoles);
-    console.log('🔐 Tiene acceso admin:', authStore.hasAdminAccess);
-
+    // Verificación final sin logs innecesarios
     if (!authStore.hasAdminAccess) {
-      console.log('🔒 Usuario sin permisos de admin, redirigiendo a home');
       next('/');
       return;
     }
@@ -140,12 +147,9 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-// Ocultar loading después de navegar
+// Completar progress bar después de navegar
 router.afterEach(() => {
-  const { hideLoading } = useLoading();
-  setTimeout(() => {
-    hideLoading();
-  }, 300); // Pequeño delay para suavizar la transición
+  globalProgressBar.complete();
 });
 
 export default router;
