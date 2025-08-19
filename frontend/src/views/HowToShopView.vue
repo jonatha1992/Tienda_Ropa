@@ -8,7 +8,7 @@
           <!-- Paso 1 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-500 rounded-full">
                 <span class="text-white" >1</span>
               </div>
             </div>
@@ -24,7 +24,7 @@
           <!-- Paso 2 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-500 rounded-full">
                 <span class="text-white" >2</span>
               </div>
             </div>
@@ -40,7 +40,7 @@
           <!-- Paso 3 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-500 rounded-full">
                 <span class="text-white">3</span>
               </div>
             </div>
@@ -56,7 +56,7 @@
           <!-- Paso 4 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-500 rounded-full">
                 <span class="text-white" >4</span>
               </div>
             </div>

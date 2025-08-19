@@ -54,7 +54,7 @@
                   placeholder="Tu mensaje..."></textarea>
               </div>
               <button type="submit"
-                class="w-full px-4 py-2 text-white transition duration-200 bg-gray-300 rounded-md hover:bg-gray-700">
+                class="w-full px-4 py-2 text-white transition duration-200 bg-gray-500 rounded-md hover:bg-gray-700">
                 <span class="text-white"> Enviar Mensaje</span>
               </button>
             </form>
