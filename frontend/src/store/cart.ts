@@ -126,7 +126,7 @@ export const useCartStore = defineStore('cart', {
       // Show notification
       const { showNotification } = useCartNotification();
       if (variantInfo) {
-        showNotification(product, quantity, variantInfo.variant);
+        showNotification(product, quantity, variantInfo);
       } else {
         showNotification(product, quantity);
       }
