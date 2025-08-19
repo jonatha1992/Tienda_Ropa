@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto Mono', 'Playfair Display', Georgia, serif;
             line-height: 1.6;
             color: #333;
             max-width: 600px;
@@ -14,30 +18,36 @@
             padding: 20px;
             background-color: #f9f9f9;
         }
+
         .container {
             background-color: white;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 10px;
         }
+
         .notification-title {
             color: #2c3e50;
             font-size: 24px;
             margin-bottom: 20px;
         }
+
         .content {
             margin-bottom: 30px;
         }
+
         .message {
             background-color: #f8f9fa;
             padding: 20px;
@@ -45,6 +55,7 @@
             margin: 20px 0;
             border-radius: 0 5px 5px 0;
         }
+
         .button {
             display: inline-block;
             padding: 12px 30px;
@@ -55,6 +66,7 @@
             font-weight: bold;
             margin: 20px 0;
         }
+
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -65,25 +77,29 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
+            <div style="display: inline-block; width: 80px; height: 80px; margin-bottom: 20px; border-radius: 50%; background: linear-gradient(45deg, #ffffff, #f8f9fa); padding: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); border: 2px solid #e5e7eb;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a" alt="M-Vintage" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.8);">
+            </div>
             <div class="logo">M-Vintage</div>
             <h1 class="notification-title">{{ title }}</h1>
         </div>
-        
+
         <div class="content">
             <div class="message">
                 {{ message | safe }}
             </div>
-            
+
             {% if action_url %}
             <div style="text-align: center;">
                 <a href="{{ action_url }}" class="button">Ver Detalles</a>
             </div>
             {% endif %}
         </div>
-        
+
         <div class="footer">
             <p>Gracias por confiar en M-Vintage.</p>
             <p>El equipo de M-Vintage</p>
@@ -91,4 +107,5 @@
         </div>
     </div>
 </body>
+
 </html>
