@@ -22,7 +22,7 @@
             active-class="border-blue-500 text-blue-600"
             inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
           >
-            Gestión de Productos
+            Productos
           </router-link>
           <router-link
             to="/admin/users"
@@ -30,7 +30,7 @@
             active-class="border-blue-500 text-blue-600"
             inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
           >
-            Gestión de Usuarios
+            Usuarios
           </router-link>
           <router-link
             to="/admin/orders"
@@ -38,7 +38,7 @@
             active-class="border-blue-500 text-blue-600"
             inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
           >
-            Gestión de Pedidos
+            Pedidos
           </router-link>
         </nav>
       </div>

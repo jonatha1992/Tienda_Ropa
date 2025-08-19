@@ -275,7 +275,7 @@
             </div>
 
             <!-- Payment Method -->
-            <div class="bg-white shadow rounded-lg p-6">
+            <div v-if="currentStep >= 3" class="bg-white shadow rounded-lg p-6">
               <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
               
               <div class="space-y-3">
@@ -315,7 +315,7 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="bg-white shadow rounded-lg p-6">
+            <div v-if="currentStep >= 3" class="bg-white shadow rounded-lg p-6">
               <button
                 type="submit"
                 :disabled="processing"
@@ -399,11 +399,13 @@ const currentStep = computed(() => {
                          checkoutForm.value.city && 
                          checkoutForm.value.postalCode;
   
-  // Step 3: Pago (only when actually processing the order)
+  // Step 3: Pago (when delivery info is complete or processing)
   if (processing.value) {
     return 3;
+  } else if (hasDeliveryInfo) {
+    return 3; // Mostrar paso 3 cuando delivery info está completa
   } else {
-    return 2; // Stay on delivery step until order is being processed
+    return 2; // Paso 2 mientras se completa delivery info
   }
 });
 

@@ -72,7 +72,7 @@ app.include_router(users_router, prefix="/api/v1")
 app.include_router(roles_router, prefix="/api/v1")
 app.include_router(master_data_router, prefix="/api/v1")
 app.include_router(payments_router, prefix="/api/v1")
-app.include_router(admin_payments_router, prefix="/api/v1", tags=["admin"])
+app.include_router(admin_payments_router, prefix="/api/v1/orders", tags=["admin"])
 app.include_router(email_verification_router, prefix="/api/v1")
 # Email functionality moved to standard /routes/
 

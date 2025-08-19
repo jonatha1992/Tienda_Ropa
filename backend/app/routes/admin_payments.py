@@ -26,7 +26,7 @@ def get_current_admin_user(user=Depends(require_admin())):
     return user
 
 
-@router.get("/admin/orders")
+@router.get("/admin/filtered")
 def get_admin_orders(
     payment_method: Optional[str] = Query(None, description="Filtrar por método de pago"),
     payment_status: Optional[str] = Query(None, description="Filtrar por estado de pago"),
@@ -65,16 +65,7 @@ def get_admin_orders(
         for order in orders:
             order.customer = session.get(Customer, order.customer_id)
         
-        return {
-            "orders": orders,
-            "total": len(orders),
-            "filters_applied": {
-                "payment_method": payment_method,
-                "payment_status": payment_status,
-                "verification_required": verification_required,
-                "delivery_status": delivery_status
-            }
-        }
+        return orders
         
     except Exception as e:
         raise HTTPException(
@@ -229,7 +220,7 @@ def update_admin_notes(
         )
 
 
-@router.get("/admin/payment-stats")
+@router.get("/admin/stats")
 def get_payment_stats(
     session: Session = Depends(get_session),
     user=Depends(get_current_admin_user)
