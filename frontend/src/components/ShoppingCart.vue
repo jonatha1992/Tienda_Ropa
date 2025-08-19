@@ -3,8 +3,8 @@
     <div class="max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-light tracking-tight text-gray-900">Carrito de compras</h1>
-        <p v-if="!cartStore.isEmpty" class="mt-2 text-sm text-gray-600">
+        <h1 class="text-3xl font-heading font-light tracking-tight text-gray-900">Carrito de compras</h1>
+        <p v-if="!cartStore.isEmpty" class="mt-2 text-sm font-body text-gray-600">
           {{ cartStore.itemCount }} {{ cartStore.itemCount === 1 ? 'producto' : 'productos' }} en tu carrito
         </p>
       </div>
@@ -31,38 +31,38 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex justify-between items-start">
                     <div class="flex-1">
-                      <h3 class="text-base font-medium text-gray-900">
+                      <h3 class="text-base font-heading font-medium text-gray-900">
                         <router-link 
                           :to="`/product/${item.product.id}`" 
-                          class="hover:text-gray-700"
+                          class="hover:text-gray-700 font-body"
                         >
                           {{ item.product.name }}
                         </router-link>
                       </h3>
                       
                       <!-- Variant Info -->
-                      <div v-if="item.variant" class="mt-1 text-sm text-gray-500">
-                        <span>{{ item.variant.color.name }}</span>
-                        <span class="mx-1">•</span>
-                        <span>Talle {{ item.variant.size.name }}</span>
+                      <div v-if="item.variant" class="mt-1 text-sm font-body text-gray-500">
+                        <span class="font-body">{{ item.variant.color.name }}</span>
+                        <span class="mx-1 font-body">•</span>
+                        <span class="font-body">Talle {{ item.variant.size.name }}</span>
                       </div>
                       
                       <!-- Unique Product Info -->
-                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm text-gray-500">
-                        <span v-if="item.selectedColor">{{ item.selectedColor.name }}</span>
-                        <span v-if="item.selectedColor && item.selectedSize" class="mx-1">•</span>
-                        <span v-if="item.selectedSize">Talle {{ item.selectedSize.name }}</span>
+                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-gray-500">
+                        <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
+                        <span v-if="item.selectedColor && item.selectedSize" class="mx-1 font-body">•</span>
+                        <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
                       </div>
 
                       <!-- Price -->
                       <div class="mt-2 flex items-center space-x-2">
-                        <span class="text-lg font-medium text-gray-900">
+                        <span class="text-lg font-body font-medium text-gray-900">
                           ${{ cartStore.getItemPrice(item).toLocaleString() }}
                         </span>
-                        <span v-if="item.product.has_discount" class="text-sm text-gray-500 line-through">
+                        <span v-if="item.product.has_discount" class="text-sm font-body text-gray-500 line-through">
                           ${{ item.product.price.toLocaleString() }}
                         </span>
-                        <span v-if="item.product.has_discount" class="text-sm text-red-600 font-medium">
+                        <span v-if="item.product.has_discount" class="text-sm font-body text-red-600 font-medium">
                           -{{ item.product.discount_percentage }}%
                         </span>
                       </div>
@@ -86,7 +86,7 @@
                       <button
                         @click="updateQuantity(item, item.quantity - 1)"
                         :disabled="item.quantity <= 1"
-                        class="px-3 py-1 text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                        class="px-3 py-1 font-body text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                       >
                         -
                       </button>
@@ -95,11 +95,11 @@
                         @input="updateQuantity(item, parseInt(($event.target as HTMLInputElement).value))"
                         type="number"
                         min="1"
-                        class="w-16 px-2 py-1 text-center border-0 focus:ring-0"
+                        class="w-16 px-2 py-1 font-body text-center border-0 focus:ring-0"
                       >
                       <button
                         @click="updateQuantity(item, item.quantity + 1)"
-                        class="px-3 py-1 text-gray-600 hover:text-gray-800"
+                        class="px-3 py-1 font-body text-gray-600 hover:text-gray-800"
                       >
                         +
                       </button>
@@ -107,10 +107,10 @@
 
                     <!-- Item Total -->
                     <div class="text-right">
-                      <p class="text-lg font-medium text-gray-900">
+                      <p class="text-lg font-body font-medium text-gray-900">
                         ${{ cartStore.getItemTotal(item).toLocaleString() }}
                       </p>
-                      <p v-if="item.quantity > 1" class="text-sm text-gray-500">
+                      <p v-if="item.quantity > 1" class="text-sm font-body text-gray-500">
                         ${{ cartStore.getItemPrice(item).toLocaleString() }} c/u
                       </p>
                     </div>
@@ -123,34 +123,34 @@
 
         <!-- Cart Summary -->
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Resumen del pedido</h3>
+          <h3 class="text-lg font-heading font-medium text-gray-900 mb-4">Resumen del pedido</h3>
           
           <div class="space-y-2">
             <!-- Subtotal -->
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Subtotal ({{ cartStore.itemCount }} productos)</span>
-              <span class="text-gray-900">
+              <span class="text-gray-600 font-body">Subtotal ({{ cartStore.itemCount }} productos)</span>
+              <span class="text-gray-900 font-body">
                 ${{ (cartStore.totalSavings > 0 ? cartStore.totalOriginalPrice : cartStore.totalPrice).toLocaleString() }}
               </span>
             </div>
 
             <!-- Discount -->
             <div v-if="cartStore.totalSavings > 0" class="flex justify-between text-sm">
-              <span class="text-red-600">Descuentos</span>
-              <span class="text-red-600">-${{ cartStore.totalSavings.toLocaleString() }}</span>
+              <span class="text-red-600 font-body">Descuentos</span>
+              <span class="text-red-600 font-body">-${{ cartStore.totalSavings.toLocaleString() }}</span>
             </div>
 
             <!-- Shipping -->
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Envío</span>
-              <span class="text-gray-900">Calculado en checkout</span>
+              <span class="text-gray-600 font-body">Envío</span>
+              <span class="text-gray-900 font-body">Calculado en checkout</span>
             </div>
 
             <!-- Total -->
             <div class="border-t border-gray-200 pt-2">
               <div class="flex justify-between">
-                <span class="text-lg font-medium text-gray-900">Total</span>
-                <span class="text-lg font-medium text-gray-900">
+                <span class="text-lg font-body font-medium text-gray-900">Total</span>
+                <span class="text-lg font-body font-medium text-gray-900">
                   ${{ cartStore.totalPrice.toLocaleString() }}
                 </span>
               </div>
@@ -166,7 +166,7 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm text-blue-700">
+                <p class="text-sm font-body text-blue-700">
                   Necesitas <strong>iniciar sesión</strong> para proceder con la compra.
                 </p>
               </div>
@@ -177,7 +177,7 @@
           <div class="mt-6">
             <button
               @click="proceedToCheckout"
-              class="w-full bg-black text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 transition-colors"
+              class="w-full bg-black text-white py-3 px-4 rounded-md font-body font-medium hover:bg-gray-800 transition-colors"
             >
               {{ authStore.isAuthenticated ? 'Proceder al checkout' : 'Iniciar sesión y continuar' }}
             </button>
@@ -187,7 +187,7 @@
           <div class="mt-4 text-center">
             <router-link
               to="/shop"
-              class="text-sm text-gray-600 hover:text-gray-800"
+              class="text-sm font-body text-gray-600 hover:text-gray-800"
             >
               ← Continuar comprando
             </router-link>
@@ -202,11 +202,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
-        <p class="text-gray-600 mb-6">Agrega algunos productos para comenzar</p>
+        <h3 class="text-lg font-heading font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
+        <p class="text-gray-600 font-body mb-6">Agrega algunos productos para comenzar</p>
         <router-link
           to="/shop"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-body font-medium rounded-md text-white bg-black hover:bg-gray-800"
         >
           Explorar productos
         </router-link>

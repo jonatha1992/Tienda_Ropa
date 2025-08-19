@@ -24,10 +24,10 @@
       </svg>
       
       <!-- Mensaje -->
-      <p class="mt-3 text-lg font-medium text-gray-900">{{ message }}</p>
+      <p class="mt-3 text-lg font-body font-medium text-gray-900">{{ message }}</p>
       
       <!-- Submensaje opcional -->
-      <p v-if="submessage" class="mt-1 text-sm text-gray-600">{{ submessage }}</p>
+      <p v-if="submessage" class="mt-1 text-sm font-body text-gray-600">{{ submessage }}</p>
     </div>
   </div>
 </template>

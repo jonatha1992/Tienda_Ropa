@@ -10,9 +10,9 @@
         >
           <CheckIcon v-if="currentStep > 1" class="w-4 h-4" />
           <ShoppingCartIcon v-else-if="currentStep === 1" class="w-4 h-4" />
-          <span v-else>1</span>
+          <span class="font-body" v-else>1</span>
         </div>
-        <span class="text-xs mt-2 text-gray-600">Carrito</span>
+        <span class="font-body text-xs mt-2 text-gray-600">Carrito</span>
       </div>
 
       <!-- Progress Line 1 -->
@@ -31,9 +31,9 @@
         >
           <CheckIcon v-if="currentStep > 2" class="w-4 h-4" />
           <TruckIcon v-else-if="currentStep === 2" class="w-4 h-4" />
-          <span v-else>2</span>
+          <span class="font-body" v-else>2</span>
         </div>
-        <span class="text-xs mt-2 text-gray-600">Entrega</span>
+        <span class="font-body text-xs mt-2 text-gray-600">Entrega</span>
       </div>
 
       <!-- Progress Line 2 -->
@@ -52,9 +52,9 @@
         >
           <CheckIcon v-if="currentStep > 3" class="w-4 h-4" />
           <CreditCardIcon v-else-if="currentStep === 3" class="w-4 h-4" />
-          <span v-else>3</span>
+          <span class="font-body" v-else>3</span>
         </div>
-        <span class="text-xs mt-2 text-gray-600">Pago</span>
+        <span class="font-body text-xs mt-2 text-gray-600">Pago</span>
       </div>
     </div>
   </div>

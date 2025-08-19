@@ -2,27 +2,27 @@
     <div class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-50 sm:px-6 lg:px-8">
         <div class="w-full max-w-md space-y-8">
             <div>
-                <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900">
+                <h2 class="mt-6 text-3xl font-heading font-extrabold text-center text-gray-900">
                     {{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}
                 </h2>
-                <p class="mt-2 text-sm text-center text-gray-600">
+                <p class="mt-2 text-sm font-body text-center text-gray-600">
                     Accede a la administración de productos
                 </p>
             </div>
 
             <div class="mt-8 space-y-6">
-                <div v-if="error" class="px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+                <div v-if="error" class="font-body px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
                     {{ error }}
                 </div>
 
                 <div v-if="loading" class="text-center">
                     <div class="inline-block w-8 h-8 border-b-2 border-indigo-600 rounded-full animate-spin"></div>
-                    <p class="mt-2 text-sm text-gray-600">Procesando...</p>
+                    <p class="mt-2 text-sm font-body text-gray-600">Procesando...</p>
                 </div>
 
                 <!-- Login con Google -->
                 <button @click="signInWithGoogle" :disabled="loading"
-                    class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md group hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50">
+                    class="relative flex justify-center w-full px-4 py-2 text-sm font-body font-medium text-white bg-red-600 border border-transparent rounded-md group hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50">
                     <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -37,7 +37,7 @@
                 </button>
 
                 <div v-if="!loading" class="text-center">
-                    <p class="text-xs text-gray-500">
+                    <p class="font-body text-xs text-gray-500">
                         Se abrirá una nueva página de Google para autenticarte
                     </p>
                 </div>
@@ -47,7 +47,7 @@
                         <div class="w-full border-t border-gray-300" />
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 text-gray-500 bg-gray-50">O</span>
+                        <span class="font-body px-2 text-gray-500 bg-gray-50">O</span>
                     </div>
                 </div>
 
@@ -69,13 +69,13 @@
                     <div>
                         <button type="submit" :disabled="loading"
                             class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
-                            {{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}
+                            <span class="font-body">{{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}</span>
                         </button>
                     </div>
                 </form>
 
                 <div class="text-center">
-                    <button @click="toggleMode" class="text-sm text-indigo-600 hover:text-indigo-500">
+                    <button @click="toggleMode" class="font-body text-sm text-indigo-600 hover:text-indigo-500">
                         {{ isLogin ? '¿No tienes cuenta? Crear cuenta' : '¿Ya tienes cuenta? Iniciar sesión' }}
                     </button>
                 </div>

@@ -2,7 +2,7 @@
   <router-link :to="`/product/${product.id}`" class="block cursor-pointer">
     <div class="relative product-card group">
         <!-- Stock Indicator Above Image -->
-        <div v-if="isOutOfStock" class="absolute -top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-600 text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg">
+        <div v-if="isOutOfStock" class="absolute -top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-600 text-white px-3 py-1 text-xs font-body font-bold rounded-full shadow-lg">
           SIN STOCK
         </div>
         
@@ -28,13 +28,13 @@
         
         <!-- Product Labels -->
         <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-2 top-3 left-3">
-          <span v-if="product.is_new" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-black">
+          <span v-if="product.is_new" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-black">
             New
           </span>
-          <span v-if="product.is_sale" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-red-600">
+          <span v-if="product.is_sale" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-red-600">
             Sale
           </span>
-          <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-3 py-1 text-xs font-medium tracking-wide text-white uppercase bg-orange-500">
+          <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-orange-500">
             -{{ product.discount_percentage }}%
           </span>
         </div>
@@ -42,13 +42,13 @@
         <!-- Sin Stock Overlay -->
         <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <div class="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
-            <span class="text-lg font-semibold text-gray-800">Sin Stock</span>
+            <span class="text-lg font-heading font-semibold text-gray-800">Sin Stock</span>
           </div>
         </div>
         
         <!-- Quick Add Button (appears on hover) -->
         <div v-if="!isOutOfStock" class="absolute inset-x-0 px-4 transition-opacity duration-300 opacity-0 bottom-4 group-hover:opacity-100">
-          <button @click.stop="quickAdd" class="w-full text-center btn-minimal btn-dark">
+          <button @click.stop="quickAdd" class="w-full text-center btn-minimal btn-dark font-body">
             Agregar
           </button>
         </div>
@@ -56,7 +56,7 @@
       
       <!-- Product Info -->
       <div class="mt-4 space-y-2">
-        <h3 class="text-sm font-medium text-gray-900 transition-colors group-hover:text-gray-700">
+        <h3 class="text-sm font-heading font-medium text-gray-900 transition-colors group-hover:text-gray-700">
           {{ product.name }}
         </h3>
         
@@ -64,22 +64,22 @@
         <div class="flex items-center space-x-2">
           <!-- Precio original si hay descuento -->
           <span v-if="product.has_discount && product.discounted_price" 
-                class="text-sm text-gray-500 line-through">
+                class="text-sm font-body text-gray-500 line-through">
             ${{ product.price.toFixed(2) }}
           </span>
           <!-- Precio con descuento si aplica, sino el precio normal -->
-          <span :class="['text-sm font-medium', product.has_discount ? 'text-green-600' : 'text-gray-900']">
+          <span :class="['text-sm font-body font-medium', product.has_discount ? 'text-green-600' : 'text-gray-900']">
             ${{ product.has_discount && product.discounted_price ? product.discounted_price.toFixed(2) : product.price.toFixed(2) }}
           </span>
           <!-- Precio original legacy (mantenemos para compatibilidad) -->
           <span v-if="!product.has_discount && product.original_price && product.original_price > product.price" 
-                class="text-sm text-gray-500 line-through">
+                class="text-sm font-body text-gray-500 line-through">
             ${{ product.original_price.toFixed(2) }}
           </span>
         </div>
         
         <!-- Product Category -->
-        <p v-if="product.categoria" class="text-xs tracking-wide text-gray-500 uppercase">
+        <p v-if="product.categoria" class="text-xs font-body tracking-wide text-gray-500 uppercase">
           {{ product.categoria }}
         </p>
       </div>

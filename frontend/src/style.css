@@ -1,16 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Bohme-style typography configuration */
+:root {
+  --heading-font: 'Lato', sans-serif;
+  --body-font: 'Roboto Mono', monospace;
+  --font-base: 14px;
+  --h1: 28px;
+  --h2: 24px;
+  --h3: 20px;
+  --h4: 18px;
+  --h5: 16px;
+  --h6: 14px;
+  --title-font-weight: 400;
+}
+
 body {
   @apply bg-white text-gray-900;
-  font-family: 'Lato', sans-serif;
+  font-family: var(--body-font);
+  font-size: var(--font-base);
+  line-height: 1.6;
+}
+
+/* Headings use Lato (like Bohme) */
+h1, h2, h3, h4, h5, h6, .heading {
+  font-family: var(--heading-font);
+  font-weight: var(--title-font-weight);
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+h4 { font-size: var(--h4); }
+h5 { font-size: var(--h5); }
+h6 { font-size: var(--h6); }
+
+/* Body text uses Roboto Mono */
+p, span, div, a, button, input, textarea, select {
+  font-family: var(--body-font);
+}
+
+/* Utility classes */
+.font-heading {
+  font-family: var(--heading-font);
+}
+
+.font-body {
+  font-family: var(--body-font);
 }
 
 .font-mono {
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--body-font);
+}
+
+/* Typography showcase - Bohme style */
+.typography-showcase h1 {
+  @apply font-heading text-h1 font-normal mb-4;
+}
+
+.typography-showcase h2 {
+  @apply font-heading text-h2 font-normal mb-3;
+}
+
+.typography-showcase h3 {
+  @apply font-heading text-h3 font-normal mb-3;
+}
+
+.typography-showcase p {
+  @apply font-body text-base leading-relaxed mb-4;
+}
+
+.typography-showcase .price {
+  @apply font-body font-medium text-lg;
+}
+
+.typography-showcase .button-text {
+  @apply font-body text-sm uppercase tracking-wide font-medium;
 }
 
 /* Bohme-style components */

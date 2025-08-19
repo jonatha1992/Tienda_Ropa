@@ -6,9 +6,9 @@
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center mb-6 space-x-3">
             <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-8 h-8" />
-            <h3 class="text-2xl font-light tracking-wider text-white">M-VINTAGE</h3>
+            <h3 class="text-2xl font-heading font-light tracking-wider text-white">M-VINTAGE</h3>
           </div>
-          <p class="max-w-md mb-4 font-light leading-relaxed text-gray-300">
+          <p class="max-w-md mb-4 font-body font-light leading-relaxed text-gray-300">
             Estilo que perdura en el tiempo. Encuentra las mejores prendas vintage y contemporáneas 
             para expresar tu personalidad única.
           </p>
@@ -19,7 +19,7 @@
               <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
               </svg>
-              <a href="mailto:mvintageapp@gmail.com" class="text-sm text-gray-300 transition-colors hover:text-white">
+              <a href="mailto:mvintageapp@gmail.com" class="text-sm font-body text-gray-300 transition-colors hover:text-white">
                 mvintageapp@gmail.com
               </a>
             </div>
@@ -27,7 +27,7 @@
               <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
               </svg>
-              <a href="tel:+5491139471826" class="text-sm text-gray-300 transition-colors hover:text-white">
+              <a href="tel:+5491139471826" class="text-sm font-body text-gray-300 transition-colors hover:text-white">
                 +54 9 11 3947-1826
               </a>
             </div>
@@ -35,7 +35,7 @@
           
           <!-- Social Media -->
           <div class="mb-6">
-            <h4 class="mb-4 text-sm font-medium tracking-wide text-white uppercase">Síguenos</h4>
+            <h4 class="mb-4 text-sm font-body font-medium tracking-wide text-white uppercase">Síguenos</h4>
             <div class="flex space-x-4">
               <a href="https://instagram.com/matilda_vintage_" target="_blank" rel="noopener noreferrer" 
                  class="p-2 transition-colors duration-200 bg-gray-800 rounded-full group hover:bg-gray-700">
@@ -74,25 +74,25 @@
 
         <!-- Shop Links -->
         <div>
-          <h4 class="mb-4 text-sm font-medium tracking-wide text-white uppercase">Tienda</h4>
+          <h4 class="mb-4 text-sm font-body font-medium tracking-wide text-white uppercase">Tienda</h4>
           <ul class="space-y-3">
-            <li><router-link to="/shop" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Nueva Colección</router-link></li>
-            <li><router-link to="/shop?category=camisetas" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Camisetas</router-link></li>
-            <li><router-link to="/shop?category=pantalones" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Pantalones</router-link></li>
-            <li><router-link to="/shop?category=accesorios" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Accesorios</router-link></li>
-            <li><router-link to="/shop?sort=newest" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Nuevos Arribos</router-link></li>
+            <li><router-link to="/shop" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Nueva Colección</router-link></li>
+            <li><router-link to="/shop?category=camisetas" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Camisetas</router-link></li>
+            <li><router-link to="/shop?category=pantalones" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Pantalones</router-link></li>
+            <li><router-link to="/shop?category=accesorios" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Accesorios</router-link></li>
+            <li><router-link to="/shop?sort=newest" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Nuevos Arribos</router-link></li>
           </ul>
         </div>
 
         <!-- Customer Service -->
         <div>
-          <h4 class="mb-4 text-sm font-medium tracking-wide text-white uppercase">Ayuda</h4>
+          <h4 class="mb-4 text-sm font-body font-medium tracking-wide text-white uppercase">Ayuda</h4>
           <ul class="space-y-3">
-            <li><router-link to="/contact" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Contacto</router-link></li>
-            <li><router-link to="/shipping" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Envíos y Devoluciones</router-link></li>
-            <li><router-link to="/how-to-shop" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Guía de Compra</router-link></li>
-            <li><router-link to="/size-guide" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Guía de Talles</router-link></li>
-            <li><router-link to="/privacy" class="text-sm text-gray-300 transition-colors duration-200 hover:text-white">Política de Privacidad</router-link></li>
+            <li><router-link to="/contact" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Contacto</router-link></li>
+            <li><router-link to="/shipping" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Envíos y Devoluciones</router-link></li>
+            <li><router-link to="/how-to-shop" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Guía de Compra</router-link></li>
+            <li><router-link to="/size-guide" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Guía de Talles</router-link></li>
+            <li><router-link to="/privacy" class="text-sm font-body text-gray-300 transition-colors duration-200 hover:text-white">Política de Privacidad</router-link></li>
           </ul>
         </div>
       </div>
@@ -100,7 +100,7 @@
       <!-- Payment Methods -->
       <div class="pt-8 mt-12 border-t border-gray-800">
         <div class="text-center">
-          <h4 class="mb-6 text-sm font-medium tracking-wide text-white uppercase">Métodos de Pago</h4>
+          <h4 class="mb-6 text-sm font-body font-medium tracking-wide text-white uppercase">Métodos de Pago</h4>
           <div class="flex flex-wrap items-center justify-center max-w-4xl gap-4 mx-auto">
             <!-- Mercado Pago -->
             <div class="flex items-center px-3 py-2 space-x-2 bg-gray-800 rounded-md">
@@ -108,7 +108,7 @@
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#00b8d4"/>
                 <path d="M9.5 8.5h5v7h-5v-7z" fill="white"/>
               </svg>
-              <span class="text-xs font-medium text-gray-300">Mercado Pago</span>
+              <span class="text-xs font-body font-medium text-gray-300">Mercado Pago</span>
             </div>
 
             <!-- Credit Cards -->
@@ -164,7 +164,7 @@
               <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
               </svg>
-              <span class="text-xs font-medium text-gray-300">Transferencia</span>
+              <span class="text-xs font-body font-medium text-gray-300">Transferencia</span>
             </div>
 
             <!-- Rapipago -->
@@ -172,7 +172,7 @@
               <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
-              <span class="text-xs font-medium text-gray-300">Rapipago</span>
+              <span class="text-xs font-body font-medium text-gray-300">Rapipago</span>
             </div>
 
             <!-- Pago Fácil -->
@@ -180,7 +180,7 @@
               <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
-              <span class="text-xs font-medium text-gray-300">Pago Fácil</span>
+              <span class="text-xs font-body font-medium text-gray-300">Pago Fácil</span>
             </div>
           </div>
           
@@ -190,19 +190,19 @@
               <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.58L10,14.17L16.59,7.58L18,9L10,17Z"/>
               </svg>
-              <span>Compra 100% segura</span>
+              <span class="font-body">Compra 100% segura</span>
             </div>
             <div class="flex items-center space-x-2">
               <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17,9H7V7A5,5 0 0,1 12,2A5,5 0 0,1 17,7V9M21,16A2,2 0 0,1 19,18H5A2,2 0 0,1 3,16V10A2,2 0 0,1 5,8H19A2,2 0 0,1 21,10V16Z"/>
               </svg>
-              <span>Datos protegidos SSL</span>
+              <span class="font-body">Datos protegidos SSL</span>
             </div>
             <div class="flex items-center space-x-2">
               <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
               </svg>
-              <span>Garantía de satisfacción</span>
+              <span class="font-body">Garantía de satisfacción</span>
             </div>
           </div>
         </div>
@@ -212,17 +212,17 @@
       <div class="pt-8 mt-12 border-t border-gray-800">
         <div class="max-w-md mx-auto text-center lg:max-w-none lg:text-left lg:flex lg:items-center lg:justify-between">
           <div class="lg:flex-1">
-            <h4 class="mb-2 text-lg font-light text-white">Mantente al día</h4>
-            <p class="text-sm text-gray-300">Recibe noticias sobre nuevas colecciones y ofertas exclusivas</p>
+            <h4 class="mb-2 text-lg font-heading font-light text-white">Mantente al día</h4>
+            <p class="text-sm font-body text-gray-300">Recibe noticias sobre nuevas colecciones y ofertas exclusivas</p>
           </div>
           <div class="mt-6 lg:mt-0 lg:ml-8 lg:flex-shrink-0">
             <div class="flex flex-col gap-3 sm:flex-row">
               <input 
                 type="email" 
                 placeholder="Tu email"
-                class="px-4 py-2 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                class="px-4 py-2 font-body text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
               >
-              <button class="btn-minimal btn-light whitespace-nowrap">
+              <button class="btn-minimal btn-light whitespace-nowrap font-body">
                 Suscribirse
               </button>
             </div>
@@ -234,14 +234,14 @@
       <div class="pt-8 mt-12 border-t border-gray-800">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-            <p>&copy; 2024 M-VINTAGE. Todos los derechos reservados.</p>
-            <router-link to="/terms" class="transition-colors hover:text-white">Términos y Condiciones</router-link>
-            <router-link to="/privacy" class="transition-colors hover:text-white">Política de Privacidad</router-link>
+            <p class="font-body">&copy; 2024 M-VINTAGE. Todos los derechos reservados.</p>
+            <router-link to="/terms" class="font-body transition-colors hover:text-white">Términos y Condiciones</router-link>
+            <router-link to="/privacy" class="font-body transition-colors hover:text-white">Política de Privacidad</router-link>
           </div>
           <div class="mt-4 lg:mt-0">
-            <p class="text-xs text-gray-500">
+            <p class="text-xs font-body text-gray-500">
               Diseñado con ❤️ por 
-              <a href="mailto:tecnofusion.it@gmail.com" class="underline transition-colors hover:text-gray-400">
+              <a href="mailto:tecnofusion.it@gmail.com" class="font-body underline transition-colors hover:text-gray-400">
                 TecnoFusion
               </a>
             </p>

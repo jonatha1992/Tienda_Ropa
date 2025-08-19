@@ -50,7 +50,19 @@ export default {
                 }
             },
             fontFamily: {
-                sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                sans: ['Lato', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                mono: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+                heading: ['Lato', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                body: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+            },
+            fontSize: {
+                'base': ['14px', '1.6'],
+                'h1': ['28px', '1.2'],
+                'h2': ['24px', '1.2'],
+                'h3': ['20px', '1.2'],
+                'h4': ['18px', '1.2'],
+                'h5': ['16px', '1.2'],
+                'h6': ['14px', '1.2']
             }
         }
     },

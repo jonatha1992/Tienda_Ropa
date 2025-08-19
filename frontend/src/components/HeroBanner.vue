@@ -25,18 +25,18 @@
       <div class="max-w-2xl">
         <div class="flex items-center justify-center mb-6 space-x-3">
           <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-12 h-12 md:h-16 md:w-16" />
-          <h1 class="text-5xl font-light tracking-wide text-white md:text-7xl">
+          <h1 class="text-5xl font-heading font-light tracking-wide text-white md:text-7xl">
             M-VINTAGE
           </h1>
         </div>
-        <p class="mb-8 text-xl font-light tracking-wide text-white md:text-2xl">
+        <p class="mb-8 text-xl font-body font-light tracking-wide text-white md:text-2xl">
           Estilo que perdura en el tiempo
         </p>
         <div class="space-y-4">
-          <button class="mr-4 btn-minimal btn-light">
+          <button class="mr-4 btn-minimal btn-light font-body">
             Ver Colección
           </button>
-          <button class="btn-minimal btn-dark">
+          <button class="btn-minimal btn-dark font-body">
             Nuevos Arribos
           </button>
         </div>

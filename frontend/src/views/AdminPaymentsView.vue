@@ -3,10 +3,34 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-light text-gray-900">Gestión de Pagos</h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <h1 class="font-heading text-3xl font-light text-gray-900">Gestión de Pagos</h1>
+        <p class="font-body mt-2 text-sm text-gray-600">
           Administra verificaciones de transferencias, entregas y estados de pago
         </p>
+      </div>
+
+      <!-- Admin Navigation Tabs -->
+      <div class="border-b border-gray-200 mb-6">
+        <nav class="flex space-x-8">
+          <router-link 
+            to="/admin/products" 
+            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+          >
+            <span class="font-body">Productos</span>
+          </router-link>
+          <router-link 
+            to="/admin/users" 
+            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+          >
+            <span class="font-body">Usuarios</span>
+          </router-link>
+          <router-link 
+            to="/admin/orders" 
+            class="border-transparent text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-black"
+          >
+            <span class="font-body">Pedidos</span>
+          </router-link>
+        </nav>
       </div>
 
       <!-- Statistics Cards -->
@@ -21,8 +45,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Pendientes de verificación</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ stats.pending_verification }}</dd>
+                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Pendientes de verificación</dt>
+                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.pending_verification }}</dd>
                 </dl>
               </div>
             </div>
@@ -39,8 +63,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Entregas pendientes</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ stats.pending_delivery }}</dd>
+                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Entregas pendientes</dt>
+                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.pending_delivery }}</dd>
                 </dl>
               </div>
             </div>
@@ -57,8 +81,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Entregas programadas</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ stats.scheduled_delivery }}</dd>
+                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Entregas programadas</dt>
+                  <dd class="font-body text-lg font-medium text-gray-900">{{ stats.scheduled_delivery }}</dd>
                 </dl>
               </div>
             </div>
@@ -75,8 +99,8 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Monto pendiente</dt>
-                  <dd class="text-lg font-medium text-gray-900">${{ stats.total_pending_amount.toLocaleString() }}</dd>
+                  <dt class="font-body text-sm font-medium text-gray-500 truncate">Monto pendiente</dt>
+                  <dd class="font-body text-lg font-medium text-gray-900">${{ stats.total_pending_amount.toLocaleString() }}</dd>
                 </dl>
               </div>
             </div>
@@ -86,65 +110,65 @@
 
       <!-- Filters -->
       <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Filtros</h2>
+        <h2 class="font-heading text-lg font-medium text-gray-900 mb-4">Filtros</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Método de pago</label>
+            <label for="paymentMethod" class="font-body block text-sm font-medium text-gray-700">Método de pago</label>
             <select
               v-model="filters.payment_method"
               id="paymentMethod"
               @change="loadOrders"
               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
             >
-              <option value="">Todos</option>
-              <option value="transfer">Transferencia</option>
-              <option value="mercadopago">MercadoPago</option>
-              <option value="cash">Efectivo</option>
+              <option class="font-body" value="">Todos</option>
+              <option class="font-body" value="transfer">Transferencia</option>
+              <option class="font-body" value="mercadopago">MercadoPago</option>
+              <option class="font-body" value="cash">Efectivo</option>
             </select>
           </div>
 
           <div>
-            <label for="paymentStatus" class="block text-sm font-medium text-gray-700">Estado del pago</label>
+            <label for="paymentStatus" class="font-body block text-sm font-medium text-gray-700">Estado del pago</label>
             <select
               v-model="filters.payment_status"
               id="paymentStatus"
               @change="loadOrders"
               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
             >
-              <option value="">Todos</option>
-              <option value="pending">Pendiente</option>
-              <option value="pending_payment">Pendiente de pago</option>
-              <option value="approved">Aprobado</option>
-              <option value="rejected">Rechazado</option>
+              <option class="font-body" value="">Todos</option>
+              <option class="font-body" value="pending">Pendiente</option>
+              <option class="font-body" value="pending_payment">Pendiente de pago</option>
+              <option class="font-body" value="approved">Aprobado</option>
+              <option class="font-body" value="rejected">Rechazado</option>
             </select>
           </div>
 
           <div>
-            <label for="verificationRequired" class="block text-sm font-medium text-gray-700">Verificación</label>
+            <label for="verificationRequired" class="font-body block text-sm font-medium text-gray-700">Verificación</label>
             <select
               v-model="filters.verification_required"
               id="verificationRequired"
               @change="loadOrders"
               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
             >
-              <option value="">Todos</option>
-              <option value="true">Requiere verificación</option>
-              <option value="false">No requiere verificación</option>
+              <option class="font-body" value="">Todos</option>
+              <option class="font-body" value="true">Requiere verificación</option>
+              <option class="font-body" value="false">No requiere verificación</option>
             </select>
           </div>
 
           <div>
-            <label for="deliveryStatus" class="block text-sm font-medium text-gray-700">Estado de entrega</label>
+            <label for="deliveryStatus" class="font-body block text-sm font-medium text-gray-700">Estado de entrega</label>
             <select
               v-model="filters.delivery_status"
               id="deliveryStatus"
               @change="loadOrders"
               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
             >
-              <option value="">Todos</option>
-              <option value="pending">Pendiente</option>
-              <option value="scheduled">Programada</option>
-              <option value="delivered">Entregada</option>
+              <option class="font-body" value="">Todos</option>
+              <option class="font-body" value="pending">Pendiente</option>
+              <option class="font-body" value="scheduled">Programada</option>
+              <option class="font-body" value="delivered">Entregada</option>
             </select>
           </div>
         </div>
@@ -154,7 +178,7 @@
       <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-medium text-gray-900">Órdenes</h2>
+            <h2 class="font-heading text-lg font-medium text-gray-900">Órdenes</h2>
             <button
               @click="loadOrders"
               :disabled="loading"
@@ -164,7 +188,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ loading ? 'Cargando...' : 'Actualizar' }}
+              <span class="font-body">{{ loading ? 'Cargando...' : 'Actualizar' }}</span>
             </button>
           </div>
         </div>
@@ -173,61 +197,61 @@
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No hay órdenes</h3>
-          <p class="mt-1 text-sm text-gray-500">No se encontraron órdenes con los filtros seleccionados.</p>
+          <h3 class="font-heading mt-2 text-sm font-medium text-gray-900">No hay órdenes</h3>
+          <p class="font-body mt-1 text-sm text-gray-500">No se encontraron órdenes con los filtros seleccionados.</p>
         </div>
 
         <div v-else class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orden</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orden</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
-                  <div v-if="order.verification_required" class="text-xs text-orange-600">
+                  <div class="font-body text-sm font-medium text-gray-900">#{{ order.id }}</div>
+                  <div v-if="order.verification_required" class="font-body text-xs text-orange-600">
                     Requiere verificación
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ order.customer?.name || 'N/A' }}</div>
-                  <div class="text-sm text-gray-500">{{ order.customer?.email || 'N/A' }}</div>
+                  <div class="font-body text-sm text-gray-900">{{ order.customer?.name || 'N/A' }}</div>
+                  <div class="font-body text-sm text-gray-500">{{ order.customer?.email || 'N/A' }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">${{ order.total?.toLocaleString() }}</div>
-                  <div v-if="order.delivery_cost" class="text-xs text-gray-500">
+                  <div class="font-body text-sm font-medium text-gray-900">${{ order.total?.toLocaleString() }}</div>
+                  <div v-if="order.delivery_cost" class="font-body text-xs text-gray-500">
                     Envío: ${{ order.delivery_cost.toLocaleString() }}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  <span class="font-body inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                         :class="getPaymentMethodClass(order.payment_method)">
                     {{ getPaymentMethodText(order.payment_method) }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  <span class="font-body inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                         :class="getPaymentStatusClass(order.payment_status)">
                     {{ getPaymentStatusText(order.payment_status) }}
                   </span>
                   <div v-if="order.delivery_status" class="mt-1">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    <span class="font-body inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                           :class="getDeliveryStatusClass(order.delivery_status)">
                       {{ getDeliveryStatusText(order.delivery_status) }}
                     </span>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ formatDate(order.created_at) }}
+                  <span class="font-body">{{ formatDate(order.created_at) }}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                   <!-- Transfer Actions -->
@@ -236,7 +260,7 @@
                     @click="openTransferModal(order)"
                     class="text-blue-600 hover:text-blue-900"
                   >
-                    Verificar
+                    <span class="font-body">Verificar</span>
                   </button>
                   
                   <!-- Cash Delivery Actions -->
@@ -245,7 +269,7 @@
                     @click="openDeliveryModal(order)"
                     class="text-green-600 hover:text-green-900"
                   >
-                    Programar
+                    <span class="font-body">Programar</span>
                   </button>
                   
                   <button
@@ -253,7 +277,7 @@
                     @click="markAsDelivered(order)"
                     class="text-purple-600 hover:text-purple-900"
                   >
-                    Entregado
+                    <span class="font-body">Entregado</span>
                   </button>
                   
                   <!-- View Details -->
@@ -261,7 +285,7 @@
                     @click="openOrderModal(order)"
                     class="text-gray-600 hover:text-gray-900"
                   >
-                    Ver
+                    <span class="font-body">Ver</span>
                   </button>
                 </td>
               </tr>
@@ -274,16 +298,16 @@
     <!-- Transfer Verification Modal -->
     <div v-if="showTransferModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Verificar Transferencia</h3>
+        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Verificar Transferencia</h3>
         <div class="space-y-4">
           <div>
-            <p class="text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="text-sm text-gray-600 mb-4">Cliente: {{ selectedOrder?.customer?.name }}</p>
+            <p class="font-body text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
+            <p class="font-body text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="font-body text-sm text-gray-600 mb-4">Cliente: {{ selectedOrder?.customer?.name }}</p>
           </div>
           
           <div>
-            <label for="adminNotes" class="block text-sm font-medium text-gray-700">Notas de verificación</label>
+            <label for="adminNotes" class="font-body block text-sm font-medium text-gray-700">Notas de verificación</label>
             <textarea
               v-model="transferForm.admin_notes"
               id="adminNotes"
@@ -299,14 +323,14 @@
               :disabled="processingTransfer"
               class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md font-medium hover:bg-green-700 disabled:bg-gray-400"
             >
-              Aprobar
+              <span class="font-body">Aprobar</span>
             </button>
             <button
               @click="verifyTransfer(false)"
               :disabled="processingTransfer"
               class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md font-medium hover:bg-red-700 disabled:bg-gray-400"
             >
-              Rechazar
+              <span class="font-body">Rechazar</span>
             </button>
           </div>
           
@@ -314,7 +338,7 @@
             @click="closeTransferModal"
             class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
           >
-            Cancelar
+            <span class="font-body">Cancelar</span>
           </button>
         </div>
       </div>
@@ -323,16 +347,16 @@
     <!-- Delivery Scheduling Modal -->
     <div v-if="showDeliveryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Programar Entrega</h3>
+        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Programar Entrega</h3>
         <div class="space-y-4">
           <div>
-            <p class="text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="text-sm text-gray-600 mb-4">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
+            <p class="font-body text-sm text-gray-600 mb-2">Orden #{{ selectedOrder?.id }}</p>
+            <p class="font-body text-sm text-gray-600 mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="font-body text-sm text-gray-600 mb-4">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
           </div>
           
           <div>
-            <label for="scheduledDate" class="block text-sm font-medium text-gray-700">Fecha de entrega</label>
+            <label for="scheduledDate" class="font-body block text-sm font-medium text-gray-700">Fecha de entrega</label>
             <input
               v-model="deliveryForm.scheduled_date"
               type="date"
@@ -344,21 +368,21 @@
           </div>
           
           <div>
-            <label for="timeSlot" class="block text-sm font-medium text-gray-700">Horario</label>
+            <label for="timeSlot" class="font-body block text-sm font-medium text-gray-700">Horario</label>
             <select
               v-model="deliveryForm.time_slot"
               id="timeSlot"
               required
               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
             >
-              <option value="mañana">Mañana (9:00 - 13:00)</option>
-              <option value="tarde">Tarde (14:00 - 18:00)</option>
-              <option value="noche">Noche (18:00 - 21:00)</option>
+              <option class="font-body" value="mañana">Mañana (9:00 - 13:00)</option>
+              <option class="font-body" value="tarde">Tarde (14:00 - 18:00)</option>
+              <option class="font-body" value="noche">Noche (18:00 - 21:00)</option>
             </select>
           </div>
           
           <div>
-            <label for="deliveryNotes" class="block text-sm font-medium text-gray-700">Notas para el delivery</label>
+            <label for="deliveryNotes" class="font-body block text-sm font-medium text-gray-700">Notas para el delivery</label>
             <textarea
               v-model="deliveryForm.notes"
               id="deliveryNotes"
@@ -374,13 +398,13 @@
               :disabled="processingDelivery || !deliveryForm.scheduled_date || !deliveryForm.time_slot"
               class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 disabled:bg-gray-400"
             >
-              Programar
+              <span class="font-body">Programar</span>
             </button>
             <button
               @click="closeDeliveryModal"
               class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
             >
-              Cancelar
+              <span class="font-body">Cancelar</span>
             </button>
           </div>
         </div>
@@ -390,34 +414,34 @@
     <!-- Order Details Modal -->
     <div v-if="showOrderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-96 overflow-y-auto">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Detalles de la Orden #{{ selectedOrder?.id }}</h3>
+        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Detalles de la Orden #{{ selectedOrder?.id }}</h3>
         <div v-if="selectedOrder" class="space-y-4">
           <!-- Order Info -->
           <div class="grid grid-cols-2 gap-4 text-sm">
-            <div><strong>Cliente:</strong> {{ selectedOrder.customer?.name }}</div>
-            <div><strong>Email:</strong> {{ selectedOrder.customer?.email }}</div>
-            <div><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone }}</div>
-            <div><strong>Total:</strong> ${{ selectedOrder.total?.toLocaleString() }}</div>
-            <div><strong>Método:</strong> {{ getPaymentMethodText(selectedOrder.payment_method) }}</div>
-            <div><strong>Estado:</strong> {{ getPaymentStatusText(selectedOrder.payment_status) }}</div>
+            <div class="font-body"><strong>Cliente:</strong> {{ selectedOrder.customer?.name }}</div>
+            <div class="font-body"><strong>Email:</strong> {{ selectedOrder.customer?.email }}</div>
+            <div class="font-body"><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone }}</div>
+            <div class="font-body"><strong>Total:</strong> ${{ selectedOrder.total?.toLocaleString() }}</div>
+            <div class="font-body"><strong>Método:</strong> {{ getPaymentMethodText(selectedOrder.payment_method) }}</div>
+            <div class="font-body"><strong>Estado:</strong> {{ getPaymentStatusText(selectedOrder.payment_status) }}</div>
           </div>
           
           <!-- Address Info -->
           <div v-if="selectedOrder.customer" class="border-t pt-4">
-            <h4 class="font-medium mb-2">Dirección de entrega</h4>
-            <p class="text-sm text-gray-600">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
-            <div v-if="selectedOrder.customer.address_reference" class="text-sm text-gray-600 mt-1">
+            <h4 class="font-heading font-medium mb-2">Dirección de entrega</h4>
+            <p class="font-body text-sm text-gray-600">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
+            <div v-if="selectedOrder.customer.address_reference" class="font-body text-sm text-gray-600 mt-1">
               <strong>Ref:</strong> {{ selectedOrder.customer.address_reference }}
             </div>
-            <div v-if="selectedOrder.customer.delivery_notes" class="text-sm text-gray-600 mt-1">
+            <div v-if="selectedOrder.customer.delivery_notes" class="font-body text-sm text-gray-600 mt-1">
               <strong>Notas:</strong> {{ selectedOrder.customer.delivery_notes }}
             </div>
           </div>
           
           <!-- Admin Notes -->
           <div v-if="selectedOrder.admin_notes" class="border-t pt-4">
-            <h4 class="font-medium mb-2">Notas del administrador</h4>
-            <p class="text-sm text-gray-600">{{ selectedOrder.admin_notes }}</p>
+            <h4 class="font-heading font-medium mb-2">Notas del administrador</h4>
+            <p class="font-body text-sm text-gray-600">{{ selectedOrder.admin_notes }}</p>
           </div>
         </div>
         
@@ -426,7 +450,7 @@
             @click="closeOrderModal"
             class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
           >
-            Cerrar
+            <span class="font-body">Cerrar</span>
           </button>
         </div>
       </div>
