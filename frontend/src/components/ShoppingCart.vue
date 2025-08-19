@@ -3,7 +3,7 @@
     <div :class="isModal ? 'px-4 py-6' : 'max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8'">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-heading font-light tracking-tight text-gray-900">Carrito de compras</h1>
+        <h1 class="text-3xl font-light tracking-tight text-gray-900 font-heading">Carrito de compras</h1>
         <p v-if="!cartStore.isEmpty" class="mt-2 text-sm font-body text-body-text">
           {{ cartStore.itemCount }} {{ cartStore.itemCount === 1 ? 'producto' : 'productos' }} en tu carrito
         </p>
@@ -18,20 +18,20 @@
               <div class="flex items-start space-x-4">
                 <!-- Product Image -->
                 <div class="flex-shrink-0">
-                  <div class="h-20 w-20 overflow-hidden rounded-lg border border-gray-200">
+                  <div class="w-20 h-20 overflow-hidden border border-gray-200 rounded-lg">
                     <img 
                       :src="item.product.images[0]?.image_url || '/placeholder-image.jpg'" 
                       :alt="item.product.name" 
-                      class="h-full w-full object-cover object-center"
+                      class="object-cover object-center w-full h-full"
                     >
                   </div>
                 </div>
 
                 <!-- Product Details -->
                 <div class="flex-1 min-w-0">
-                  <div class="flex justify-between items-start">
+                  <div class="flex items-start justify-between">
                     <div class="flex-1">
-                      <h3 class="text-base font-heading font-medium text-gray-900">
+                      <h3 class="text-base font-medium text-gray-900 font-heading">
                         <router-link 
                           :to="`/product/${item.product.id}`" 
                           class="hover:text-gray-700 font-body"
@@ -55,14 +55,14 @@
                       </div>
 
                       <!-- Price -->
-                      <div class="mt-2 flex items-center space-x-2">
-                        <span class="text-lg font-body font-medium text-body-text">
+                      <div class="flex items-center mt-2 space-x-2">
+                        <span class="text-lg font-medium font-body text-body-text">
                           ${{ cartStore.getItemPrice(item).toLocaleString() }}
                         </span>
-                        <span v-if="item.product.has_discount" class="text-sm font-body text-body-text line-through">
+                        <span v-if="item.product.has_discount" class="text-sm line-through font-body text-body-text">
                           ${{ item.product.price.toLocaleString() }}
                         </span>
-                        <span v-if="item.product.has_discount" class="text-sm font-body text-red-600 font-medium">
+                        <span v-if="item.product.has_discount" class="text-sm font-medium text-red-600 font-body">
                           -{{ item.product.discount_percentage }}%
                         </span>
                       </div>
@@ -74,14 +74,14 @@
                       class="ml-4 text-gray-400 hover:text-gray-500"
                       title="Eliminar producto"
                     >
-                      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
                   </div>
 
                   <!-- Quantity Controls -->
-                  <div class="mt-4 flex items-center justify-between">
+                  <div class="flex items-center justify-between mt-4">
                     <div class="flex items-center border border-gray-300 rounded-md">
                       <button
                         @click="updateQuantity(item, item.quantity - 1)"
@@ -95,7 +95,7 @@
                         @input="updateQuantity(item, parseInt(($event.target as HTMLInputElement).value))"
                         type="number"
                         min="1"
-                        class="w-16 px-2 py-1 font-body text-center border-0 focus:ring-0"
+                        class="w-16 px-2 py-1 text-center border-0 font-body focus:ring-0"
                       >
                       <button
                         @click="updateQuantity(item, item.quantity + 1)"
@@ -107,7 +107,7 @@
 
                     <!-- Item Total -->
                     <div class="text-right">
-                      <p class="text-lg font-body font-medium text-body-text">
+                      <p class="text-lg font-medium font-body text-body-text">
                         ${{ cartStore.getItemTotal(item).toLocaleString() }}
                       </p>
                       <p v-if="item.quantity > 1" class="text-sm font-body text-body-text">
@@ -122,8 +122,8 @@
         </div>
 
         <!-- Cart Summary -->
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
-          <h3 class="text-lg font-heading font-medium text-gray-900 mb-4">Resumen del pedido</h3>
+        <div class="p-6 border border-gray-200 rounded-lg bg-gray-50">
+          <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Resumen del pedido</h3>
           
           <div class="space-y-2">
             <!-- Subtotal -->
@@ -147,10 +147,10 @@
             </div>
 
             <!-- Total -->
-            <div class="border-t border-gray-200 pt-2">
+            <div class="pt-2 border-t border-gray-200">
               <div class="flex justify-between">
-                <span class="text-lg font-body font-medium text-gray-900">Total</span>
-                <span class="text-lg font-body font-medium text-gray-900">
+                <span class="text-lg font-medium text-gray-900 font-body">Total</span>
+                <span class="text-lg font-medium text-gray-900 font-body">
                   ${{ cartStore.totalPrice.toLocaleString() }}
                 </span>
               </div>
@@ -158,15 +158,15 @@
           </div>
 
           <!-- Auth Notice -->
-          <div v-if="!authStore.isAuthenticated" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <div v-if="!authStore.isAuthenticated" class="p-3 mt-4 border border-blue-200 rounded-md bg-blue-50">
             <div class="flex">
               <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="w-5 h-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm font-body text-blue-700">
+                <p class="text-sm text-blue-700 font-body">
                   Necesitas <strong>iniciar sesión</strong> para proceder con la compra.
                 </p>
               </div>
@@ -177,7 +177,7 @@
           <div class="mt-6">
             <button
               @click="proceedToCheckout"
-              class="w-full bg-black text-white py-3 px-4 rounded-md font-body font-medium hover:bg-gray-800 transition-colors"
+              class="w-full px-4 py-3 font-medium text-white transition-colors bg-black rounded-md hover:bg-gray-800"
             >
               {{ authStore.isAuthenticated ? 'Proceder al checkout' : 'Iniciar sesión y continuar' }}
             </button>
@@ -187,7 +187,7 @@
           <div class="mt-4 text-center">
             <router-link
               to="/shop"
-              class="text-sm font-body text-gray-600 hover:text-gray-800"
+              class="text-sm text-gray-600 font-body hover:text-gray-800"
             >
               ← Continuar comprando
             </router-link>
@@ -196,17 +196,17 @@
       </div>
 
       <!-- Empty Cart -->
-      <div v-else class="text-center py-12">
-        <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+      <div v-else class="py-12 text-center">
+        <div class="w-24 h-24 mx-auto mb-4 text-gray-400">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 class="text-lg font-heading font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
-        <p class="text-gray-600 font-body mb-6">Agrega algunos productos para comenzar</p>
+        <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">Tu carrito está vacío</h3>
+        <p class="mb-6 text-gray-600 font-body">Agrega algunos productos para comenzar</p>
         <router-link
           to="/shop"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-body font-medium rounded-md text-white bg-black hover:bg-gray-800"
+          class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md font-body hover:bg-gray-800"
         >
           Explorar productos
         </router-link>

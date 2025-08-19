@@ -16,14 +16,14 @@
           @click="showAddUserModal = true"
           class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
         >
-          <span class="font-body">+ Agregar Usuario</span>
+          <span >+ Agregar Usuario</span>
         </button>
         <button
           @click="loadUsers"
           :disabled="loading"
           class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
         >
-          <span class="font-body">{{ loading ? 'Cargando...' : 'Actualizar Lista' }}</span>
+          <span >{{ loading ? 'Cargando...' : 'Actualizar Lista' }}</span>
         </button>
       </div>
     </div>
@@ -34,16 +34,16 @@
     <!-- Users Table -->
     <div class="overflow-hidden bg-white rounded-lg shadow-md">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="font-heading text-lg font-semibold text-gray-900">
+        <h3 class="text-lg font-semibold text-gray-900 font-heading">
           Usuarios del Sistema ({{ filteredUsers.length }})
         </h3>
       </div>
       
-      <div v-if="loading && users.length === 0" class="font-body p-6 text-center text-body-text">
+      <div v-if="loading && users.length === 0" class="p-6 text-center font-body text-body-text">
         Cargando usuarios...
       </div>
       
-      <div v-else-if="filteredUsers.length === 0" class="font-body p-6 text-center text-body-text">
+      <div v-else-if="filteredUsers.length === 0" class="p-6 text-center font-body text-body-text">
         {{ searchQuery ? 'No se encontraron usuarios con esa búsqueda' : 'No hay usuarios registrados' }}
       </div>
       
@@ -51,10 +51,10 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="font-heading px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Usuario</th>
-              <th class="font-heading px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Roles</th>
-              <th class="font-heading px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Estado</th>
-              <th class="font-heading px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Acciones</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Usuario</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Roles</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Estado</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -63,14 +63,14 @@
                 <div class="flex items-center">
                   <div class="flex-shrink-0 w-10 h-10">
                     <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
-                      <span class="font-body text-sm font-medium text-body-text">
+                      <span class="text-sm font-medium font-body text-body-text">
                         {{ getUserInitials(user.email) }}
                       </span>
                     </div>
                   </div>
                   <div class="ml-4">
-                    <div class="font-body text-sm font-medium text-body-text">{{ user.email }}</div>
-                    <div class="font-body text-sm text-body-text">ID: {{ user.id }}</div>
+                    <div class="text-sm font-medium font-body text-body-text">{{ user.email }}</div>
+                    <div class="text-sm font-body text-body-text">ID: {{ user.id }}</div>
                   </div>
                 </div>
               </td>
@@ -79,18 +79,18 @@
                   <span
                     v-for="role in user.roles || []"
                     :key="role.id"
-                    class="font-body inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-full font-body"
                     :class="getRoleBadgeClass(role.name)"
                   >
                     {{ role.name.toUpperCase() }}
                   </span>
-                  <span v-if="!user.roles || user.roles.length === 0" class="font-body text-xs text-body-text">
+                  <span v-if="!user.roles || user.roles.length === 0" class="text-xs font-body text-body-text">
                     Sin roles asignados
                   </span>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="font-body inline-flex px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full font-body">
                   Activo
                 </span>
               </td>
@@ -119,7 +119,7 @@
       <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-3/5 xl:w-1/2">
         <div class="mt-3">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="font-heading text-lg font-bold text-gray-900">
+            <h3 class="text-lg font-bold text-gray-900 font-heading">
               Gestionar Roles: {{ selectedUser?.email }}
             </h3>
             <button
@@ -134,12 +134,12 @@
           
           <!-- Current Roles -->
           <div class="mb-4">
-            <h4 class="font-heading mb-2 text-sm font-medium text-gray-700">Roles Actuales</h4>
+            <h4 class="mb-2 text-sm font-medium text-gray-700 font-heading">Roles Actuales</h4>
             <div class="flex flex-wrap gap-2">
               <span
                 v-for="role in selectedUser?.roles || []"
                 :key="role.id"
-                class="font-body inline-flex items-center px-3 py-1 text-sm rounded-full"
+                class="inline-flex items-center px-3 py-1 text-sm rounded-full font-body"
                 :class="getRoleBadgeClass(role.name)"
               >
                 {{ role.name.toUpperCase() }}
@@ -150,7 +150,7 @@
                   ×
                 </button>
               </span>
-              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="font-body text-sm text-body-text">
+              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="text-sm font-body text-body-text">
                 Sin roles asignados
               </span>
             </div>
@@ -158,15 +158,15 @@
           
           <!-- Add Role -->
           <div class="mb-4">
-            <h4 class="font-heading mb-2 text-sm font-medium text-gray-700">Agregar Rol</h4>
+            <h4 class="mb-2 text-sm font-medium text-gray-700 font-heading">Agregar Rol</h4>
             <div class="flex gap-2">
-              <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+              <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md">
                 <option class="font-body" value="">Seleccionar rol</option>
                 <option
                   v-for="role in availableRoles"
                   :key="role.id"
                   :value="role.id"
-                  class="font-body text-sm"
+                  class="text-sm font-body"
                 >
                   {{ role.name.toUpperCase() }} - {{ role.description }}
                 </option>
@@ -189,7 +189,7 @@
       <div class="relative w-11/12 p-5 mx-auto bg-white border rounded-md shadow-lg top-20 md:w-3/4 lg:w-1/2">
         <div class="mt-3">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="font-heading text-lg font-bold text-gray-900">
+            <h3 class="text-lg font-bold text-gray-900 font-heading">
               Agregar Nuevo Usuario
             </h3>
             <button
@@ -205,7 +205,7 @@
           <!-- User Form -->
           <form @submit.prevent="addNewUser" class="space-y-4">
             <div>
-              <label class="font-body block text-sm font-medium text-body-text mb-1">Email</label>
+              <label class="block mb-1 text-sm font-medium font-body text-body-text">Email</label>
               <input
                 v-model="newUserForm.email"
                 @blur="checkEmailExists"
@@ -215,11 +215,11 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 :class="{ 'border-red-500': emailError }"
               />
-              <p v-if="emailError" class="font-body mt-1 text-sm text-red-600">{{ emailError }}</p>
+              <p v-if="emailError" class="mt-1 text-sm text-red-600 font-body">{{ emailError }}</p>
             </div>
             
             <div>
-              <label class="font-body block text-sm font-medium text-body-text mb-1">Nombre de Usuario (opcional)</label>
+              <label class="block mb-1 text-sm font-medium font-body text-body-text">Nombre de Usuario (opcional)</label>
               <input
                 v-model="newUserForm.username"
                 type="text"
@@ -229,7 +229,7 @@
             </div>
             
             <div>
-              <label class="font-body block text-sm font-medium text-body-text mb-1">Contraseña Temporal</label>
+              <label class="block mb-1 text-sm font-medium font-body text-body-text">Contraseña Temporal</label>
               <div class="relative">
                 <input
                   v-model="newUserForm.password"
@@ -256,18 +256,18 @@
             </div>
             
             <div>
-              <label class="font-body block text-sm font-medium text-gray-700 mb-1">Rol Inicial</label>
+              <label class="block mb-1 text-sm font-medium text-gray-700 font-body">Rol Inicial</label>
               <select
                 v-model="newUserForm.roleId"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               >
                 <option class="font-body" value="">Seleccionar rol</option>
                 <option
                   v-for="role in adminRoles"
                   :key="role.id"
                   :value="role.id"
-                  class="font-body text-sm"
+                  class="text-sm font-body"
                 >
                   {{ role.name.toUpperCase() }} - {{ role.description }}
                 </option>
