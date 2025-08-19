@@ -9,28 +9,31 @@
         <!-- Product Images Container -->
         <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
           <!-- Primary Image -->
-          <OptimizedImage
-            :src="imageToShow"
-            :alt="product.name"
-            loading="lazy"
-            aspect-ratio="square"
-            :show-spinner="true"
-            :fallback-src="defaultImage"
-            image-class="object-cover w-full h-full transition-opacity duration-300 primary-image"
-            @error="handleImageError"
-          />
+          <div class="primary-image-container">
+            <OptimizedImage
+              :src="imageToShow"
+              :alt="product.name"
+              loading="lazy"
+              aspect-ratio="square"
+              :show-spinner="true"
+              :fallback-src="defaultImage"
+              image-class="object-cover w-full h-full"
+              @error="handleImageError"
+            />
+          </div>
         
           <!-- Secondary Image (hover effect) -->
-          <OptimizedImage
-            v-if="product.images && product.images[1]"
-            :src="product.images[1].image_url"
-            :alt="product.name"
-            loading="lazy"
-            aspect-ratio="square"
-            :show-spinner="true"
-            :fallback-src="defaultImage"
-            image-class="object-cover w-full h-full secondary-image"
-          />
+          <div v-if="product.images && product.images[1]" class="secondary-image-container">
+            <OptimizedImage
+              :src="product.images[1].image_url"
+              :alt="product.name"
+              loading="lazy"
+              aspect-ratio="square"
+              :show-spinner="true"
+              :fallback-src="defaultImage"
+              image-class="object-cover w-full h-full"
+            />
+          </div>
         </div>
         
         <!-- Product Labels -->
@@ -199,47 +202,67 @@ const closeImageGallery = () => {
 .product-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .product-card:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  border-color: #e5e7eb;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.12),
+    0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
 }
 
 /* Image container styling */
 .product-card .aspect-square {
-  border-radius: 8px 8px 0 0;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
 }
 
-/* Primary image styling */
-:deep(.primary-image) {
+/* Primary image container styling */
+.primary-image-container {
   position: relative;
   z-index: 1;
   transition: opacity 0.3s ease;
+  width: 100%;
+  height: 100%;
 }
 
-/* Secondary image styling */
-:deep(.secondary-image) {
+/* Secondary image container styling */
+.secondary-image-container {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
   opacity: 0;
   transition: opacity 0.3s ease;
+  width: 100%;
+  height: 100%;
 }
 
 /* Hover effects */
-.product-card:hover :deep(.primary-image) {
+.product-card:hover .primary-image-container {
   opacity: 0;
 }
 
-.product-card:hover :deep(.secondary-image) {
+.product-card:hover .secondary-image-container {
   opacity: 1;
+}
+
+/* Quick Add Button Enhancement */
+.product-card .btn-minimal {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product-card .btn-minimal:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-1px);
 }
 </style>
