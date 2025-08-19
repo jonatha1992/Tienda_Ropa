@@ -20,17 +20,18 @@
             @error="handleImageError"
           />
         
-        <!-- Secondary Image (hover effect) -->
-        <OptimizedImage
-          v-if="product.images && product.images[1]"
-          :src="product.images[1].image_url"
-          :alt="product.name"
-          loading="lazy"
-          aspect-ratio="square"
-          :show-spinner="true"
-          :fallback-src="defaultImage"
-          image-class="object-cover w-full h-full secondary-image"
-        />
+          <!-- Secondary Image (hover effect) -->
+          <OptimizedImage
+            v-if="product.images && product.images[1]"
+            :src="product.images[1].image_url"
+            :alt="product.name"
+            loading="lazy"
+            aspect-ratio="square"
+            :show-spinner="true"
+            :fallback-src="defaultImage"
+            image-class="object-cover w-full h-full secondary-image"
+          />
+        </div>
         
         <!-- Product Labels -->
         <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-2 top-3 left-3">
@@ -61,7 +62,7 @@
       </div>
       
       <!-- Product Info -->
-      <div class="mt-4 space-y-2">
+      <div class="p-4 space-y-2">
         <h3 class="text-sm font-heading font-medium text-gray-900 transition-colors group-hover:text-gray-700">
           {{ product.name }}
         </h3>
@@ -198,25 +199,47 @@ const closeImageGallery = () => {
 .product-card {
   position: relative;
   overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: white;
 }
 
-.primary-image {
+.product-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Image container styling */
+.product-card .aspect-square {
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+/* Primary image styling */
+:deep(.primary-image) {
+  position: relative;
+  z-index: 1;
   transition: opacity 0.3s ease;
 }
 
-.secondary-image {
+/* Secondary image styling */
+:deep(.secondary-image) {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 2;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.product-card:hover .primary-image {
+/* Hover effects */
+.product-card:hover :deep(.primary-image) {
   opacity: 0;
 }
 
-.product-card:hover .secondary-image {
+.product-card:hover :deep(.secondary-image) {
   opacity: 1;
 }
 </style>
