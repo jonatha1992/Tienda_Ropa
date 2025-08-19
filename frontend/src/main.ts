@@ -9,10 +9,10 @@ import router from './router'
 const pinia = createPinia()
 const app = createApp(App)
 
-// Toast configuration
+// Professional Toast configuration matching website branding
 const toastOptions = {
     position: 'top-right' as const,
-    timeout: 4000,
+    timeout: 3000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,
@@ -22,7 +22,17 @@ const toastOptions = {
     hideProgressBar: false,
     closeButton: 'button',
     icon: true,
-    rtl: false
+    rtl: false,
+    transition: 'Vue-Toastification__fade',
+    maxToasts: 2,
+    newestOnTop: true,
+    filterBeforeCreate: (toast: any, toasts: any[]) => {
+        if (toasts.filter(t => t.type === toast.type).length !== 0) {
+            // Prevent spam of same type
+            return false;
+        }
+        return toast;
+    }
 }
 
 app.use(router)

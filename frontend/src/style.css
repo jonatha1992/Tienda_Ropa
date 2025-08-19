@@ -82,6 +82,74 @@ p, span, div, a, button, input, textarea, select {
   @apply font-body text-sm uppercase tracking-wide font-medium;
 }
 
+/* Professional Toast Notifications - Matching website branding */
+/* Custom Toastify styles for professional look */
+.Vue-Toastification__toast {
+  @apply font-body;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid currentColor;
+}
+
+.Vue-Toastification__toast--success {
+  background-color: #ffffff;
+  color: #059669;
+  border-left-color: #10b981;
+}
+
+.Vue-Toastification__toast--error {
+  background-color: #ffffff;
+  color: #dc2626;
+  border-left-color: #ef4444;
+}
+
+.Vue-Toastification__toast--warning {
+  background-color: #ffffff;
+  color: #d97706;
+  border-left-color: #f59e0b;
+}
+
+.Vue-Toastification__toast--info {
+  background-color: #ffffff;
+  color: #2563eb;
+  border-left-color: #3b82f6;
+}
+
+.Vue-Toastification__toast-body {
+  @apply font-body text-sm;
+  padding: 0.75rem 1rem;
+}
+
+.Vue-Toastification__close-button {
+  @apply text-gray-400 hover:text-gray-600;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.Vue-Toastification__progress-bar {
+  height: 3px;
+}
+
+.Vue-Toastification__toast--success .Vue-Toastification__progress-bar {
+  background-color: #10b981;
+}
+
+.Vue-Toastification__toast--error .Vue-Toastification__progress-bar {
+  background-color: #ef4444;
+}
+
+.Vue-Toastification__toast--warning .Vue-Toastification__progress-bar {
+  background-color: #f59e0b;
+}
+
+.Vue-Toastification__toast--info .Vue-Toastification__progress-bar {
+  background-color: #3b82f6;
+}
+
+.Vue-Toastification__icon {
+  margin-right: 0.5rem;
+}
+
 /* Bohme-style components */
 .hero-section {
   @apply relative overflow-hidden;
