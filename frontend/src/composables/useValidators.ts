@@ -1,24 +1,25 @@
 import { parsePhoneNumberFromString, AsYouType } from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
 
 export function isNonEmptyTrimmed(value: string | undefined | null) {
     if (value === undefined || value === null) return false;
     return String(value).trim().length > 0;
 }
 
-export function isValidPhone(phone: string, country = 'AR') {
+export function isValidPhone(phone: string, country: string = 'AR') {
     if (!phone) return false;
     try {
-        const parsed = parsePhoneNumberFromString(phone, country);
+        const parsed = parsePhoneNumberFromString(phone, country as CountryCode);
         return parsed ? parsed.isValid() : false;
     } catch (e) {
         return false;
     }
 }
 
-export function formatE164(phone: string, country = 'AR') {
+export function formatE164(phone: string, country: string = 'AR') {
     if (!phone) return phone;
     try {
-        const parsed = parsePhoneNumberFromString(phone, country);
+        const parsed = parsePhoneNumberFromString(phone, country as CountryCode);
         if (parsed && parsed.isValid()) return parsed.number; // E.164
         return phone;
     } catch (e) {
@@ -28,7 +29,7 @@ export function formatE164(phone: string, country = 'AR') {
 
 // Simple postal code validator. Argentina common pattern: 4 digits (for many zones),
 // accept 4-8 digits to be more permissive (some international). Returns normalized string.
-export function isValidPostalCode(postal: string, country = 'AR') {
+export function isValidPostalCode(postal: string, country: string = 'AR') {
     if (!postal) return false;
     const p = String(postal).trim();
     if (country === 'AR') {
@@ -39,9 +40,9 @@ export function isValidPostalCode(postal: string, country = 'AR') {
     return /^[A-Za-z0-9 \-]{3,10}$/.test(p);
 }
 
-export function asYouType(phone: string, country = 'AR') {
+export function asYouType(phone: string, country: string = 'AR') {
     try {
-        return new AsYouType(country).input(phone);
+        return new AsYouType(country as CountryCode).input(phone);
     } catch (e) {
         return phone;
     }
