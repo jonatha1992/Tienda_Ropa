@@ -8,11 +8,11 @@
           <!-- Paso 1 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-indigo-600 rounded-full">
-                <span >1</span>
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+                <span class="text-white" >1</span>
               </div>
             </div>
-            <div>
+            <div> 
               <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Navega nuestra colección</h2>
               <p class="font-body text-body-text">
                 Explora nuestras categorías: JACKET, BLAZER, DRESS, JEAN y muchas más. 
@@ -24,8 +24,8 @@
           <!-- Paso 2 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-indigo-600 rounded-full">
-                <span >2</span>
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+                <span class="text-white" >2</span>
               </div>
             </div>
             <div>
@@ -40,8 +40,8 @@
           <!-- Paso 3 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-indigo-600 rounded-full">
-                <span >3</span>
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+                <span class="text-white">3</span>
               </div>
             </div>
             <div>
@@ -56,8 +56,8 @@
           <!-- Paso 4 -->
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-indigo-600 rounded-full">
-                <span >4</span>
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-300 rounded-full">
+                <span class="text-white" >4</span>
               </div>
             </div>
             <div>
@@ -103,7 +103,7 @@
               Si tienes alguna pregunta sobre el proceso de compra, no dudes en contactarnos.
             </p>
             <router-link to="/contact" 
-              class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700">
+              class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-gray-300 rounded-md gray-600 hover:bg-gray-700">
               <span >Contactar</span>
             </router-link>
           </div>

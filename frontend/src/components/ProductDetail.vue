@@ -274,10 +274,10 @@
             <button 
               @click="addToCart"
               :disabled="!canAddToCart"
-              class="w-full px-6 py-3 text-sm font-medium transition-colors rounded-md font-body"
+              class="w-full px-6 py-3 text-sm font-medium transition-colors rounded-md "
               :class="canAddToCart 
-                ? 'bg-black text-white' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
+                ? 'bg-gray-100 text-white' 
+                : 'bg-gray-500 text-gray-500 cursor-not-allowed'"
             >
               {{ buttonText }}
             </button>
