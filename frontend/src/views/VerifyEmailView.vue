@@ -21,7 +21,7 @@
           </div>
           <h3 class="text-lg font-medium text-gray-900 mb-2">¡Email Verificado!</h3>
           <p class="text-sm text-gray-600 mb-4">Tu email ha sido verificado exitosamente.</p>
-          <router-link to="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800">
+          <router-link to="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900">
             Continuar a la Tienda
           </router-link>
         </div>
@@ -37,7 +37,7 @@
           <p class="text-sm text-gray-600 mb-4">{{ errorMessage }}</p>
           <button 
             @click="showManualForm = true; verificationStatus = 'pending'"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900"
           >
             Intentar Nuevamente
           </button>
@@ -83,7 +83,7 @@
           <button
             type="submit"
             :disabled="processing"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 disabled:bg-gray-400"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400"
           >
             <span v-if="processing" class="flex items-center">
               <div class="animate-spin -ml-1 mr-2 h-4 w-4 border-b-2 border-white rounded-full"></div>

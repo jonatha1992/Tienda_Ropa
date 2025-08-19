@@ -39,7 +39,7 @@
           <button
             @click="retryPayment"
             :disabled="!orderDetails"
-            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
+            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400 transition-colors"
           >
             Intentar nuevamente
           </button>

@@ -15,6 +15,7 @@ import TransferInstructionsView from './views/TransferInstructionsView.vue'
 import CashConfirmationView from './views/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
+import { useLoading } from './composables/useLoading';
 import ContactView from './views/ContactView.vue';
 import HowToShopView from './views/HowToShopView.vue';
 import ShippingView from './views/ShippingView.vue';
@@ -78,8 +79,13 @@ const router = createRouter({
 });
 
 // Guard para rutas protegidas
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const { showLoading } = useLoading();
+  // Mostrar loading al cambiar de ruta
+  if (to.path !== from.path) {
+    showLoading('Cargando página...', 'Por favor espera');
+  }
 
   // Esperar a que se inicialice la autenticación si aún no se ha hecho
   if (authStore.loading) {
@@ -132,6 +138,14 @@ router.beforeEach(async (to, _from, next) => {
   } else {
     next();
   }
+});
+
+// Ocultar loading después de navegar
+router.afterEach(() => {
+  const { hideLoading } = useLoading();
+  setTimeout(() => {
+    hideLoading();
+  }, 300); // Pequeño delay para suavizar la transición
 });
 
 export default router;

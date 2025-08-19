@@ -9,21 +9,27 @@
         <!-- Product Images Container -->
         <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
           <!-- Primary Image -->
-          <img 
-            :src="imageToShow" 
+          <OptimizedImage
+            :src="imageToShow"
             :alt="product.name"
-            loading="eager"
-            class="object-cover w-full h-full transition-opacity duration-300 primary-image"
+            loading="lazy"
+            aspect-ratio="square"
+            :show-spinner="true"
+            :fallback-src="defaultImage"
+            image-class="object-cover w-full h-full transition-opacity duration-300 primary-image"
             @error="handleImageError"
           />
         
         <!-- Secondary Image (hover effect) -->
-        <img 
-          v-if="product.images && product.images[1]" 
-          :src="product.images[1].image_url" 
+        <OptimizedImage
+          v-if="product.images && product.images[1]"
+          :src="product.images[1].image_url"
           :alt="product.name"
-          loading="eager"
-          class="object-cover w-full h-full secondary-image"
+          loading="lazy"
+          aspect-ratio="square"
+          :show-spinner="true"
+          :fallback-src="defaultImage"
+          image-class="object-cover w-full h-full secondary-image"
         />
         
         <!-- Product Labels -->
@@ -92,6 +98,7 @@
 
 import { defineProps, computed, ref } from 'vue';
 import type { Product } from '../types';
+import OptimizedImage from './OptimizedImage.vue';
 
 const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a';
 

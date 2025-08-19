@@ -68,7 +68,7 @@
         <div class="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
           <router-link
             to="/"
-            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
+            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 transition-colors"
           >
             Volver al inicio
           </router-link>

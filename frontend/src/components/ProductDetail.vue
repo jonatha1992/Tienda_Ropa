@@ -7,11 +7,13 @@
         <div class="flex gap-4 flex-shrink-0">
           <!-- Main Image (más grande) -->
           <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative">
-            <img 
-              :src="mainImage" 
-              :alt="product.name" 
+            <OptimizedImage
+              :src="mainImage"
+              :alt="product.name"
               loading="eager"
-              class="object-cover object-center w-full h-full"
+              :show-spinner="true"
+              :fallback-src="'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a'"
+              image-class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Desktop -->
             <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
@@ -30,11 +32,13 @@
               class="w-20 h-20 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent hover:border-gray-300'"
             >
-              <img 
-                :src="image.image_url" 
-                :alt="`${product.name} - imagen ${index + 1}`" 
-                loading="eager"
-                class="object-cover object-center w-full h-full"
+              <OptimizedImage
+                :src="image.image_url"
+                :alt="`${product.name} - imagen ${index + 1}`"
+                loading="lazy"
+                aspect-ratio="square"
+                :show-spinner="true"
+                image-class="object-cover object-center w-full h-full"
               />
             </div>
           </div>
@@ -163,11 +167,13 @@
         <!-- Mobile Images -->
         <div class="px-4 py-6">
           <div class="mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square relative">
-            <img 
-              :src="mainImage" 
-              :alt="product.name" 
+            <OptimizedImage
+              :src="mainImage"
+              :alt="product.name"
               loading="eager"
-              class="object-cover object-center w-full h-full"
+              :show-spinner="true"
+              aspect-ratio="square"
+              image-class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Mobile -->
             <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
@@ -186,11 +192,13 @@
               class="flex-shrink-0 w-16 h-16 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent'"
             >
-              <img 
-                :src="image.image_url" 
-                :alt="`${product.name} - imagen ${index + 1}`" 
-                loading="eager"
-                class="object-cover object-center w-full h-full"
+              <OptimizedImage
+                :src="image.image_url"
+                :alt="`${product.name} - imagen ${index + 1}`"
+                loading="lazy"
+                aspect-ratio="square"
+                :show-spinner="true"
+                image-class="object-cover object-center w-full h-full"
               />
             </div>
           </div>
@@ -376,6 +384,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import OptimizedImage from './OptimizedImage.vue';
 import { useRoute } from 'vue-router';
 import type { Product, Color, Size } from '../types';
 import { useCartStore } from '../store/cart';

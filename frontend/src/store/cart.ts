@@ -123,12 +123,16 @@ export const useCartStore = defineStore('cart', {
       // Save to localStorage
       this.saveToStorage();
       
-      // Show notification
+      // Mostrar notificación personalizada solo si no estamos en un contexto de actualización de cantidad
       const { showNotification } = useCartNotification();
-      if (variantInfo) {
-        showNotification(product, quantity, variantInfo);
-      } else {
-        showNotification(product, quantity);
+      // Solo mostramos la notificación si no es una actualización de cantidad
+      const existingItem = this.items.find(item => item.id === cartItemId);
+      if (!existingItem || existingItem.quantity !== quantity) {
+        if (variantInfo) {
+          showNotification(product, quantity, variantInfo);
+        } else {
+          showNotification(product, quantity);
+        }
       }
     },
     
