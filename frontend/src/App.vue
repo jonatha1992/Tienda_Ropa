@@ -2,6 +2,7 @@
   <div>
     <Navbar />
     <router-view />
+    <Footer />
     <!-- Loading Spinner Global -->
     <LoadingSpinner 
       :show="isLoading" 
@@ -22,6 +23,7 @@ import { onMounted } from 'vue'
 import { useAuthStore } from './store/auth'
 import { useLoading } from './composables/useLoading'
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 import Chatbot from './components/Chatbot.vue'
 import CartModal from './components/CartModal.vue'

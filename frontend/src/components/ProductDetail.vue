@@ -6,7 +6,7 @@
         <!-- Left Side - Images (más compacto) -->
         <div class="flex flex-shrink-0 gap-4">
           <!-- Main Image (más grande) -->
-          <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative">
+          <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative cursor-pointer" @click="openImageGallery(selectedImage)">
             <OptimizedImage
               :src="mainImage"
               :alt="product.name"
@@ -28,7 +28,7 @@
             <div 
               v-for="(image, index) in product.images" 
               :key="index"
-              @click="selectedImage = index"
+              @click="selectedImage = index; openImageGallery(index)"
               class="w-20 h-20 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent hover:border-gray-300'"
             >
@@ -166,7 +166,7 @@
       <div class="lg:hidden">
         <!-- Mobile Images -->
         <div class="px-4 py-6">
-          <div class="relative mb-4 overflow-hidden bg-gray-100 rounded-lg aspect-square">
+          <div class="relative mb-4 overflow-hidden bg-gray-100 rounded-lg cursor-pointer" style="aspect-ratio: 26/32;" @click="openImageGallery(selectedImage)">
             <img 
               :src="mainImage" 
               :alt="product.name" 
@@ -186,7 +186,7 @@
             <div 
               v-for="(image, index) in product.images" 
               :key="index"
-              @click="selectedImage = index"
+              @click="selectedImage = index; openImageGallery(index)"
               class="flex-shrink-0 w-16 h-16 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent'"
             >
@@ -375,12 +375,22 @@
         <p class="text-gray-600 font-body">Cargando producto...</p>
       </div>
     </div>
+
+    <!-- Image Gallery Modal -->
+    <ImageGalleryModal
+      :is-open="showImageGallery"
+      :images="product?.images || []"
+      :initial-index="galleryInitialIndex"
+      :alt="product?.name || ''"
+      @close="closeImageGallery"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import OptimizedImage from './OptimizedImage.vue';
+import ImageGalleryModal from './ImageGalleryModal.vue';
 import { useRoute } from 'vue-router';
 import type { Product, Color, Size } from '../types';
 import { useCartStore } from '../store/cart';
@@ -398,6 +408,10 @@ const allSizes = ref<Size[]>([]);
 const similarProducts = ref<Product[]>([]);
 const cartStore = useCartStore();
 const toast = useToast();
+
+// Image Gallery Modal states
+const showImageGallery = ref(false);
+const galleryInitialIndex = ref(0);
 
 // Computed properties
 const mainImage = computed(() => {
@@ -620,5 +634,19 @@ const addToCart = () => {
     // Show error message
     toast.error('Error al agregar el producto al carrito');
   }
+};
+
+// Image Gallery Modal functions
+const openImageGallery = (index: number) => {
+  galleryInitialIndex.value = index;
+  showImageGallery.value = true;
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+};
+
+const closeImageGallery = () => {
+  showImageGallery.value = false;
+  // Restore body scroll
+  document.body.style.overflow = 'auto';
 };
 </script>

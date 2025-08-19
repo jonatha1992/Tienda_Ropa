@@ -146,26 +146,26 @@
                 </div>
               </div>
               
-              <div class="mt-4">
-                <label for="email" class="font-body block text-sm font-medium text-body-text">Email</label>
-                <input
-                  v-model="checkoutForm.email"
-                  type="email"
-                  id="email"
-                  required
-                  class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                >
-              </div>
-              
-              <div class="mt-4">
-                <label for="phone" class="font-body block text-sm font-medium text-body-text">Teléfono</label>
-                <input
-                  v-model="checkoutForm.phone"
-                  type="tel"
-                  id="phone"
-                  required
-                  class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                >
+              <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label for="email" class="font-body block text-sm font-medium text-body-text">Email</label>
+                  <input
+                    v-model="checkoutForm.email"
+                    type="email"
+                    id="email"
+                    required
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+                  >
+                </div>
+                
+                <div>
+                  <CountryPhoneSelector
+                    v-model="checkoutForm.phone"
+                    v-model:country-code="checkoutForm.phoneCountryCode"
+                    input-id="phone"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
@@ -175,14 +175,13 @@
               
               <div class="space-y-4">
                 <div>
-                  <label for="address" class="font-body block text-sm font-medium text-body-text">Dirección</label>
-                  <input
+                  <AddressAutocomplete
                     v-model="checkoutForm.address"
-                    type="text"
-                    id="address"
+                    input-id="address"
+                    :country-code="checkoutForm.country"
                     required
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                  >
+                    @address-selected="onAddressSelected"
+                  />
                 </div>
                 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -363,6 +362,9 @@ import { ordersApi, customersApi, orderItemsApi } from '../config/api';
 import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from '../composables/useValidators';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 import DeliveryProgress from '../components/DeliveryProgress.vue';
+import CountryPhoneSelector from '../components/CountryPhoneSelector.vue';
+import AddressAutocomplete from '../components/AddressAutocomplete.vue';
+import type { ParsedAddress } from '../composables/useAddressAutocomplete';
 import { BanknotesIcon, CreditCardIcon, CurrencyDollarIcon } from '@heroicons/vue/24/outline';
 
 const cartStore = useCartStore();
@@ -377,6 +379,7 @@ const checkoutForm = ref({
   lastName: '',
   email: '',
   phone: '',
+  phoneCountryCode: 'AR',
   address: '',
   city: '',
   postalCode: '',
@@ -441,6 +444,18 @@ onMounted(() => {
   }
 });
 
+const onAddressSelected = (parsedAddress: ParsedAddress) => {
+  // Auto-fill address fields when user selects from suggestions
+  checkoutForm.value.address = parsedAddress.street
+  checkoutForm.value.city = parsedAddress.city
+  checkoutForm.value.postalCode = parsedAddress.postalCode
+  checkoutForm.value.province = parsedAddress.province
+  checkoutForm.value.country = parsedAddress.country
+  
+  // Show success message
+  toast.success('Dirección seleccionada. Verificá los datos completados.')
+}
+
 const processOrder = async () => {
   // Double-check authentication
   if (!authStore.isAuthenticated) {
@@ -469,7 +484,7 @@ const processOrder = async () => {
     // Validate form (phone, postal code, required fields)
     const validateForm = () => {
       // phone
-      if (!isValidPhone(checkoutForm.value.phone, checkoutForm.value.country)) {
+      if (!isValidPhone(checkoutForm.value.phone, checkoutForm.value.phoneCountryCode)) {
         toast.error(validationMessages.phone);
         return false;
       }
@@ -492,7 +507,7 @@ const processOrder = async () => {
     }
 
     // Step 1: Create customer
-    const normalizedPhone = formatE164(checkoutForm.value.phone, checkoutForm.value.country);
+    const normalizedPhone = formatE164(checkoutForm.value.phone, checkoutForm.value.phoneCountryCode);
     const customerData: CustomerCreate = {
       name: `${checkoutForm.value.firstName} ${checkoutForm.value.lastName}`,
       first_name: checkoutForm.value.firstName,
