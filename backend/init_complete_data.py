@@ -2,13 +2,17 @@
 Script para inicializar todos los datos necesarios: colores, categorías, talles y roles.
 Ejecutar después de las migraciones para poblar la base de datos con datos de referencia.
 """
+
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.session import get_session
 from app.controllers.master_data_controller import (
-    create_colors_bulk, create_categories_bulk, create_sizes_bulk
+    create_colors_bulk,
+    create_categories_bulk,
+    create_sizes_bulk,
 )
 from app.controllers.role_controller import initialize_default_roles
 from app.models.master_data import ColorCreate, CategoryCreate, SizeCreate
@@ -17,71 +21,67 @@ from app.models.user import UserCreate, User
 from app.models.role import Role
 import sqlmodel
 
+
 def init_complete_data():
     """Inicializar todos los datos maestros y roles."""
     db = next(get_session())
-    
+
     try:
         print("🎨 Inicializando datos completos...")
-        
+
         # === ROLES ===
         print("\n👥 Inicializando roles por defecto...")
         initialize_default_roles(db)
         print("✅ Roles inicializados")
-        
+
         # === COLORES ===
         print("\n📋 Creando colores estéticos...")
         colors_data = [
             # Neutros sofisticados
             ColorCreate(name="BLANCO", hex_code="#FFFFFF"),
-            ColorCreate(name="NEGRO", hex_code="#1C1C1C"),  # Negro más suave que el puro
+            ColorCreate(
+                name="NEGRO", hex_code="#1C1C1C"
+            ),  # Negro más suave que el puro
             ColorCreate(name="GRIS CLARO", hex_code="#F5F5F5"),
             ColorCreate(name="GRIS", hex_code="#9CA3AF"),
             ColorCreate(name="GRIS OSCURO", hex_code="#374151"),
             ColorCreate(name="BEIGE", hex_code="#F5F5DC"),
             ColorCreate(name="CREMA", hex_code="#F7F3E9"),
             ColorCreate(name="MARFIL", hex_code="#FFFDD0"),
-            
             # Azules elegantes
             ColorCreate(name="AZUL MARINO", hex_code="#1E3A8A"),
             ColorCreate(name="AZUL CIELO", hex_code="#87CEEB"),
             ColorCreate(name="AZUL DENIM", hex_code="#4F46E5"),
             ColorCreate(name="AZUL POLVO", hex_code="#B0C4DE"),
             ColorCreate(name="AZUL PETROLEO", hex_code="#0891B2"),
-            
             # Rojos sofisticados
             ColorCreate(name="ROJO BORGOÑA", hex_code="#800020"),
             ColorCreate(name="ROJO CORAL", hex_code="#FF6B6B"),
             ColorCreate(name="ROJO CARMESÍ", hex_code="#DC2626"),
             ColorCreate(name="ROSA POLVO", hex_code="#F8BBD9"),
             ColorCreate(name="ROSA NUDE", hex_code="#E8B4B8"),
-            
             # Verdes naturales
             ColorCreate(name="VERDE OLIVA", hex_code="#6B7280"),
             ColorCreate(name="VERDE SALVIA", hex_code="#87A96B"),
             ColorCreate(name="VERDE MENTA", hex_code="#B8E6B8"),
             ColorCreate(name="VERDE BOSQUE", hex_code="#228B22"),
             ColorCreate(name="VERDE MILITAR", hex_code="#4A5D23"),
-            
             # Amarillos y naranjas suaves
             ColorCreate(name="AMARILLO MOSTAZA", hex_code="#FFDB58"),
             ColorCreate(name="NARANJA TERRACOTA", hex_code="#E07A5F"),
             ColorCreate(name="NARANJA QUEMADO", hex_code="#CC5500"),
             ColorCreate(name="DORADO", hex_code="#FFD700"),
             ColorCreate(name="CAMEL", hex_code="#C19A6B"),
-            
             # Morados y lilas elegantes
             ColorCreate(name="LAVANDA", hex_code="#E6E6FA"),
             ColorCreate(name="MORADO UVA", hex_code="#6F2DA8"),
             ColorCreate(name="LILA", hex_code="#C8A2C8"),
             ColorCreate(name="PÚRPURA", hex_code="#800080"),
-            
             # Marrones cálidos
             ColorCreate(name="MARRÓN CHOCOLATE", hex_code="#7B3F00"),
             ColorCreate(name="MARRÓN TAUPE", hex_code="#483C32"),
             ColorCreate(name="MARRÓN CAOBA", hex_code="#C04000"),
             ColorCreate(name="CAFÉ", hex_code="#6F4E37"),
-            
             # Colores trendy
             ColorCreate(name="CORAL LIVING", hex_code="#FF6F61"),
             ColorCreate(name="AZUL SERENITY", hex_code="#88B0D1"),
@@ -89,14 +89,17 @@ def init_complete_data():
             ColorCreate(name="ROSA MILENIAL", hex_code="#F7CAC9"),
             ColorCreate(name="AMARILLO LIMÓN", hex_code="#FFF700"),
         ]
-        
+
         created_colors = create_colors_bulk(db, colors_data)
         print(f"✅ Creados {len(created_colors)} colores")
-        
+
         # === CATEGORÍAS ===
         print("\n📂 Creando categorías...")
         categories_data = [
-            CategoryCreate(name="BIKINI_SUMMER", description="Trajes de baño veraniegos (bikinis, mallas, etc.)"),
+            CategoryCreate(
+                name="BIKINI_SUMMER",
+                description="Trajes de baño veraniegos (bikinis, mallas, etc.)",
+            ),
             CategoryCreate(name="JACKET", description="Chaquetas"),
             CategoryCreate(name="TRENCH", description="Gabardinas / trench coats"),
             CategoryCreate(name="BLAZER", description="Blazers y bléiseres"),
@@ -118,13 +121,12 @@ def init_complete_data():
             CategoryCreate(name="SHOE", description="Calzado / zapatillas"),
             CategoryCreate(name="MAKE_A_GIFT", description="Regalos"),
             CategoryCreate(name="TOTE_BAG", description="Tote bags / bolsos"),
-            CategoryCreate(name="TEJIDO", description="Prendas tejidas")
-
+            CategoryCreate(name="TEJIDO", description="Prendas tejidas"),
         ]
-        
+
         created_categories = create_categories_bulk(db, categories_data)
         print(f"✅ Creadas {len(created_categories)} categorías")
-        
+
         # === TALLES ===
         print("\n📏 Creando talles...")
         sizes_data = [
@@ -149,47 +151,16 @@ def init_complete_data():
             SizeCreate(name="46", numeric_size=46, order=18),
             SizeCreate(name="48", numeric_size=48, order=19),
         ]
-        
+
         created_sizes = create_sizes_bulk(db, sizes_data)
         print(f"✅ Creados {len(created_sizes)} talles")
-        
+
         print(f"\n🎉 Todos los datos inicializados exitosamente!")
         print(f"   - Roles por defecto (admin, manager, employee, user)")
         print(f"   - {len(created_colors)} colores")
-        print(f"   - {len(created_categories)} categorías") 
+        print(f"   - {len(created_categories)} categorías")
         print(f"   - {len(created_sizes)} talles")
-        
 
-        # === USUARIO ADMIN INICIAL ===
-
-        print("\n👤 Verificando usuario admin inicial...")
-
-        # Verificar si ya existe el usuario admin
-        from sqlmodel import select
-        existing_admin = db.exec(select(User).where(User.email == "jonicorrea1992@gmail.com")).first()
-        
-        if existing_admin:
-            print(f"✅ Usuario admin ya existe: {existing_admin.email}")
-            # Verificar que tenga rol de admin
-            from app.controllers.role_controller import get_user_roles
-            user_roles = get_user_roles(db, existing_admin.id)
-            has_admin = any(role.name == "admin" for role in user_roles)
-            if not has_admin:
-                from app.controllers.role_controller import assign_role_to_user
-                admin_role = db.exec(select(Role).where(Role.name == "admin")).first()
-                if admin_role:
-                    assign_role_to_user(db, existing_admin.id, admin_role.id, None)
-                    print(f"✅ Rol admin asignado al usuario existente")
-        else:
-            admin_user_data = UserCreate(
-                email="jonicorrea1992@gmail.com",
-                uid="NDXokx50A5QpVyg1saO4bP669An2",
-                is_active=True
-            )
-            admin_role = "admin"
-
-            created_user = create_user_with_role(db, admin_user_data, admin_role)
-            print(f"✅ Usuario admin creado: {created_user.email} (role: {admin_role})")
     except Exception as e:
         print(f"❌ Error: {e}")
         db.rollback()
