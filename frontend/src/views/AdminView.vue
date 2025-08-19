@@ -5,8 +5,8 @@
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center justify-between py-6">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-            <p class="mt-1 text-sm text-gray-500">Gestiona productos, usuarios y configuraciones del sistema</p>
+            <h1 class="text-3xl font-bold text-gray-900">Gestión de Productos</h1>
+            <p class="mt-1 text-sm text-gray-500">Administra el catálogo de productos, variantes y existencias</p>
           </div>
         </div>
       </div>

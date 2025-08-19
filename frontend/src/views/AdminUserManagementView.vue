@@ -5,8 +5,8 @@
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
              <div class="flex items-center justify-between py-6">
           <div>
-            <h1 class="font-heading text-3xl font-bold text-gray-900">Panel de Administración</h1>
-            <p class="font-body mt-1 text-sm text-body-text">Gestiona usuarios, roles y permisos del sistema</p>
+            <h1 class="font-heading text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+            <p class="font-body mt-1 text-sm text-body-text">Administra usuarios, roles y permisos del sistema</p>
           </div>
           <div class="flex items-center space-x-4">
             <span class="font-body text-sm text-body-text">Bienvenido,</span>
