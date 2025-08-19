@@ -32,7 +32,7 @@ import VerifyEmailView from './views/VerifyEmailView.vue';
 const routes = [
   { path: '/', component: HomeView },
   { path: '/shop', component: CollectionView },
-  { path: '/product/:id', component: ProductDetailView },
+  { path: '/product/:name', component: ProductDetailView },
   { path: '/cart', component: CartView },
   { path: '/checkout', component: CheckoutView, meta: { requiresAuth: true } },
   { path: '/auth', component: AuthView },

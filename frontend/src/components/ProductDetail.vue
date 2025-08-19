@@ -1,5 +1,26 @@
 <template>
   <div class="min-h-screen bg-white">
+    <!-- Breadcrumb Navigation -->
+    <nav class="px-4 py-4 mx-auto max-w-7xl lg:px-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm font-body">
+        <li>
+          <router-link to="/" class="text-gray-500 hover:text-gray-700 transition-colors">
+            Home
+          </router-link>
+        </li>
+        <li class="text-gray-400">/</li>
+        <li>
+          <router-link to="/shop" class="text-gray-500 hover:text-gray-700 transition-colors">
+            Shop
+          </router-link>
+        </li>
+        <li v-if="product" class="text-gray-400">/</li>
+        <li v-if="product" class="text-gray-900 font-medium truncate max-w-xs">
+          {{ product.name }}
+        </li>
+      </ol>
+    </nav>
+    
     <div v-if="product" class="mx-auto max-w-7xl">
       <!-- Desktop Layout -->
       <div class="hidden lg:flex lg:gap-x-12 lg:px-8 lg:py-8 lg:max-w-6xl lg:mx-auto">
@@ -303,7 +324,7 @@
               :key="similarProduct.id"
               class="group"
             >
-              <router-link :to="`/product/${similarProduct.id}`" class="block">
+              <router-link :to="`/product/${createSlug(similarProduct.name)}`" class="block">
                 <div class="relative overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
                   <!-- Image -->
                   <div class="overflow-hidden bg-gray-100 aspect-square">
@@ -340,7 +361,7 @@
                 :key="similarProduct.id"
                 class="flex-shrink-0 w-48 group"
               >
-                <router-link :to="`/product/${similarProduct.id}`" class="block">
+                <router-link :to="`/product/${createSlug(similarProduct.name)}`" class="block">
                   <div class="relative overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
                     <!-- Image -->
                     <div class="overflow-hidden bg-gray-100 aspect-square">
@@ -531,6 +552,23 @@ const decrementQuantity = () => {
   }
 };
 
+// Create URL-friendly slug from product name
+const createSlug = (name: string) => {
+  return name
+    .toLowerCase()
+    .replace(/[áàâã]/g, 'a')
+    .replace(/[éèê]/g, 'e')
+    .replace(/[íìî]/g, 'i')
+    .replace(/[óòôõ]/g, 'o')
+    .replace(/[úùû]/g, 'u')
+    .replace(/[ñ]/g, 'n')
+    .replace(/[ç]/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+};
+
 // Function to get similar product image
 const getSimilarProductImage = (product: Product) => {
   const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a';
@@ -563,10 +601,18 @@ const loadSimilarProducts = async (categoria: string, currentProductId: number) 
 };
 
 onMounted(async () => {
-  const productId = route.params.id;
+  const productName = route.params.name as string;
   try {
-    // Load product data
-    product.value = await productsApi.getProduct(Number(productId));
+    // Load all products and find by name slug
+    const allProducts = await productsApi.getProducts();
+    const foundProduct = allProducts.find((p: Product) => createSlug(p.name) === productName);
+    
+    if (!foundProduct) {
+      console.error('Product not found:', productName);
+      return;
+    }
+    
+    product.value = foundProduct;
     
     // Load colors and sizes for variants
     if (product.value && !product.value.is_unique && product.value.variants) {

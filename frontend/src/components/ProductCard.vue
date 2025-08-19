@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/product/${product.id}`" class="block cursor-pointer">
+  <router-link :to="`/product/${createSlug(product.name)}`" class="block cursor-pointer">
     <div class="relative product-card group">
         <!-- Stock Indicator Above Image -->
         <div v-if="isOutOfStock" class="absolute -top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-600 text-white px-3 py-1 text-xs font-body font-bold rounded-full shadow-lg">
@@ -7,7 +7,7 @@
         </div>
         
         <!-- Product Images Container -->
-        <div class="relative w-full overflow-hidden bg-gray-100 aspect-square cursor-pointer" @click.stop="openImageGallery">
+        <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
           <!-- Primary Image -->
           <OptimizedImage
             :src="imageToShow"
@@ -118,6 +118,23 @@ const props = defineProps<{
 
 const imageError = ref(false);
 
+// Create URL-friendly slug from product name
+const createSlug = (name: string) => {
+  return name
+    .toLowerCase()
+    .replace(/[áàâã]/g, 'a')
+    .replace(/[éèê]/g, 'e')
+    .replace(/[íìî]/g, 'i')
+    .replace(/[óòôõ]/g, 'o')
+    .replace(/[úùû]/g, 'u')
+    .replace(/[ñ]/g, 'n')
+    .replace(/[ç]/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+};
+
 // Improved image handling with error fallback
 const imageToShow = computed(() => {
   if (imageError.value) {
@@ -176,3 +193,30 @@ const closeImageGallery = () => {
   document.body.style.overflow = 'auto';
 };
 </script>
+
+<style scoped>
+.product-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-image {
+  transition: opacity 0.3s ease;
+}
+
+.secondary-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .primary-image {
+  opacity: 0;
+}
+
+.product-card:hover .secondary-image {
+  opacity: 1;
+}
+</style>
