@@ -35,3 +35,12 @@ class Order(SQLModel, table=True):
     verification_required: bool = Field(default=False, description="Si requiere verificación manual")
     verified_by_admin: Optional[bool] = Field(default=None, description="Si admin verificó")
     admin_verification_date: Optional[datetime] = Field(default=None)
+    
+    # Campos de SEGUIMIENTO DE ENVÍO
+    tracking_number: Optional[str] = Field(default=None, max_length=255, description="Número de seguimiento del proveedor")
+    shipping_provider: Optional[str] = Field(default=None, max_length=100, description="Proveedor: correo-argentino, oca, andreani")
+    shipped_at: Optional[datetime] = Field(default=None, description="Fecha y hora de envío")
+    estimated_delivery: Optional[datetime] = Field(default=None, description="Fecha estimada de entrega")
+    shipped_by: Optional[int] = Field(default=None, foreign_key="user.id", description="Admin que marcó como enviado")
+    tracking_updated_at: Optional[datetime] = Field(default=None, description="Última actualización del tracking")
+    delivery_notes_shipping: Optional[str] = Field(default=None, description="Notas específicas del envío")

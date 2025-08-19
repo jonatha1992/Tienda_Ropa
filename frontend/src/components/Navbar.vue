@@ -75,8 +75,31 @@
                 {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
               </span>
             </button>
-            <div v-if="authStore.isAuthenticated" class="flex items-center space-x-2">
-              <button @click="handleLogout" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Cerrar Sesión</button>
+            <!-- User Account Menu -->
+            <div v-if="authStore.isAuthenticated" class="relative">
+              <button @click.stop="toggleAccountMenu"
+                class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
+                MI CUENTA ▼
+              </button>
+              <div v-if="isAccountMenuOpen" @click.stop
+                class="absolute z-50 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg"
+                style="top: 100%; right: 0; min-width: 200px;">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <router-link to="/orders" @click="closeMenus"
+                    class="block px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                    Mis Pedidos
+                  </router-link>
+                  <router-link to="/profile" @click="closeMenus"
+                    class="block px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                    Mi Perfil
+                  </router-link>
+                  <div class="border-t border-gray-100"></div>
+                  <button @click="handleLogout" 
+                    class="block w-full text-left px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                    Cerrar Sesión
+                  </button>
+                </div>
+              </div>
             </div>
             <router-link v-else to="/auth" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Iniciar Sesión</router-link>
           </div>
@@ -161,6 +184,7 @@ const isMobileMenuOpen = ref(false);
 const isMobileShopMenuOpen = ref(false);
 const isAdminMenuOpen = ref(false);
 const isMobileAdminMenuOpen = ref(false);
+const isAccountMenuOpen = ref(false);
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
@@ -188,6 +212,10 @@ const toggleAdminMenu = () => {
 
 const toggleMobileAdminMenu = () => {
   isMobileAdminMenuOpen.value = !isMobileAdminMenuOpen.value;
+};
+
+const toggleAccountMenu = () => {
+  isAccountMenuOpen.value = !isAccountMenuOpen.value;
 };
 
 const handleLogout = async () => {
@@ -221,6 +249,7 @@ const closeMenus = () => {
   isMobileShopMenuOpen.value = false;
   isAdminMenuOpen.value = false;
   isMobileAdminMenuOpen.value = false;
+  isAccountMenuOpen.value = false;
 };
 
 onMounted(() => {

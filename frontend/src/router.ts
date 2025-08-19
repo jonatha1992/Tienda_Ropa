@@ -8,6 +8,7 @@ import AuthView from './views/AuthView.vue'
 import AdminView from './views/AdminView.vue'
 import AdminUserManagementView from './views/AdminUserManagementView.vue'
 import AdminPaymentsView from './views/AdminPaymentsView.vue'
+import AdminOrdersView from './views/AdminOrdersView.vue'
 import PaymentSuccessView from './views/PaymentSuccessView.vue'
 import PaymentFailureView from './views/PaymentFailureView.vue'
 import PaymentPendingView from './views/PaymentPendingView.vue'
@@ -71,7 +72,7 @@ const routes = [
   },
   {
     path: '/admin/orders',
-    component: AdminPaymentsView, // Reutilizamos AdminPaymentsView que ya tiene la gestión de pedidos
+    component: AdminOrdersView,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
 ];
