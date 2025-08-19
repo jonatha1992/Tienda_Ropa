@@ -69,7 +69,7 @@
                     <div>
                         <button type="submit" :disabled="loading"
                             class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-600 border border-transparent rounded-md group hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50">
-                            <span class="font-body">{{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}</span>
+                            <span class="text-white">{{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}</span>
                         </button>
                     </div>
                 </form>

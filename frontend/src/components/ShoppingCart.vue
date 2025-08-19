@@ -185,12 +185,12 @@
 
           <!-- Continue Shopping -->
           <div class="mt-4 text-center">
-            <router-link
-              to="/shop"
-              class="text-sm text-gray-600 font-body hover:text-gray-800"
+            <button
+              @click="continueShopping"
+              class="text-sm text-gray-600 font-body hover:text-gray-800 cursor-pointer"
             >
               ← Continuar comprando
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
@@ -204,12 +204,12 @@
         </div>
         <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">Tu carrito está vacío</h3>
         <p class="mb-6 text-gray-600 font-body">Agrega algunos productos para comenzar</p>
-        <router-link
-          to="/shop"
+        <button
+          @click="continueShopping"
           class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md font-body hover:bg-gray-800"
         >
           Explorar productos
-        </router-link>
+        </button>
       </div>
     </div>
   </div>
@@ -221,6 +221,7 @@ import { useRouter } from 'vue-router';
 import { useCartStore, type CartItem } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
+import { useCartModal } from '../composables/useCartModal';
 
 // Props
 interface Props {
@@ -234,6 +235,7 @@ const cartStore = useCartStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
+const { closeCartModal } = useCartModal();
 
 onMounted(() => {
   // Load cart from localStorage when component mounts
@@ -270,6 +272,11 @@ const proceedToCheckout = () => {
     return;
   }
   
+  // Close modal if in modal mode
+  if (props.isModal) {
+    closeCartModal();
+  }
+  
   // Check if user is authenticated
   if (!authStore.isAuthenticated) {
     toast.warning('Debes iniciar sesión para continuar con la compra');
@@ -279,5 +286,15 @@ const proceedToCheckout = () => {
   
   // Navigate to checkout page
   router.push('/checkout');
+};
+
+const continueShopping = () => {
+  // Close modal if in modal mode
+  if (props.isModal) {
+    closeCartModal();
+  }
+  
+  // Navigate to shop
+  router.push('/shop');
 };
 </script>
