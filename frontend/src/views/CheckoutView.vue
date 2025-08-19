@@ -360,6 +360,7 @@ import { useCartStore } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { ordersApi, customersApi, orderItemsApi } from '../config/api';
+import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from '../composables/useValidators';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 import DeliveryProgress from '../components/DeliveryProgress.vue';
 import { BanknotesIcon, CreditCardIcon, CurrencyDollarIcon } from '@heroicons/vue/24/outline';
@@ -465,13 +466,39 @@ const processOrder = async () => {
       return;
     }
     
+    // Validate form (phone, postal code, required fields)
+    const validateForm = () => {
+      // phone
+      if (!isValidPhone(checkoutForm.value.phone, checkoutForm.value.country)) {
+        toast.error(validationMessages.phone);
+        return false;
+      }
+      // postal code
+      if (!isValidPostalCode(checkoutForm.value.postalCode, checkoutForm.value.country)) {
+        toast.error(validationMessages.postal);
+        return false;
+      }
+      // address and city required
+      if (!checkoutForm.value.address || !checkoutForm.value.city) {
+        toast.error('La dirección y la ciudad son obligatorias.');
+        return false;
+      }
+      return true;
+    };
+
+    if (!validateForm()) {
+      processing.value = false;
+      return;
+    }
+
     // Step 1: Create customer
+    const normalizedPhone = formatE164(checkoutForm.value.phone, checkoutForm.value.country);
     const customerData: CustomerCreate = {
       name: `${checkoutForm.value.firstName} ${checkoutForm.value.lastName}`,
       first_name: checkoutForm.value.firstName,
       last_name: checkoutForm.value.lastName,
       email: checkoutForm.value.email,
-      phone: checkoutForm.value.phone,
+      phone: normalizedPhone,
       address: checkoutForm.value.address,
       city: checkoutForm.value.city,
       postal_code: checkoutForm.value.postalCode,

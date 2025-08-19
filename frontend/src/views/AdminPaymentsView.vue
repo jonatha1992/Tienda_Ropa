@@ -1,32 +1,32 @@
 <template>
-  <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50">
+    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="font-heading text-3xl font-light text-gray-900">Gestión de Pagos</h1>
-        <p class="font-body mt-2 text-sm text-body-text">
+        <h1 class="text-3xl font-bold text-gray-900 font-heading">Gestión de Pagos</h1>
+        <p class="mt-2 text-sm font-body text-body-text">
           Administra verificaciones de transferencias, entregas y estados de pago
         </p>
       </div>
 
       <!-- Admin Navigation Tabs -->
-      <div class="border-b border-gray-200 mb-6">
+      <div class="mb-6 border-b border-gray-200">
         <nav class="flex space-x-8">
           <router-link 
             to="/admin/products" 
-            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+            class="px-1 py-4 text-sm font-medium text-gray-500 transition-colors border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 whitespace-nowrap"
           >
             <span class="font-body">Productos</span>
           </router-link>
           <router-link 
             to="/admin/users" 
-            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+            class="px-1 py-4 text-sm font-medium text-gray-500 transition-colors border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 whitespace-nowrap"
           >
             <span class="font-body">Usuarios</span>
           </router-link>
           <router-link 
             to="/admin/orders" 
-            class="border-transparent text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-black"
+            class="px-1 py-4 text-sm font-medium text-gray-900 border-b-2 border-transparent border-black whitespace-nowrap"
           >
             <span class="font-body">Pedidos</span>
           </router-link>
@@ -34,73 +34,73 @@
       </div>
 
       <!-- Statistics Cards -->
-      <div v-if="stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div v-if="stats" class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+        <div class="overflow-hidden bg-white rounded-lg shadow">
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div class="ml-5 w-0 flex-1">
+              <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-body-text truncate">Pendientes de verificación</dt>
-                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.pending_verification }}</dd>
+                  <dt class="text-sm font-medium truncate font-body text-body-text">Pendientes de verificación</dt>
+                  <dd class="text-lg font-medium font-body text-body-text">{{ stats.pending_verification }}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="overflow-hidden bg-white rounded-lg shadow">
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <div class="ml-5 w-0 flex-1">
+              <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-body-text truncate">Entregas pendientes</dt>
-                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.pending_delivery }}</dd>
+                  <dt class="text-sm font-medium truncate font-body text-body-text">Entregas pendientes</dt>
+                  <dd class="text-lg font-medium font-body text-body-text">{{ stats.pending_delivery }}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="overflow-hidden bg-white rounded-lg shadow">
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-4 12v-7" />
                 </svg>
               </div>
-              <div class="ml-5 w-0 flex-1">
+              <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-body-text truncate">Entregas programadas</dt>
-                  <dd class="font-body text-lg font-medium text-body-text">{{ stats.scheduled_delivery }}</dd>
+                  <dt class="text-sm font-medium truncate font-body text-body-text">Entregas programadas</dt>
+                  <dd class="text-lg font-medium font-body text-body-text">{{ stats.scheduled_delivery }}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="overflow-hidden bg-white rounded-lg shadow">
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
               </div>
-              <div class="ml-5 w-0 flex-1">
+              <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="font-body text-sm font-medium text-body-text truncate">Monto pendiente</dt>
-                  <dd class="font-body text-lg font-medium text-body-text">${{ stats.total_pending_amount.toLocaleString() }}</dd>
+                  <dt class="text-sm font-medium truncate font-body text-body-text">Monto pendiente</dt>
+                  <dd class="text-lg font-medium font-body text-body-text">${{ stats.total_pending_amount.toLocaleString() }}</dd>
                 </dl>
               </div>
             </div>
@@ -109,16 +109,16 @@
       </div>
 
       <!-- Filters -->
-      <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 class="font-heading text-lg font-medium text-gray-900 mb-4">Filtros</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="p-6 mb-6 bg-white rounded-lg shadow">
+        <h2 class="mb-4 text-lg font-medium text-gray-900 font-heading">Filtros</h2>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label for="paymentMethod" class="font-body block text-sm font-medium text-body-text">Método de pago</label>
+            <label for="paymentMethod" class="block text-sm font-medium font-body text-body-text">Método de pago</label>
             <select
               v-model="filters.payment_method"
               id="paymentMethod"
               @change="loadOrders"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="">Todos</option>
               <option class="font-body" value="transfer">Transferencia</option>
@@ -128,12 +128,12 @@
           </div>
 
           <div>
-            <label for="paymentStatus" class="font-body block text-sm font-medium text-body-text">Estado del pago</label>
+            <label for="paymentStatus" class="block text-sm font-medium font-body text-body-text">Estado del pago</label>
             <select
               v-model="filters.payment_status"
               id="paymentStatus"
               @change="loadOrders"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="">Todos</option>
               <option class="font-body" value="pending">Pendiente</option>
@@ -144,12 +144,12 @@
           </div>
 
           <div>
-            <label for="verificationRequired" class="font-body block text-sm font-medium text-body-text">Verificación</label>
+            <label for="verificationRequired" class="block text-sm font-medium font-body text-body-text">Verificación</label>
             <select
               v-model="filters.verification_required"
               id="verificationRequired"
               @change="loadOrders"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="">Todos</option>
               <option class="font-body" value="true">Requiere verificación</option>
@@ -158,12 +158,12 @@
           </div>
 
           <div>
-            <label for="deliveryStatus" class="font-body block text-sm font-medium text-body-text">Estado de entrega</label>
+            <label for="deliveryStatus" class="block text-sm font-medium font-body text-body-text">Estado de entrega</label>
             <select
               v-model="filters.delivery_status"
               id="deliveryStatus"
               @change="loadOrders"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="">Todos</option>
               <option class="font-body" value="pending">Pendiente</option>
@@ -175,16 +175,16 @@
       </div>
 
       <!-- Orders Table -->
-      <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="overflow-hidden bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
           <div class="flex items-center justify-between">
-            <h2 class="font-heading text-lg font-medium text-gray-900">Órdenes</h2>
+            <h2 class="text-lg font-medium text-gray-900 font-heading">Órdenes</h2>
             <button
               @click="loadOrders"
               :disabled="loading"
-              class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 disabled:bg-gray-100"
             >
-              <svg v-if="loading" class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <svg v-if="loading" class="w-4 h-4 mr-2 -ml-1 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -194,41 +194,41 @@
         </div>
 
         <div v-if="orders.length === 0 && !loading" class="px-6 py-12 text-center">
-          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <h3 class="font-heading mt-2 text-sm font-medium text-gray-900">No hay órdenes</h3>
-          <p class="font-body mt-1 text-sm text-body-text">No se encontraron órdenes con los filtros seleccionados.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 font-heading">No hay órdenes</h3>
+          <p class="mt-1 text-sm font-body text-body-text">No se encontraron órdenes con los filtros seleccionados.</p>
         </div>
 
         <div v-else class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orden</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                <th class="font-heading px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Orden</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Cliente</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Total</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Método</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Estado</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Fecha</th>
+                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase font-heading">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm font-medium text-body-text">#{{ order.id }}</div>
-                  <div v-if="order.verification_required" class="font-body text-xs text-orange-600">
+                  <div class="text-sm font-medium font-body text-body-text">#{{ order.id }}</div>
+                  <div v-if="order.verification_required" class="text-xs text-orange-600 font-body">
                     Requiere verificación
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm text-body-text">{{ order.customer?.name || 'N/A' }}</div>
-                  <div class="font-body text-sm text-body-text">{{ order.customer?.email || 'N/A' }}</div>
+                  <div class="text-sm font-body text-body-text">{{ order.customer?.name || 'N/A' }}</div>
+                  <div class="text-sm font-body text-body-text">{{ order.customer?.email || 'N/A' }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-body text-sm font-medium text-body-text">${{ order.total?.toLocaleString() }}</div>
-                  <div v-if="order.delivery_cost" class="font-body text-xs text-body-text">
+                  <div class="text-sm font-medium font-body text-body-text">${{ order.total?.toLocaleString() }}</div>
+                  <div v-if="order.delivery_cost" class="text-xs font-body text-body-text">
                     Envío: ${{ order.delivery_cost.toLocaleString() }}
                   </div>
                 </td>
@@ -250,10 +250,10 @@
                     </span>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                   <span class="font-body">{{ formatDate(order.created_at) }}</span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <td class="px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
                   <!-- Transfer Actions -->
                   <button
                     v-if="order.payment_method === 'transfer' && !order.transfer_verified"
@@ -296,23 +296,23 @@
     </div>
 
     <!-- Transfer Verification Modal -->
-    <div v-if="showTransferModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Verificar Transferencia</h3>
+    <div v-if="showTransferModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-600 bg-opacity-50">
+      <div class="w-full max-w-md p-6 bg-white rounded-lg">
+        <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Verificar Transferencia</h3>
         <div class="space-y-4">
           <div>
-            <p class="font-body text-sm text-body-text mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="font-body text-sm text-body-text mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="font-body text-sm text-body-text mb-4">Cliente: {{ selectedOrder?.customer?.name }}</p>
+            <p class="mb-2 text-sm font-body text-body-text">Orden #{{ selectedOrder?.id }}</p>
+            <p class="mb-2 text-sm font-body text-body-text">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="mb-4 text-sm font-body text-body-text">Cliente: {{ selectedOrder?.customer?.name }}</p>
           </div>
           
           <div>
-            <label for="adminNotes" class="font-body block text-sm font-medium text-body-text">Notas de verificación</label>
+            <label for="adminNotes" class="block text-sm font-medium font-body text-body-text">Notas de verificación</label>
             <textarea
               v-model="transferForm.admin_notes"
               id="adminNotes"
               rows="3"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
               placeholder="Detalles de la verificación..."
             ></textarea>
           </div>
@@ -321,14 +321,14 @@
             <button
               @click="verifyTransfer(true)"
               :disabled="processingTransfer"
-              class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md font-medium hover:bg-green-700 disabled:bg-gray-400"
+              class="flex-1 px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400"
             >
               <span class="font-body">Aprobar</span>
             </button>
             <button
               @click="verifyTransfer(false)"
               :disabled="processingTransfer"
-              class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md font-medium hover:bg-red-700 disabled:bg-gray-400"
+              class="flex-1 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:bg-gray-400"
             >
               <span class="font-body">Rechazar</span>
             </button>
@@ -336,7 +336,7 @@
           
           <button
             @click="closeTransferModal"
-            class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
+            class="w-full px-4 py-2 font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
           >
             <span class="font-body">Cancelar</span>
           </button>
@@ -345,35 +345,35 @@
     </div>
 
     <!-- Delivery Scheduling Modal -->
-    <div v-if="showDeliveryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Programar Entrega</h3>
+    <div v-if="showDeliveryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-600 bg-opacity-50">
+      <div class="w-full max-w-md p-6 bg-white rounded-lg">
+        <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Programar Entrega</h3>
         <div class="space-y-4">
           <div>
-            <p class="font-body text-sm text-body-text mb-2">Orden #{{ selectedOrder?.id }}</p>
-            <p class="font-body text-sm text-body-text mb-2">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
-            <p class="font-body text-sm text-body-text mb-4">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
+            <p class="mb-2 text-sm font-body text-body-text">Orden #{{ selectedOrder?.id }}</p>
+            <p class="mb-2 text-sm font-body text-body-text">Total: ${{ selectedOrder?.total?.toLocaleString() }}</p>
+            <p class="mb-4 text-sm font-body text-body-text">{{ formatCustomerAddress(selectedOrder?.customer) }}</p>
           </div>
           
           <div>
-            <label for="scheduledDate" class="font-body block text-sm font-medium text-body-text">Fecha de entrega</label>
+            <label for="scheduledDate" class="block text-sm font-medium font-body text-body-text">Fecha de entrega</label>
             <input
               v-model="deliveryForm.scheduled_date"
               type="date"
               id="scheduledDate"
               :min="tomorrow"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
           </div>
           
           <div>
-            <label for="timeSlot" class="font-body block text-sm font-medium text-body-text">Horario</label>
+            <label for="timeSlot" class="block text-sm font-medium font-body text-body-text">Horario</label>
             <select
               v-model="deliveryForm.time_slot"
               id="timeSlot"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="mañana">Mañana (9:00 - 13:00)</option>
               <option class="font-body" value="tarde">Tarde (14:00 - 18:00)</option>
@@ -382,12 +382,12 @@
           </div>
           
           <div>
-            <label for="deliveryNotes" class="font-body block text-sm font-medium text-body-text">Notas para el delivery</label>
+            <label for="deliveryNotes" class="block text-sm font-medium font-body text-body-text">Notas para el delivery</label>
             <textarea
               v-model="deliveryForm.notes"
               id="deliveryNotes"
               rows="2"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
               placeholder="Instrucciones especiales..."
             ></textarea>
           </div>
@@ -396,13 +396,13 @@
             <button
               @click="scheduleDelivery"
               :disabled="processingDelivery || !deliveryForm.scheduled_date || !deliveryForm.time_slot"
-              class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 disabled:bg-gray-400"
+              class="flex-1 px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
             >
               <span class="font-body">Programar</span>
             </button>
             <button
               @click="closeDeliveryModal"
-              class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
+              class="flex-1 px-4 py-2 font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               <span class="font-body">Cancelar</span>
             </button>
@@ -412,9 +412,9 @@
     </div>
 
     <!-- Order Details Modal -->
-    <div v-if="showOrderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-96 overflow-y-auto">
-        <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Detalles de la Orden #{{ selectedOrder?.id }}</h3>
+    <div v-if="showOrderModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-600 bg-opacity-50">
+      <div class="w-full max-w-2xl p-6 overflow-y-auto bg-white rounded-lg max-h-96">
+        <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Detalles de la Orden #{{ selectedOrder?.id }}</h3>
         <div v-if="selectedOrder" class="space-y-4">
           <!-- Order Info -->
           <div class="grid grid-cols-2 gap-4 text-sm">
@@ -427,28 +427,28 @@
           </div>
           
           <!-- Address Info -->
-          <div v-if="selectedOrder.customer" class="border-t pt-4">
-            <h4 class="font-heading font-medium mb-2">Dirección de entrega</h4>
-            <p class="font-body text-sm text-body-text">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
-            <div v-if="selectedOrder.customer.address_reference" class="font-body text-sm text-body-text mt-1">
+          <div v-if="selectedOrder.customer" class="pt-4 border-t">
+            <h4 class="mb-2 font-medium font-heading">Dirección de entrega</h4>
+            <p class="text-sm font-body text-body-text">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
+            <div v-if="selectedOrder.customer.address_reference" class="mt-1 text-sm font-body text-body-text">
               <strong>Ref:</strong> {{ selectedOrder.customer.address_reference }}
             </div>
-            <div v-if="selectedOrder.customer.delivery_notes" class="font-body text-sm text-body-text mt-1">
+            <div v-if="selectedOrder.customer.delivery_notes" class="mt-1 text-sm font-body text-body-text">
               <strong>Notas:</strong> {{ selectedOrder.customer.delivery_notes }}
             </div>
           </div>
           
           <!-- Admin Notes -->
-          <div v-if="selectedOrder.admin_notes" class="border-t pt-4">
-            <h4 class="font-heading font-medium mb-2">Notas del administrador</h4>
-            <p class="font-body text-sm text-body-text">{{ selectedOrder.admin_notes }}</p>
+          <div v-if="selectedOrder.admin_notes" class="pt-4 border-t">
+            <h4 class="mb-2 font-medium font-heading">Notas del administrador</h4>
+            <p class="text-sm font-body text-body-text">{{ selectedOrder.admin_notes }}</p>
           </div>
         </div>
         
         <div class="mt-6">
           <button
             @click="closeOrderModal"
-            class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium hover:bg-gray-50"
+            class="w-full px-4 py-2 font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
           >
             <span class="font-body">Cerrar</span>
           </button>
