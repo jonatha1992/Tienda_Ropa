@@ -92,7 +92,7 @@
             <!-- Mobile Cart Badge -->
             <span 
               v-if="cartStore.itemCount > 0" 
-              class="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 font-medium"
+              class="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 "
             >
               {{ cartStore.itemCount > 99 ? '99+' : cartStore.itemCount }}
             </span>

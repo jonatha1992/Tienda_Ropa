@@ -83,7 +83,7 @@
               contáctanos inmediatamente.
             </p>
             <router-link to="/contact" 
-              class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-yellow-600 rounded-md hover:bg-yellow-700">
+              class="inline-flex items-center px-4 py-2 font-medium text-white transition duration-200 bg-yellow-600 rounded-md hover:bg-yellow-700">
               Contactar Soporte
             </router-link>
           </div>
