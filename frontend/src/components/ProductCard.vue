@@ -95,15 +95,6 @@
       </div>
     </div>
   </router-link>
-
-  <!-- Image Gallery Modal -->
-  <ImageGalleryModal
-    :is-open="showImageGallery"
-    :images="product.images || []"
-    :initial-index="0"
-    :alt="product.name"
-    @close="closeImageGallery"
-  />
 </template>
 
 <script setup lang="ts">
@@ -112,7 +103,6 @@
 import { defineProps, computed, ref } from 'vue';
 import type { Product } from '../types';
 import OptimizedImage from './OptimizedImage.vue';
-import ImageGalleryModal from './ImageGalleryModal.vue';
 
 const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a';
 
@@ -179,22 +169,6 @@ const isOutOfStock = computed(() => {
 const quickAdd = () => {
   console.log('Quick add clicked for:', props.product.name);
   // TODO: Implementar lógica de quick add
-};
-
-// Image Gallery Modal states
-const showImageGallery = ref(false);
-
-// Image Gallery Modal functions
-const openImageGallery = () => {
-  showImageGallery.value = true;
-  // Prevent body scroll
-  document.body.style.overflow = 'hidden';
-};
-
-const closeImageGallery = () => {
-  showImageGallery.value = false;
-  // Restore body scroll
-  document.body.style.overflow = 'auto';
 };
 </script>
 
