@@ -28,6 +28,7 @@ import PrivacyView from './views/PrivacyView.vue';
 import OrdersView from './views/OrdersView.vue';
 import OrderDetailView from './views/OrderDetailView.vue';
 import VerifyEmailView from './views/VerifyEmailView.vue';
+import ProfileView from './views/ProfileView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
@@ -45,6 +46,7 @@ const routes = [
   // Orders routes
   { path: '/orders', component: OrdersView, meta: { requiresAuth: true } },
   { path: '/orders/:id', component: OrderDetailView, meta: { requiresAuth: true } },
+  { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
   // Payment result routes
   { path: '/payment/success', component: PaymentSuccessView },
   { path: '/payment/failure', component: PaymentFailureView },

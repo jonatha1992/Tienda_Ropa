@@ -37,10 +37,8 @@
               image-class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Desktop -->
-            <div v-if="isOutOfStock" class="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40">
-              <div class="px-6 py-3 bg-white rounded-lg bg-opacity-90">
-                <span class="text-xl font-semibold text-gray-800 font-heading">Sin Stock</span>
-              </div>
+            <div v-if="isOutOfStock" class="absolute top-0 left-0 z-10 mt-2 ml-4">
+              <span class="bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-lg">SIN STOCK</span>
             </div>
           </div>
           
@@ -161,8 +159,8 @@
 
           <!-- Product Description -->
           <div class="space-y-4">
-            <h3 class="text-sm font-medium text-gray-900 font-heading">Descripción</h3>
-            <div class="text-sm prose text-gray-600 font-body" v-html="product.description"></div>
+            <h3 class="text-sm font-medium text-gray-900 font-body">Descripción:</h3>
+            <div class="text-sm font-normal text-gray-800 leading-tight" v-html="product.description"></div>
           </div>
 
           <!-- Product Details -->

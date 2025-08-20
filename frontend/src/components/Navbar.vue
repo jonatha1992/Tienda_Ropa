@@ -148,6 +148,36 @@
             <router-link to="/admin/orders" @click="closeMenus" class="block px-3 py-2 text-sm font-normal tracking-wide text-gray-700 uppercase transition-colors font-body hover:text-gray-900">- Pedidos</router-link>
           </div>
         </div>
+        <!-- User Menu Mobile -->
+        <div v-if="authStore.isAuthenticated" class="border-t border-gray-200 mt-2 pt-2">
+          <div class="relative">
+            <button @click.stop="toggleMobileAccountMenu" class="flex items-center justify-between w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
+              MI CUENTA
+              <svg :class="{'transform rotate-180': isMobileAccountMenuOpen}" class="w-4 h-4 text-gray-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div v-if="isMobileAccountMenuOpen" class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <router-link to="/orders" @click="closeMenus" class="block px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                  Mis Pedidos
+                </router-link>
+                <router-link to="/profile" @click="closeMenus" class="block px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                  Mi Perfil
+                </router-link>
+                <div class="border-t border-gray-100"></div>
+                <button @click="handleLogout" class="block w-full px-4 py-2 text-sm font-normal tracking-wide text-left text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="border-t border-gray-200 mt-2 pt-2">
+          <router-link to="/auth" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
+            Iniciar Sesión
+          </router-link>
+        </div>
         
         <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CONTACTO</router-link>
         <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÓMO COMPRAR</router-link>
@@ -179,11 +209,12 @@ import { useRouter } from 'vue-router';
 import { masterDataApi } from '../config/index';
 import type { Category } from '../types';
 
-const isShopMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobileShopMenuOpen = ref(false);
-const isAdminMenuOpen = ref(false);
 const isMobileAdminMenuOpen = ref(false);
+const isMobileAccountMenuOpen = ref(false);
+const isShopMenuOpen = ref(false);
+const isAdminMenuOpen = ref(false);
 const isAccountMenuOpen = ref(false);
 const authStore = useAuthStore();
 const cartStore = useCartStore();
@@ -212,6 +243,10 @@ const toggleAdminMenu = () => {
 
 const toggleMobileAdminMenu = () => {
   isMobileAdminMenuOpen.value = !isMobileAdminMenuOpen.value;
+};
+
+const toggleMobileAccountMenu = () => {
+  isMobileAccountMenuOpen.value = !isMobileAccountMenuOpen.value;
 };
 
 const toggleAccountMenu = () => {
@@ -244,11 +279,12 @@ const loadCategories = async () => {
 };
 
 const closeMenus = () => {
-  isShopMenuOpen.value = false;
   isMobileMenuOpen.value = false;
   isMobileShopMenuOpen.value = false;
-  isAdminMenuOpen.value = false;
   isMobileAdminMenuOpen.value = false;
+  isMobileAccountMenuOpen.value = false;
+  isShopMenuOpen.value = false;
+  isAdminMenuOpen.value = false;
   isAccountMenuOpen.value = false;
 };
 

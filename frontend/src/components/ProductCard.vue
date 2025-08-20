@@ -1,6 +1,6 @@
 <template>
   <router-link :to="`/product/${createSlug(product.name)}`" class="block h-full">
-    <div class="h-full flex flex-col bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div class="h-full flex flex-col bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300">
       <!-- Imagen del producto -->
       <div class="relative aspect-square overflow-hidden bg-gray-50">
         <!-- Imagen principal -->
@@ -43,11 +43,19 @@
           </span>
         </div>
 
-        <!-- Overlay de Sin Stock -->
-        <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white px-4 py-2 rounded">
-            <span class="text-sm font-medium text-gray-800">Sin Stock</span>
-          </div>
+        <!-- Etiqueta de oferta o nuevo -->
+        <div v-if="(product.is_sale || product.is_new) && (product.stock ?? 0) > 0" class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+          <span v-if="product.is_sale" class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+            OFERTA
+          </span>
+          <span v-if="product.is_new" class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full">
+            NUEVO
+          </span>
+        </div>
+
+        <!-- Etiqueta de SIN STOCK en esquina superior izquierda -->
+        <div v-if="(product.stock ?? 0) <= 0" class="absolute top-0 left-0 z-10 mt-2 ml-4">
+          <span class="bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-lg">SIN STOCK</span>
         </div>
       </div>
 
