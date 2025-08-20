@@ -17,6 +17,7 @@ from app.controllers.transfer_controller import transfer_controller
 from app.controllers.cash_controller import cash_controller
 from app.core.mailer import send_email, render_template
 from app.core.config import settings
+from app.routes.inventory import reduce_stock
 
 router = APIRouter()
 
@@ -143,15 +144,20 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     
     # Send order confirmation email asynchronously
     try:
+        print(f"🔄 Iniciando envío de email de confirmación para orden #{db_order.id} a {customer.email}")
         # Run email sending in background
         import threading
         email_thread = threading.Thread(
             target=lambda: asyncio.run(send_order_confirmation_email(db_order, customer, session))
         )
+        email_thread.daemon = True  # Ensure thread doesn't prevent app shutdown
         email_thread.start()
+        print(f"✅ Thread de email iniciado para orden #{db_order.id}")
     except Exception as e:
-        print(f"❌ Error iniciando envío de email: {str(e)}")
+        print(f"❌ Error iniciando envío de email para orden #{db_order.id}: {str(e)}")
         # Don't fail the order creation if email fails
+        import traceback
+        traceback.print_exc()
     
     return response
 
@@ -191,30 +197,77 @@ def read_my_orders(
     firebase_user: dict = Depends(get_current_user)
 ):
     """Obtener todos los pedidos del usuario autenticado"""
-    # Buscar customers que coincidan con el email del usuario autenticado
-    user_email = firebase_user.get('email')
-    if not user_email:
-        return []
-    
-    # Encontrar todos los customers con este email
-    customers = session.exec(
-        select(Customer).where(Customer.email == user_email)
-    ).all()
-    
-    if not customers:
-        return []
-    
-    # Obtener pedidos de todos los customers con este email
-    customer_ids = [customer.id for customer in customers]
-    orders = session.exec(
-        select(Order)
-        .where(Order.customer_id.in_(customer_ids))
-        .order_by(Order.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-    ).all()
-    
-    return orders
+    try:
+        # Debug completo del usuario de Firebase
+        print(f"🔍 FIREBASE USER DEBUG:")
+        print(f"  - Usuario completo: {firebase_user}")
+        print(f"  - Tipo: {type(firebase_user)}")
+        print(f"  - Keys disponibles: {list(firebase_user.keys()) if isinstance(firebase_user, dict) else 'No es dict'}")
+        
+        # Buscar customers que coincidan con el email del usuario autenticado
+        user_email = firebase_user.get('email')
+        if not user_email:
+            print(f"❌ Usuario sin email: {firebase_user}")
+            raise HTTPException(status_code=400, detail="Usuario sin email válido")
+        
+        print(f"🔄 Buscando pedidos para email: {user_email}")
+        
+        # DEBUG: Ver todos los customers en la base
+        all_customers = session.exec(select(Customer)).all()
+        print(f"📊 TOTAL customers en DB: {len(all_customers)}")
+        for customer in all_customers[:5]:  # Solo primeros 5
+            print(f"  - Customer {customer.id}: {customer.email} | {customer.name}")
+        
+        # Encontrar todos los customers con este email
+        customers = session.exec(
+            select(Customer).where(Customer.email == user_email)
+        ).all()
+        
+        if not customers:
+            print(f"ℹ️ No se encontraron customers para email: {user_email}")
+            # DEBUG: Verificar emails similares
+            similar_customers = session.exec(
+                select(Customer).where(Customer.email.ilike(f"%{user_email.split('@')[0]}%"))
+            ).all()
+            print(f"🔍 Customers con emails similares: {[(c.id, c.email) for c in similar_customers]}")
+            return []  # Retornar lista vacía es válido - usuario sin pedidos
+        
+        print(f"✅ Encontrados {len(customers)} customers para email: {user_email}")
+        for customer in customers:
+            print(f"  - Customer {customer.id}: {customer.name} | {customer.email}")
+        
+        # DEBUG: Ver todas las órdenes en la base
+        all_orders = session.exec(select(Order)).all()
+        print(f"📊 TOTAL órdenes en DB: {len(all_orders)}")
+        for order in all_orders[:5]:  # Solo primeras 5
+            print(f"  - Order {order.id}: customer_id={order.customer_id} | total={order.total} | status={order.status}")
+        
+        # Obtener pedidos de todos los customers con este email
+        customer_ids = [customer.id for customer in customers]
+        print(f"🔍 Buscando órdenes para customer_ids: {customer_ids}")
+        
+        orders = session.exec(
+            select(Order)
+            .where(Order.customer_id.in_(customer_ids))
+            .order_by(Order.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        ).all()
+        
+        print(f"✅ Encontradas {len(orders)} órdenes para usuario {user_email}")
+        if orders:
+            for order in orders:
+                print(f"  - Order {order.id}: customer_id={order.customer_id} | total={order.total} | created_at={order.created_at}")
+        
+        return orders
+        
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions
+    except Exception as e:
+        print(f"❌ Error inesperado en read_my_orders: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Error interno del servidor al cargar pedidos")
 
 
 @router.get("/orders/{order_id}", response_model=Order)

@@ -82,6 +82,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Si hay una posición guardada (botón atrás/adelante), ir ahí
+    if (savedPosition) {
+      return savedPosition;
+    }
+    // Si hay un hash (#section), ir a esa sección
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      };
+    }
+    // Por defecto, ir al top de la página
+    return { top: 0 };
+  }
 });
 
 // Guard para rutas protegidas

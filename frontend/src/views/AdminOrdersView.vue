@@ -410,7 +410,7 @@ const loadOrders = async () => {
     }
     
     console.log('🔄 Loading orders from:', endpoint);
-    const response = await fetch(`${config.backendUrl}/api/v1${endpoint}`, {
+    const response = await fetch(`${config.backendUrl}${endpoint}`, {
       headers: getAuthHeaders()
     });
     
@@ -440,7 +440,7 @@ const loadOrders = async () => {
 const loadStatistics = async () => {
   try {
     console.log('📊 Loading shipping statistics...');
-    const response = await fetch(`${config.backendUrl}/api/v1/admin/shipping/statistics`, {
+    const response = await fetch(`${config.backendUrl}/admin/shipping/statistics`, {
       headers: getAuthHeaders()
     });
     
@@ -456,7 +456,7 @@ const loadStatistics = async () => {
 const loadShippingProviders = async () => {
   try {
     console.log('🚛 Loading shipping providers...');
-    const response = await fetch(`${config.backendUrl}/api/v1/admin/shipping/providers`, {
+    const response = await fetch(`${config.backendUrl}/admin/shipping/providers`, {
       headers: getAuthHeaders()
     });
     
@@ -508,7 +508,7 @@ const saveTrackingInfo = async () => {
     console.log('💾 Saving tracking info:', payload);
     
     const response = await fetch(
-      `${config.backendUrl}/api/v1/admin/shipping/orders/${selectedOrder.value.order_id}/shipping-info`,
+      `${config.backendUrl}/admin/shipping/orders/${selectedOrder.value.order_id}/shipping-info`,
       {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -539,7 +539,7 @@ const markAsShipped = async (orderId: number) => {
     console.log('🚢 Marking order as shipped:', orderId);
     
     const response = await fetch(
-      `${config.backendUrl}/api/v1/admin/shipping/orders/${orderId}/mark-shipped`,
+      `${config.backendUrl}/admin/shipping/orders/${orderId}/mark-shipped`,
       {
         method: 'POST',
         headers: getAuthHeaders(),
@@ -569,7 +569,7 @@ const bulkMarkShipped = async () => {
     console.log('🚢 Bulk marking orders as shipped:', selectedOrders.value);
     
     const response = await fetch(
-      `${config.backendUrl}/api/v1/admin/shipping/bulk-actions/mark-shipped`,
+      `${config.backendUrl}/admin/shipping/bulk-actions/mark-shipped`,
       {
         method: 'POST',
         headers: getAuthHeaders(),

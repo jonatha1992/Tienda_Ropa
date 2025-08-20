@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Body
@@ -66,3 +67,54 @@ def delete_inventory(*, session: Session = Depends(get_session), inventory_id: i
     session.delete(inventory_item)
     session.commit()
     return {"ok": True}
+
+
+def reduce_stock(product_id: int, quantity: int, session: Session) -> bool:
+    """
+    Reduce el stock de un producto específico.
+    
+    Args:
+        product_id: ID del producto
+        quantity: Cantidad a reducir
+        session: Sesión de base de datos
+        
+    Returns:
+        True si se redujo correctamente, False si no hay suficiente stock
+    """
+    try:
+        # Buscar el inventory item para este producto
+        inventory_item = session.exec(
+            select(Inventory).where(Inventory.product_id == product_id)
+        ).first()
+        
+        if not inventory_item:
+            # Si no existe, crear uno con stock 0
+            inventory_item = Inventory(
+                product_id=product_id,
+                quantity=0,
+                last_update=datetime.now()
+            )
+            session.add(inventory_item)
+            session.commit()
+            session.refresh(inventory_item)
+            return False  # No hay stock disponible
+        
+        # Verificar si hay suficiente stock
+        if inventory_item.quantity < quantity:
+            print(f"❌ Stock insuficiente para producto {product_id}. Disponible: {inventory_item.quantity}, Solicitado: {quantity}")
+            return False
+        
+        # Reducir el stock
+        inventory_item.quantity -= quantity
+        inventory_item.last_update = datetime.now()
+        
+        session.add(inventory_item)
+        session.commit()
+        
+        print(f"✅ Stock reducido para producto {product_id}: -{quantity}. Stock restante: {inventory_item.quantity}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error reduciendo stock para producto {product_id}: {str(e)}")
+        session.rollback()
+        return False

@@ -46,11 +46,11 @@ class TransferController:
             
             # Valores por defecto si no hay configuración
             default_bank_info = {
-                "bank_name": "Banco Nación",
-                "account_type": "Cuenta Corriente",
-                "account_number": "CONFIGURAR_NUMERO",
-                "cbu": "CONFIGURAR_CBU_AQUI",
-                "alias": "tienda.ropa", 
+                "bank_name": "Mercado Pago",
+                "account_type": "CVU",
+                "account_number": "0000003100021521638349",
+                "cbu": "0000003100021521638349",
+                "alias": "mvintage", 
                 "holder_name": "M-Vintage Ropa",
                 "cuit": "XX-XXXXXXXX-X",
                 "instructions": "Incluye como referencia el número de orden para identificar tu pago"

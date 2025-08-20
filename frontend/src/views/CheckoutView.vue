@@ -391,6 +391,9 @@ const checkoutForm = ref({
   paymentMethod: 'transfer'
 });
 
+// Track if delivery info was just completed
+const deliveryInfoCompleted = ref(false);
+
 // Determine current step based on form completion
 const currentStep = computed(() => {
   // Step 1: Carrito (always completed if we're in checkout)
@@ -402,6 +405,16 @@ const currentStep = computed(() => {
                          checkoutForm.value.address && 
                          checkoutForm.value.city && 
                          checkoutForm.value.postalCode;
+  
+  // Show notification when delivery info gets completed
+  if (hasDeliveryInfo && !deliveryInfoCompleted.value) {
+    deliveryInfoCompleted.value = true;
+    setTimeout(() => {
+      toast.success('✅ Información de entrega completa. Ya puedes proceder con el pago.');
+    }, 300);
+  } else if (!hasDeliveryInfo && deliveryInfoCompleted.value) {
+    deliveryInfoCompleted.value = false;
+  }
   
   // Step 3: Pago (when delivery info is complete or processing)
   if (processing.value) {

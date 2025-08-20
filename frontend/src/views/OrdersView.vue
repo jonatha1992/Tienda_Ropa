@@ -82,6 +82,25 @@
         </div>
       </div>
 
+      <!-- Error State -->
+      <div v-else-if="hasError" class="text-center py-12">
+        <div class="mx-auto h-24 w-24 text-red-400 mb-4">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar pedidos</h3>
+        <p class="text-gray-600 mb-6">Hubo un problema al cargar tus pedidos. Por favor, intenta nuevamente.</p>
+        <button
+          @click="loadOrders"
+          :disabled="loading"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:bg-gray-400"
+        >
+          <span v-if="loading">Cargando...</span>
+          <span v-else>Reintentar</span>
+        </button>
+      </div>
+
       <!-- Empty State -->
       <div v-else class="text-center py-12">
         <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
@@ -91,12 +110,21 @@
         </div>
         <h3 class="text-lg font-medium text-gray-900 mb-2">No tienes pedidos aún</h3>
         <p class="text-gray-600 mb-6">Cuando realices tu primera compra, aparecerá aquí</p>
-        <router-link
-          to="/shop"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"
-        >
-          Comenzar a comprar
-        </router-link>
+        <div class="space-x-4">
+          <router-link
+            to="/shop"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"
+          >
+            Comenzar a comprar
+          </router-link>
+          <button
+            @click="loadOrders"
+            :disabled="loading"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
+          >
+            Actualizar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -116,6 +144,7 @@ const toast = useToast();
 
 const orders = ref<Order[]>([]);
 const loading = ref(true);
+const hasError = ref(false);
 
 onMounted(async () => {
   // Check authentication
@@ -131,12 +160,50 @@ onMounted(async () => {
 const loadOrders = async () => {
   try {
     loading.value = true;
+    hasError.value = false; // Reset error state
     console.log('🔄 Cargando pedidos del usuario...');
+    console.log('👤 Usuario autenticado:', authStore.isAuthenticated);
+    console.log('📧 Email del usuario:', authStore.backendUser?.email);
+    
     orders.value = await ordersApi.getMyOrders();
     console.log('✅ Pedidos cargados:', orders.value);
-  } catch (error) {
+    console.log('📊 Cantidad de pedidos:', orders.value.length);
+    
+    // Si no hay pedidos pero no hubo error, mostrar info
+    if (orders.value.length === 0) {
+      console.log('ℹ️ No se encontraron pedidos para el usuario');
+    }
+    
+  } catch (error: any) {
     console.error('❌ Error loading orders:', error);
-    toast.error('Error al cargar los pedidos');
+    console.error('❌ Error response:', error?.response);
+    console.error('❌ Error data:', error?.response?.data);
+    console.error('❌ Error status:', error?.response?.status);
+    
+    // Manejo de errores específicos
+    if (error?.response?.status === 401) {
+      console.log('🔐 Error 401: Sesión expirada');
+      toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+      authStore.logout();
+      router.push('/auth');
+    } else if (error?.response?.status === 400) {
+      console.log('⚠️ Error 400: Problema con la solicitud');
+      toast.error('Error en la solicitud. Intenta cerrar sesión y volver a iniciar.');
+    } else if (error?.response?.status === 404) {
+      console.log('🔍 Error 404: Endpoint no encontrado');
+      toast.error('Error del servidor. El servicio no está disponible.');
+    } else if (error?.response?.status >= 500) {
+      console.log('🔥 Error del servidor:', error?.response?.status);
+      toast.error('Error del servidor. Por favor, intenta más tarde.');
+    } else if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('Network Error')) {
+      console.log('🌐 Error de red');
+      toast.error('Error de conexión. Verifica tu internet e intenta nuevamente.');
+    } else {
+      console.log('❓ Error desconocido:', error?.message);
+      toast.error(`Error al cargar los pedidos: ${error?.response?.data?.detail || error?.message || 'Error desconocido'}`);
+    }
+    
+    hasError.value = true; // Set error state
     orders.value = [];
   } finally {
     loading.value = false;
