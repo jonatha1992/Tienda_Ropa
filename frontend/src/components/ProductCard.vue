@@ -65,33 +65,40 @@
     </div>
     
     <!-- Product Info -->
-    <div class="p-4 space-y-2">
-      <h3 class="text-sm font-heading font-normal text-gray-800 transition-colors group-hover:text-gray-600">
+    <div class="p-4 pt-3 flex-grow flex flex-col">
+      <h3 class="text-xs font-body font-normal text-gray-800 leading-tight tracking-wide mb-1 line-clamp-2 h-8">
         {{ product.name }}
       </h3>
       
-      <!-- Product Price -->
-      <div class="flex items-center space-x-2">
-        <!-- Precio original si hay descuento -->
-        <span v-if="product.has_discount && product.discounted_price" 
-              class="text-sm font-body text-gray-500 line-through">
-          ${{ product.price.toFixed(2) }}
-        </span>
-        <!-- Precio con descuento si aplica, sino el precio normal -->
-        <span :class="['text-sm font-body font-normal', product.has_discount ? 'text-green-600' : 'text-gray-800']">
-          ${{ product.has_discount && product.discounted_price ? product.discounted_price.toFixed(2) : product.price.toFixed(2) }}
-        </span>
-        <!-- Precio original legacy (mantenemos para compatibilidad) -->
-        <span v-if="!product.has_discount && product.original_price && product.original_price > product.price" 
-              class="text-sm font-body text-gray-500 line-through">
-          ${{ product.original_price.toFixed(2) }}
-        </span>
-      </div>
-      
       <!-- Product Category -->
-      <p v-if="product.categoria" class="text-xs font-body font-light tracking-wide text-gray-400 uppercase">
+      <p v-if="product.categoria" class="text-[10px] font-body font-light tracking-wider text-gray-400 uppercase mb-2">
         {{ product.categoria }}
       </p>
+      
+      <!-- Product Price -->
+      <div class="mt-auto">
+        <!-- Precio con descuento -->
+        <div v-if="product.has_discount && product.discounted_price" class="space-y-0.5">
+          <span class="block text-sm font-bold text-gray-900">
+            ${{ product.discounted_price.toFixed(2) }}
+          </span>
+          <span class="text-xs text-gray-400 line-through">
+            ${{ product.price.toFixed(2) }}
+          </span>
+        </div>
+        
+        <!-- Precio normal -->
+        <div v-else>
+          <span class="text-sm font-bold text-gray-900">
+            ${{ product.price.toFixed(2) }}
+          </span>
+          <!-- Mostrar precio tachado si hay un precio original mayor -->
+          <span v-if="product.original_price && product.original_price > product.price" 
+                class="ml-1.5 text-xs text-gray-400 line-through">
+            ${{ product.original_price.toFixed(2) }}
+          </span>
+        </div>
+      </div>
     </div>
   </router-link>
 </template>
@@ -173,52 +180,112 @@ const quickAdd = () => {
 .product-card {
   position: relative;
   overflow: hidden;
-  border: none;
-  border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
   background: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
+  border-color: #d1d5db;
 }
 
 /* Image container styling */
 .product-card .aspect-square {
-  border-radius: 4px 4px 0 0;
+  border-radius: 6px 6px 0 0;
   overflow: hidden;
+  position: relative;
+  background: #f9fafb;
 }
 
 /* Primary image container styling */
 .primary-image-container {
   position: relative;
   z-index: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   width: 100%;
   height: 100%;
+  opacity: 1;
 }
 
-/* Secondary image container styling */
+/* Secondary image styling */
 .secondary-image-container {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
 }
 
-/* Hover effects */
 .product-card:hover .primary-image-container {
   opacity: 0;
 }
 
 .product-card:hover .secondary-image-container {
   opacity: 1;
+}
+
+/* Quick add button */
+.btn-minimal {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-minimal.btn-dark {
+  background-color: #111;
+  color: white;
+  border: 1px solid #111;
+}
+
+.btn-minimal.btn-dark:hover {
+  background-color: #333;
+  border-color: #333;
+}
+
+/* Stock indicator */
+.bg-red-600 {
+  background-color: #dc2626;
+}
+
+/* Labels */
+.bg-black, .bg-red-600, .bg-orange-500 {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+}
+
+/* Price styling */
+.line-through {
+  text-decoration-color: #9ca3af;
+}
+
+/* Image hover effect */
+.product-card .aspect-square {
+  overflow: hidden;
+}
+
+.product-card img {
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.03);
 }
 
 /* Quick Add Button Enhancement */
