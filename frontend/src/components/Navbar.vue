@@ -185,9 +185,17 @@
         
         <div class="pt-4 mt-4 border-t border-gray-200">
           <div v-if="authStore.isAuthenticated" class="flex items-center px-3 mb-3">
+            <div class="mr-3">
+              <img 
+                :src="authStore.firebaseUser?.photoURL || '/user-avatar-placeholder.png'" 
+                :alt="authStore.firebaseUser?.displayName || 'Usuario'"
+                class="w-10 h-10 rounded-full object-cover"
+                onerror="this.src='/user-avatar-placeholder.png'"
+              >
+            </div>
             <div>
-              <div class="text-sm font-medium text-gray-900 font-body">{{ authStore.firebaseUser?.displayName }}</div>
-              <div class="text-xs text-gray-500 font-body">{{ authStore.firebaseUser?.email }}</div>
+              <div class="text-sm font-medium text-gray-900 font-body">{{ authStore.firebaseUser?.displayName || 'Usuario' }}</div>
+              <div class="text-xs text-gray-500 font-body">{{ authStore.firebaseUser?.email || '' }}</div>
             </div>
           </div>
           <div class="space-y-1">
