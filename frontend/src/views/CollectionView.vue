@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-gray-50">
     <!-- Breadcrumbs -->
     <nav class="border-b border-gray-200 bg-gray-50">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center py-4 space-x-2 text-sm">
-          <router-link to="/" class="text-gray-500 transition-colors hover:text-gray-700">
+          <router-link to="/" class="text-gray-400 transition-colors hover:text-gray-600">
             Home
           </router-link>
           <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
           </svg>
-          <router-link to="/shop" class="text-gray-500 transition-colors hover:text-gray-700">
+          <router-link to="/shop" class="text-gray-400 transition-colors hover:text-gray-600">
             Shop
           </router-link>
           <svg v-if="selectedCategory" class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -129,17 +129,17 @@
           <!-- Collection Header -->
           <div class="flex items-center justify-between mb-8">
             <div>
-              <h1 class="text-3xl font-light tracking-wide text-gray-900">
+              <h1 class="text-3xl font-light tracking-wide text-gray-800">
                 {{ collectionTitle }}
               </h1>
-              <p class="mt-1 text-sm text-gray-500">
+              <p class="mt-1 text-sm text-gray-400">
                 {{ filteredProducts.length }} producto{{ filteredProducts.length !== 1 ? 's' : '' }}
               </p>
             </div>
           </div>
 
           <!-- Products Grid -->
-          <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
             <ProductCard 
               v-for="product in paginatedProducts" 
               :key="product.id" 

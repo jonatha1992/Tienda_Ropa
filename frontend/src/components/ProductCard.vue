@@ -66,7 +66,7 @@
     
     <!-- Product Info -->
     <div class="p-4 space-y-2">
-      <h3 class="text-sm font-heading font-medium text-gray-900 transition-colors group-hover:text-gray-700">
+      <h3 class="text-sm font-heading font-normal text-gray-800 transition-colors group-hover:text-gray-600">
         {{ product.name }}
       </h3>
       
@@ -78,7 +78,7 @@
           ${{ product.price.toFixed(2) }}
         </span>
         <!-- Precio con descuento si aplica, sino el precio normal -->
-        <span :class="['text-sm font-body font-medium', product.has_discount ? 'text-green-600' : 'text-gray-900']">
+        <span :class="['text-sm font-body font-normal', product.has_discount ? 'text-green-600' : 'text-gray-800']">
           ${{ product.has_discount && product.discounted_price ? product.discounted_price.toFixed(2) : product.price.toFixed(2) }}
         </span>
         <!-- Precio original legacy (mantenemos para compatibilidad) -->
@@ -89,7 +89,7 @@
       </div>
       
       <!-- Product Category -->
-      <p v-if="product.categoria" class="text-xs font-body tracking-wide text-gray-500 uppercase">
+      <p v-if="product.categoria" class="text-xs font-body font-light tracking-wide text-gray-400 uppercase">
         {{ product.categoria }}
       </p>
     </div>
@@ -173,24 +173,21 @@ const quickAdd = () => {
 .product-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid #f3f4f6;
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .product-card:hover {
-  border-color: #e5e7eb;
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.12),
-    0 4px 10px rgba(0, 0, 0, 0.08);
-  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Image container styling */
 .product-card .aspect-square {
-  border-radius: 12px 12px 0 0;
+  border-radius: 4px 4px 0 0;
   overflow: hidden;
 }
 
