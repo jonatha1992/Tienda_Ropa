@@ -1,15 +1,10 @@
 <template>
-  <router-link :to="`/product/${createSlug(product.name)}`" class="block cursor-pointer">
-    <div class="relative product-card group">
-      <!-- Stock Indicator Above Image -->
-      <div v-if="isOutOfStock" class="absolute -top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-600 text-white px-3 py-1 text-xs font-body font-bold rounded-full shadow-lg">
-        SIN STOCK
-      </div>
-      
-      <!-- Product Images Container -->
-      <div class="relative w-full overflow-hidden bg-gray-100 aspect-square">
-        <!-- Primary Image -->
-        <div class="primary-image-container">
+  <router-link :to="`/product/${createSlug(product.name)}`" class="block h-full">
+    <div class="h-full flex flex-col bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+      <!-- Imagen del producto -->
+      <div class="relative aspect-square overflow-hidden bg-gray-50">
+        <!-- Imagen principal -->
+        <div class="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0">
           <OptimizedImage
             :src="imageToShow"
             :alt="product.name"
@@ -17,13 +12,13 @@
             aspect-ratio="square"
             :show-spinner="true"
             :fallback-src="defaultImage"
-            image-class="object-cover w-full h-full"
+            image-class="w-full h-full object-cover"
             @error="handleImageError"
           />
         </div>
-      
-        <!-- Secondary Image (hover effect) -->
-        <div v-if="product.images && product.images[1]" class="secondary-image-container">
+
+        <!-- Imagen secundaria (hover) -->
+        <div v-if="product.images && product.images[1]" class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <OptimizedImage
             :src="product.images[1].image_url"
             :alt="product.name"
@@ -31,75 +26,69 @@
             aspect-ratio="square"
             :show-spinner="true"
             :fallback-src="defaultImage"
-            image-class="object-cover w-full h-full"
+            image-class="w-full h-full object-cover"
           />
         </div>
-      </div>
-      
-      <!-- Product Labels -->
-      <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-2 top-3 left-3">
-        <span v-if="product.is_new" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-black">
-          New
-        </span>
-        <span v-if="product.is_sale" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-red-600">
-          Sale
-        </span>
-        <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-3 py-1 text-xs font-body font-medium tracking-wide text-white uppercase bg-orange-500">
-          -{{ product.discount_percentage }}%
-        </span>
-      </div>
-      
-      <!-- Sin Stock Overlay -->
-      <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-        <div class="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
-          <span class="text-lg font-heading font-semibold text-gray-800">Sin Stock</span>
+
+        <!-- Etiquetas de producto -->
+        <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute top-2 left-2 space-y-1">
+          <span v-if="product.is_new" class="inline-block px-2 py-0.5 text-[10px] font-medium text-white bg-black uppercase">
+            New
+          </span>
+          <span v-if="product.is_sale" class="inline-block px-2 py-0.5 text-[10px] font-medium text-white bg-red-600 uppercase">
+            Sale
+          </span>
+          <span v-if="product.has_discount && product.discount_percentage" class="inline-block px-2 py-0.5 text-[10px] font-medium text-white bg-orange-500 uppercase">
+            -{{ product.discount_percentage }}%
+          </span>
+        </div>
+
+        <!-- Overlay de Sin Stock -->
+        <div v-if="isOutOfStock" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div class="bg-white px-4 py-2 rounded">
+            <span class="text-sm font-medium text-gray-800">Sin Stock</span>
+          </div>
         </div>
       </div>
-      
-      <!-- Quick Add Button (appears on hover) -->
-      <div v-if="!isOutOfStock" class="absolute inset-x-0 px-4 transition-opacity duration-300 opacity-0 bottom-4 group-hover:opacity-100">
-        <button @click.stop="quickAdd" class="w-full text-center btn-minimal btn-dark font-body">
-          Agregar
-        </button>
+
+      <!-- Información del producto -->
+      <div class="p-3 flex-1 flex flex-col">
+        <!-- Nombre del producto -->
+        <h3 class="text-sm font-normal text-gray-800 mb-1 line-clamp-2 leading-tight">
+          {{ product.name }}
+        </h3>
+        
+        <!-- Categoría -->
+        <p v-if="product.categoria" class="text-xs text-gray-500 uppercase tracking-wider mb-2">
+          {{ product.categoria }}
+        </p>
+        
+        <!-- Precios -->
+        <div class="mt-auto pt-2">
+          <!-- Precio con descuento -->
+          <div v-if="product.has_discount && product.discounted_price" class="space-y-0.5">
+            <span class="block text-sm font-bold text-gray-900">
+              ${{ product.discounted_price.toFixed(2) }}
+            </span>
+            <span class="text-xs text-gray-400 line-through">
+              ${{ product.price.toFixed(2) }}
+            </span>
+          </div>
+          
+          <!-- Precio normal -->
+          <div v-else>
+            <span class="text-sm font-bold text-gray-900">
+              ${{ product.price.toFixed(2) }}
+            </span>
+            <span v-if="product.original_price && product.original_price > product.price" 
+                  class="ml-1.5 text-xs text-gray-400 line-through">
+              ${{ product.original_price.toFixed(2) }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     
-    <!-- Product Info -->
-    <div class="p-4 pt-3 flex-grow flex flex-col">
-      <h3 class="text-xs font-body font-normal text-gray-800 leading-tight tracking-wide mb-1 line-clamp-2 h-8">
-        {{ product.name }}
-      </h3>
-      
-      <!-- Product Category -->
-      <p v-if="product.categoria" class="text-[10px] font-body font-light tracking-wider text-gray-400 uppercase mb-2">
-        {{ product.categoria }}
-      </p>
-      
-      <!-- Product Price -->
-      <div class="mt-auto">
-        <!-- Precio con descuento -->
-        <div v-if="product.has_discount && product.discounted_price" class="space-y-0.5">
-          <span class="block text-sm font-bold text-gray-900">
-            ${{ product.discounted_price.toFixed(2) }}
-          </span>
-          <span class="text-xs text-gray-400 line-through">
-            ${{ product.price.toFixed(2) }}
-          </span>
-        </div>
-        
-        <!-- Precio normal -->
-        <div v-else>
-          <span class="text-sm font-bold text-gray-900">
-            ${{ product.price.toFixed(2) }}
-          </span>
-          <!-- Mostrar precio tachado si hay un precio original mayor -->
-          <span v-if="product.original_price && product.original_price > product.price" 
-                class="ml-1.5 text-xs text-gray-400 line-through">
-            ${{ product.original_price.toFixed(2) }}
-          </span>
-        </div>
-      </div>
-    </div>
   </router-link>
 </template>
 
@@ -177,127 +166,70 @@ const quickAdd = () => {
 </script>
 
 <style scoped>
-.product-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Estilos para el contenedor de la tarjeta */
+.router-link {
+  display: block;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
 }
 
-.product-card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
-  border-color: #d1d5db;
-}
-
-/* Image container styling */
-.product-card .aspect-square {
-  border-radius: 6px 6px 0 0;
-  overflow: hidden;
+/* Estilos para la imagen */
+.aspect-square {
   position: relative;
-  background: #f9fafb;
-}
-
-/* Primary image container styling */
-.primary-image-container {
-  position: relative;
-  z-index: 1;
-  transition: opacity 0.4s ease;
   width: 100%;
-  height: 100%;
-  opacity: 1;
+  padding-bottom: 100%; /* Mantener relación de aspecto 1:1 */
+  overflow: hidden;
+  background-color: #f9fafb;
 }
 
-/* Secondary image styling */
-.secondary-image-container {
+/* Contenedor de imágenes */
+.aspect-square > div {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: 2;
 }
 
-.product-card:hover .primary-image-container {
-  opacity: 0;
+/* Efecto hover en la imagen */
+img {
+  transition: transform 0.3s ease;
 }
 
-.product-card:hover .secondary-image-container {
-  opacity: 1;
+.router-link:hover img {
+  transform: scale(1.03);
 }
 
-/* Quick add button */
-.btn-minimal {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.btn-minimal.btn-dark {
-  background-color: #111;
-  color: white;
-  border: 1px solid #111;
-}
-
-.btn-minimal.btn-dark:hover {
-  background-color: #333;
-  border-color: #333;
-}
-
-/* Stock indicator */
-.bg-red-600 {
-  background-color: #dc2626;
-}
-
-/* Labels */
+/* Estilos para las etiquetas de producto */
 .bg-black, .bg-red-600, .bg-orange-500 {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.65rem;
+  border-radius: 2px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  border-radius: 2px;
+  line-height: 1;
+  padding: 0.25rem 0.4rem;
 }
 
-/* Price styling */
+/* Estilos para el texto tachado */
 .line-through {
   text-decoration-color: #9ca3af;
 }
 
-/* Image hover effect */
-.product-card .aspect-square {
-  overflow: hidden;
+/* Efecto de hover en toda la tarjeta */
+.router-link {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.product-card img {
-  transition: transform 0.4s ease;
+.router-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.product-card:hover img {
-  transform: scale(1.03);
-}
-
-/* Quick Add Button Enhancement */
-.product-card .btn-minimal {
-  backdrop-filter: blur(8px);
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.product-card .btn-minimal:hover {
-  background: rgba(0, 0, 0, 0.9);
+/* Mejoras de accesibilidad */
+.router-link:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
   transform: translateY(-1px);
 }
 </style>
