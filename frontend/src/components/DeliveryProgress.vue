@@ -4,14 +4,15 @@
     <div class="flex items-center justify-between mb-8">
       <!-- Step 1: Carrito -->
       <div class="flex flex-col items-center">
-        <div 
-          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300"
+        <button 
+          @click="$emit('go-to-step', 1)"
+          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 cursor-pointer hover:shadow-lg"
           :class="getStepClasses(1)"
         >
           <CheckIcon v-if="currentStep > 1" class="w-4 h-4" />
           <ShoppingCartIcon v-else-if="currentStep === 1" class="w-4 h-4" />
           <span class="font-body" v-else>1</span>
-        </div>
+        </button>
         <span class="font-body text-xs mt-2 text-body-text">Carrito</span>
       </div>
 
@@ -71,6 +72,11 @@ const props = withDefaults(defineProps<Props>(), {
   currentStep: 1
 })
 
+// Define emits for step navigation
+defineEmits<{
+  'go-to-step': [step: number]
+}>()
+
 const getStepClasses = (step: number) => {
   if (props.currentStep > step) {
     // Completed step
@@ -80,7 +86,7 @@ const getStepClasses = (step: number) => {
     return 'bg-gray-800 text-white ring-2 ring-gray-800 ring-offset-2'
   } else {
     // Future step
-    return 'bg-gray-200 text-gray-500'
+    return 'bg-gray-200 text-white'
   }
 }
 </script>

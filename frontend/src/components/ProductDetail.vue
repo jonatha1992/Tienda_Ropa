@@ -40,6 +40,13 @@
             <div v-if="isOutOfStock" class="absolute top-0 left-0 z-10 mt-2 ml-4">
               <span class="bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-lg">SIN STOCK</span>
             </div>
+            
+            <!-- Discount Badge Desktop -->
+            <div v-else-if="product.has_discount && product.discount_amount" class="absolute top-0 right-0 z-10 mt-2 mr-4">
+              <div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-lg">
+                -{{ discountPercentage }}% OFF
+              </div>
+            </div>
           </div>
           
           <!-- Thumbnail Images (más grandes) -->
@@ -70,7 +77,16 @@
           
           <!-- Price -->
           <div class="mb-6">
-            <span class="text-2xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
+            <div v-if="product.has_discount && product.discounted_price" class="flex items-center space-x-3">
+              <span class="text-2xl font-light text-red-600 font-body">${{ product.discounted_price.toLocaleString() }}</span>
+              <span class="text-lg font-light text-gray-500 line-through font-body">${{ product.price.toLocaleString() }}</span>
+              <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+                {{ discountPercentage }}% OFF
+              </span>
+            </div>
+            <div v-else>
+              <span class="text-2xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
+            </div>
           </div>
 
           <!-- Color Selection -->
@@ -198,6 +214,13 @@
                 <span class="text-lg font-semibold text-gray-800 font-heading">Sin Stock</span>
               </div>
             </div>
+            
+            <!-- Discount Badge Mobile -->
+            <div v-else-if="product.has_discount && product.discount_amount" class="absolute top-2 right-2 z-10">
+              <div class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg">
+                -{{ discountPercentage }}%
+              </div>
+            </div>
           </div>
           
           <!-- Mobile Thumbnail Scroll -->
@@ -223,7 +246,16 @@
         <div class="px-4 pb-8">
           <h1 class="mb-2 text-xl font-light text-gray-900 font-heading">{{ product.name }}</h1>
           <div class="mb-4">
-            <span class="text-xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
+            <div v-if="product.has_discount && product.discounted_price" class="flex items-center space-x-2">
+              <span class="text-xl font-light text-red-600 font-body">${{ product.discounted_price.toLocaleString() }}</span>
+              <span class="text-sm font-light text-gray-500 line-through font-body">${{ product.price.toLocaleString() }}</span>
+              <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+                {{ discountPercentage }}% OFF
+              </span>
+            </div>
+            <div v-else>
+              <span class="text-xl font-light text-gray-900 font-body">${{ product.price.toLocaleString() }}</span>
+            </div>
           </div>
 
           <!-- Mobile Color Selection -->
@@ -537,6 +569,15 @@ const isOutOfStock = computed(() => {
   return false;
 });
 
+// Calculate discount percentage
+const discountPercentage = computed(() => {
+  if (!product.value || !product.value.has_discount || !product.value.discount_amount) {
+    return 0;
+  }
+  
+  return Math.round((product.value.discount_amount / product.value.price) * 100);
+});
+
 // Quantity functions
 const incrementQuantity = () => {
   if (quantity.value < (maxQuantity.value ?? 1)) {
@@ -640,7 +681,25 @@ onMounted(async () => {
 });
 
 const addToCart = () => {
-  if (!canAddToCart.value || !product.value) return;
+  if (!product.value) {
+    return;
+  }
+  
+  if (!canAddToCart.value) {
+    // Check why we can't add to cart and show appropriate message
+    if (product.value.is_unique) {
+      if ((product.value.stock ?? 0) <= 0) {
+        toast.warning('Este producto no tiene stock disponible');
+      }
+    } else {
+      if (!selectedColor.value || !selectedSize.value) {
+        toast.warning('Por favor selecciona color y talle');
+      } else if (!selectedVariant.value || selectedVariant.value.stock <= 0) {
+        toast.warning('La combinación seleccionada no tiene stock disponible');
+      }
+    }
+    return;
+  }
   
   try {
     // For unique products
@@ -666,16 +725,17 @@ const addToCart = () => {
             size: selectedSize.value
           }
         );
+      } else {
+        toast.warning('Por favor selecciona color y talle');
+        return;
       }
     }
     
     // Reset quantity to 1 after adding to cart
     quantity.value = 1;
     
-    
   } catch (error) {
     console.error('Error agregando producto al carrito:', error);
-    // Show error message
     toast.error('Error al agregar el producto al carrito');
   }
 };

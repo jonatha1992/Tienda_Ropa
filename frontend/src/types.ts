@@ -191,6 +191,9 @@ export interface OrderItem {
   product_id: number;
   quantity: number;
   price: number;
+  variant_id?: number; // For products with variants
+  color_id?: number; // For unique products
+  size_id?: number; // For unique products
   product?: Product;
 }
 

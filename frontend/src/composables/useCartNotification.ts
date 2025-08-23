@@ -6,6 +6,8 @@ interface NotificationProductData {
   name: string
   quantity: number
   price: number
+  hasDiscount: boolean
+  category?: string
   variant?: {
     color: string
     size: string
@@ -35,6 +37,8 @@ export function useCartNotification() {
       name: product.name,
       quantity,
       price: price || 0,
+      hasDiscount: product.has_discount || false,
+      category: product.categoria || undefined,
       variant: variantInfo ? {
         color: variantInfo.color.name,
         size: variantInfo.size.name

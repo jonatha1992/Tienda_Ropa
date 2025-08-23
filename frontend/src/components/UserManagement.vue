@@ -16,14 +16,14 @@
           @click="showAddUserModal = true"
           class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
         >
-          <span >+ Agregar Usuario</span>
+          <span  class="text-white">+ Agregar Usuario</span>
         </button>
         <button
           @click="loadUsers"
           :disabled="loading"
           class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
         >
-          <span >{{ loading ? 'Cargando...' : 'Actualizar Lista' }}</span>
+          <span class="text-white" >{{ loading ? 'Cargando...' : 'Actualizar Lista' }}</span>
         </button>
       </div>
     </div>
@@ -99,13 +99,13 @@
                   @click="manageUserRoles(user)"
                   class="mr-4 text-blue-600 hover:text-blue-900"
                 >
-                  <span class="font-body">Gestionar Roles</span>
+                  <span >Gestionar Roles</span>
                 </button>
                 <button
                   @click="viewUserDetails(user)"
                   class="text-green-600 hover:text-green-900"
                 >
-                  <span class="font-body">Ver Detalles</span>
+                  <span >Ver Detalles</span>
                 </button>
               </td>
             </tr>
@@ -150,7 +150,7 @@
                   ×
                 </button>
               </span>
-              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="text-sm font-body text-body-text">
+              <span v-if="!selectedUser?.roles || selectedUser.roles.length === 0" class="text-sm text-white ">
                 Sin roles asignados
               </span>
             </div>
@@ -287,7 +287,7 @@
                 :disabled="loading"
                 class="flex-1 px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                <span class="font-body">{{ loading ? 'Creando...' : 'Crear Usuario' }}</span>
+                <span class="text-white">{{ loading ? 'Creando...' : 'Crear Usuario' }}</span>
               </button>
             </div>
           </form>

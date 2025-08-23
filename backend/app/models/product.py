@@ -95,10 +95,30 @@ class ProductVariantRead(SQLModel):
     talle: Optional[str]
     stock: int
 
+class StockCheckItem(SQLModel):
+    """Item para verificación de stock"""
+    product_id: int
+    variant_id: Optional[int] = None
+    quantity: int = Field(gt=0, description="Cantidad solicitada")
+
+class StockCheckResultItem(SQLModel):
+    """Resultado de verificación de stock para un ítem"""
+    product_id: int
+    variant_id: Optional[int] = None
+    available: bool
+    available_stock: int
+    requested_quantity: int
+    has_enough_stock: bool
+
+class StockCheckResponse(SQLModel):
+    """Respuesta de verificación de stock"""
+    items: List[StockCheckResultItem]
+    all_available: bool
+
 class ProductRead(ProductBase):
     id: int
-    images: List["ProductImageRead"]
-    variants: List["ProductVariantRead"]
+    images: List[ProductImageRead]
+    variants: List[ProductVariantRead]
     
     @property
     def display_stock(self) -> int:

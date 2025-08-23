@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import type { Product, ProductVariant, Color, Size } from '../types';
 import { useCartNotification } from '../composables/useCartNotification';
+import { stockService } from '../services/stockService';
+import type { StockCheckItem, StockCheckResponse } from '../types/stock';
 
 export interface CartItem {
   id: string; // Unique identifier for cart item
@@ -46,6 +48,22 @@ export const useCartStore = defineStore('cart', {
         }
         return total;
       }, 0);
+    },
+    
+    // Calculate average discount percentage across all items
+    averageDiscountPercentage: (state) => {
+      const discountedItems = state.items.filter(item => item.product.has_discount && item.product.discount_amount);
+      if (discountedItems.length === 0) return 0;
+      
+      const totalOriginal = discountedItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+      const totalSavings = discountedItems.reduce((total, item) => {
+        if (item.product.discount_amount) {
+          return total + (item.product.discount_amount * item.quantity);
+        }
+        return total;
+      }, 0);
+      
+      return totalOriginal > 0 ? Math.round((totalSavings / totalOriginal) * 100) : 0;
     },
     
     itemCount: (state) => {
@@ -123,16 +141,12 @@ export const useCartStore = defineStore('cart', {
       // Save to localStorage
       this.saveToStorage();
       
-      // Mostrar notificación personalizada solo si no estamos en un contexto de actualización de cantidad
+      // Mostrar notificación personalizada cuando se agrega producto
       const { showNotification } = useCartNotification();
-      // Solo mostramos la notificación si no es una actualización de cantidad
-      const existingItem = this.items.find(item => item.id === cartItemId);
-      if (!existingItem || existingItem.quantity !== quantity) {
-        if (variantInfo) {
-          showNotification(product, quantity, variantInfo);
-        } else {
-          showNotification(product, quantity);
-        }
+      if (variantInfo) {
+        showNotification(product, quantity, variantInfo);
+      } else {
+        showNotification(product, quantity);
       }
     },
     
@@ -224,31 +238,95 @@ export const useCartStore = defineStore('cart', {
       }
     },
     
-    // Validate stock availability
-    validateStock() {
-      const itemsToRemove: string[] = [];
-      
-      this.items.forEach(item => {
-        let availableStock = 0;
+    // Validate stock availability by checking with the backend
+    async validateStock() {
+      if (this.items.length === 0) return { hasStockIssues: false };
+
+      // Prepare items for stock check
+      const stockCheckItems: StockCheckItem[] = this.items.map(item => ({
+        product_id: item.product.id,
+        variant_id: item.variant?.variant.id,
+        quantity: item.quantity
+      }));
+
+      try {
+        // Check stock with backend
+        const response = await stockService.checkStock(stockCheckItems);
         
-        if (item.product.is_unique) {
-          availableStock = item.product.stock || 0;
-        } else if (item.variant) {
-          availableStock = item.variant.variant.stock;
+        const itemsToRemove: string[] = [];
+        let hasStockIssues = false;
+
+        // Process each item in the cart
+        this.items.forEach((item, index) => {
+          const stockResult = response.items[index];
+          
+          if (!stockResult.available) {
+            // Product is not available at all
+            itemsToRemove.push(item.id);
+            hasStockIssues = true;
+            console.log(`⚠️ Producto sin stock removido del carrito: ${item.product.name}`);
+          } else if (!stockResult.has_enough_stock) {
+            // Not enough stock for requested quantity
+            const availableStock = stockResult.available_stock;
+            if (availableStock > 0) {
+              // Adjust quantity to available stock
+              const oldQuantity = item.quantity;
+              this.updateQuantity(item.id, availableStock);
+              hasStockIssues = true;
+              console.log(`⚠️ Cantidad reducida para ${item.product.name}: ${oldQuantity} → ${availableStock}`);
+            } else {
+              // No stock available, remove from cart
+              itemsToRemove.push(item.id);
+              hasStockIssues = true;
+              console.log(`⚠️ Producto sin stock removido del carrito: ${item.product.name}`);
+            }
+          }
+          
+          // Update local stock information
+          if (item.product.is_unique) {
+            item.product.stock = stockResult.available_stock;
+          } else if (item.variant) {
+            item.variant.variant.stock = stockResult.available_stock;
+          }
+        });
+
+        // Remove items with no stock
+        itemsToRemove.forEach(itemId => {
+          this.removeFromCart(itemId);
+        });
+
+        // Show notifications if needed
+        if (hasStockIssues && typeof window !== 'undefined') {
+          this.showStockNotification(itemsToRemove.length > 0);
         }
-        
-        if (availableStock === 0) {
-          itemsToRemove.push(item.id);
-        } else if (item.quantity > availableStock) {
-          // Adjust quantity to available stock
-          this.updateQuantity(item.id, availableStock);
-        }
-      });
+
+        return { hasStockIssues, allAvailable: response.all_available };
+      } catch (error) {
+        console.error('Error al verificar el stock:', error);
+        // En caso de error, mostramos un mensaje al usuario
+        this.showStockNotification(false, true);
+        return { hasStockIssues: true, allAvailable: false, error: true };
+      }
+    },
+
+    // Show stock notification
+    showStockNotification(itemsRemoved: boolean, isError: boolean = false) {
+      if (typeof window === 'undefined') return;
       
-      // Remove items with no stock
-      itemsToRemove.forEach(itemId => {
-        this.removeFromCart(itemId);
-      });
+      try {
+        const { useToast } = require('vue-toastification');
+        const toast = useToast();
+        
+        if (isError) {
+          toast.error('Error al verificar el stock. Por favor, intente nuevamente.');
+        } else if (itemsRemoved) {
+          toast.warning('Algunos productos fueron removidos del carrito por falta de stock');
+        } else {
+          toast.info('Se ajustó la cantidad de algunos productos por stock limitado');
+        }
+      } catch (error) {
+        console.log('ℹ️ Stock validation completed with adjustments');
+      }
     },
     
     // Get item price (considering discounts)
@@ -261,6 +339,24 @@ export const useCartStore = defineStore('cart', {
     // Get item total price
     getItemTotal(item: CartItem): number {
       return this.getItemPrice(item) * item.quantity;
+    },
+    
+    // Get item discount percentage
+    getItemDiscountPercentage(item: CartItem): number {
+      if (!item.product.has_discount || !item.product.discount_amount) {
+        return 0;
+      }
+      
+      return Math.round((item.product.discount_amount / item.product.price) * 100);
+    },
+    
+    // Get item total savings
+    getItemSavings(item: CartItem): number {
+      if (!item.product.has_discount || !item.product.discount_amount) {
+        return 0;
+      }
+      
+      return item.product.discount_amount * item.quantity;
     },
     
     // Debug function to check cart state

@@ -27,7 +27,7 @@
         
         <!-- Delivery Progress -->
         <div class="mt-6">
-          <DeliveryProgress :current-step="currentStep" />
+          <DeliveryProgress :current-step="currentStep" @go-to-step="handleGoToStep" />
         </div>
       </div>
 
@@ -113,13 +113,47 @@
               </div>
             </div>
           </div>
+
+          <!-- Delivery Summary (Step 3) - Only in left column -->
+          <div v-if="currentStep === 3" class="mt-6">
+            <div class="bg-white shadow rounded-lg p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-heading text-lg font-medium text-gray-900">Información de entrega</h3>
+                <button 
+                  @click="showPaymentStep = false"
+                  class="text-sm text-blue-600 hover:text-blue-800 font-body"
+                >
+                  Editar
+                </button>
+              </div>
+              
+              <div class="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700 font-body">Nombre:</span>
+                  <span class="text-gray-900 font-body">{{ checkoutForm.firstName }} {{ checkoutForm.lastName }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700 font-body">Email:</span>
+                  <span class="text-gray-900 font-body">{{ checkoutForm.email }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700 font-body">Teléfono:</span>
+                  <span class="text-gray-900 font-body">{{ checkoutForm.phone }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700 font-body">Dirección:</span>
+                  <span class="text-gray-900 font-body">{{ checkoutForm.address }}, {{ checkoutForm.city }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Checkout Form -->
         <div class="order-1 lg:order-2">
           <form @submit.prevent="processOrder" class="space-y-6">
             <!-- Customer Information -->
-            <div class="bg-white shadow rounded-lg p-6">
+            <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
               <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Información de contacto</h3>
               
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -170,7 +204,7 @@
             </div>
 
             <!-- Shipping Information -->
-            <div class="bg-white shadow rounded-lg p-6">
+            <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
               <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Dirección de envío</h3>
               
               <div class="space-y-4">
@@ -273,8 +307,33 @@
               </div>
             </div>
 
-            <!-- Payment Method -->
-            <div v-if="currentStep >= 3" class="bg-white shadow rounded-lg p-6">
+            <!-- Continue to Payment Button -->
+            <div v-if="currentStep === 2 && deliveryInfoCompleted && !showPaymentStep" class="bg-white shadow rounded-lg p-6">
+              <div class="text-center">
+                <div class="mb-4">
+                  <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-3">
+                    <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Información de entrega completa</h3>
+                  <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el método de pago</p>
+                </div>
+                <button
+                  type="button"
+                  @click="goToPaymentStep"
+                  class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
+                >
+                  <span class="text-white">Continuar al pago</span>
+                  <svg class="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Payment Method - Back to right column -->
+            <div v-if="currentStep === 3" class="bg-white shadow rounded-lg p-6" data-payment-section>
               <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
               
               <div class="space-y-3">
@@ -313,8 +372,8 @@
               </div>
             </div>
 
-            <!-- Submit Button -->
-            <div v-if="currentStep >= 3" class="bg-white shadow rounded-lg p-6">
+            <!-- Submit Button - Back to right column -->
+            <div v-if="currentStep === 3" class="bg-white shadow rounded-lg p-6">
               <button
                 type="submit"
                 :disabled="processing"
@@ -328,6 +387,7 @@
                 Al confirmar tu pedido, aceptas nuestros términos y condiciones
               </p>
             </div>
+
           </form>
         </div>
       </div>
@@ -358,7 +418,8 @@ import { useRouter } from 'vue-router';
 import { useCartStore } from '../store/cart';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
-import { ordersApi, customersApi, orderItemsApi } from '../config/api';
+import { ordersApi, customersApi, orderItemsApi, productsApi } from '../config/api';
+import { stockService } from '../services/stockService';
 import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from '../composables/useValidators';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 import DeliveryProgress from '../components/DeliveryProgress.vue';
@@ -393,10 +454,12 @@ const checkoutForm = ref({
 
 // Track if delivery info was just completed
 const deliveryInfoCompleted = ref(false);
+// Track if user wants to proceed to payment
+const showPaymentStep = ref(false);
 
 // Determine current step based on form completion
 const currentStep = computed(() => {
-  // Step 1: Carrito (always completed if we're in checkout)
+  // Step 1: Carrito (already completed when we're in checkout)
   // Step 2: Entrega (delivery info being filled)
   const hasDeliveryInfo = checkoutForm.value.firstName && 
                          checkoutForm.value.lastName && 
@@ -406,25 +469,43 @@ const currentStep = computed(() => {
                          checkoutForm.value.city && 
                          checkoutForm.value.postalCode;
   
-  // Show notification when delivery info gets completed
+  // Track delivery info completion
   if (hasDeliveryInfo && !deliveryInfoCompleted.value) {
     deliveryInfoCompleted.value = true;
-    setTimeout(() => {
-      toast.success('✅ Información de entrega completa. Ya puedes proceder con el pago.');
-    }, 300);
   } else if (!hasDeliveryInfo && deliveryInfoCompleted.value) {
     deliveryInfoCompleted.value = false;
+    showPaymentStep.value = false; // Reset payment step if delivery info becomes incomplete
   }
   
-  // Step 3: Pago (when delivery info is complete or processing)
+  // Step 3: Pago (when user explicitly wants to proceed or processing)
   if (processing.value) {
     return 3;
-  } else if (hasDeliveryInfo) {
-    return 3; // Mostrar paso 3 cuando delivery info está completa
+  } else if (hasDeliveryInfo && showPaymentStep.value) {
+    return 3; // Show payment step when user clicked continue
   } else {
-    return 2; // Paso 2 mientras se completa delivery info
+    return 2; // Step 2 - filling delivery info (or showing continue button when complete)
   }
 });
+
+// Function to proceed to payment step
+const goToPaymentStep = () => {
+  showPaymentStep.value = true;
+  // Scroll to top for better UX since payment section is now in left column
+  setTimeout(() => {
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
+  }, 100);
+};
+
+// Function to handle step navigation
+const handleGoToStep = (step: number) => {
+  if (step === 1) {
+    // Navigate back to cart
+    router.push('/cart');
+  }
+};
 
 onMounted(() => {
   // Check authentication first
@@ -464,9 +545,6 @@ const onAddressSelected = (parsedAddress: ParsedAddress) => {
   checkoutForm.value.postalCode = parsedAddress.postalCode
   checkoutForm.value.province = parsedAddress.province
   checkoutForm.value.country = parsedAddress.country
-  
-  // Show success message
-  toast.success('Dirección seleccionada. Verificá los datos completados.')
 }
 
 const processOrder = async () => {
@@ -482,11 +560,27 @@ const processOrder = async () => {
     return;
   }
   
-  processing.value = true;
-  
   try {
-    // Validate stock one more time
-    cartStore.validateStock();
+    // Validate stock with backend using the new stock service
+    console.log('🔍 Validating real-time stock with backend...');
+    processing.value = true;
+    
+    // Prepare items for stock check
+    const stockCheckItems = cartStore.items.map(item => ({
+      product_id: item.product.id,
+      variant_id: item.variant?.variant.id,
+      quantity: item.quantity
+    }));
+
+    // Check stock with backend
+    const stockResponse = await cartStore.validateStock();
+    
+    if (stockResponse.hasStockIssues) {
+      // The cart store already handles showing notifications and updating quantities
+      // Just redirect to cart to show the changes
+      router.push('/cart');
+      return;
+    }
     
     if (cartStore.isEmpty) {
       toast.error('Algunos productos ya no están disponibles');
@@ -552,16 +646,121 @@ const processOrder = async () => {
     
     // Step 3: Create order items
     for (const item of cartStore.items) {
-      const orderItemData: Omit<OrderItem, 'id'> = {
+      // FINAL stock check right before creating order item
+      console.log(`🔄 FINAL stock check for product ${item.product.id} before order item creation...`);
+      
+      try {
+        // Use the stock service for final verification
+        const finalStockCheck = await stockService.checkStock([{
+          product_id: item.product.id,
+          variant_id: item.variant?.variant.id,
+          quantity: item.quantity
+        }]);
+        
+        const itemResult = finalStockCheck.items[0];
+        
+        console.log(`Final stock check result:`, {
+          product_id: item.product.id,
+          product_name: item.product.name,
+          final_available_stock: itemResult.available_stock,
+          requested_quantity: item.quantity,
+          has_enough_stock: itemResult.has_enough_stock
+        });
+        
+        if (!itemResult.has_enough_stock) {
+          console.error(`❌ FINAL STOCK CHECK FAILED: Product ${item.product.id} now has ${itemResult.available_stock} stock but ${item.quantity} requested`);
+          throw new Error(`Stock insuficiente para "${item.product.name}". Stock disponible: ${itemResult.available_stock}, solicitado: ${item.quantity}`);
+        }
+        
+        // Update local stock information
+        if (item.product.is_unique) {
+          item.product.stock = itemResult.available_stock;
+        } else if (item.variant) {
+          item.variant.variant.stock = itemResult.available_stock;
+        }
+        
+      } catch (error: any) {
+        console.error(`Error in final stock check for product ${item.product.id}:`, error);
+        if (error.message?.includes('Stock insuficiente')) {
+          throw error;
+        }
+        // If it's an API error, log it but continue
+        console.warn('Could not verify final stock, proceeding with order item creation');
+      }
+      
+      const itemPrice = item.product.has_discount && item.product.discounted_price 
+        ? item.product.discounted_price 
+        : item.product.price;
+      
+      // Base order item data
+      const orderItemData: Partial<Omit<OrderItem, 'id' | 'product'>> & {
+        order_id: number;
+        product_id: number;
+        quantity: number;
+        price: number;
+      } = {
         order_id: response.order.id,
         product_id: item.product.id,
         quantity: item.quantity,
-        price: item.product.has_discount && item.product.discounted_price 
-          ? item.product.discounted_price 
-          : item.product.price
+        price: itemPrice
       };
       
-      await orderItemsApi.createOrderItem(orderItemData);
+      // Add variant information based on product type
+      if (item.product.is_unique) {
+        // For unique products, add color and size IDs if available
+        if (item.selectedColor) {
+          orderItemData.color_id = item.selectedColor.id;
+        }
+        if (item.selectedSize) {
+          orderItemData.size_id = item.selectedSize.id;
+        }
+      } else {
+        // For variant products, add variant_id
+        if (item.variant && item.variant.variant.id) {
+          orderItemData.variant_id = item.variant.variant.id;
+        }
+      }
+      
+      console.log('Creating order item:', JSON.stringify(orderItemData, null, 2));
+      console.log('Cart item variant info:', item.variant);
+      console.log('Cart item selectedColor:', item.selectedColor);
+      console.log('Cart item selectedSize:', item.selectedSize);
+      console.log('Product is_unique:', item.product.is_unique);
+      console.log('🔍 STOCK INFORMATION:');
+      console.log('Frontend shows stock:', item.product.stock);
+      console.log('Product variants with stock:', item.product.variants?.map(v => ({
+        variant_id: v.id,
+        stock: v.stock,
+        color: v.color_id,
+        size: v.size_id
+      })));
+      console.log('Product price details:', {
+        original_price: item.product.price,
+        has_discount: item.product.has_discount,
+        discounted_price: item.product.discounted_price,
+        calculated_price: itemPrice
+      });
+      
+      try {
+        await orderItemsApi.createOrderItem(orderItemData);
+        console.log('Order item created successfully for product:', item.product.id);
+      } catch (error: any) {
+        console.error('❌ ERROR CREATING ORDER ITEM:');
+        console.error('Backend error message:', JSON.stringify(error.response?.data, null, 2));
+        console.error('Error status:', error.response?.status);
+        console.error('Data we sent:', JSON.stringify(orderItemData, null, 2));
+        console.error('Full cart item:', JSON.stringify({
+          id: item.id,
+          product_id: item.product.id,
+          product_name: item.product.name,
+          is_unique: item.product.is_unique,
+          quantity: item.quantity,
+          variant: item.variant,
+          selectedColor: item.selectedColor,
+          selectedSize: item.selectedSize
+        }, null, 2));
+        throw error; // Re-throw to be caught by outer try-catch
+      }
     }
     
     console.log('Order items created for order:', response.order.id);
@@ -611,9 +810,20 @@ const processOrder = async () => {
       router.push('/');
     }
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error processing order:', error);
-    toast.error('Error al procesar el pedido. Por favor intenta nuevamente.');
+    
+    // Handle specific stock error
+    if (error.response?.data?.detail?.includes('Stock insuficiente')) {
+      toast.error('No hay suficiente stock para algunos productos. Revisa tu carrito.');
+      // Refresh cart to update stock
+      cartStore.validateStock();
+      if (!cartStore.isEmpty) {
+        router.push('/cart');
+      }
+    } else {
+      toast.error('Error al procesar el pedido. Por favor intenta nuevamente.');
+    }
   } finally {
     processing.value = false;
   }

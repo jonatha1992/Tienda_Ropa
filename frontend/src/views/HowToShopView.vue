@@ -61,10 +61,26 @@
               </div>
             </div>
             <div>
-              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Completa tu compra</h2>
+              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Completa tu información de entrega</h2>
               <p class="font-body text-body-text">
-                Proporciona tu información de envío y elige tu método de pago preferido. 
-                Aceptamos tarjetas de crédito, débito y transferencias bancarias.
+                Llena todos los datos de contacto y dirección de envío. Una vez completada toda la información, 
+                aparecerá un botón <strong>"Continuar al pago"</strong> que te llevará a seleccionar tu método de pago preferido.
+              </p>
+            </div>
+          </div>
+
+          <!-- Paso 5 -->
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center w-8 h-8 font-bold text-white bg-gray-500 rounded-full">
+                <span class="text-white" >5</span>
+              </div>
+            </div>
+            <div>
+              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Elige tu método de pago y confirma</h2>
+              <p class="font-body text-body-text">
+                Selecciona entre transferencia bancaria, MercadoPago (tarjetas de crédito y débito) 
+                o efectivo contra entrega. Luego confirma tu pedido para finalizarlo.
               </p>
             </div>
           </div>
@@ -72,25 +88,40 @@
           <!-- Métodos de pago -->
           <div class="p-6 mt-8 rounded-lg bg-gray-50">
             <h3 class="mb-4 text-lg font-semibold text-gray-800 font-heading">Métodos de Pago Aceptados</h3>
-            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <div class="text-center">
-                <div class="p-3 bg-white rounded shadow">
-                  <span class="text-sm font-body text-body-text">Visa</span>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div class="flex items-center p-4 bg-white rounded-lg shadow">
+                <div class="p-2 mr-3 bg-blue-100 rounded-full">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 font-heading">Transferencia Bancaria</h4>
+                  <p class="text-sm text-gray-600 font-body">Pago directo a cuenta bancaria</p>
                 </div>
               </div>
-              <div class="text-center">
-                <div class="p-3 bg-white rounded shadow">
-                  <span class="text-sm font-body text-body-text">Mastercard</span>
+              
+              <div class="flex items-center p-4 bg-white rounded-lg shadow">
+                <div class="p-2 mr-3 bg-purple-100 rounded-full">
+                  <svg class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 font-heading">MercadoPago</h4>
+                  <p class="text-sm text-gray-600 font-body">Tarjetas de crédito, débito y más</p>
                 </div>
               </div>
-              <div class="text-center">
-                <div class="p-3 bg-white rounded shadow">
-                  <span class="text-sm font-body text-body-text">American Express</span>
+              
+              <div class="flex items-center p-4 bg-white rounded-lg shadow">
+                <div class="p-2 mr-3 bg-green-100 rounded-full">
+                  <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
                 </div>
-              </div>
-              <div class="text-center">
-                <div class="p-3 bg-white rounded shadow">
-                  <span class="text-sm font-body text-body-text">Transferencia</span>
+                <div>
+                  <h4 class="font-semibold text-gray-900 font-heading">Efectivo Contra Entrega</h4>
+                  <p class="text-sm text-gray-600 font-body">Paga cuando recibas tu pedido</p>
                 </div>
               </div>
             </div>
@@ -103,8 +134,8 @@
               Si tienes alguna pregunta sobre el proceso de compra, no dudes en contactarnos.
             </p>
             <router-link to="/contact" 
-              class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-gray-300 rounded-md gray-600 hover:bg-gray-700">
-              <span >Contactar</span>
+              class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-gray-500 rounded-md gray-600 hover:bg-gray-800">
+              <span  class="text-white">Contactar</span>
             </router-link>
           </div>
         </div>
