@@ -172,7 +172,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="genero in ['unisex', 'masculino', 'femenino']"
                         as="template"
@@ -182,23 +182,17 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
-                          <span
-                            :class="[
-                              selected ? 'font-medium' : 'font-normal',
-                              'block truncate',
-                            ]"
-                          >
+                          <span class="block truncate">
                             {{ genero.charAt(0).toUpperCase() + genero.slice(1) }}
                           </span>
                           <span
                             v-if="selected"
                             :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
+                              'absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600 ',
                             ]"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
@@ -224,7 +218,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="estado in ['nuevo', 'usado']"
                         as="template"
@@ -234,8 +228,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <span
@@ -248,10 +242,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -278,7 +269,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="category in filteredCategories"
                         as="template"
@@ -288,8 +279,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <span
@@ -302,10 +293,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -361,7 +349,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="color in filteredColors"
                         as="template"
@@ -371,8 +359,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <div class="flex items-center">
@@ -392,10 +380,7 @@
                           </div>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -424,7 +409,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="size in filteredSizes"
                         as="template"
@@ -434,8 +419,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <span
@@ -449,10 +434,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -506,7 +488,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="color in filteredColors"
                         as="template"
@@ -516,8 +498,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <div class="flex items-center">
@@ -537,10 +519,7 @@
                           </div>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -569,7 +548,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="size in filteredSizes"
                         as="template"
@@ -579,8 +558,8 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-teal-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
                           <span
@@ -594,10 +573,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            :class="[
-                              active ? 'text-white' : 'text-teal-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-3',
-                            ]"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
