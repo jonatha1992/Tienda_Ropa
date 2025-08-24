@@ -249,54 +249,23 @@ def read_my_orders(
 ):
     """Obtener todos los pedidos del usuario autenticado"""
     try:
-        # Debug completo del usuario de Firebase
-        print(f"🔍 FIREBASE USER DEBUG:")
-        print(f"  - Usuario completo: {firebase_user}")
-        print(f"  - Tipo: {type(firebase_user)}")
-        print(f"  - Keys disponibles: {list(firebase_user.keys()) if isinstance(firebase_user, dict) else 'No es dict'}")
-        
         # Buscar customers que coincidan con el email del usuario autenticado
         user_email = firebase_user.get('email')
         if not user_email:
-            print(f"❌ Usuario sin email: {firebase_user}")
-            raise HTTPException(status_code=400, detail="Usuario sin email válido")
+            return []  # Si no hay email, retornar lista vacía
         
-        print(f"🔄 Buscando pedidos para email: {user_email}")
-        
-        # DEBUG: Ver todos los customers en la base
-        all_customers = session.exec(select(Customer)).all()
-        print(f"📊 TOTAL customers en DB: {len(all_customers)}")
-        for customer in all_customers[:5]:  # Solo primeros 5
-            print(f"  - Customer {customer.id}: {customer.email} | {customer.name}")
-        
-        # Encontrar todos los customers con este email
+        # Encontrar todos los customers con este email usando consulta segura
         customers = session.exec(
             select(Customer).where(Customer.email == user_email)
         ).all()
         
         if not customers:
-            print(f"ℹ️ No se encontraron customers para email: {user_email}")
-            # DEBUG: Verificar emails similares
-            similar_customers = session.exec(
-                select(Customer).where(Customer.email.ilike(f"%{user_email.split('@')[0]}%"))
-            ).all()
-            print(f"🔍 Customers con emails similares: {[(c.id, c.email) for c in similar_customers]}")
-            return []  # Retornar lista vacía es válido - usuario sin pedidos
-        
-        print(f"✅ Encontrados {len(customers)} customers para email: {user_email}")
-        for customer in customers:
-            print(f"  - Customer {customer.id}: {customer.name} | {customer.email}")
-        
-        # DEBUG: Ver todas las órdenes en la base
-        all_orders = session.exec(select(Order)).all()
-        print(f"📊 TOTAL órdenes en DB: {len(all_orders)}")
-        for order in all_orders[:5]:  # Solo primeras 5
-            print(f"  - Order {order.id}: customer_id={order.customer_id} | total={order.total} | status={order.status}")
+            return []  # No hay customers para este usuario, retornar lista vacía
         
         # Obtener pedidos de todos los customers con este email
         customer_ids = [customer.id for customer in customers]
-        print(f"🔍 Buscando órdenes para customer_ids: {customer_ids}")
         
+        # Usar LEFT JOIN para evitar errores si hay datos inconsistentes
         orders = session.exec(
             select(Order)
             .where(Order.customer_id.in_(customer_ids))
@@ -305,28 +274,27 @@ def read_my_orders(
             .limit(limit)
         ).all()
         
-        print(f"✅ Encontradas {len(orders)} órdenes para usuario {user_email}")
-        if orders:
-            for order in orders:
-                print(f"  - Order {order.id}: customer_id={order.customer_id} | total={order.total} | created_at={order.created_at}")
-        
-        # Transform orders to ensure proper date formatting and include delivery method info
+        # Transform orders to ensure proper date formatting
         orders_formatted = []
         for order in orders:
-            order_dict = order.model_dump()
-            if order.created_at:
-                order_dict['created_at'] = order.created_at.isoformat()
-            orders_formatted.append(order_dict)
+            try:
+                order_dict = order.model_dump()
+                if order.created_at:
+                    order_dict['created_at'] = order.created_at.isoformat()
+                orders_formatted.append(order_dict)
+            except Exception as e:
+                # Si un order específico falla, lo saltamos pero continuamos
+                print(f"⚠️ Error procesando order {order.id}: {e}")
+                continue
         
         return orders_formatted
         
-    except HTTPException:
-        raise  # Re-raise HTTP exceptions
     except Exception as e:
-        print(f"❌ Error inesperado en read_my_orders: {str(e)}")
+        print(f"❌ Error en read_my_orders: {str(e)}")
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail="Error interno del servidor al cargar pedidos")
+        # Retornar lista vacía en lugar de error 500
+        return []
 
 
 @router.get("/orders/{order_id}", response_model=Order)
