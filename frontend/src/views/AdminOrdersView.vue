@@ -172,6 +172,9 @@
                   Total
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Método de Entrega
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Estado de Envío
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -216,6 +219,14 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">
+                    <span :class="getDeliveryMethodClass(order.delivery_method)" 
+                      class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      {{ getDeliveryMethodText(order.delivery_method) }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
                   <span :class="getShippingStatusClass(order.shipping_status)" 
                     class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
                     {{ getShippingStatusText(order.shipping_status) }}
@@ -241,13 +252,31 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center justify-end space-x-2">
-                    <!-- Add Tracking Button -->
+                    <!-- Change Payment Status Button -->
+                    <button v-if="order.status === 'pending'" @click="openStatusModal(order)"
+                      class="text-yellow-600 hover:text-yellow-900 p-1 rounded" title="Cambiar estado de pago">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                      <span class="sr-only">Cambiar estado</span>
+                    </button>
+
+                    <!-- Add Tracking Button (for shipping orders) -->
                     <button v-if="order.can_add_tracking" @click="openTrackingModal(order)"
-                      class="text-blue-600 hover:text-blue-900 p-1 rounded">
+                      class="text-blue-600 hover:text-blue-900 p-1 rounded" title="Agregar tracking">
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                       <span class="sr-only">Agregar tracking</span>
+                    </button>
+                    
+                    <!-- Coordinate Pickup Button (for local pickup orders) -->
+                    <button v-if="order.can_coordinate_pickup" @click="coordinatePickup(order)"
+                      class="text-purple-600 hover:text-purple-900 p-1 rounded" title="Coordinar retiro por WhatsApp">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <span class="sr-only">Coordinar retiro</span>
                     </button>
                     
                     <!-- Mark as Shipped Button -->
@@ -357,6 +386,22 @@
           </div>
         </div>
       </div>
+
+      <!-- Order Status Modal -->
+      <OrderStatusModal
+        :is-open="showStatusModal"
+        :order="selectedOrder"
+        @close="closeStatusModal"
+        @update-status="updateOrderStatus"
+      />
+
+      <!-- Shipping Modal -->
+      <ShippingModal
+        :is-open="showShippingModal"
+        :order="selectedOrder"
+        @close="closeShippingModal"
+        @update-shipping="updateOrderShipping"
+      />
     </div>
   </div>
 </template>
@@ -367,6 +412,8 @@ import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 import { ordersApi } from '../config/api';
+import OrderStatusModal from '../components/OrderStatusModal.vue';
+import ShippingModal from '../components/ShippingModal.vue';
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -380,6 +427,8 @@ const statistics = ref<any>(null);
 const statusFilter = ref('');
 const selectedOrders = ref<number[]>([]);
 const showTrackingModal = ref(false);
+const showStatusModal = ref(false);
+const showShippingModal = ref(false);
 const selectedOrder = ref<any>(null);
 const shippingProviders = ref<any[]>([]);
 
@@ -414,15 +463,20 @@ const loadOrders = async () => {
       total: order.total,
       status: order.payment_status || order.status || 'pending', // Use payment_status first
       payment_method: order.payment_method,
+      delivery_method: order.delivery_method || 'envio_andreani',
       created_at: order.created_at,
       tracking_number: order.tracking_number,
       shipping_provider: order.shipping_provider,
       shipped_at: order.shipped_at,
       estimated_delivery: order.estimated_delivery,
       
-      // Status flags for admin actions
-      can_add_tracking: !order.tracking_number && (order.payment_status === 'approved' || order.payment_method === 'cash'),
+      // Status flags for admin actions - differentiate based on delivery method
+      can_add_tracking: !order.tracking_number && 
+                       (order.payment_status === 'approved' || order.payment_method === 'cash') &&
+                       (order.delivery_method === 'envio_andreani' || order.delivery_method === 'envio_correo'),
       can_mark_shipped: !!order.tracking_number && !order.shipped_at,
+      can_coordinate_pickup: (order.delivery_method === 'retiro_local') && 
+                            (order.payment_status === 'approved' || order.payment_method === 'cash'),
       shipping_status: order.shipped_at ? 'shipped' : (order.tracking_number ? 'ready_to_ship' : 'pending')
     }));
     
@@ -693,6 +747,99 @@ const getTrackingHint = (provider: string) => {
     'andreani': 'Formato: 8-15 caracteres alfanuméricos'
   };
   return hints[provider as keyof typeof hints] || '';
+};
+
+const getDeliveryMethodClass = (deliveryMethod: string) => {
+  switch (deliveryMethod) {
+    case 'envio_andreani':
+      return 'bg-blue-100 text-blue-800';
+    case 'envio_correo':
+      return 'bg-green-100 text-green-800';
+    case 'retiro_local':
+      return 'bg-purple-100 text-purple-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
+
+const getDeliveryMethodText = (deliveryMethod: string) => {
+  switch (deliveryMethod) {
+    case 'envio_andreani':
+      return 'Andreani';
+    case 'envio_correo':
+      return 'Correo Argentino';
+    case 'retiro_local':
+      return 'Retiro en Local';
+    default:
+      return 'No definido';
+  }
+};
+
+const coordinatePickup = (order: any) => {
+  const message = `Hola ${order.customer_name}, tu pedido #${order.order_id} está listo para retirar. 
+
+📦 Total: $${order.total.toLocaleString()}
+
+📍 Dirección: Av. Ejemplo 123, CABA
+🕐 Horarios: Lun-Vie 9-18hs, Sáb 9-13hs
+
+¿Cuándo te conviene pasar a retirarlo?`;
+  
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/5491112345678?text=${encodedMessage}`;
+  
+  window.open(whatsappUrl, '_blank');
+};
+
+// Modal functions
+const openStatusModal = (order: any) => {
+  selectedOrder.value = order;
+  showStatusModal.value = true;
+};
+
+const closeStatusModal = () => {
+  showStatusModal.value = false;
+  selectedOrder.value = null;
+};
+
+const openShippingModal = (order: any) => {
+  selectedOrder.value = order;
+  showShippingModal.value = true;
+};
+
+const closeShippingModal = () => {
+  showShippingModal.value = false;
+  selectedOrder.value = null;
+};
+
+// Update order status
+const updateOrderStatus = async (orderId: number, status: string, notes: string) => {
+  try {
+    console.log('🔄 Updating order status:', { orderId, status, notes });
+    await ordersApi.updateOrderStatus(orderId, { status, adminNotes: notes });
+    
+    toast.success('Estado del pedido actualizado exitosamente');
+    closeStatusModal();
+    await loadOrders();
+  } catch (error) {
+    console.error('❌ Error updating order status:', error);
+    toast.error('Error al actualizar el estado del pedido');
+  }
+};
+
+// Update order shipping
+const updateOrderShipping = async (orderId: number, shippingData: any) => {
+  try {
+    console.log('🔄 Updating order shipping:', { orderId, shippingData });
+    await ordersApi.updateOrderShipping(orderId, shippingData);
+    
+    toast.success('Información de envío actualizada exitosamente');
+    closeShippingModal();
+    await loadOrders();
+  } catch (error) {
+    console.error('❌ Error updating order shipping:', error);
+    toast.error('Error al actualizar la información de envío');
+  }
 };
 
 // Initialize

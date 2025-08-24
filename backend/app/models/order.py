@@ -8,13 +8,16 @@ class Order(SQLModel, table=True):
     customer_id: int = Field(foreign_key="customer.id")
     status: Optional[str] = None
     total: float
-    created_at: Optional[datetime] = None
+    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     
     # Payment fields
     payment_method: str = Field(default="transfer", max_length=20)
     payment_status: str = Field(default="pending", max_length=20)
     mercadopago_payment_id: Optional[str] = Field(default=None)
     mercadopago_preference_id: Optional[str] = Field(default=None)
+    
+    # Delivery method
+    delivery_method: Optional[str] = Field(default="envio_andreani", max_length=30, description="envio_andreani, envio_correo, retiro_local")
     
     # Campos para TRANSFERENCIA
     bank_account_info: Optional[str] = Field(default=None, description="JSON con datos bancarios mostrados")

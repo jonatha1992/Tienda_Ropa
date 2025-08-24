@@ -305,6 +305,23 @@ export const ordersApi = {
       delivery_notes: deliveryNotes
     });
     return response.data;
+  },
+
+  // Update order status (admin)
+  async updateOrderStatus(orderId: number, statusData: { status: string; adminNotes?: string }): Promise<any> {
+    const response = await apiClient.put(`/orders/${orderId}/status`, statusData);
+    return response.data;
+  },
+
+  // Update order shipping (admin)
+  async updateOrderShipping(orderId: number, shippingData: {
+    trackingNumber: string;
+    shippingProvider: string;
+    estimatedDelivery?: string;
+    shippingNotes?: string;
+  }): Promise<any> {
+    const response = await apiClient.put(`/orders/${orderId}/shipping`, shippingData);
+    return response.data;
   }
 };
 

@@ -115,6 +115,10 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     else:
         db_order.payment_status = "pending"
     
+    # Validar y establecer delivery_method si no viene en el payload
+    if not db_order.delivery_method:
+        db_order.delivery_method = "envio_andreani"  # default
+    
     session.add(db_order)
     session.commit()
     session.refresh(db_order)
@@ -191,6 +195,9 @@ def read_orders_with_customer_info(
     for order, customer in results:
         order_dict = order.model_dump()
         order_dict['customer'] = customer.model_dump()
+        # Ensure dates are properly formatted
+        if order.created_at:
+            order_dict['created_at'] = order.created_at.isoformat()
         orders_with_customer.append(order_dict)
     
     return orders_with_customer
@@ -285,7 +292,15 @@ def read_my_orders(
             for order in orders:
                 print(f"  - Order {order.id}: customer_id={order.customer_id} | total={order.total} | created_at={order.created_at}")
         
-        return orders
+        # Transform orders to ensure proper date formatting and include delivery method info
+        orders_formatted = []
+        for order in orders:
+            order_dict = order.model_dump()
+            if order.created_at:
+                order_dict['created_at'] = order.created_at.isoformat()
+            orders_formatted.append(order_dict)
+        
+        return orders_formatted
         
     except HTTPException:
         raise  # Re-raise HTTP exceptions

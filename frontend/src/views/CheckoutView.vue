@@ -27,7 +27,12 @@
         
         <!-- Delivery Progress -->
         <div class="mt-6">
-          <DeliveryProgress :current-step="currentStep" @go-to-step="handleGoToStep" />
+          <DeliveryProgress 
+            :current-step="currentStep" 
+            :initial-delivery-method="deliveryMethod"
+            @go-to-step="handleGoToStep"
+            @delivery-method-changed="handleDeliveryMethodChanged"
+          />
         </div>
       </div>
 
@@ -100,14 +105,16 @@
               
               <div class="flex justify-between text-sm">
                 <span class="font-body text-body-text">Envío</span>
-                <span class="font-body text-body-text">Gratis</span>
+                <span class="font-body text-body-text">
+                  {{ deliveryCost === 0 ? 'Gratis' : `$${deliveryCost.toLocaleString()}` }}
+                </span>
               </div>
               
               <div class="border-t border-gray-200 pt-2">
                 <div class="flex justify-between">
                   <span class="font-body text-base font-medium text-body-text">Total</span>
                   <span class="font-body text-base font-medium text-body-text">
-                    ${{ cartStore.totalPrice.toLocaleString() }}
+                    ${{ (cartStore.totalPrice + deliveryCost).toLocaleString() }}
                   </span>
                 </div>
               </div>
@@ -480,6 +487,10 @@ const deliveryInfoCompleted = ref(false);
 // Track if user wants to proceed to payment
 const showPaymentStep = ref(false);
 
+// Delivery method and cost
+const deliveryMethod = ref('envio_andreani');
+const deliveryCost = ref(500);
+
 // Determine current step based on form completion
 const currentStep = computed(() => {
   // Step 1: Carrito (already completed when we're in checkout)
@@ -528,6 +539,12 @@ const handleGoToStep = (step: number) => {
     // Navigate back to cart
     router.push('/cart');
   }
+};
+
+const handleDeliveryMethodChanged = (data: { method: string; cost: number }) => {
+  deliveryMethod.value = data.method;
+  deliveryCost.value = data.cost;
+  console.log('🚚 Delivery method changed:', data);
 };
 
 onMounted(async () => {
@@ -691,8 +708,9 @@ const processOrder = async () => {
     // Step 2: Create order with real customer_id
     const orderData: Partial<Order> = {
       customer_id: customer.id,
-      total: cartStore.totalPrice,
+      total: cartStore.totalPrice + deliveryCost.value,
       payment_method: checkoutForm.value.paymentMethod as PaymentMethod,
+      delivery_method: deliveryMethod.value,
     };
     
     const response = await ordersApi.createOrder(orderData);
