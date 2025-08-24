@@ -5,7 +5,6 @@ import ProductDetailView from './views/ProductDetailView.vue'
 import CheckoutView from './views/CheckoutView.vue'
 import CartView from './views/CartView.vue'
 import AuthView from './views/AuthView.vue'
-import AdminView from './views/AdminView.vue'
 import AdminUserManagementView from './views/AdminUserManagementView.vue'
 import AdminPaymentsView from './views/AdminPaymentsView.vue'
 import AdminOrdersView from './views/AdminOrdersView.vue'
@@ -16,8 +15,6 @@ import TransferInstructionsView from './views/TransferInstructionsView.vue'
 import CashConfirmationView from './views/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
-import { authCache } from './utils/cache';
-import type { Role } from './types';
 import { useLoading } from './composables/useLoading';
 import { globalProgressBar } from './composables/useProgressBar';
 import ContactView from './views/ContactView.vue';
@@ -29,6 +26,7 @@ import OrdersView from './views/OrdersView.vue';
 import OrderDetailView from './views/OrderDetailView.vue';
 import VerifyEmailView from './views/VerifyEmailView.vue';
 import ProfileView from './views/ProfileView.vue';
+import AdminViewProduct from './views/AdminViewProduct.vue';
 
 const routes = [
   { path: '/', component: HomeView },
@@ -59,7 +57,7 @@ const routes = [
   },
   {
     path: '/admin/products',
-    component: AdminView,
+    component: AdminViewProduct,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {

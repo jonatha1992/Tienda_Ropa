@@ -154,7 +154,26 @@
           <form @submit.prevent="processOrder" class="space-y-6">
             <!-- Customer Information -->
             <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
-              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Información de contacto</h3>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-heading text-lg font-medium text-gray-900">Información de contacto</h3>
+                
+                <!-- Loading indicator -->
+                <div v-if="loadingUserData" class="flex items-center text-sm text-gray-500">
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Cargando datos...
+                </div>
+                
+                <!-- Previous data indicator -->
+                <div v-else-if="usingPreviousData" class="flex items-center text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                  <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Datos de compra anterior
+                </div>
+              </div>
               
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
@@ -421,6 +440,7 @@ import { useToast } from 'vue-toastification';
 import { ordersApi, customersApi, orderItemsApi, productsApi } from '../config/api';
 import { stockService } from '../services/stockService';
 import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from '../composables/useValidators';
+import { useUserData } from '../composables/useUserData';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../types';
 import DeliveryProgress from '../components/DeliveryProgress.vue';
 import CountryPhoneSelector from '../components/CountryPhoneSelector.vue';
@@ -432,8 +452,11 @@ const cartStore = useCartStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
+const { loadCustomerData, getCheckoutFormData, hasCustomerData } = useUserData();
 
 const processing = ref(false);
+const loadingUserData = ref(false);
+const usingPreviousData = ref(false);
 
 const checkoutForm = ref({
   firstName: '',
@@ -507,7 +530,7 @@ const handleGoToStep = (step: number) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   // Check authentication first
   if (!authStore.isAuthenticated) {
     toast.warning('Debes iniciar sesión para acceder al checkout');
@@ -518,24 +541,55 @@ onMounted(() => {
   // Load cart from localStorage
   cartStore.loadFromStorage();
   
-  // Pre-fill email if user is authenticated
-  if (authStore.isAuthenticated && authStore.backendUser) {
-    checkoutForm.value.email = authStore.backendUser.email;
-    if (authStore.backendUser.name) {
-      const nameParts = authStore.backendUser.name.split(' ');
-      checkoutForm.value.firstName = nameParts[0] || '';
-      checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
-    }
-  }
-  
-  // Validate stock
-  cartStore.validateStock();
-  
   // Redirect if cart is empty
   if (cartStore.isEmpty) {
     toast.warning('Tu carrito está vacío');
     router.push('/cart');
+    return;
   }
+  
+  // Load customer data automatically if user is authenticated
+  loadingUserData.value = true;
+  try {
+    const customerData = await loadCustomerData();
+    
+    if (customerData) {
+      // User has previous purchase data - auto-populate form
+      const formData = getCheckoutFormData();
+      Object.assign(checkoutForm.value, formData);
+      usingPreviousData.value = true;
+      
+      console.log('✅ Form auto-populated with previous customer data');
+      toast.success('Datos cargados desde compra anterior', { timeout: 2000 });
+    } else {
+      // First-time buyer - only pre-fill basic info from auth
+      if (authStore.backendUser) {
+        checkoutForm.value.email = authStore.backendUser.email;
+        if (authStore.backendUser.name) {
+          const nameParts = authStore.backendUser.name.split(' ');
+          checkoutForm.value.firstName = nameParts[0] || '';
+          checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
+        }
+      }
+      console.log('ℹ️ First-time buyer - basic info pre-filled');
+    }
+  } catch (error) {
+    console.error('❌ Error loading user data:', error);
+    // Fallback to basic auth info
+    if (authStore.backendUser) {
+      checkoutForm.value.email = authStore.backendUser.email;
+      if (authStore.backendUser.name) {
+        const nameParts = authStore.backendUser.name.split(' ');
+        checkoutForm.value.firstName = nameParts[0] || '';
+        checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
+      }
+    }
+  } finally {
+    loadingUserData.value = false;
+  }
+  
+  // Validate stock
+  cartStore.validateStock();
 });
 
 const onAddressSelected = (parsedAddress: ParsedAddress) => {

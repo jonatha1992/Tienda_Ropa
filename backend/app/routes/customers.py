@@ -51,6 +51,22 @@ def update_customer(
     return db_customer
 
 
+@router.get("/customers/my-data", response_model=Customer)
+def get_my_customer_data(session: Session = Depends(get_session), user=Depends(get_current_user)):
+    """
+    Obtiene los datos del customer asociado al usuario autenticado.
+    Busca por email para encontrar datos de compras anteriores.
+    """
+    customer = session.exec(
+        select(Customer).where(Customer.email == user.email)
+    ).first()
+    
+    if not customer:
+        raise HTTPException(status_code=404, detail="No customer data found for this user")
+    
+    return customer
+
+
 @router.delete("/customers/{customer_id}")
 def delete_customer(customer_id: int, session: Session = Depends(get_session), user=Depends(get_current_user)):
     customer = session.get(Customer, customer_id)

@@ -743,8 +743,8 @@ import ProductCard from '../components/ProductCard.vue';
 import { useAuthStore } from '../store/auth';
 import { useLoading } from '../composables/useLoading';
 import { masterDataApi, config, apiClient } from '../config/index';
-import type { Color, Category, Size } from '../types';
-import type { Product as GlobalProduct } from '../types';
+import type { Color, Category, Size } from '../types/index';
+import type { Product as GlobalProduct } from '../types/index';
 
 const toast = useToast();
 const authStore = useAuthStore();

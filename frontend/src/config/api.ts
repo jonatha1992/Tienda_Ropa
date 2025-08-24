@@ -2,6 +2,7 @@ import axios from 'axios';
 import { auth } from './firebase';
 import { config } from './app';
 import type { Role, RoleType, User, UserWithRoles, Color, Category, Size, Product } from '../types';
+import type { StockCheckItem, StockCheckResponse } from '../types/stock';
 
 const apiClient = axios.create({
   baseURL: config.backendUrl,
@@ -191,6 +192,12 @@ export const productsApi = {
   // Delete product
   async deleteProduct(id: number): Promise<void> {
     await apiClient.delete(`/products/${id}`);
+  },
+
+  // Check stock for multiple products/variants
+  async checkStock(items: StockCheckItem[]): Promise<StockCheckResponse> {
+    const response = await apiClient.post('/products/check-stock/', items);
+    return response.data;
   }
 };
 
@@ -324,6 +331,12 @@ export const customersApi = {
   // Delete customer
   async deleteCustomer(id: number): Promise<void> {
     await apiClient.delete(`/customers/${id}`);
+  },
+
+  // Get customer data for authenticated user
+  async getMyCustomerData(): Promise<any> {
+    const response = await apiClient.get('/customers/my-data');
+    return response.data;
   }
 };
 

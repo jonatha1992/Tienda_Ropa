@@ -17,7 +17,9 @@
       "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_master_data_module.py -v)",
       "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_products_module.py -v)",
       "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_ecommerce_module.py -v --tb=short)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_inventory_module.py -v --tb=short)"
+      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_inventory_module.py -v --tb=short)",
+      "Bash(dir:*)",
+      "Bash(del api.ts)"
     ],
     "deny": [],
     "ask": []

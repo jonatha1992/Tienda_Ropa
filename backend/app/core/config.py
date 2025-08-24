@@ -133,6 +133,7 @@ class Settings(BaseSettings):
         # Always add common development and production origins
         common_origins = [
             "http://localhost:5173",
+            "http://localhost:5174",
             "http://localhost:3000", 
             "https://m-vintage-test.web.app",
             "https://m-vintage.web.app",

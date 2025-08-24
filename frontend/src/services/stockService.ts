@@ -1,7 +1,5 @@
-import axios from 'axios';
+import { productsApi } from '../config/api';
 import type { StockCheckItem, StockCheckResponse } from '@/types/stock';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export const stockService = {
   /**
@@ -11,16 +9,7 @@ export const stockService = {
    */
   async checkStock(items: StockCheckItem[]): Promise<StockCheckResponse> {
     try {
-      const response = await axios.post<StockCheckResponse>(
-        `${API_URL}/api/v1/products/check-stock/`,
-        items,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      return response.data;
+      return await productsApi.checkStock(items);
     } catch (error) {
       console.error('Error al verificar el stock:', error);
       // En caso de error, asumimos que no hay stock disponible
