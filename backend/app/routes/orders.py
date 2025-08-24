@@ -320,6 +320,85 @@ def update_order(
     return db_order
 
 
+@router.put("/orders/{order_id}/status")
+def update_order_status(
+    *, 
+    session: Session = Depends(get_session), 
+    order_id: int, 
+    status_data: dict, 
+    user=Depends(get_current_user)
+):
+    """
+    Actualizar el estado de pago de una orden (para admin)
+    """
+    order = session.get(Order, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Update payment status
+    if 'status' in status_data:
+        order.payment_status = status_data['status']
+    
+    # Update admin notes
+    if 'adminNotes' in status_data:
+        order.admin_notes = status_data['adminNotes']
+    
+    # Set verification info
+    order.verified_by_admin = True
+    order.admin_verification_date = datetime.utcnow()
+    
+    session.add(order)
+    session.commit()
+    session.refresh(order)
+    
+    return {"message": "Order status updated successfully", "order_id": order.id}
+
+
+@router.put("/orders/{order_id}/shipping")
+def update_order_shipping(
+    *, 
+    session: Session = Depends(get_session), 
+    order_id: int, 
+    shipping_data: dict, 
+    user=Depends(get_current_user)
+):
+    """
+    Actualizar información de envío de una orden (para admin)
+    """
+    order = session.get(Order, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Update shipping info
+    if 'trackingNumber' in shipping_data:
+        order.tracking_number = shipping_data['trackingNumber']
+    
+    if 'shippingProvider' in shipping_data:
+        order.shipping_provider = shipping_data['shippingProvider']
+    
+    if 'estimatedDelivery' in shipping_data and shipping_data['estimatedDelivery']:
+        from datetime import datetime
+        order.estimated_delivery = datetime.fromisoformat(shipping_data['estimatedDelivery'])
+    
+    if 'shippingNotes' in shipping_data:
+        order.delivery_notes_shipping = shipping_data['shippingNotes']
+    
+    # Set shipping timestamp and admin who shipped
+    order.shipped_at = datetime.utcnow()
+    order.shipped_by = user.id
+    order.tracking_updated_at = datetime.utcnow()
+    
+    # Auto-update payment status to shipped if it was approved
+    if order.payment_status == 'approved':
+        order.payment_status = 'shipped'
+    
+    session.add(order)
+    session.commit()
+    session.refresh(order)
+    
+    return {"message": "Order shipping updated successfully", "order_id": order.id}
+
+
 @router.delete("/orders/{order_id}")
 def delete_order(*, session: Session = Depends(get_session), order_id: int, user=Depends(get_current_user)):
     order = session.get(Order, order_id)
