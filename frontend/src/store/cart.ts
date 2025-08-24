@@ -21,7 +21,7 @@ export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],
     lastSaved: null as number | null, // Timestamp when cart was last saved
-    sessionTimeout: 20 * 60 * 1000, // 20 minutes in milliseconds
+    sessionTimeout: 60 * 60 * 1000, // 60 minutes in milliseconds (increased from 20 min)
   }),
   
   getters: {
@@ -97,7 +97,8 @@ export const useCartStore = defineStore('cart', {
     ) {
       // Check session validity before adding
       if (!this.isSessionValid()) {
-        console.log('⏰ Cart session expired, clearing before adding new item');
+        const expiredMinutes = this.lastSaved ? Math.round((Date.now() - this.lastSaved) / 1000 / 60) : 0;
+        console.log('⏰ Cart session expired after', expiredMinutes, 'minutes, clearing before adding new item');
         this.clearCart();
       }
       let cartItemId: string;
@@ -205,9 +206,9 @@ export const useCartStore = defineStore('cart', {
               const now = Date.now();
               const timeDiff = now - (cartData.timestamp || 0);
               
-              // Check if cart has expired (20 minutes)
+              // Check if cart has expired (60 minutes)
               if (timeDiff > this.sessionTimeout) {
-                console.log('⏰ Cart session expired, clearing cart');
+                console.log('⏰ Cart session expired after', Math.round(timeDiff / 1000 / 60), 'minutes, clearing cart');
                 this.clearStorage();
                 this.items = [];
                 return;
@@ -405,14 +406,14 @@ export const useCartStore = defineStore('cart', {
     initializeCart() {
       this.loadFromStorage();
       
-      // Set up periodic session validation (every 5 minutes)
+      // Set up periodic session validation (every 10 minutes)
       if (typeof window !== 'undefined') {
         setInterval(() => {
           if (!this.isSessionValid() && !this.isEmpty) {
-            console.log('⏰ Cart session expired during use, clearing cart');
+            console.log('⏰ Cart session expired during use after', Math.round((Date.now() - (this.lastSaved || 0)) / 1000 / 60), 'minutes, clearing cart');
             this.clearCart();
           }
-        }, 5 * 60 * 1000); // Check every 5 minutes
+        }, 10 * 60 * 1000); // Check every 10 minutes (reduced frequency)
       }
     }
   },

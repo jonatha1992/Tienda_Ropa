@@ -238,10 +238,11 @@ const toast = useToast();
 const { closeCartModal } = useCartModal();
 
 onMounted(() => {
-  // Load cart from localStorage when component mounts
-  cartStore.loadFromStorage();
-  // Validate stock availability
-  cartStore.validateStock();
+  // Cart is already initialized in main.ts, just validate stock if needed
+  // Only validate stock when component mounts if cart has items
+  if (!cartStore.isEmpty) {
+    cartStore.validateStock();
+  }
 });
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {

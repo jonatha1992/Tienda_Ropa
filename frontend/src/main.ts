@@ -39,14 +39,16 @@ app.use(router)
 app.use(pinia)
 app.use(Toast, toastOptions)
 
-// Initialize cart from localStorage after Pinia is ready
-app.mount('#app')
-
-// Initialize cart with session management when app starts
+// Initialize cart with session management before mounting the app
 if (typeof window !== 'undefined') {
-    // Import cart store after pinia is initialized
+    // Import and initialize cart store before app mount
     import('./store/cart').then(({ useCartStore }) => {
         const cartStore = useCartStore()
+        console.log('🛒 Initializing cart store...')
         cartStore.initializeCart()
+        console.log('🛒 Cart initialized with', cartStore.items.length, 'items')
     })
 }
+
+// Mount app after cart initialization is started
+app.mount('#app')
