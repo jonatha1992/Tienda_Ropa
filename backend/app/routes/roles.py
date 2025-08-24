@@ -11,7 +11,7 @@ from app.controllers.role_controller import (
     assign_role_to_user, remove_role_from_user, get_user_roles, get_users_with_role,
     initialize_default_roles
 )
-from app.core.security import require_admin, get_current_db_user
+from app.core.security import require_admin, get_current_db_user, get_current_user
 
 router = APIRouter(prefix="/roles", tags=["Roles"])
 
@@ -139,7 +139,16 @@ async def get_role_users(
 @router.get("/me/roles", response_model=List[RoleRead])
 async def get_my_roles(
     db: Session = Depends(get_session),
-    current_user: User = Depends(get_current_db_user)
+    firebase_user: dict = Depends(get_current_user)
 ):
     """Obtener los roles del usuario actual"""
-    return get_user_roles(db, current_user.id)
+    # Try to find user in database by Firebase UID
+    from app.controllers.user_controller import get_user_by_firebase_uid
+    user = get_user_by_firebase_uid(db, firebase_user['uid'])
+    
+    # If user doesn't exist in database, return empty roles list
+    if not user:
+        return []
+    
+    # Return user's roles from database
+    return get_user_roles(db, user.id)

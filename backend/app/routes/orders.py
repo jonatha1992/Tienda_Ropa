@@ -179,7 +179,7 @@ def read_orders_with_customer_info(
     *, session: Session = Depends(get_session), skip: int = 0, limit: int = 100, user=Depends(get_current_user)
 ):
     """
-    Endpoint para admin que retorna órdenes con información del customer incluida
+    Endpoint para admin que retorna órdenes con información del customer y OrderItems incluida
     """
     try:
         # Use LEFT JOIN to include orders even if customer is missing
@@ -191,7 +191,7 @@ def read_orders_with_customer_info(
             .order_by(Order.created_at.desc())
         ).all()
         
-        # Transform results to include customer info
+        # Transform results to include customer info and OrderItems
         orders_with_customer = []
         for order, customer in results:
             order_dict = order.model_dump()
@@ -206,6 +206,28 @@ def read_orders_with_customer_info(
                     'email': None,
                     'phone': None
                 }
+            
+            # Get order items with product details
+            try:
+                order_items_query = session.exec(
+                    select(OrderItem, Product)
+                    .where(OrderItem.order_id == order.id)
+                    .join(Product, OrderItem.product_id == Product.id)
+                ).all()
+                
+                # Format order items
+                items_formatted = []
+                for order_item, product in order_items_query:
+                    item_dict = order_item.model_dump()
+                    item_dict['product'] = product.model_dump()
+                    items_formatted.append(item_dict)
+                
+                order_dict['items'] = items_formatted
+                
+            except Exception as items_error:
+                # If items query fails, set empty items list
+                print(f"⚠️ Error getting items for order {order.id}: {items_error}")
+                order_dict['items'] = []
             
             # Ensure dates are properly formatted
             if order.created_at:
@@ -240,14 +262,14 @@ def read_customer_orders(
     return orders
 
 
-@router.get("/orders/my-orders", response_model=List[Order])
+@router.get("/orders/my-orders", response_model=List[dict])
 def read_my_orders(
     session: Session = Depends(get_session), 
     skip: int = 0, 
     limit: int = 100, 
     firebase_user: dict = Depends(get_current_user)
 ):
-    """Obtener todos los pedidos del usuario autenticado"""
+    """Obtener todos los pedidos del usuario autenticado con información completa de OrderItems"""
     try:
         # Buscar customers que coincidan con el email del usuario autenticado
         user_email = firebase_user.get('email')
@@ -265,7 +287,7 @@ def read_my_orders(
         # Obtener pedidos de todos los customers con este email
         customer_ids = [customer.id for customer in customers]
         
-        # Usar LEFT JOIN para evitar errores si hay datos inconsistentes
+        # Obtener pedidos
         orders = session.exec(
             select(Order)
             .where(Order.customer_id.in_(customer_ids))
@@ -274,14 +296,31 @@ def read_my_orders(
             .limit(limit)
         ).all()
         
-        # Transform orders to ensure proper date formatting
+        # Transform orders to include OrderItems with Product info
         orders_formatted = []
         for order in orders:
             try:
                 order_dict = order.model_dump()
                 if order.created_at:
                     order_dict['created_at'] = order.created_at.isoformat()
+                
+                # Get order items with product details
+                order_items_query = session.exec(
+                    select(OrderItem, Product)
+                    .where(OrderItem.order_id == order.id)
+                    .join(Product, OrderItem.product_id == Product.id)
+                ).all()
+                
+                # Format order items
+                items_formatted = []
+                for order_item, product in order_items_query:
+                    item_dict = order_item.model_dump()
+                    item_dict['product'] = product.model_dump()
+                    items_formatted.append(item_dict)
+                
+                order_dict['items'] = items_formatted
                 orders_formatted.append(order_dict)
+                
             except Exception as e:
                 # Si un order específico falla, lo saltamos pero continuamos
                 print(f"⚠️ Error procesando order {order.id}: {e}")
