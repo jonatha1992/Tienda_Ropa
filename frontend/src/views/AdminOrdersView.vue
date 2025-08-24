@@ -412,6 +412,7 @@ import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 import { ordersApi } from '../config/api';
+import { config } from '../config/index';
 import OrderStatusModal from '../components/OrderStatusModal.vue';
 import ShippingModal from '../components/ShippingModal.vue';
 

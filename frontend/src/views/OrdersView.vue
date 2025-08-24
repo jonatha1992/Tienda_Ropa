@@ -345,7 +345,7 @@ const getStatusText = (status: string) => {
 };
 
 // Delivery method functions
-const getDeliveryMethodClass = (deliveryMethod: string) => {
+const getDeliveryMethodClass = (deliveryMethod: string | undefined) => {
   switch (deliveryMethod) {
     case 'envio_andreani':
       return 'bg-blue-100 text-blue-800';
@@ -358,7 +358,7 @@ const getDeliveryMethodClass = (deliveryMethod: string) => {
   }
 };
 
-const getDeliveryMethodText = (deliveryMethod: string) => {
+const getDeliveryMethodText = (deliveryMethod: string | undefined) => {
   switch (deliveryMethod) {
     case 'envio_andreani':
       return 'Envío por Andreani';
@@ -371,7 +371,7 @@ const getDeliveryMethodText = (deliveryMethod: string) => {
   }
 };
 
-const isShippingOrder = (deliveryMethod: string) => {
+const isShippingOrder = (deliveryMethod: string | undefined) => {
   return deliveryMethod === 'envio_andreani' || deliveryMethod === 'envio_correo';
 };
 
@@ -387,7 +387,12 @@ const getShippingProviderName = (provider: string) => {
 };
 
 // Tracking functions
-const trackShipment = (trackingNumber: string, provider: string) => {
+const trackShipment = (trackingNumber: string | undefined, provider: string | undefined) => {
+  if (!trackingNumber || !provider) {
+    toast.error('Información de tracking no disponible');
+    return;
+  }
+  
   let trackingUrl = '';
   
   switch (provider) {

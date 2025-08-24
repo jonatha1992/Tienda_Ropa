@@ -212,9 +212,12 @@ npm run test -- --watch
 
 ### Frontend Linting
 ```powershell
-cd C:\Repositorio\Tienda_Ropa\frontend
+cd C:\Repositorio\mvintage\frontend
 # Type checking (ALWAYS run before commits):
 vue-tsc --noEmit
+
+# Build for test environment (ALWAYS run after TypeScript fixes):
+npm run build:test
 
 # If ESLint is configured, run:
 npm run lint

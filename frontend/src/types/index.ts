@@ -130,6 +130,11 @@ export interface Order {
   delivery_status?: string;
   delivery_notes?: string;
   
+  // Shipping fields
+  delivery_method?: string;
+  tracking_number?: string;
+  shipping_provider?: string;
+  
   // Campos admin
   admin_notes?: string;
   verification_required?: boolean;

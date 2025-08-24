@@ -19,9 +19,13 @@
       "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_ecommerce_module.py -v --tb=short)",
       "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_inventory_module.py -v --tb=short)",
       "Bash(dir:*)",
-      "Bash(del api.ts)"
+      "Bash(del api.ts)",
+      "Bash(npm run build:test:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\c\\Repositorio\\mvintage"
+    ]
   }
 }
