@@ -366,7 +366,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
-import { config } from '../config/index';
+import { ordersApi } from '../config/api';
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -401,34 +401,48 @@ const getAuthHeaders = () => ({
 const loadOrders = async () => {
   loading.value = true;
   try {
-    let endpoint = '/admin/shipping/orders/pending';
+    console.log('🔄 Loading all orders with customer info from ordersApi');
+    const allOrders = await ordersApi.getOrdersWithCustomerInfo();
+    console.log('✅ Orders loaded:', allOrders);
     
-    if (statusFilter.value === 'shipped') {
-      endpoint = '/admin/shipping/orders/shipped';
-    } else if (statusFilter.value === 'with_tracking') {
-      endpoint = '/admin/shipping/bulk-actions/ready';
+    // Transform orders to include customer info and status flags
+    orders.value = allOrders.map((order: any) => ({
+      order_id: order.id,
+      customer_name: order.customer?.name || 'Cliente desconocido',
+      customer_email: order.customer?.email || '',
+      customer_phone: order.customer?.phone || null,
+      total: order.total,
+      status: order.payment_status || order.status || 'pending', // Use payment_status first
+      payment_method: order.payment_method,
+      created_at: order.created_at,
+      tracking_number: order.tracking_number,
+      shipping_provider: order.shipping_provider,
+      shipped_at: order.shipped_at,
+      estimated_delivery: order.estimated_delivery,
+      
+      // Status flags for admin actions
+      can_add_tracking: !order.tracking_number && (order.payment_status === 'approved' || order.payment_method === 'cash'),
+      can_mark_shipped: !!order.tracking_number && !order.shipped_at,
+      shipping_status: order.shipped_at ? 'shipped' : (order.tracking_number ? 'ready_to_ship' : 'pending')
+    }));
+    
+    // Apply status filter
+    if (statusFilter.value) {
+      orders.value = orders.value.filter((order: any) => {
+        switch (statusFilter.value) {
+          case 'pending_shipment':
+            return !order.tracking_number && (order.status === 'approved' || order.payment_method === 'cash');
+          case 'with_tracking':
+            return !!order.tracking_number && !order.shipped_at;
+          case 'shipped':
+            return !!order.shipped_at;
+          default:
+            return true;
+        }
+      });
     }
     
-    console.log('🔄 Loading orders from:', endpoint);
-    const response = await fetch(`${config.backendUrl}${endpoint}`, {
-      headers: getAuthHeaders()
-    });
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    const data = await response.json();
-    console.log('✅ Orders loaded:', data);
-    
-    if (statusFilter.value === 'with_tracking') {
-      orders.value = data.orders.map((order: any) => ({
-        ...order,
-        shipping_status: 'ready_to_ship',
-        can_add_tracking: false,
-        can_mark_shipped: true
-      }));
-    } else {
-      orders.value = data;
-    }
+    console.log(`📊 Showing ${orders.value.length} orders after filtering`);
   } catch (error) {
     console.error('❌ Error loading orders:', error);
     toast.error('Error al cargar pedidos');

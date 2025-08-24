@@ -170,6 +170,32 @@ def read_orders(
     return orders
 
 
+@router.get("/orders/admin", response_model=List[dict])
+def read_orders_with_customer_info(
+    *, session: Session = Depends(get_session), skip: int = 0, limit: int = 100, user=Depends(get_current_user)
+):
+    """
+    Endpoint para admin que retorna órdenes con información del customer incluida
+    """
+    # Join order with customer to get customer info
+    results = session.exec(
+        select(Order, Customer)
+        .join(Customer, Order.customer_id == Customer.id)
+        .offset(skip)
+        .limit(limit)
+        .order_by(Order.created_at.desc())
+    ).all()
+    
+    # Transform results to include customer info
+    orders_with_customer = []
+    for order, customer in results:
+        order_dict = order.model_dump()
+        order_dict['customer'] = customer.model_dump()
+        orders_with_customer.append(order_dict)
+    
+    return orders_with_customer
+
+
 @router.get("/orders/customer/{customer_id}", response_model=List[Order])
 def read_customer_orders(
     customer_id: int, 

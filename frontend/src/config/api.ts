@@ -232,6 +232,12 @@ export const ordersApi = {
     return response.data;
   },
 
+  // Get all orders with customer info (for admin)
+  async getOrdersWithCustomerInfo(): Promise<any[]> {
+    const response = await apiClient.get('/orders/admin');
+    return response.data;
+  },
+
   // Get order by ID
   async getOrder(id: number): Promise<any> {
     const response = await apiClient.get(`/orders/${id}`);
