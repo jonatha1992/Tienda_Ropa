@@ -181,26 +181,44 @@ def read_orders_with_customer_info(
     """
     Endpoint para admin que retorna órdenes con información del customer incluida
     """
-    # Join order with customer to get customer info
-    results = session.exec(
-        select(Order, Customer)
-        .join(Customer, Order.customer_id == Customer.id)
-        .offset(skip)
-        .limit(limit)
-        .order_by(Order.created_at.desc())
-    ).all()
-    
-    # Transform results to include customer info
-    orders_with_customer = []
-    for order, customer in results:
-        order_dict = order.model_dump()
-        order_dict['customer'] = customer.model_dump()
-        # Ensure dates are properly formatted
-        if order.created_at:
-            order_dict['created_at'] = order.created_at.isoformat()
-        orders_with_customer.append(order_dict)
-    
-    return orders_with_customer
+    try:
+        # Use LEFT JOIN to include orders even if customer is missing
+        results = session.exec(
+            select(Order, Customer)
+            .outerjoin(Customer, Order.customer_id == Customer.id)
+            .offset(skip)
+            .limit(limit)
+            .order_by(Order.created_at.desc())
+        ).all()
+        
+        # Transform results to include customer info
+        orders_with_customer = []
+        for order, customer in results:
+            order_dict = order.model_dump()
+            
+            # Handle case where customer might be None
+            if customer:
+                order_dict['customer'] = customer.model_dump()
+            else:
+                order_dict['customer'] = {
+                    'id': None,
+                    'name': 'Cliente no encontrado',
+                    'email': None,
+                    'phone': None
+                }
+            
+            # Ensure dates are properly formatted
+            if order.created_at:
+                order_dict['created_at'] = order.created_at.isoformat()
+            orders_with_customer.append(order_dict)
+        
+        return orders_with_customer
+        
+    except Exception as e:
+        import logging
+        logging.error(f"Error in read_orders_with_customer_info: {e}")
+        # Return empty list instead of crashing
+        return []
 
 
 @router.get("/orders/customer/{customer_id}", response_model=List[Order])
