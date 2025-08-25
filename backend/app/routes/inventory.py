@@ -13,6 +13,8 @@ from app.models.product import Product
 router = APIRouter()
 
 
+from pydantic import ValidationError
+
 @router.post("/inventory/", response_model=Inventory)
 def create_inventory(session: Session = Depends(get_session), inventory: Inventory = Body(...), user=Depends(get_current_user)):
     # Verificar que el producto existe
@@ -20,7 +22,21 @@ def create_inventory(session: Session = Depends(get_session), inventory: Invento
     if not product:
         raise HTTPException(status_code=422, detail="Product not found")
     
-    db_inventory = Inventory.model_validate(inventory)
+    try:
+        db_inventory = Inventory.model_validate(inventory)
+    except ValidationError as e:
+        # Convert validation errors to JSON serializable format
+        error_details = []
+        for error in e.errors():
+            error_dict = {
+                "type": error.get("type"),
+                "loc": error.get("loc"),
+                "msg": error.get("msg"),
+                "input": error.get("input")
+            }
+            error_details.append(error_dict)
+        raise HTTPException(status_code=422, detail=error_details)
+        
     session.add(db_inventory)
     session.commit()
     session.refresh(db_inventory)

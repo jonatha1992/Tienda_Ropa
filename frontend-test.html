@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Vintage Frontend API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .endpoint {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 M-Vintage Frontend-Backend Communication Test</h1>
+        <p>Esta página simula las llamadas exactas que hace <code>AdminOrdersView.vue</code> al backend.</p>
+
+        <div class="test-section">
+            <h3>⚙️ Configuration</h3>
+            <p>Backend URL: <span class="endpoint" id="backendUrl">http://localhost:8000/api/v1</span></p>
+            <p>Status: <span id="connectionStatus">Testing...</span></p>
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Admin Orders View - Core Functions</h3>
+            <p>Estas son las funciones exactas que llama AdminOrdersView.vue al cargar:</p>
+            <p style="background: #fff3cd; padding: 8px; border-radius: 4px; border: 1px solid #ffeaa7;">
+                ⚠️ <strong>Estos endpoints requieren autenticación</strong>. Usa el campo de token de abajo o los endpoints públicos.
+            </p>
+            <button onclick="testOrdersWithCustomerInfo()">Load Orders (ordersApi.getOrdersWithCustomerInfo)</button>
+            <button onclick="testShippingStatistics()">Load Statistics (ordersApi.getShippingStatistics)</button>
+            <button onclick="testShippingProviders()">Load Providers (ordersApi.getShippingProviders)</button>
+            <div id="adminOrdersResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🚚 Shipping Actions</h3>
+            <p>Funciones para gestionar envíos:</p>
+            <p style="background: #fff3cd; padding: 8px; border-radius: 4px; border: 1px solid #ffeaa7;">
+                ⚠️ <strong>Estos endpoints requieren autenticación</strong>. Usa el campo de token de abajo.
+            </p>
+            <button onclick="testUpdateShippingInfo()">Update Shipping Info (ordersApi.updateShippingInfo)</button>
+            <button onclick="testMarkAsShipped()">Mark as Shipped (ordersApi.markOrderAsShipped)</button>
+            <button onclick="testBulkMarkShipped()">Bulk Mark Shipped (ordersApi.bulkMarkAsShipped)</button>
+            <div id="shippingActionsResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔐 Authentication Test</h3>
+            <p>Para probar endpoints protegidos, necesitas un Firebase JWT token:</p>
+            <div style="background: #e3f2fd; padding: 12px; border-radius: 4px; border: 1px solid #2196f3; margin: 10px 0;">
+                <strong>📋 Cómo obtener el token:</strong><br>
+                1. Ve a <a href="https://m-vintage-test.web.app" target="_blank">https://m-vintage-test.web.app</a><br>
+                2. Inicia sesión con tu cuenta admin<br>
+                3. Abre Developer Tools (F12) → Console<br>
+                4. Pega: <code>firebase.auth().currentUser.getIdToken().then(t => {console.log(t); navigator.clipboard.writeText(t)})</code><br>
+                5. El token se copiará al clipboard automáticamente
+            </div>
+            <input type="text" id="testToken" placeholder="Pega aquí tu Firebase JWT Token"
+                style="width: 400px; padding: 8px;" 
+                onchange="saveTokenOnChange()" 
+                onpaste="setTimeout(saveTokenOnChange, 10)">
+            <button onclick="testWithAuth()">Test with Authentication</button>
+            <button onclick="clearSavedToken()" style="background: #dc3545;">Clear Saved Token</button>
+            <button onclick="saveTokenManually()" style="background: #28a745;">Save Token</button>
+            <div id="authResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📈 Public Endpoints</h3>
+            <p>Endpoints que no requieren autenticación:</p>
+            <button onclick="testPublicEndpoints()">Test Public Endpoints</button>
+            <div id="publicResults"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8000/api/v1';
+
+        // Simulated API client similar to frontend
+        class APIClient {
+            constructor(baseURL) {
+                this.baseURL = baseURL;
+                this.authToken = null;
+            }
+
+            setAuth(token) {
+                this.authToken = token;
+            }
+
+            async request(method, endpoint, data = null) {
+                const url = `${this.baseURL}${endpoint}`;
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                if (this.authToken) {
+                    headers.Authorization = `Bearer ${this.authToken}`;
+                }
+
+                const options = {
+                    method,
+                    headers,
+                    mode: 'cors'
+                };
+
+                if (data && (method === 'POST' || method === 'PUT')) {
+                    options.body = JSON.stringify(data);
+                }
+
+                try {
+                    const response = await fetch(url, options);
+                    const responseData = await response.json();
+
+                    return {
+                        success: response.ok,
+                        status: response.status,
+                        data: responseData,
+                        url,
+                        method
+                    };
+                } catch (error) {
+                    return {
+                        success: false,
+                        error: error.message,
+                        url,
+                        method
+                    };
+                }
+            }
+
+            // Simulated ordersApi functions
+            async getOrdersWithCustomerInfo() {
+                return this.request('GET', '/orders/admin');
+            }
+
+            async getShippingStatistics() {
+                return this.request('GET', '/admin/shipping/statistics');
+            }
+
+            async getShippingProviders() {
+                return this.request('GET', '/admin/shipping/providers');
+            }
+
+            async updateShippingInfo(orderId, shippingData) {
+                return this.request('PUT', `/admin/shipping/orders/${orderId}/shipping-info`, shippingData);
+            }
+
+            async markOrderAsShipped(orderId) {
+                return this.request('POST', `/admin/shipping/orders/${orderId}/mark-shipped`, { send_notification: true });
+            }
+
+            async bulkMarkAsShipped(orderIds) {
+                return this.request('POST', '/admin/shipping/bulk-actions/mark-shipped', orderIds);
+            }
+        }
+
+        const apiClient = new APIClient(BASE_URL);
+
+        function displayResult(containerId, result) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+
+            if (result.success) {
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ ${result.method} ${result.url}
+Status: ${result.status}
+Data: ${JSON.stringify(result.data, null, 2)}`;
+            } else if (result.status === 401) {
+                resultDiv.className = 'result info';
+                resultDiv.textContent = `🔐 ${result.method} ${result.url}
+Status: ${result.status} (Authentication Required)
+Response: ${JSON.stringify(result.data, null, 2)}`;
+            } else if (result.status === 403) {
+                resultDiv.className = 'result info';
+                resultDiv.textContent = `🚫 ${result.method} ${result.url}
+Status: ${result.status} (Permission Denied)
+Response: ${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ ${result.method} ${result.url}
+${result.error ? `Error: ${result.error}` : `Status: ${result.status}`}
+${result.data ? `Response: ${JSON.stringify(result.data, null, 2)}` : ''}`;
+            }
+
+            container.appendChild(resultDiv);
+        }
+
+        async function testConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.textContent = 'Testing...';
+
+            try {
+                const response = await fetch(`${BASE_URL.replace('/api/v1', '')}/health`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusElement.innerHTML = `✅ Connected - ${data.status || 'Backend running'}`;
+                    statusElement.style.color = 'green';
+                } else {
+                    statusElement.innerHTML = `⚠️ Connected but got status ${response.status}`;
+                    statusElement.style.color = 'orange';
+                }
+            } catch (error) {
+                statusElement.innerHTML = `❌ Connection failed: ${error.message}`;
+                statusElement.style.color = 'red';
+            }
+        }
+
+        async function testOrdersWithCustomerInfo() {
+            const result = await apiClient.getOrdersWithCustomerInfo();
+            displayResult('adminOrdersResults', result);
+        }
+
+        async function testShippingStatistics() {
+            const result = await apiClient.getShippingStatistics();
+            displayResult('adminOrdersResults', result);
+        }
+
+        async function testShippingProviders() {
+            const result = await apiClient.getShippingProviders();
+            displayResult('adminOrdersResults', result);
+        }
+
+        async function testUpdateShippingInfo() {
+            const testData = {
+                tracking_number: 'TEST123456789',
+                shipping_provider: 'andreani',
+                estimated_delivery: '2025-08-30T10:00:00Z',
+                delivery_notes: 'Test shipping update'
+            };
+            const result = await apiClient.updateShippingInfo(1, testData);
+            displayResult('shippingActionsResults', result);
+        }
+
+        async function testMarkAsShipped() {
+            const result = await apiClient.markOrderAsShipped(1);
+            displayResult('shippingActionsResults', result);
+        }
+
+        async function testBulkMarkShipped() {
+            const result = await apiClient.bulkMarkAsShipped([1, 2, 3]);
+            displayResult('shippingActionsResults', result);
+        }
+
+        async function testWithAuth() {
+            const token = document.getElementById('testToken').value;
+            if (token) {
+                apiClient.setAuth(token);
+                // Save token to localStorage for next time
+                localStorage.setItem('firebase_jwt_token', token);
+                console.log('✅ Token saved to localStorage');
+            }
+
+            // Test a protected endpoint
+            const result = await apiClient.getOrdersWithCustomerInfo();
+            displayResult('authResults', result);
+        }
+
+        async function testPublicEndpoints() {
+            const publicTests = [
+                { name: 'Get Colors', endpoint: '/colors' },
+                { name: 'Get Categories', endpoint: '/categories' },
+                { name: 'Get Sizes', endpoint: '/sizes' }
+            ];
+
+            for (const test of publicTests) {
+                const result = await apiClient.request('GET', test.endpoint);
+                result.testName = test.name;
+                displayResult('publicResults', result);
+            }
+        }
+
+        // Load saved token from localStorage on page load
+        function loadSavedToken() {
+            const savedToken = localStorage.getItem('firebase_jwt_token');
+            if (savedToken) {
+                document.getElementById('testToken').value = savedToken;
+                apiClient.setAuth(savedToken);
+                console.log('✅ Token loaded from localStorage');
+                showTokenStatus('🔑 Token cargado desde localStorage (listo para usar endpoints protegidos)');
+            }
+        }
+
+        // Save token automatically when input changes
+        function saveTokenOnChange() {
+            const token = document.getElementById('testToken').value.trim();
+            if (token && token.length > 20) {  // Basic validation - JWT tokens are long
+                localStorage.setItem('firebase_jwt_token', token);
+                apiClient.setAuth(token);
+                console.log('✅ Token auto-saved to localStorage');
+                showTokenStatus('💾 Token guardado automáticamente');
+            }
+        }
+
+        // Save token manually
+        function saveTokenManually() {
+            const token = document.getElementById('testToken').value.trim();
+            if (token) {
+                localStorage.setItem('firebase_jwt_token', token);
+                apiClient.setAuth(token);
+                console.log('✅ Token manually saved to localStorage');
+                showTokenStatus('💾 Token guardado manualmente');
+            } else {
+                showTokenStatus('⚠️ Pega un token antes de guardarlo', 'error');
+            }
+        }
+
+        // Show token status message
+        function showTokenStatus(message, type = 'info') {
+            document.getElementById('authResults').innerHTML = '';
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `result ${type}`;
+            statusDiv.style.margin = '10px 0';
+            statusDiv.textContent = message;
+            document.getElementById('authResults').appendChild(statusDiv);
+        }
+
+        // Clear saved token
+        function clearSavedToken() {
+            localStorage.removeItem('firebase_jwt_token');
+            document.getElementById('testToken').value = '';
+            apiClient.setAuth(null);
+            console.log('🗑️ Token removed from localStorage');
+            showTokenStatus('🗑️ Token eliminado. Pega un nuevo token para usar endpoints protegidos.');
+        }
+
+        // Test connection on load
+        window.onload = function () {
+            testConnection();
+            loadSavedToken();
+        };
+    </script>
+</body>
+
+</html>

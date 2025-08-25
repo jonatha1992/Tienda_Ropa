@@ -7,7 +7,7 @@ class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     customer_id: int = Field(foreign_key="customer.id")
     status: Optional[str] = None
-    total: float
+    total: float = Field(ge=0)
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     
     # Payment fields

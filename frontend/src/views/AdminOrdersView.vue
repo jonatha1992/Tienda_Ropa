@@ -412,7 +412,6 @@ import { useAuthStore } from '../store/auth';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 import { ordersApi } from '../config/api';
-import { config } from '../config/index';
 import OrderStatusModal from '../components/OrderStatusModal.vue';
 import ShippingModal from '../components/ShippingModal.vue';
 
@@ -441,11 +440,7 @@ const trackingForm = ref({
   delivery_notes: ''
 });
 
-// Auth header
-const getAuthHeaders = () => ({
-  'Authorization': `Bearer ${authStore.token}`,
-  'Content-Type': 'application/json'
-});
+// Auth header function removed - now using apiClient with automatic token handling
 
 // Load data
 const loadOrders = async () => {
@@ -509,13 +504,7 @@ const loadOrders = async () => {
 const loadStatistics = async () => {
   try {
     console.log('📊 Loading shipping statistics...');
-    const response = await fetch(`${config.backendUrl}/admin/shipping/statistics`, {
-      headers: getAuthHeaders()
-    });
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    statistics.value = await response.json();
+    statistics.value = await ordersApi.getShippingStatistics();
     console.log('✅ Statistics loaded:', statistics.value);
   } catch (error) {
     console.error('❌ Error loading statistics:', error);
@@ -525,14 +514,7 @@ const loadStatistics = async () => {
 const loadShippingProviders = async () => {
   try {
     console.log('🚛 Loading shipping providers...');
-    const response = await fetch(`${config.backendUrl}/admin/shipping/providers`, {
-      headers: getAuthHeaders()
-    });
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    const data = await response.json();
-    shippingProviders.value = data.providers;
+    shippingProviders.value = await ordersApi.getShippingProviders();
     console.log('✅ Providers loaded:', shippingProviders.value);
   } catch (error) {
     console.error('❌ Error loading providers:', error);
@@ -576,18 +558,7 @@ const saveTrackingInfo = async () => {
     
     console.log('💾 Saving tracking info:', payload);
     
-    const response = await fetch(
-      `${config.backendUrl}/admin/shipping/orders/${selectedOrder.value.order_id}/shipping-info`,
-      {
-        method: 'PUT',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(payload)
-      }
-    );
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    const result = await response.json();
+    const result = await ordersApi.updateShippingInfo(selectedOrder.value.order_id, payload);
     console.log('✅ Tracking info saved:', result);
     
     toast.success('Información de envío actualizada exitosamente');
@@ -607,18 +578,7 @@ const markAsShipped = async (orderId: number) => {
   try {
     console.log('🚢 Marking order as shipped:', orderId);
     
-    const response = await fetch(
-      `${config.backendUrl}/admin/shipping/orders/${orderId}/mark-shipped`,
-      {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ send_notification: true })
-      }
-    );
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    const result = await response.json();
+    const result = await ordersApi.markOrderAsShipped(orderId);
     console.log('✅ Order marked as shipped:', result);
     
     toast.success(`Pedido #${orderId} marcado como enviado`);
@@ -637,18 +597,7 @@ const bulkMarkShipped = async () => {
   try {
     console.log('🚢 Bulk marking orders as shipped:', selectedOrders.value);
     
-    const response = await fetch(
-      `${config.backendUrl}/admin/shipping/bulk-actions/mark-shipped`,
-      {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(selectedOrders.value)
-      }
-    );
-    
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    
-    const result = await response.json();
+    const result = await ordersApi.bulkMarkAsShipped(selectedOrders.value);
     console.log('✅ Bulk mark shipped result:', result);
     
     toast.success(`${result.processed} pedidos marcados como enviados`);

@@ -1,15 +1,13 @@
-
-
-
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from pydantic import EmailStr
 
 class CustomerBase(SQLModel):
     """Campos base para Customer con datos completos de entrega"""
     name: str
     first_name: Optional[str] = None      # Para MercadoPago payer.name
     last_name: Optional[str] = None       # Para MercadoPago payer.surname
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     
     # Dirección completa para entregas
@@ -31,4 +29,4 @@ class CustomerCreate(CustomerBase):
 class Customer(CustomerBase, table=True):
     """Customer con todos los datos de entrega"""
     id: Optional[int] = Field(default=None, primary_key=True)
-    email: Optional[str] = Field(default=None, index=True)  # Mantener index en email
+    email: Optional[EmailStr] = Field(default=None, index=True)  # Mantener index en email

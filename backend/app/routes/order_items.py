@@ -6,13 +6,21 @@ from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.order_item import OrderItem
+from app.models.order import Order
 from app.routes.inventory import reduce_stock
 
 router = APIRouter()
 
 
+from pydantic import ValidationError
+
 @router.post("/order-items/", response_model=OrderItem)
 def create_order_item(*, session: Session = Depends(get_session), order_item: OrderItem, user=Depends(get_current_user)):
+    # Check if order exists
+    order = session.get(Order, order_item.order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail=f"Order with id {order_item.order_id} not found")
+
     # Verificar stock antes de crear el order item
     stock_available = reduce_stock(order_item.product_id, order_item.quantity, session)
     
@@ -22,8 +30,11 @@ def create_order_item(*, session: Session = Depends(get_session), order_item: Or
             detail=f"Stock insuficiente para el producto {order_item.product_id}. Cantidad solicitada: {order_item.quantity}"
         )
     
-    # Crear el order item si hay stock suficiente
-    db_order_item = OrderItem.model_validate(order_item)
+    try:
+        db_order_item = OrderItem.model_validate(order_item)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
+
     session.add(db_order_item)
     session.commit()
     session.refresh(db_order_item)

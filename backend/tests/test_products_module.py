@@ -259,9 +259,10 @@ class TestProductImages:
         
         product = response.json()
         assert len(product["images"]) == 3
-        assert "imagen1.jpg" in product["images"]
-        assert "imagen2.jpg" in product["images"]
-        assert "imagen3.jpg" in product["images"]
+        image_urls = [img['image_url'] for img in product['images']]
+        assert "imagen1.jpg" in image_urls
+        assert "imagen2.jpg" in image_urls
+        assert "imagen3.jpg" in image_urls
 
     def test_product_without_images(self, client, auth_cookie):
         """Test producto sin imágenes (debería usar images vacío o por defecto)"""
@@ -306,19 +307,16 @@ class TestProductsErrorHandling:
         assert response.status_code == 404
 
     def test_products_require_authentication(self, client):
-        """Test que los endpoints de productos requieran autenticación"""
-        endpoints = [
-            ("GET", "/api/v1/products/"),
+        """Test que los endpoints protegidos de productos requieran autenticación"""
+        # Solo endpoints que requieren autenticación (GET de productos es público)
+        protected_endpoints = [
             ("POST", "/api/v1/products/"),
-            ("GET", "/api/v1/products/1"),
             ("PUT", "/api/v1/products/1"),
             ("DELETE", "/api/v1/products/1")
         ]
         
-        for method, endpoint in endpoints:
-            if method == "GET":
-                response = client.get(endpoint)
-            elif method == "POST":
+        for method, endpoint in protected_endpoints:
+            if method == "POST":
                 response = client.post(endpoint, json={})
             elif method == "PUT":
                 response = client.put(endpoint, json={})
@@ -326,3 +324,14 @@ class TestProductsErrorHandling:
                 response = client.delete(endpoint)
             
             assert response.status_code in [401, 403], f"{method} {endpoint} should require auth"
+        
+        # Verificar que endpoints públicos NO requieren autenticación
+        public_endpoints = [
+            ("GET", "/api/v1/products/"),
+            ("GET", "/api/v1/products/1")
+        ]
+        
+        for method, endpoint in public_endpoints:
+            response = client.get(endpoint)
+            # Los endpoints públicos pueden retornar 200 (datos) o 404 (no encontrado), pero no 401/403
+            assert response.status_code not in [401, 403], f"{method} {endpoint} should be public"

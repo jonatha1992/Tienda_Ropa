@@ -322,6 +322,39 @@ export const ordersApi = {
   }): Promise<any> {
     const response = await apiClient.put(`/orders/${orderId}/shipping`, shippingData);
     return response.data;
+  },
+
+  // Bulk mark orders as shipped
+  async bulkMarkAsShipped(orderIds: number[]): Promise<any> {
+    const response = await apiClient.post('/admin/shipping/bulk-actions/mark-shipped', orderIds);
+    return response.data;
+  },
+
+  // Admin shipping functions
+  // Get shipping statistics
+  async getShippingStatistics(): Promise<any> {
+    const response = await apiClient.get('/admin/shipping/statistics');
+    return response.data;
+  },
+
+  // Get shipping providers
+  async getShippingProviders(): Promise<any[]> {
+    const response = await apiClient.get('/admin/shipping/providers');
+    return response.data.providers;
+  },
+
+  // Update shipping info for order
+  async updateShippingInfo(orderId: number, shippingData: any): Promise<any> {
+    const response = await apiClient.put(`/admin/shipping/orders/${orderId}/shipping-info`, shippingData);
+    return response.data;
+  },
+
+  // Mark order as shipped
+  async markOrderAsShipped(orderId: number): Promise<any> {
+    const response = await apiClient.post(`/admin/shipping/orders/${orderId}/mark-shipped`, {
+      send_notification: true
+    });
+    return response.data;
   }
 };
 

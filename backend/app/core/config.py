@@ -22,7 +22,7 @@ Archivos sugeridos (solo locales, nunca subir secretos reales):
 """
 
 # Determinar entorno temprano (valores soportados: dev, test, pro)
-RAW_ENV = os.getenv("ENVIRONMENT", "test").lower()
+RAW_ENV = os.getenv("ENVIRONMENT", "dev").lower()
 ENV_FILE_MAP = {
     "dev": ".env.dev",
     "test": ".env.test",
@@ -126,24 +126,25 @@ class Settings(BaseSettings):
         if self.CORS_ORIGINS:
             items = [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
             return items or [self.FRONTEND_URL]
-        
+
         # Default origins based on environment
         origins = [self.FRONTEND_URL]
-        
+
         # Always add common development and production origins
         common_origins = [
             "http://localhost:5173",
             "http://localhost:5174",
-            "http://localhost:3000", 
+            "http://localhost:3000",
+            "http://127.0.0.1:5500",  # Live Server for frontend-test.html
             "https://m-vintage-test.web.app",
             "https://m-vintage.web.app",
-            "https://mvintage-frontend.vercel.app"
+            "https://mvintage-frontend.vercel.app",
         ]
-        
+
         for origin in common_origins:
             if origin not in origins:
                 origins.append(origin)
-                
+
         return origins
 
     @property

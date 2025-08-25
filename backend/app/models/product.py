@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field, Relationship
 class ProductBase(SQLModel):
     name: str
     description: Optional[str] = None
-    price: float
+    price: float = Field(gt=0)
     genero: Optional[str] = "unisex"
     estado: Optional[str] = "nuevo"
     categoria: Optional[str] = None  # Nueva campo para categoría
@@ -80,9 +80,9 @@ class ProductCreate(ProductBase):
             self.discount_percentage = None
 
 class ProductVariantCreate(SQLModel):
-    color: Optional[str] = None
-    talle: Optional[str] = None
-    stock: int
+    color: str = Field(min_length=1, description="Color is required for variants")
+    talle: str = Field(min_length=1, description="Size is required for variants")  
+    stock: int = Field(ge=0)
 
 
 class ProductImageRead(SQLModel):

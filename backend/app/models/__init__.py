@@ -1,7 +1,3 @@
-# Definición única de Base para todos los modelos
-from sqlalchemy.orm import declarative_base
-Base = declarative_base()
-
 # Importar todos los modelos para que SQLModel los registre
 from .user import User
 from .role import Role

@@ -99,6 +99,8 @@ async def send_order_confirmation_email(order: Order, customer: Customer, sessio
         print(f"❌ Error procesando email de confirmación: {str(e)}")
 
 
+from pydantic import ValidationError
+
 @router.post("/orders/")
 def create_order(session: Session = Depends(get_session), order: Order = Body(...), user=Depends(get_current_user)):
     # Verificar que el customer existe
@@ -106,8 +108,10 @@ def create_order(session: Session = Depends(get_session), order: Order = Body(..
     if not customer:
         raise HTTPException(status_code=422, detail="Customer not found")
     
-    # Crear la orden con estado inicial según método de pago
-    db_order = Order.model_validate(order)
+    try:
+        db_order = Order.model_validate(order)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
     
     # Establecer estado inicial según método de pago
     if db_order.payment_method == "mercadopago":
