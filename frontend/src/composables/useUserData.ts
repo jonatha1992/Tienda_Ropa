@@ -1,7 +1,7 @@
-import { ref, computed } from 'vue'
+﻿import { ref, computed } from 'vue'
 import { customersApi } from '../config/api'
 import { useAuthStore } from '../store/auth'
-import type { Customer } from '../types'
+import type { Customer } from '../types/users/user.types'
 
 export function useUserData() {
   const authStore = useAuthStore()
@@ -13,10 +13,10 @@ export function useUserData() {
   const hasCustomerData = computed(() => customerData.value !== null)
   
   /**
-   * Carga automáticamente los datos del customer si el usuario está autenticado
+   * Carga automÃ¡ticamente los datos del customer si el usuario estÃ¡ autenticado
    */
   const loadCustomerData = async (): Promise<Customer | null> => {
-    // Solo cargar si el usuario está autenticado
+    // Solo cargar si el usuario estÃ¡ autenticado
     if (!authStore.isAuthenticated) {
       customerData.value = null
       return null
@@ -28,16 +28,16 @@ export function useUserData() {
     try {
       const data = await customersApi.getMyCustomerData()
       customerData.value = data
-      console.log('✅ Customer data loaded:', data.name, data.email)
+      console.log('âœ… Customer data loaded:', data.name, data.email)
       return data
     } catch (err: any) {
       // 404 es normal para usuarios sin compras anteriores
       if (err?.response?.status === 404) {
-        console.log('ℹ️ No previous customer data found (first-time buyer)')
+        console.log('â„¹ï¸ No previous customer data found (first-time buyer)')
         customerData.value = null
         error.value = null
       } else {
-        console.error('❌ Error loading customer data:', err)
+        console.error('âŒ Error loading customer data:', err)
         error.value = 'Error al cargar los datos del usuario'
         customerData.value = null
       }
@@ -95,7 +95,7 @@ export function useUserData() {
   }
 }
 
-// Función auxiliar para readonly
+// FunciÃ³n auxiliar para readonly
 function readonly<T>(ref: any) {
   return ref
 }

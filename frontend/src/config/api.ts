@@ -1,8 +1,22 @@
 import axios from 'axios';
 import { auth } from './firebase';
 import { config } from './app';
-import type { Role, RoleType, User, UserWithRoles, Color, Category, Size, Product } from '../types';
-import type { StockCheckItem, StockCheckResponse } from '../types/stock';
+import type { 
+  Role, 
+  RoleType, 
+  UserWithRoles 
+} from '../types/users/role.types';
+import type { User } from '../types/users/user.types';
+import type { 
+  Color, 
+  Category, 
+  Size, 
+  Product 
+} from '../types/products';
+import type { 
+  StockCheckItem, 
+  StockCheckResponse 
+} from '../types/stock';
 
 const apiClient = axios.create({
   baseURL: config.backendUrl,
@@ -34,10 +48,43 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Solo loguear errores que no sean 401 (ya que son esperados cuando no hay usuario autenticado)
-    if (error.response && error.response.status !== 401) {
-      console.error(`❌ API error: ${error.response.status} ${error.config.method?.toUpperCase()} ${error.config.url}`);
+    if (error.response) {
+      const { status, data } = error.response;
+      
+      // Check if the response is HTML instead of JSON
+      if (typeof data === 'string' && data.startsWith('<!DOCTYPE html>')) {
+        console.error('❌ Server returned HTML instead of JSON. This usually means:', {
+          url: error.config.url,
+          status,
+          possibleCauses: [
+            'Backend server is not running',
+            'Incorrect API base URL',
+            'Authentication failed',
+            'Server error'
+          ]
+        });
+        
+        // Create a more helpful error
+        const htmlError = new Error(`Server returned HTML response. Check if the backend is running at ${config.backendUrl}`);
+        (htmlError as any).isHtmlResponse = true;
+        return Promise.reject(htmlError);
+      }
+      
+      // Log other errors (except 401 which is expected for unauthenticated users)
+      if (status !== 401) {
+        console.error(`❌ API error: ${status} ${error.config.method?.toUpperCase()} ${error.config.url}`, {
+          data,
+          headers: error.response.headers
+        });
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('❌ No response from server. Check if the backend is running at', config.backendUrl, error);
+    } else {
+      // Something happened in setting up the request
+      console.error('❌ Request setup error:', error.message);
     }
+    
     return Promise.reject(error);
   }
 );
@@ -282,7 +329,7 @@ export const ordersApi = {
 
   // Verify bank transfer
   async verifyTransfer(orderId: number, verified: boolean, adminNotes: string): Promise<any> {
-    const response = await apiClient.post(`/orders/${orderId}/verify-transfer`, {
+    const response = await apiClient.post(`/admin/verify-transfer/${orderId}`, {
       verified,
       admin_notes: adminNotes
     });
@@ -425,6 +472,33 @@ export const orderItemsApi = {
   // Delete order item
   async deleteOrderItem(id: number): Promise<void> {
     await apiClient.delete(`/order-items/${id}`);
+  }
+};
+
+// API functions for shipping quotes
+export const shippingQuotesApi = {
+  // Get shipping quotes for a destination and weight
+  async getShippingQuotes(data: {
+    postal_code: string;
+    city?: string;
+    province?: string;
+    total_weight_kg: number;
+    include_fallback?: boolean;
+  }): Promise<any> {
+    const response = await apiClient.post('/shipping/quote', data);
+    return response.data;
+  },
+
+  // Get available carriers
+  async getAvailableCarriers(): Promise<any> {
+    const response = await apiClient.get('/shipping/carriers');
+    return response.data;
+  },
+
+  // Test shipping API connection
+  async testShippingApi(): Promise<any> {
+    const response = await apiClient.get('/shipping/test-api');
+    return response.data;
   }
 };
 

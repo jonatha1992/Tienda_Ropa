@@ -1,34 +1,35 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from './views/HomeView.vue'
-import CollectionView from './views/CollectionView.vue'
-import ProductDetailView from './views/ProductDetailView.vue'
-import CheckoutView from './views/CheckoutView.vue'
-import CartView from './views/CartView.vue'
-import AuthView from './views/AuthView.vue'
-import AdminUserManagementView from './views/AdminUserManagementView.vue'
-import AdminPaymentsView from './views/AdminPaymentsView.vue'
-import AdminOrdersView from './views/AdminOrdersView.vue'
-import PaymentSuccessView from './views/PaymentSuccessView.vue'
-import PaymentFailureView from './views/PaymentFailureView.vue'
-import PaymentPendingView from './views/PaymentPendingView.vue'
-import TransferInstructionsView from './views/TransferInstructionsView.vue'
-import CashConfirmationView from './views/CashConfirmationView.vue'
+﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import HomeView from './views/shared/HomeView.vue'
+import CollectionView from './views/products/CollectionView.vue'
+import ProductDetailView from './views/products/ProductDetailView.vue'
+import CheckoutView from './views/checkout/CheckoutView.vue'
+import CartView from './views/cart/CartView.vue'
+import AuthView from './views/auth/AuthView.vue'
+import AdminUserManagementView from './views/admin/AdminUserManagementView.vue'
+import AdminPaymentsView from './views/admin/AdminPaymentsView.vue'
+import AdminOrdersView from './views/admin/AdminOrdersView.vue'
+import PaymentSuccessView from './views/checkout/PaymentSuccessView.vue'
+import PaymentFailureView from './views/checkout/PaymentFailureView.vue'
+import PaymentPendingView from './views/checkout/PaymentPendingView.vue'
+import TransferInstructionsView from './views/checkout/TransferInstructionsView.vue'
+import CashConfirmationView from './views/checkout/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
 import { useLoading } from './composables/useLoading';
 import { globalProgressBar } from './composables/useProgressBar';
-import ContactView from './views/ContactView.vue';
-import HowToShopView from './views/HowToShopView.vue';
-import ShippingView from './views/ShippingView.vue';
-import TermsView from './views/TermsView.vue';
-import PrivacyView from './views/PrivacyView.vue';
-import OrdersView from './views/OrdersView.vue';
-import OrderDetailView from './views/OrderDetailView.vue';
-import VerifyEmailView from './views/VerifyEmailView.vue';
-import ProfileView from './views/ProfileView.vue';
-import AdminViewProduct from './views/AdminViewProduct.vue';
+import ContactView from './views/shared/ContactView.vue';
+import HowToShopView from './views/shared/HowToShopView.vue';
+import ShippingView from './views/shared/ShippingView.vue';
+import TermsView from './views/shared/TermsView.vue';
+import PrivacyView from './views/shared/PrivacyView.vue';
+import OrdersView from './views/orders/OrdersView.vue';
+import OrderDetailView from './views/orders/OrderDetailView.vue';
+import VerifyEmailView from './views/auth/VerifyEmailView.vue';
+// @ts-ignore - Vue component import
+import ProfileView from './views/profile/ProfileView.vue';
+import AdminViewProduct from './views/admin/AdminViewProduct.vue';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
   { path: '/shop', component: CollectionView },
   { path: '/product/:name', component: ProductDetailView },
@@ -81,18 +82,18 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // Si hay una posición guardada (botón atrás/adelante), ir ahí
+    // Si hay una posiciÃ³n guardada (botÃ³n atrÃ¡s/adelante), ir ahÃ­
     if (savedPosition) {
       return savedPosition;
     }
-    // Si hay un hash (#section), ir a esa sección
+    // Si hay un hash (#section), ir a esa secciÃ³n
     if (to.hash) {
       return {
         el: to.hash,
         behavior: 'smooth'
       };
     }
-    // Por defecto, ir al top de la página
+    // Por defecto, ir al top de la pÃ¡gina
     return { top: 0 };
   }
 });
@@ -106,9 +107,9 @@ router.beforeEach(async (to, from, next) => {
     globalProgressBar.start();
   }
 
-  // Esperar a que se inicialice la autenticación si aún no se ha hecho
+  // Esperar a que se inicialice la autenticaciÃ³n si aÃºn no se ha hecho
   if (authStore.loading) {
-    // Verificar si ya hay datos en caché para acelerar
+    // Verificar si ya hay datos en cachÃ© para acelerar
     await authStore.fetchUserRoles(false)
     
     await new Promise(resolve => {
@@ -120,40 +121,40 @@ router.beforeEach(async (to, from, next) => {
     await authStore.initAuth();
   }
 
-  // Para rutas de admin, asegurar que los roles estén cargados
+  // Para rutas de admin, asegurar que los roles estÃ©n cargados
   if (to.meta.requiresAdmin && authStore.isAuthenticated) {
     // Early return si ya tiene acceso admin y roles cargados
     if (authStore.hasAdminAccess && authStore.userRoles.length > 0) {
       return next();
     }
 
-    // Si no hay roles cargados, intentar cargarlos (con caché)
+    // Si no hay roles cargados, intentar cargarlos (con cachÃ©)
     if (authStore.userRoles.length === 0) {
       try {
-        await authStore.fetchUserRoles(false); // false = usar caché si está disponible
+        await authStore.fetchUserRoles(false); // false = usar cachÃ© si estÃ¡ disponible
       } catch (error) {
-        console.error('❌ Error cargando roles:', error);
+        console.error('âŒ Error cargando roles:', error);
       }
     }
 
-    // Verificación final sin logs innecesarios
+    // VerificaciÃ³n final sin logs innecesarios
     if (!authStore.hasAdminAccess) {
       next('/');
       return;
     }
   }
 
-  // Verificar si la ruta requiere autenticación
+  // Verificar si la ruta requiere autenticaciÃ³n
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    console.log('🔒 Ruta protegida, redirigiendo a login');
+    console.log('ðŸ”’ Ruta protegida, redirigiendo a login');
     next('/auth');
   } else if (to.path === '/auth' && authStore.isAuthenticated) {
-    // Si el usuario ya está autenticado, redirigir según sus roles
+    // Si el usuario ya estÃ¡ autenticado, redirigir segÃºn sus roles
     if (authStore.hasAdminAccess) {
-      console.log('✅ Admin autenticado, redirigiendo a admin');
+      console.log('âœ… Admin autenticado, redirigiendo a admin');
       next('/admin/products');
     } else {
-      console.log('✅ Usuario regular autenticado, redirigiendo a home');
+      console.log('âœ… Usuario regular autenticado, redirigiendo a home');
       next('/');
     }
   } else {
@@ -161,9 +162,10 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-// Completar progress bar después de navegar
+// Completar progress bar despuÃ©s de navegar
 router.afterEach(() => {
   globalProgressBar.complete();
 });
 
 export default router;
+

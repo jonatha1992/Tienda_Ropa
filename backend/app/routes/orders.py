@@ -4,14 +4,14 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Body
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_admin
 from sqlmodel import Session, select
 
 from app.db.session import get_session
 from app.models.order import Order
 from app.models.customer import Customer
 from app.models.order_item import OrderItem
-from app.models.product import Product
+from app.models.product import Product, ProductImage
 from app.controllers.payments_controller import payments_controller
 from app.controllers.transfer_controller import transfer_controller
 from app.controllers.cash_controller import cash_controller
@@ -180,7 +180,7 @@ def read_orders(
 
 @router.get("/orders/admin", response_model=List[dict])
 def read_orders_with_customer_info(
-    *, session: Session = Depends(get_session), skip: int = 0, limit: int = 100, user=Depends(get_current_user)
+    *, session: Session = Depends(get_session), skip: int = 0, limit: int = 100, user=Depends(require_admin())
 ):
     """
     Endpoint para admin que retorna órdenes con información del customer y OrderItems incluida
@@ -223,7 +223,17 @@ def read_orders_with_customer_info(
                 items_formatted = []
                 for order_item, product in order_items_query:
                     item_dict = order_item.model_dump()
-                    item_dict['product'] = product.model_dump()
+                    
+                    # Get product with images
+                    product_dict = product.model_dump()
+                    
+                    # Load product images
+                    product_images = session.exec(
+                        select(ProductImage).where(ProductImage.product_id == product.id)
+                    ).all()
+                    product_dict['images'] = [img.model_dump() for img in product_images]
+                    
+                    item_dict['product'] = product_dict
                     items_formatted.append(item_dict)
                 
                 order_dict['items'] = items_formatted
@@ -319,7 +329,17 @@ def read_my_orders(
                 items_formatted = []
                 for order_item, product in order_items_query:
                     item_dict = order_item.model_dump()
-                    item_dict['product'] = product.model_dump()
+                    
+                    # Get product with images
+                    product_dict = product.model_dump()
+                    
+                    # Load product images
+                    product_images = session.exec(
+                        select(ProductImage).where(ProductImage.product_id == product.id)
+                    ).all()
+                    product_dict['images'] = [img.model_dump() for img in product_images]
+                    
+                    item_dict['product'] = product_dict
                     items_formatted.append(item_dict)
                 
                 order_dict['items'] = items_formatted
@@ -370,7 +390,7 @@ def update_order_status(
     session: Session = Depends(get_session), 
     order_id: int, 
     status_data: dict, 
-    user=Depends(get_current_user)
+    user=Depends(require_admin())
 ):
     """
     Actualizar el estado de pago de una orden (para admin)
@@ -404,7 +424,7 @@ def update_order_shipping(
     session: Session = Depends(get_session), 
     order_id: int, 
     shipping_data: dict, 
-    user=Depends(get_current_user)
+    user=Depends(require_admin())
 ):
     """
     Actualizar información de envío de una orden (para admin)

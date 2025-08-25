@@ -116,9 +116,15 @@
             <p style="background: #fff3cd; padding: 8px; border-radius: 4px; border: 1px solid #ffeaa7;">
                 ⚠️ <strong>Estos endpoints requieren autenticación</strong>. Usa el campo de token de abajo.
             </p>
-            <button onclick="testUpdateShippingInfo()">Update Shipping Info (ordersApi.updateShippingInfo)</button>
-            <button onclick="testMarkAsShipped()">Mark as Shipped (ordersApi.markOrderAsShipped)</button>
-            <button onclick="testBulkMarkShipped()">Bulk Mark Shipped (ordersApi.bulkMarkAsShipped)</button>
+            <p style="background: #e3f2fd; padding: 8px; border-radius: 4px; border: 1px solid #2196f3;">
+                💡 <strong>Usando Order IDs válidos:</strong> 13, 14 (basado en debug dump)
+            </p>
+            <button onclick="getAvailableOrders()">🔍 Get Available Orders (ver IDs)</button>
+            <button onclick="testUpdateShippingInfo()">📦 Update Shipping (Andreani - Order 13)</button>
+            <button onclick="testUpdateShippingInfoOCA()">📦 Update Shipping (OCA - Order 13)</button>
+            <button onclick="testUpdateShippingInfoCorreo()">📦 Update Shipping (Correo - Order 14)</button>
+            <button onclick="testMarkAsShipped()">✅ Mark as Shipped (Order ID 13)</button>
+            <button onclick="testBulkMarkShipped()">📋 Bulk Mark Shipped (Order IDs 13, 14)</button>
             <div id="shippingActionsResults"></div>
         </div>
 
@@ -301,23 +307,74 @@ ${result.data ? `Response: ${JSON.stringify(result.data, null, 2)}` : ''}`;
 
         async function testUpdateShippingInfo() {
             const testData = {
-                tracking_number: 'TEST123456789',
-                shipping_provider: 'andreani',
-                estimated_delivery: '2025-08-30T10:00:00Z',
-                delivery_notes: 'Test shipping update'
+                tracking_number: 'AR123456789',  // Realistic tracking number
+                shipping_provider: 'andreani',   // Valid provider (must be: correo-argentino, oca, andreani)
+                estimated_delivery: '2025-08-30T10:00:00',  // ISO format without Z (backend expects datetime)
+                delivery_notes: 'Test shipping update from frontend-test.html - Andreani'
             };
-            const result = await apiClient.updateShippingInfo(1, testData);
+            // Use existing order ID 13 (from debug dump)
+            const result = await apiClient.updateShippingInfo(13, testData);
+            displayResult('shippingActionsResults', result);
+        }
+
+        async function testUpdateShippingInfoOCA() {
+            const testData = {
+                tracking_number: 'OCA987654321',
+                shipping_provider: 'oca',        // Different valid provider
+                estimated_delivery: '2025-09-02T14:30:00',
+                delivery_notes: 'Test shipping update - OCA Provider'
+            };
+            const result = await apiClient.updateShippingInfo(13, testData);
+            displayResult('shippingActionsResults', result);
+        }
+
+        async function testUpdateShippingInfoCorreo() {
+            const testData = {
+                tracking_number: 'CP555444333',
+                shipping_provider: 'correo-argentino',  // Third valid provider
+                estimated_delivery: '2025-09-05T16:00:00',
+                delivery_notes: 'Test shipping update - Correo Argentino'
+            };
+            const result = await apiClient.updateShippingInfo(14, testData);  // Use different order
             displayResult('shippingActionsResults', result);
         }
 
         async function testMarkAsShipped() {
-            const result = await apiClient.markOrderAsShipped(1);
+            // Use existing order ID 13 (from debug dump)
+            const result = await apiClient.markOrderAsShipped(13);
             displayResult('shippingActionsResults', result);
         }
 
         async function testBulkMarkShipped() {
-            const result = await apiClient.bulkMarkAsShipped([1, 2, 3]);
+            // Use existing order IDs 13, 14 (from debug dump)
+            const result = await apiClient.bulkMarkAsShipped([13, 14]);
             displayResult('shippingActionsResults', result);
+        }
+
+        async function getAvailableOrders() {
+            const result = await apiClient.getOrdersWithCustomerInfo();
+            if (result.success && result.data) {
+                const orders = result.data;
+                const orderInfo = orders.map(order => ({
+                    id: order.id,
+                    total: order.total,
+                    status: order.payment_status,
+                    customer: order.customer?.first_name || 'N/A'
+                }));
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <strong>📋 Órdenes disponibles para testing:</strong><br>
+                    ${orderInfo.map(o => 
+                        `🛍️ Order ID: ${o.id} | Total: $${o.total} | Status: ${o.status} | Customer: ${o.customer}`
+                    ).join('<br>')}
+                `;
+                
+                document.getElementById('shippingActionsResults').appendChild(resultDiv);
+            } else {
+                displayResult('shippingActionsResults', result);
+            }
         }
 
         async function testWithAuth() {

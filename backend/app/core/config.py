@@ -89,6 +89,14 @@ class Settings(BaseSettings):
     APP_NAME: str = "M-Vintage"
     APP_URL: str = "https://m-vintage.web.app"
 
+    # Shipping Quotes API Configuration
+    SHIPPING_API_URL: str = "https://apilogistica-production.up.railway.app/api/v1"
+    SHIPPING_API_TOKEN: str = ""
+    SHIPPING_ORIGIN_ADDRESS: str = "Av. Constitución 405"
+    SHIPPING_ORIGIN_POSTAL_CODE: str = "1000"
+    SHIPPING_ORIGIN_CITY: str = "CABA"
+    SHIPPING_ORIGIN_COUNTRY: str = "AR"
+
     class Config:
         # (doc) Configuración de pydantic BaseSettings.
         # Permite que BaseSettings también intente leer el archivo específico

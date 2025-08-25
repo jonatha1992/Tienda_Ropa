@@ -1,5 +1,5 @@
 import { productsApi } from '../config/api';
-import type { StockCheckItem, StockCheckResponse } from '@/types/stock';
+import type { StockCheckItem, StockCheckResponse } from '../types/stock';
 
 export const stockService = {
   /**

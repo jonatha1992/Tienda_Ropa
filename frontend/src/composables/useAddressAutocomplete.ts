@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+﻿import { ref, reactive } from 'vue'
 
 export interface AddressSuggestion {
   place_id: number
@@ -35,7 +35,7 @@ export function useAddressAutocomplete() {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  // Rate limiting - máximo 1 consulta por segundo según términos de Nominatim
+  // Rate limiting - mÃ¡ximo 1 consulta por segundo segÃºn tÃ©rminos de Nominatim
   let lastRequestTime = 0
   const MIN_REQUEST_INTERVAL = 1000
 
@@ -96,7 +96,7 @@ export function useAddressAutocomplete() {
   const parseAddress = (suggestion: AddressSuggestion): ParsedAddress => {
     const { address } = suggestion
     
-    // Construir dirección completa
+    // Construir direcciÃ³n completa
     let street = ''
     if (address.road) {
       street = address.road
@@ -114,7 +114,7 @@ export function useAddressAutocomplete() {
     // Determinar provincia/estado
     let province = address.state || address.province || ''
 
-    // Determinar país
+    // Determinar paÃ­s
     let country = address.country_code?.toUpperCase() || 'AR'
 
     return {
@@ -142,7 +142,7 @@ export function useAddressAutocomplete() {
   }
 }
 
-// Función auxiliar para readonly
+// FunciÃ³n auxiliar para readonly
 function readonly<T>(ref: any) {
   return ref
 }

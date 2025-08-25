@@ -1,4 +1,4 @@
-import { ref, readonly } from 'vue'
+﻿import { ref, readonly } from 'vue'
 
 // Estado global de la barra de progreso
 const progress = ref(0)
@@ -17,13 +17,13 @@ export function useProgressBar() {
     progress.value = 0
     isVisible.value = true
     
-    // Progresión realista simulada
-    // Avance rápido inicial (simula DNS lookup, conexión)
+    // ProgresiÃ³n realista simulada
+    // Avance rÃ¡pido inicial (simula DNS lookup, conexiÃ³n)
     setTimeout(() => progress.value = 10, 50)
     setTimeout(() => progress.value = 25, 100)
     setTimeout(() => progress.value = 40, 200)
     
-    // Avance más lento (simula descarga de recursos)
+    // Avance mÃ¡s lento (simula descarga de recursos)
     setTimeout(() => progress.value = 60, 400)
     setTimeout(() => progress.value = 75, 700)
     setTimeout(() => progress.value = 85, 1000)
@@ -36,13 +36,13 @@ export function useProgressBar() {
     if (progressTimeout) clearTimeout(progressTimeout)
     if (hideTimeout) clearTimeout(hideTimeout)
     
-    // Completar rápidamente
+    // Completar rÃ¡pidamente
     progress.value = 100
     
-    // Auto-hide después de mostrar completión
+    // Auto-hide despuÃ©s de mostrar completiÃ³n
     hideTimeout = setTimeout(() => {
       isVisible.value = false
-      // Reset después de hide para próxima vez
+      // Reset despuÃ©s de hide para prÃ³xima vez
       setTimeout(() => progress.value = 0, 300)
     }, 200)
   }

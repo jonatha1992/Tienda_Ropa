@@ -19,9 +19,10 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "~/*": ["./src/*"]
     },
-    "types": ["vite/client", "node"]
+    "types": ["node"]
   },
   "include": [
     "src/**/*.ts",
@@ -31,9 +32,6 @@
     "src/env.d.ts"
   ],
   "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  // No se recomienda usar references con noEmit: true en proyectos referenciados
+  // Se eliminó la referencia a tsconfig.node.json para evitar conflictos
 }

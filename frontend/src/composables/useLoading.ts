@@ -1,4 +1,4 @@
-import { ref, readonly, computed } from 'vue';
+﻿import { ref, readonly, computed } from 'vue';
 import { debounce } from '../utils/debounce';
 
 // Estado global del loading
@@ -35,11 +35,11 @@ export function useLoading() {
   };
   const isRouteLoading = computed(() => routeLoading.value);
 
-  // NOTA: showSmartLoading ya no se usa para navegación de rutas,
-  // solo para operaciones específicas como agregar al carrito, etc.
-  // La navegación de rutas ahora usa ProgressBar (globalProgressBar).
+  // NOTA: showSmartLoading ya no se usa para navegaciÃ³n de rutas,
+  // solo para operaciones especÃ­ficas como agregar al carrito, etc.
+  // La navegaciÃ³n de rutas ahora usa ProgressBar (globalProgressBar).
   
-  // Loading inteligente - solo muestra loading si la operación tarda más del umbral
+  // Loading inteligente - solo muestra loading si la operaciÃ³n tarda mÃ¡s del umbral
   const showSmartLoading = (
     promise: Promise<any>, 
     message: string = 'Cargando...', 
@@ -48,25 +48,25 @@ export function useLoading() {
     let timeoutId: NodeJS.Timeout | null = null;
     let loadingShown = false;
 
-    // Mostrar loading solo si tarda más del umbral
+    // Mostrar loading solo si tarda mÃ¡s del umbral
     timeoutId = setTimeout(() => {
       showLoading(message);
       loadingShown = true;
     }, threshold);
 
     return promise.finally(() => {
-      // Limpiar timeout si la operación terminó rápido
+      // Limpiar timeout si la operaciÃ³n terminÃ³ rÃ¡pido
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      // Ocultar loading solo si se mostró
+      // Ocultar loading solo si se mostrÃ³
       if (loadingShown) {
         hideLoading();
       }
     });
   };
 
-  // Loading debounced para evitar flicker en operaciones rápidas consecutivas
+  // Loading debounced para evitar flicker en operaciones rÃ¡pidas consecutivas
   const debouncedShowLoading = debounce((message: string, submessage?: string) => {
     showLoading(message, submessage);
   }, 100);

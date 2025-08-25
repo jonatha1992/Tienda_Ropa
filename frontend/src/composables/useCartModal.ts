@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+﻿import { ref, onMounted, onUnmounted } from 'vue'
 
 const isCartModalOpen = ref(false)
 
