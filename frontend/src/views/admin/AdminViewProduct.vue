@@ -5,8 +5,8 @@
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center justify-between py-6">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">GestiÃ³n de Productos</h1>
-            <p class="mt-1 text-sm text-gray-500">Administra el catÃ¡logo de productos, variantes y existencias</p>
+            <h1 class="text-3xl font-bold text-gray-900">Gestión de Productos</h1>
+            <p class="mt-1 text-sm text-gray-500">Administra el catálogo de productos, variantes y existencias</p>
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@
         <form @submit.prevent="confirmSave" class="p-8 bg-white border-2 border-gray-200 shadow-lg rounded-xl">
           <h2 class="mb-6 text-2xl font-bold text-gray-800">{{ editing ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
 
-          <!-- Checkbox para producto Ãºnico -->
+          <!-- Checkbox para producto único -->
           <div class="mb-6">
             <label class="flex items-center">
               <input 
@@ -64,12 +64,12 @@
                 class="mr-2 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
               >
               <span class="text-sm font-semibold text-gray-700">
-                Producto Ãºnico (solo una combinaciÃ³n de atributos)
+                Producto único (solo una combinación de atributos)
               </span>
             </label>
             <p class="mt-1 text-xs text-gray-500">
-              Si estÃ¡ marcado, el producto tendrÃ¡ solo una combinaciÃ³n de color/talla. 
-              Si no, podrÃ¡s agregar mÃºltiples variantes.
+              Si está marcado, el producto tendrá solo una combinación de color/talla. 
+              Si no, podrás agregar múltiples variantes.
             </p>
           </div>
 
@@ -102,7 +102,7 @@
             </div>
           </div>
 
-          <!-- SecciÃ³n de descuento -->
+          <!-- Sección de descuento -->
           <div class="mt-6">
             <div class="flex items-center mb-4">
               <input 
@@ -153,20 +153,20 @@
             </div>
           </div>
 
-          <!-- SecciÃ³n de atributos de producto en tres columnas -->
+          <!-- Sección de atributos de producto en tres columnas -->
           <div class="mt-6">
             <h3 class="mb-4 text-lg font-semibold text-gray-800">Atributos del Producto</h3>
             <div class="grid items-start grid-cols-1 gap-6 p-6 border-2 border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 md:grid-cols-3">
               <div>
-                <label for="genero" class="block mb-2 text-sm font-semibold text-gray-700">GÃ©nero</label>
+                <label for="genero" class="block mb-2 text-sm font-semibold text-gray-700">Género</label>
                 <Combobox v-model="product.genero">
                   <div class="relative mt-1">
                     <div class="relative w-full overflow-hidden text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <ComboboxInput
                         class="w-full py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 transition-all duration-200 bg-white border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                        :displayValue="(genero: any) => genero ? genero.charAt(0).toUpperCase() + genero.slice(1) : 'Seleccione el gÃ©nero'"
+                        :displayValue="(genero: any) => genero ? genero.charAt(0).toUpperCase() + genero.slice(1) : 'Seleccione el género'"
                         @change="product.genero = $event.target.value"
-                        placeholder="GÃ©nero del producto"
+                        placeholder="Género del producto"
                       />
                       <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
@@ -253,17 +253,17 @@
                 </Combobox>
               </div>
               <div>
-                <label for="categoria" class="block mb-2 text-sm font-semibold text-gray-700">CategorÃ­a</label>
+                <label for="categoria" class="block mb-2 text-sm font-semibold text-gray-700">Categoría</label>
                 <Combobox v-model="product.categoria">
                   <div class="relative mt-1">
                     <div class="relative w-full overflow-hidden text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <ComboboxInput
                         ref="uniqueCategoryInput"
                         class="w-full py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 transition-all duration-200 bg-white border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                        :displayValue="(categoria: any) => categoria && categoria !== 'Seleccione la categorÃ­a' ? categoria : ''"
+                        :displayValue="(categoria: any) => categoria && categoria !== 'Seleccione la categoría' ? categoria : ''"
                         @change="updateCategorySearch($event.target.value)"
                         @focus="clearCategorySearch($event.target)"
-                        placeholder="Buscar categorÃ­a..."
+                        placeholder="Buscar categoría..."
                       />
                       <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
@@ -305,18 +305,18 @@
               </div>
             </div>
             <div class="mt-6">
-              <label for="description" class="block mb-2 text-sm font-semibold text-gray-700">DescripciÃ³n</label>
+              <label for="description" class="block mb-2 text-sm font-semibold text-gray-700">Descripción</label>
               <textarea 
                 v-model="product.description" 
                 rows="4"
-                placeholder="Describe las caracterÃ­sticas del producto..."
+                placeholder="Describe las características del producto..."
                 class="w-full px-4 py-3 mt-1 text-sm leading-5 text-gray-900 transition-all duration-200 bg-white border-2 border-gray-200 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               ></textarea>
             </div>
           </div>
 
           <div class="mt-6">
-            <label class="block text-sm font-medium text-gray-700">ImÃ¡genes</label>
+            <label class="block text-sm font-medium text-gray-700">Imágenes</label>
             <input type="file" @change="handleFileSelect" multiple
               class="block w-full mt-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
             <div v-if="imagePreviews.length" class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-4">
@@ -326,7 +326,7 @@
             </div>
           </div>
 
-          <!-- SecciÃ³n de atributos Ãºnicos -->
+          <!-- Sección de atributos únicos -->
           <div v-if="product.is_unique" class="mt-6">
             <h3 class="text-lg font-semibold text-gray-800">Atributos del Producto Ãšnico</h3>
             <div class="grid items-start grid-cols-1 gap-6 p-6 border-2 border-blue-200 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 md:grid-cols-3">
@@ -364,7 +364,7 @@
                           ]"
                         >
                           <div class="flex items-center">
-                            <!-- CÃ­rculo de color -->
+                            <!-- Círculo de color -->
                             <div 
                               class="flex-shrink-0 w-4 h-4 mr-3 border border-gray-300 rounded-full"
                               :style="{ backgroundColor: color.hex_code }"
@@ -464,7 +464,7 @@
             </div>
           </div>
 
-          <!-- SecciÃ³n de variantes mÃºltiples -->
+          <!-- Sección de variantes múltiples -->
           <div v-else class="mt-6">
             <h3 class="text-lg font-semibold text-gray-800">Variantes</h3>
             <div v-for="(variant, index) in product.variants" :key="index"
@@ -503,7 +503,7 @@
                           ]"
                         >
                           <div class="flex items-center">
-                            <!-- CÃ­rculo de color -->
+                            <!-- Círculo de color -->
                             <div 
                               class="flex-shrink-0 w-4 h-4 mr-3 border border-gray-300 rounded-full"
                               :style="{ backgroundColor: color.hex_code }"
@@ -919,7 +919,7 @@ const clearColorSearch = (inputElement?: HTMLInputElement) => {
   colorSearchQuery.value = '';
   if (inputElement) {
     inputElement.value = '';
-    // Limpiar tambiÃ©n el modelo si no hay valor seleccionado vÃ¡lido
+    // Limpiar también el modelo si no hay valor seleccionado válido
     if (!product.value.color || product.value.color === 'Seleccione el color') {
       product.value.color = null;
     }
@@ -930,7 +930,7 @@ const clearSizeSearch = (inputElement?: HTMLInputElement) => {
   sizeSearchQuery.value = '';
   if (inputElement) {
     inputElement.value = '';
-    // Limpiar tambiÃ©n el modelo si no hay valor seleccionado vÃ¡lido
+    // Limpiar también el modelo si no hay valor seleccionado válido
     if (!product.value.talle || product.value.talle === 'Seleccione el talle') {
       product.value.talle = null;
     }
@@ -941,8 +941,8 @@ const clearCategorySearch = (inputElement?: HTMLInputElement) => {
   categorySearchQuery.value = '';
   if (inputElement) {
     inputElement.value = '';
-    // Limpiar tambiÃ©n el modelo si no hay valor seleccionado vÃ¡lido
-    if (!product.value.categoria || product.value.categoria === 'Seleccione la categorÃ­a') {
+    // Limpiar también el modelo si no hay valor seleccionado válido
+    if (!product.value.categoria || product.value.categoria === 'Seleccione la categoría') {
       product.value.categoria = null;
     }
   }
@@ -952,7 +952,7 @@ const clearVariantColorSearch = (inputElement: HTMLInputElement, variantIndex: n
   colorSearchQuery.value = '';
   if (inputElement) {
     inputElement.value = '';
-    // Limpiar tambiÃ©n el modelo de la variante si no hay valor seleccionado vÃ¡lido
+    // Limpiar también el modelo de la variante si no hay valor seleccionado válido
     if (product.value.variants[variantIndex] && 
         (!product.value.variants[variantIndex].color || 
          product.value.variants[variantIndex].color === 'Seleccione el color')) {
@@ -965,7 +965,7 @@ const clearVariantSizeSearch = (inputElement: HTMLInputElement, variantIndex: nu
   sizeSearchQuery.value = '';
   if (inputElement) {
     inputElement.value = '';
-    // Limpiar tambiÃ©n el modelo de la variante si no hay valor seleccionado vÃ¡lido
+    // Limpiar también el modelo de la variante si no hay valor seleccionado válido
     if (product.value.variants[variantIndex] && 
         (!product.value.variants[variantIndex].talle || 
          product.value.variants[variantIndex].talle === 'Seleccione el talle')) {
@@ -979,7 +979,7 @@ const previewProduct = computed((): GlobalProduct => {
   return {
     id: 1, // ID temporal para la vista previa
     name: product.value.name || 'Nombre del producto',
-    description: product.value.description || 'DescripciÃ³n del producto',
+    description: product.value.description || 'Descripción del producto',
     price: product.value.price || 0,
     genero: product.value.genero,
     estado: product.value.estado,
@@ -1016,14 +1016,14 @@ async function loadMasterData() {
     console.log('ðŸ“‹ Cargando datos maestros...');
     console.log('ðŸ”— URL base API:', config.backendUrl);
     
-    // Cargar colores, categorÃ­as y talles usando la nueva API
+    // Cargar colores, categorías y talles usando la nueva API
     console.log('ðŸŒˆ Cargando colores...');
     const colors = await masterDataApi.getColors();
     console.log('ðŸŒˆ Colores recibidos:', colors);
     
-    console.log('ðŸ“‚ Cargando categorÃ­as...');
+    console.log('ðŸ“‚ Cargando categorías...');
     const categories = await masterDataApi.getCategories();
-    console.log('ðŸ“‚ CategorÃ­as recibidas:', categories);
+    console.log('ðŸ“‚ Categorías recibidas:', categories);
     
     console.log('ðŸ“ Cargando talles...');
     const sizes = await masterDataApi.getSizes();
@@ -1048,23 +1048,23 @@ async function loadMasterData() {
     
   } catch (error) {
     console.error('âŒ Error cargando datos maestros:', error);
-    toast.error('Error cargando datos de colores, categorÃ­as y talles');
+    toast.error('Error cargando datos de colores, categorías y talles');
   }
 }
 
-// --- LÃ³gica de la API ---
+// --- Lógica de la API ---
 async function fetchProducts() {
   if (import.meta.env.VITEST) return;
   console.log('ðŸ”„ Obteniendo productos...');
 
   if (!authStore.token) {
-    console.warn('âš ï¸ No hay token de autenticaciÃ³n');
+    console.warn('âš ï¸ No hay token de autenticación');
     return;
   }
 
-  // Debug: verificar estado de autenticaciÃ³n
+  // Debug: verificar estado de autenticación
   try {
-    console.log('ðŸ” Verificando estado de autenticaciÃ³n...');
+    console.log('ðŸ” Verificando estado de autenticación...');
     const debugResponse = await apiClient.get('/users/debug');
     console.log('ðŸ” Debug info:', debugResponse.data);
     
@@ -1076,7 +1076,7 @@ async function fetchProducts() {
       return;
     }
   } catch (debugError) {
-    console.error('âŒ Error verificando autenticaciÃ³n:', debugError);
+    console.error('âŒ Error verificando autenticación:', debugError);
   }
 
   try {
@@ -1105,7 +1105,7 @@ async function saveProduct() {
   );
 
   if (!authStore.token) {
-    toast.error('No estÃ¡s autenticado. Por favor inicia sesiÃ³n.');
+    toast.error('No estás autenticado. Por favor inicia sesiÃ³n.');
     hideLoading();
     return;
   }
@@ -1126,7 +1126,7 @@ async function saveProduct() {
     }
   } catch (debugError) {
     console.error('âŒ Error verificando permisos:', debugError);
-    toast.error('Error verificando permisos. Verifica tu autenticaciÃ³n.');
+    toast.error('Error verificando permisos. Verifica tu autenticación.');
     hideLoading();
     return;
   }
@@ -1134,12 +1134,12 @@ async function saveProduct() {
   // Validar datos del producto
   if (product.value.is_unique) {
     if (!product.value.color && !product.value.talle) {
-      toast.error('Los productos Ãºnicos deben tener al menos color o talla especificado');
+      toast.error('Los productos únicos deben tener al menos color o talla especificado');
       hideLoading();
       return;
     }
     if (product.value.stock === null || product.value.stock === undefined || product.value.stock < 0) {
-      toast.error('Los productos Ãºnicos deben tener stock especificado');
+      toast.error('Los productos únicos deben tener stock especificado');
       hideLoading();
       return;
     }
@@ -1149,10 +1149,10 @@ async function saveProduct() {
       hideLoading();
       return;
     }
-    // Validar que todas las variantes tengan datos vÃ¡lidos
+    // Validar que todas las variantes tengan datos válidos
     for (const variant of product.value.variants) {
       if (variant.stock < 0) {
-        toast.error('Todas las variantes deben tener stock vÃ¡lido');
+        toast.error('Todas las variantes deben tener stock válido');
         hideLoading();
         return;
       }
@@ -1174,7 +1174,7 @@ async function saveProduct() {
       console.log('ðŸ“¸ Subiendo imÃ¡genes a Firebase Storage...');
       const imageUrls = await uploadImages();
       product.value.images = imageUrls;
-      console.log('âœ… ImÃ¡genes subidas:', imageUrls);
+      console.log('âœ… Imágenes subidas:', imageUrls);
     }
 
     const method = editing.value ? 'PUT' : 'POST';
@@ -1216,7 +1216,7 @@ async function deleteProduct(id?: number) {
   if (!id) return;
 
   if (!authStore.token) {
-    toast.error('âŒ No estÃ¡s autenticado. Por favor inicia sesiÃ³n.');
+    toast.error('âŒ No estás autenticado. Por favor inicia sesiÃ³n.');
     return;
   }
 
@@ -1235,7 +1235,7 @@ async function deleteProduct(id?: number) {
     const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
     toast.error(`âŒ ${errorMessage}`);
   }
-}// --- LÃ³gica de ImÃ¡genes ---
+}// --- Lógica de Imágenes ---
 function handleFileSelect(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files) {
@@ -1312,7 +1312,7 @@ async function uploadImages(): Promise<string[]> {
   }
 }
 
-// --- LÃ³gica del Formulario ---
+// --- Lógica del Formulario ---
 function editProduct(p: Product) {
   editing.value = true;
   product.value = {
@@ -1349,7 +1349,7 @@ function removeVariant(index: number) {
 
 function onUniqueProductChange() {
   if (product.value.is_unique) {
-    // Si cambia a Ãºnico, limpiar variantes y mover la primera variante (si existe) a los campos Ãºnicos
+    // Si cambia a único, limpiar variantes y mover la primera variante (si existe) a los campos únicos
     if (product.value.variants.length > 0) {
       const firstVariant = product.value.variants[0];
       product.value.color = firstVariant.color;
@@ -1361,7 +1361,7 @@ function onUniqueProductChange() {
     }
     product.value.variants = [];
   } else {
-    // Si cambia a variantes, mover los campos Ãºnicos a una nueva variante
+    // Si cambia a variantes, mover los campos únicos a una nueva variante
     if (product.value.color || product.value.talle || product.value.stock) {
       product.value.variants = [{
         color: product.value.color || null,
@@ -1369,7 +1369,7 @@ function onUniqueProductChange() {
         stock: product.value.stock || 1
       }];
     } else {
-      // Si no hay datos Ãºnicos, crear una variante vacÃ­a con stock 1
+      // Si no hay datos únicos, crear una variante vacía con stock 1
       product.value.variants = [{ color: '', talle: '', stock: 1 }];
     }
     product.value.color = null;
@@ -1408,7 +1408,7 @@ function resetForm() {
   imagePreviews.value = [];
 }
 
-// --- LÃ³gica de Descuentos ---
+// --- Lógica de Descuentos ---
 function onDiscountChange() {
   if (!product.value.has_discount) {
     product.value.discount_percentage = null;
@@ -1430,17 +1430,17 @@ function getDiscountAmount(): number {
   return 0;
 }
 
-// --- LÃ³gica del Modal ---
+// --- Lógica del Modal ---
 function confirmSave() {
   modalTitle.value = editing.value ? 'Confirmar ActualizaciÃ³n' : 'Confirmar CreaciÃ³n';
-  modalMessage.value = `Â¿EstÃ¡s seguro de que deseas ${editing.value ? 'actualizar' : 'guardar'} este producto?`;
+  modalMessage.value = `Â¿Estás seguro de que deseas ${editing.value ? 'actualizar' : 'guardar'} este producto?`;
   confirmAction.value = saveProduct;
   showModal.value = true;
 }
 
 function confirmDelete(id: number) {
   modalTitle.value = 'Confirmar EliminaciÃ³n';
-  modalMessage.value = 'Â¿EstÃ¡s seguro de que deseas eliminar este producto?';
+  modalMessage.value = 'Â¿Estás seguro de que deseas eliminar este producto?';
   confirmAction.value = () => deleteProduct(id);
   showModal.value = true;
 }

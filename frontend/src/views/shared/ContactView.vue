@@ -33,7 +33,7 @@
 
           <!-- Formulario de contacto -->
           <div>
-            <h2 class="mb-4 text-xl font-semibold text-gray-800 font-heading">EnvÃ­anos un mensaje</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800 font-heading">Envíanos un mensaje</h2>
             <form class="space-y-4">
               <div>
                 <label for="name" class="block mb-1 text-sm font-medium font-body text-body-text">Nombre</label>

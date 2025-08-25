@@ -2,18 +2,18 @@
   <div class="min-h-screen bg-white py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-light tracking-wide text-gray-900 mb-4">TÃ©rminos y Condiciones</h1>
-        <p class="text-lg text-gray-600">Ãšltima actualizaciÃ³n: {{ lastUpdated }}</p>
+        <h1 class="text-4xl font-light tracking-wide text-gray-900 mb-4">Términos y Condiciones</h1>
+        <p class="text-lg text-gray-600">Última actualización: {{ lastUpdated }}</p>
       </div>
 
       <div class="prose prose-lg max-w-none">
         <div class="space-y-8">
-          <!-- 1. AceptaciÃ³n de tÃ©rminos -->
+          <!-- 1. Aceptación de tÃ©rminos -->
           <section>
-            <h2 class="text-2xl font-light text-gray-900 mb-4">1. AceptaciÃ³n de los TÃ©rminos</h2>
+            <h2 class="text-2xl font-light text-gray-900 mb-4">1. Aceptación de los TÃ©rminos</h2>
             <p class="text-gray-700 leading-relaxed mb-4">
               Al acceder y utilizar el sitio web de M-VINTAGE (el "Sitio"), usted acepta estar sujeto a estos 
-              TÃ©rminos y Condiciones de uso. Si no estÃ¡ de acuerdo con alguna parte de estos tÃ©rminos, 
+              Términos y Condiciones de uso. Si no estÃ¡ de acuerdo con alguna parte de estos tÃ©rminos, 
               no debe utilizar nuestro sitio web.
             </p>
             <p class="text-gray-700 leading-relaxed">
@@ -180,7 +180,7 @@
             <h2 class="text-2xl font-light text-gray-900 mb-4">13. InformaciÃ³n de Contacto</h2>
             <div class="bg-gray-50 p-6 rounded-lg">
               <p class="text-gray-700 mb-4">
-                Si tiene preguntas sobre estos TÃ©rminos y Condiciones, puede contactarnos:
+                Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos:
               </p>
               <div class="space-y-2 text-gray-700">
                 <p><strong>Email:</strong> 

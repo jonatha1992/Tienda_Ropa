@@ -3,9 +3,9 @@
     <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 font-heading">GestiÃ³n de EnvÃ­os</h1>
+        <h1 class="text-3xl font-bold text-gray-900 font-heading">Gestión de Envíos</h1>
         <p class="mt-2 text-sm font-body text-gray-600">
-          Administra pedidos, asigna nÃºmeros de seguimiento y controla el estado de los envÃ­os
+          Administra pedidos, asigna números de seguimiento y controla el estado de los envíos
         </p>
       </div>
 
@@ -45,7 +45,7 @@
               </div>
               <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="text-sm font-medium truncate font-body text-gray-600">Pendientes de EnvÃ­o</dt>
+                  <dt class="text-sm font-medium truncate font-body text-gray-600">Pendientes de Envío</dt>
                   <dd class="text-lg font-medium font-body text-gray-900">{{ statistics.pending_shipment }}</dd>
                 </dl>
               </div>
@@ -81,7 +81,7 @@
               </div>
               <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="text-sm font-medium truncate font-body text-gray-600">Tasa de EnvÃ­o</dt>
+                  <dt class="text-sm font-medium truncate font-body text-gray-600">Tasa de Envío</dt>
                   <dd class="text-lg font-medium font-body text-gray-900">{{ statistics.shipping_rate_percent }}%</dd>
                 </dl>
               </div>
@@ -116,7 +116,7 @@
             <select v-model="statusFilter" @change="loadOrders" 
               class="rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
               <option value="">Todos</option>
-              <option value="pending_shipment">Pendientes de EnvÃ­o</option>
+              <option value="pending_shipment">Pendientes de Envío</option>
               <option value="with_tracking">Con Tracking</option>
               <option value="shipped">Enviados</option>
             </select>
@@ -172,10 +172,10 @@
                   Total
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  MÃ©todo de Entrega
+                  Método de Entrega
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Estado de EnvÃ­o
+                  Estado de Envío
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Seguimiento
@@ -338,11 +338,11 @@
                   </div>
                   <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                      Asignar InformaciÃ³n de EnvÃ­o
+                      Asignar Información de Envío
                     </h3>
                     <div class="mt-4 space-y-4">
                       <div>
-                        <label class="block text-sm font-medium text-gray-700">Proveedor de EnvÃ­o</label>
+                        <label class="block text-sm font-medium text-gray-700">Proveedor de Envío</label>
                         <select v-model="trackingForm.shipping_provider" required
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
                           <option value="">Seleccionar proveedor</option>
@@ -353,7 +353,7 @@
                       </div>
                       
                       <div>
-                        <label class="block text-sm font-medium text-gray-700">NÃºmero de Seguimiento</label>
+                        <label class="block text-sm font-medium text-gray-700">Número de Seguimiento</label>
                         <input type="text" v-model="trackingForm.tracking_number" required
                           :placeholder="getTrackingPlaceholder(trackingForm.shipping_provider)"
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
@@ -370,7 +370,7 @@
                       </div>
                       
                       <div>
-                        <label class="block text-sm font-medium text-gray-700">Notas del EnvÃ­o (opcional)</label>
+                        <label class="block text-sm font-medium text-gray-700">Notas del Envío (opcional)</label>
                         <textarea v-model="trackingForm.delivery_notes" rows="3"
                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         </textarea>
@@ -520,7 +520,7 @@ const getDeliveryMethodText = (method: string | null | undefined): string => {
 };
 
 const getTrackingPlaceholder = (providerCode: string | undefined): string => {
-  return providerCode ? `Ej: ${providerCode.toUpperCase()}1234567890` : 'NÃºmero de seguimiento';
+  return providerCode ? `Ej: ${providerCode.toUpperCase()}1234567890` : 'Número de seguimiento';
 };
 
 const getTrackingHint = (providerCode: string | undefined): string => {
@@ -635,19 +635,7 @@ const bulkMarkShipped = async () => {
   if (selectedOrders.value.length === 0) return;
   
   try {
-    const response = await fetch('/api/orders/bulk-shipped', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.token}`
-      },
-      body: JSON.stringify({ order_ids: selectedOrders.value })
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al marcar los pedidos como enviados');
-    }
-
+    await ordersApi.bulkMarkAsShipped(selectedOrders.value);
     await loadOrders();
     selectedOrders.value = [];
     toast.success('Pedidos marcados como enviados correctamente');
@@ -696,21 +684,7 @@ const markAsShipped = async (order: Order | number) => {
     payment_method: orderData.payment_method || 'unknown'
   };
   try {
-    const response = await fetch(`/api/orders/${orderId}/shipped`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.token}`
-      },
-      body: JSON.stringify({
-        shipped_at: new Date().toISOString()
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al marcar el pedido como enviado');
-    }
-
+    await ordersApi.markOrderAsShipped(orderId);
     await loadOrders();
     toast.success('Pedido marcado como enviado');
   } catch (error) {
@@ -775,25 +749,14 @@ const saveTrackingInfo = async () => {
   
   try {
     trackingLoading.value = true;
-    const response = await fetch(`/api/orders/${selectedOrder.value.order_id}/tracking`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.token}`
-      },
-      body: JSON.stringify({
-        tracking_number: trackingNumber.value,
-        shipping_provider: selectedProvider.value
-      })
+    await ordersApi.updateOrderShipping(selectedOrder.value.order_id, {
+      trackingNumber: trackingNumber.value,
+      shippingProvider: selectedProvider.value
     });
-
-    if (!response.ok) {
-      throw new Error('Error al guardar la informaciÃ³n de seguimiento');
-    }
 
     await loadOrders();
     closeTrackingModal();
-    toast.success('InformaciÃ³n de seguimiento actualizada');
+    toast.success('Información de seguimiento actualizada');
   } catch (error) {
     console.error('Error al guardar la informaciÃ³n de seguimiento:', error);
     toast.error('Error al actualizar el seguimiento');
@@ -806,23 +769,7 @@ const saveTrackingInfo = async () => {
 const loadOrders = async () => {
   try {
     loading.value = true;
-    const response = await fetch('/api/orders', {
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      if (errorText.startsWith('<!DOCTYPE html>')) {
-        throw { isHtmlResponse: true };
-      }
-      throw new Error('Error al cargar las Ã³rdenes');
-    }
-    
-    const data = await response.json();
-    const ordersData = Array.isArray(data) ? data : (data.orders || []);
+    const ordersData = await ordersApi.getOrdersWithCustomerInfo();
     
     // Transform the data to match the Order interface using our utility functions
     orders.value = ordersData.map((order: any): Order => {
@@ -892,17 +839,7 @@ const loadOrders = async () => {
 // Cargar estadÃ­sticas
 const loadStatistics = async () => {
   try {
-    const response = await fetch('/api/orders/statistics', {
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Error al cargar las estadÃ­sticas');
-    }
-    
-    statistics.value = await response.json();
+    statistics.value = await ordersApi.getAdminStats();
   } catch (error) {
     console.error('Error al cargar las estadÃ­sticas:', error);
     toast.error('Error al cargar las estadÃ­sticas');
@@ -912,18 +849,7 @@ const loadStatistics = async () => {
 // Cargar transportistas
 const loadShippingProviders = async () => {
   try {
-    const response = await fetch('/api/shipping-providers', {
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Error al cargar los transportistas');
-    }
-    
-    const data = await response.json();
-    shippingProviders.value = data.providers || [];
+    shippingProviders.value = await ordersApi.getShippingProviders();
   } catch (error) {
     console.error('Error al cargar los transportistas:', error);
     toast.error('Error al cargar los transportistas');
@@ -968,18 +894,7 @@ const handleSaveOrder = async (updatedOrder: Partial<Order>) => {
   };
   if (!updatedOrder?.order_id) return;
   try {
-    const response = await fetch(`/api/orders/${orderToSave.order_id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.token}`
-      },
-      body: JSON.stringify(orderToSave)
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al actualizar el pedido');
-    }
+    await ordersApi.updateOrder(orderToSave.order_id, orderToSave);
 
     // Actualizar la lista de pedidos
     await loadOrders();
@@ -1017,7 +932,7 @@ const updateOrderShipping = async (orderId: number, shippingData: any) => {
     console.log('ðŸ”„ Updating order shipping:', { orderId, shippingData });
     await ordersApi.updateOrderShipping(orderId, shippingData);
     
-    toast.success('InformaciÃ³n de envÃ­o actualizada exitosamente');
+    toast.success('Información de envÃ­o actualizada exitosamente');
     closeShippingModal();
     await loadOrders();
   } catch (error) {

@@ -22,7 +22,7 @@
                 class="absolute z-10 w-48 mt-2 bg-white border border-gray-100 shadow-lg">
                 <div class="py-1" role="menu" aria-orientation="vertical">
                   <div v-if="categories.length === 0" class="px-4 py-2 text-sm italic text-gray-500 font-body">
-                    No hay stock con categorÃ­as
+                    No hay stock con categorias
                   </div>
                   <router-link v-else v-for="category in categories" :key="category.id"
                     :to="`/shop?category=${category.name.toLowerCase()}`" @click="closeMenus"
@@ -79,7 +79,7 @@
             <div v-if="authStore.isAuthenticated" class="relative">
               <button @click.stop="toggleAccountMenu"
                 class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
-                MI CUENTA â–¼
+                MI CUENTA
               </button>
               <div v-if="isAccountMenuOpen" @click.stop
                 class="absolute z-50 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg"
@@ -95,13 +95,13 @@
                   </router-link>
                   <div class="border-t border-gray-100"></div>
                   <button @click="handleLogout" 
-                    class="block w-full text-left px-4 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
-                    Cerrar SesiÃ³n
+                    class="block w-full px-4 py-2 text-sm font-normal tracking-wide text-left text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
+                    Cerrar Sesion
                   </button>
                 </div>
               </div>
             </div>
-            <router-link v-else to="/auth" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Iniciar SesiÃ³n</router-link>
+            <router-link v-else to="/auth" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Iniciar Sesión</router-link>
           </div>
         </div>
 
@@ -149,7 +149,7 @@
           </div>
         </div>
         <!-- User Menu Mobile -->
-        <div v-if="authStore.isAuthenticated" class="border-t border-gray-200 mt-2 pt-2">
+        <div v-if="authStore.isAuthenticated" class="pt-2 mt-2 border-t border-gray-200">
           <div class="relative">
             <button @click.stop="toggleMobileAccountMenu" class="flex items-center justify-between w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
               MI CUENTA
@@ -167,15 +167,15 @@
                 </router-link>
                 <div class="border-t border-gray-100"></div>
                 <button @click="handleLogout" class="block w-full px-4 py-2 text-sm font-normal tracking-wide text-left text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
-                  Cerrar SesiÃ³n
+                  Cerrar Sesión
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div v-else class="border-t border-gray-200 mt-2 pt-2">
+        <div v-else class="pt-2 mt-2 border-t border-gray-200">
           <router-link to="/auth" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
-            Iniciar SesiÃ³n
+            Iniciar Sesión
           </router-link>
         </div>
         
@@ -189,7 +189,7 @@
               <img 
                 :src="authStore.firebaseUser?.photoURL || '/user-avatar-placeholder.png'" 
                 :alt="authStore.firebaseUser?.displayName || 'Usuario'"
-                class="w-10 h-10 rounded-full object-cover"
+                class="object-cover w-10 h-10 rounded-full"
                 onerror="this.src='/user-avatar-placeholder.png'"
               >
             </div>
@@ -199,8 +199,8 @@
             </div>
           </div>
           <div class="space-y-1">
-            <button v-if="authStore.isAuthenticated" @click="handleLogout" class="block w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Cerrar SesiÃ³n</button>
-            <router-link v-else to="/auth" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Iniciar SesiÃ³n</router-link>
+            <button v-if="authStore.isAuthenticated" @click="handleLogout" class="block w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Cerrar Sesión</button>
+            <router-link v-else to="/auth" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">Iniciar Sesión</router-link>
           </div>
         </div>
       </div>
@@ -267,7 +267,7 @@ const handleLogout = async () => {
     closeMenus();
     router.push('/');
   } catch (error) {
-    console.error('Error al cerrar sesiÃ³n:', error);
+    console.error('Error al cerrar sesión:', error);
   }
 };
 

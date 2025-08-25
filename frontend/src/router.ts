@@ -28,6 +28,7 @@ import VerifyEmailView from './views/auth/VerifyEmailView.vue';
 // @ts-ignore - Vue component import
 import ProfileView from './views/profile/ProfileView.vue';
 import AdminViewProduct from './views/admin/AdminViewProduct.vue';
+import SizeGuideView from './views/shared/SizeGuideView.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -42,6 +43,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/shipping', component: ShippingView },
   { path: '/terms', component: TermsView },
   { path: '/privacy', component: PrivacyView },
+  { path: '/size-guide', component: SizeGuideView },
   // Orders routes
   { path: '/orders', component: OrdersView, meta: { requiresAuth: true } },
   { path: '/orders/:id', component: OrderDetailView, meta: { requiresAuth: true } },

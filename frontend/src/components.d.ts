@@ -37,7 +37,7 @@ declare module '*.scss' {
 // Environment variables
 declare namespace NodeJS {
   interface ProcessEnv {
-    NODE_ENV: 'development' | 'production' | 'test'
+    NODE_ENV: 'dev' | 'production' | 'test'
     VITE_API_BASE_URL: string
     VITE_FIREBASE_API_KEY: string
     VITE_FIREBASE_AUTH_DOMAIN: string
@@ -57,4 +57,4 @@ declare global {
   }
 }
 
-export {}
+export { }
