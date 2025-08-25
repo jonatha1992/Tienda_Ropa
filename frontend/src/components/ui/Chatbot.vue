@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="chatbot-container">
-    <!-- BotÃ³n flotante del chatbot -->
+    <!-- Botón flotante del chatbot -->
     <button
       @click="toggleChat"
       class="fixed z-50 flex items-center justify-center w-16 h-16 text-black transition-all duration-300 bg-white border border-black rounded-full shadow-lg bottom-6 right-6 hover:bg-gray-100"
@@ -33,11 +33,11 @@
         <img src="/imagen-portada.svg" alt="M-VINTAGE" class="w-8 h-8" />
         <div>
           <h3 class="font-heading font-medium">M-VINTAGE Assistant</h3>
-          <p class="font-body text-xs text-body-text">Â¿En quÃ© puedo ayudarte?</p>
+          <p class="font-body text-xs text-body-text">¿En qué puedo ayudarte?</p>
         </div>
       </div>
 
-      <!-- Ãrea de mensajes -->
+      <!-- Área de mensajes -->
       <div 
         ref="messagesContainer"
         class="flex-1 p-4 space-y-3 overflow-y-auto bg-gray-50"
@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <!-- Sugerencias rÃ¡pidas -->
+      <!-- Sugerencias rápidas -->
       <div v-if="showSuggestions" class="p-3 bg-gray-100 border-t border-gray-200">
         <p class="font-body mb-2 text-xs text-body-text">Preguntas frecuentes:</p>
         <div class="flex flex-wrap gap-1">
@@ -141,17 +141,17 @@ const messagesContainer = ref<HTMLElement>();
 const messages = ref<ChatMessage[]>([]);
 
 const quickSuggestions = [
-  'Â¿Horarios de envÃ­o?',
+  '¿Horarios de envío?',
   'Tallas disponibles',
-  'PolÃ­tica de devoluciÃ³n',
-  'MÃ©todos de pago',
+  'Política de devolución',
+  'Métodos de pago',
   'Contacto'
 ];
 
-// NÃºmero de WhatsApp de M-VINTAGE
+// Número de WhatsApp de M-VINTAGE
 const WHATSAPP_NUMBER = '5491139471826';
 
-// FunciÃ³n para crear enlace de WhatsApp
+// Función para crear enlace de WhatsApp
 const createWhatsAppLink = (message: string) => {
   const encodedMessage = encodeURIComponent(message);
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
@@ -159,45 +159,45 @@ const createWhatsAppLink = (message: string) => {
 
 // Respuestas predefinidas del bot que redirigen a WhatsApp
 const botResponses: { [key: string]: { text: string; action?: 'whatsapp'; whatsappMessage?: string } } = {
-  'hola': { text: 'Â¡Hola! Bienvenido a M-VINTAGE. Para una atenciÃ³n personalizada, te conectamos con nuestro equipo via WhatsApp ðŸ“±' },
-  'horarios de envÃ­o': { 
-    text: 'Para consultar horarios de envÃ­o especÃ­ficos, nuestro equipo te ayudarÃ¡ via WhatsApp ðŸ“¦',
+  'hola': { text: '¡Hola! Bienvenido a M-VINTAGE. Para una atención personalizada, te conectamos con nuestro equipo via WhatsApp ðŸ“±' },
+  'horarios de envío': { 
+    text: 'Para consultar horarios de envío específicos, nuestro equipo te ayudará via WhatsApp ðŸ“¦',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre los horarios de envÃ­o.'
+    whatsappMessage: 'Hola! Me gustaría consultar sobre los horarios de envío.'
   },
   'tallas disponibles': { 
-    text: 'Para verificar tallas disponibles de productos especÃ­ficos, consulta con nuestro equipo via WhatsApp ðŸ‘•',
+    text: 'Para verificar tallas disponibles de productos específicos, consulta con nuestro equipo via WhatsApp ðŸ‘•',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre tallas disponibles de productos.'
+    whatsappMessage: 'Hola! Me gustaría consultar sobre tallas disponibles de productos.'
   },
-  'polÃ­tica de devoluciÃ³n': { 
-    text: 'Para informaciÃ³n detallada sobre nuestra polÃ­tica de devoluciones, contacta via WhatsApp ðŸ”„',
+  'política de devolución': { 
+    text: 'Para información detallada sobre nuestra política de devoluciones, contacta via WhatsApp ðŸ”„',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a conocer mÃ¡s sobre la polÃ­tica de devoluciones.'
+    whatsappMessage: 'Hola! Me gustaría conocer más sobre la política de devoluciones.'
   },
-  'mÃ©todos de pago': { 
-    text: 'Para conocer todos nuestros mÃ©todos de pago disponibles, consulta via WhatsApp ðŸ’³',
+  'métodos de pago': { 
+    text: 'Para conocer todos nuestros métodos de pago disponibles, consulta via WhatsApp ðŸ’³',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a conocer los mÃ©todos de pago disponibles.'
+    whatsappMessage: 'Hola! Me gustaría conocer los métodos de pago disponibles.'
   },
   'contacto': { 
-    text: 'Te conectamos directamente con nuestro equipo de atenciÃ³n al cliente via WhatsApp ðŸ“ž',
+    text: 'Te conectamos directamente con nuestro equipo de atención al cliente via WhatsApp ðŸ“ž',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a contactarme con el equipo de M-VINTAGE.'
+    whatsappMessage: 'Hola! Me gustaría contactarme con el equipo de M-VINTAGE.'
   },
   'envios': { 
-    text: 'Para informaciÃ³n sobre envÃ­os y costos segÃºn tu ubicaciÃ³n, consulta via WhatsApp ðŸšš',
+    text: 'Para información sobre envíos y costos según tu ubicación, consulta via WhatsApp ðŸšš',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre envÃ­os y costos.'
+    whatsappMessage: 'Hola! Me gustaría consultar sobre envíos y costos.'
   },
-  'tienda': { text: 'Somos M-VINTAGE, tu tienda de ropa con estilo Ãºnico. Para conocer mÃ¡s sobre nosotros, Â¡contactanos via WhatsApp! ðŸª' },
+  'tienda': { text: 'Somos M-VINTAGE, tu tienda de ropa con estilo único. Para conocer más sobre nosotros, ¡contáctanos via WhatsApp! ðŸª' },
   'productos': { 
-    text: 'Para consultar sobre productos especÃ­ficos y disponibilidad, nuestro equipo te ayudarÃ¡ via WhatsApp ðŸ‘—',
+    text: 'Para consultar sobre productos específicos y disponibilidad, nuestro equipo te ayudará via WhatsApp ðŸ‘—',
     action: 'whatsapp',
-    whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre productos disponibles.'
+    whatsappMessage: 'Hola! Me gustaría consultar sobre productos disponibles.'
   },
   'ayuda': { 
-    text: 'Nuestro equipo estÃ¡ listo para ayudarte con cualquier consulta via WhatsApp ðŸ¤',
+    text: 'Nuestro equipo está listo para ayudarte con cualquier consulta via WhatsApp ðŸ¤',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Necesito ayuda con una consulta sobre M-VINTAGE.'
   }
@@ -209,7 +209,7 @@ const toggleChat = () => {
   if (isChatOpen.value && messages.value.length === 0) {
     // Mensaje de bienvenida
     setTimeout(() => {
-      addBotMessage({ text: 'Â¡Hola! Soy el asistente virtual de M-VINTAGE. Â¿En quÃ© puedo ayudarte hoy?' });
+      addBotMessage({ text: '¡Hola! Soy el asistente virtual de M-VINTAGE. ¿En qué puedo ayudarte hoy?' });
     }, 500);
   }
 };
@@ -222,7 +222,7 @@ const sendMessage = async () => {
   newMessage.value = '';
   showSuggestions.value = false;
 
-  // Simular que el bot estÃ¡ escribiendo
+  // Simular que el bot está escribiendo
   isTyping.value = true;
   
   setTimeout(() => {
@@ -233,13 +233,13 @@ const sendMessage = async () => {
 };
 
 const sendQuickMessage = (suggestion: string) => {
-  // Mapear sugerencias a mensajes de WhatsApp especÃ­ficos
+  // Mapear sugerencias a mensajes de WhatsApp específicos
   const whatsappMessages: { [key: string]: string } = {
-    'Â¿Horarios de envÃ­o?': 'Hola! Me gustarÃ­a consultar sobre los horarios de envÃ­o.',
-    'Tallas disponibles': 'Hola! Me gustarÃ­a consultar sobre tallas disponibles de productos.',
-    'PolÃ­tica de devoluciÃ³n': 'Hola! Me gustarÃ­a conocer mÃ¡s sobre la polÃ­tica de devoluciones.',
-    'MÃ©todos de pago': 'Hola! Me gustarÃ­a conocer los mÃ©todos de pago disponibles.',
-    'Contacto': 'Hola! Me gustarÃ­a contactarme con el equipo de M-VINTAGE.'
+    '¿Horarios de envío?': 'Hola! Me gustaría consultar sobre los horarios de envío.',
+    'Tallas disponibles': 'Hola! Me gustaría consultar sobre tallas disponibles de productos.',
+    'Política de devolución': 'Hola! Me gustaría conocer más sobre la política de devoluciones.',
+    'Métodos de pago': 'Hola! Me gustaría conocer los métodos de pago disponibles.',
+    'Contacto': 'Hola! Me gustaría contactarme con el equipo de M-VINTAGE.'
   };
   
   const whatsappMessage = whatsappMessages[suggestion] || `Hola! Tengo una consulta sobre: ${suggestion}`;
@@ -278,12 +278,12 @@ const getBotResponse = (userMessage: string): { text: string; action?: 'whatsapp
     }
   }
   
-  // Respuestas por categorÃ­as mÃ¡s amplias
+  // Respuestas por categorías más amplias
   if (lowerMessage.includes('precio') || lowerMessage.includes('costo') || lowerMessage.includes('cuanto')) {
     return { 
-      text: 'Para consultar precios especÃ­ficos y ofertas disponibles, nuestro equipo te ayudarÃ¡ via WhatsApp ðŸ’°',
+      text: 'Para consultar precios específicos y ofertas disponibles, nuestro equipo te ayudará via WhatsApp ðŸ’°',
       action: 'whatsapp',
-      whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre precios de productos.'
+      whatsappMessage: 'Hola! Me gustaría consultar sobre precios de productos.'
     };
   }
   
@@ -291,17 +291,17 @@ const getBotResponse = (userMessage: string): { text: string; action?: 'whatsapp
     return { 
       text: 'Para verificar stock en tiempo real, consulta con nuestro equipo via WhatsApp ðŸ“¦',
       action: 'whatsapp',
-      whatsappMessage: 'Hola! Me gustarÃ­a consultar sobre stock de productos.'
+      whatsappMessage: 'Hola! Me gustaría consultar sobre stock de productos.'
     };
   }
   
   if (lowerMessage.includes('gracias')) {
-    return { text: 'Â¡De nada! Si necesitas mÃ¡s ayuda, contactanos via WhatsApp. Â¡Estamos aquÃ­ para ti! ðŸ˜Š' };
+    return { text: 'Â¡De nada! Si necesitas más ayuda, contactanos via WhatsApp. Â¡Estamos aquÃ­ para ti! ðŸ˜Š' };
   }
   
   // Respuesta por defecto
   return { 
-    text: 'Para obtener informaciÃ³n personalizada y especÃ­fica, nuestro equipo te atenderÃ¡ via WhatsApp ðŸ“±',
+    text: 'Para obtener información personalizada y especÃ­fica, nuestro equipo te atenderá via WhatsApp ðŸ“±',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Tengo una consulta sobre M-VINTAGE.'
   };
@@ -326,7 +326,7 @@ const handleTyping = () => {
 };
 
 const openWhatsApp = (message?: string) => {
-  const whatsappMessage = message || 'Hola! Me gustarÃ­a contactarme con el equipo de M-VINTAGE.';
+  const whatsappMessage = message || 'Hola! Me gustaría contactarme con el equipo de M-VINTAGE.';
   const whatsappUrl = createWhatsAppLink(whatsappMessage);
   window.open(whatsappUrl, '_blank');
 };
@@ -350,10 +350,10 @@ onMounted(() => {
 
 <style scoped>
 .chatbot-container {
-  /* Estilos especÃ­ficos del chatbot si son necesarios */
+  /* Estilos específicos del chatbot si son necesarios */
 }
 
-/* AnimaciÃ³n para el botÃ³n flotante */
+/* Animación para el botÃ³n flotante */
 @keyframes bounce {
   0%, 20%, 53%, 80%, 100% {
     transform: translate3d(0, 0, 0);
@@ -369,7 +369,7 @@ onMounted(() => {
   }
 }
 
-/* Scroll personalizado para el Ã¡rea de mensajes */
+/* Scroll personalizado para el área de mensajes */
 .overflow-y-auto::-webkit-scrollbar {
   width: 4px;
 }

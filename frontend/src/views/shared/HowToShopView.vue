@@ -2,7 +2,7 @@
   <div class="min-h-screen py-8 bg-gray-50">
     <div class="max-w-4xl px-4 mx-auto sm:px-6 lg:px-8">
       <div class="p-6 bg-white rounded-lg shadow">
-        <h1 class="mb-6 text-3xl font-bold text-gray-900 font-heading">CÃ³mo Comprar</h1>
+        <h1 class="mb-6 text-3xl font-bold text-gray-900 font-heading">Cómo Comprar</h1>
         
         <div class="space-y-8">
           <!-- Paso 1 -->
@@ -13,9 +13,9 @@
               </div>
             </div>
             <div> 
-              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Navega nuestra colecciÃ³n</h2>
+              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Navega nuestra colección</h2>
               <p class="font-body text-body-text">
-                Explora nuestras categorÃ­as: JACKET, BLAZER, DRESS, JEAN y muchas mÃ¡s. 
+                Explora nuestras categorías: JACKET, BLAZER, DRESS, JEAN y muchas más. 
                 Usa los filtros para encontrar exactamente lo que buscas.
               </p>
             </div>
@@ -31,7 +31,7 @@
             <div>
               <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Selecciona tu talla y color</h2>
               <p class="font-body text-body-text">
-                Revisa nuestras guÃ­as de tallas para encontrar el ajuste perfecto. 
+                Revisa nuestras guías de tallas para encontrar el ajuste perfecto. 
                 Elige entre nuestra variedad de colores disponibles.
               </p>
             </div>
@@ -47,7 +47,7 @@
             <div>
               <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Agrega al carrito</h2>
               <p class="font-body text-body-text">
-                Una vez que hayas seleccionado tus productos, agrÃ©galos al carrito de compras. 
+                Una vez que hayas seleccionado tus productos, agrégalos al carrito de compras. 
                 Puedes seguir comprando o proceder al checkout.
               </p>
             </div>
@@ -61,10 +61,10 @@
               </div>
             </div>
             <div>
-              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Completa tu informaciÃ³n de entrega</h2>
+              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Completa tu información de entrega</h2>
               <p class="font-body text-body-text">
-                Llena todos los datos de contacto y direcciÃ³n de envÃ­o. Una vez completada toda la informaciÃ³n, 
-                aparecerÃ¡ un botÃ³n <strong>"Continuar al pago"</strong> que te llevarÃ¡ a seleccionar tu mÃ©todo de pago preferido.
+                Llena todos los datos de contacto y dirección de envío. Una vez completada toda la información, 
+                aparecerá un botón <strong>"Continuar al pago"</strong> que te llevará a seleccionar tu método de pago preferido.
               </p>
             </div>
           </div>
@@ -77,17 +77,17 @@
               </div>
             </div>
             <div>
-              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Elige tu mÃ©todo de pago y confirma</h2>
+              <h2 class="mb-2 text-xl font-semibold text-gray-800 font-heading">Elige tu método de pago y confirma</h2>
               <p class="font-body text-body-text">
-                Selecciona entre transferencia bancaria, MercadoPago (tarjetas de crÃ©dito y dÃ©bito) 
+                Selecciona entre transferencia bancaria, MercadoPago (tarjetas de crédito y débito) 
                 o efectivo contra entrega. Luego confirma tu pedido para finalizarlo.
               </p>
             </div>
           </div>
 
-          <!-- MÃ©todos de pago -->
+          <!-- Métodos de pago -->
           <div class="p-6 mt-8 rounded-lg bg-gray-50">
-            <h3 class="mb-4 text-lg font-semibold text-gray-800 font-heading">MÃ©todos de Pago Aceptados</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-800 font-heading">Métodos de Pago Aceptados</h3>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div class="flex items-center p-4 bg-white rounded-lg shadow">
                 <div class="p-2 mr-3 bg-blue-100 rounded-full">
@@ -109,7 +109,7 @@
                 </div>
                 <div>
                   <h4 class="font-semibold text-gray-900 font-heading">MercadoPago</h4>
-                  <p class="text-sm text-gray-600 font-body">Tarjetas de crÃ©dito, dÃ©bito y mÃ¡s</p>
+                  <p class="text-sm text-gray-600 font-body">Tarjetas de crédito, débito y más</p>
                 </div>
               </div>
               
@@ -129,7 +129,7 @@
 
           <!-- Contacto -->
           <div class="p-6 rounded-lg bg-indigo-50">
-            <h3 class="mb-2 text-lg font-semibold text-gray-800 font-heading">Â¿Necesitas ayuda?</h3>
+            <h3 class="mb-2 text-lg font-semibold text-gray-800 font-heading">¿Necesitas ayuda?</h3>
             <p class="mb-3 font-body text-body-text">
               Si tienes alguna pregunta sobre el proceso de compra, no dudes en contactarnos.
             </p>
@@ -145,6 +145,6 @@
 </template>
 
 <script setup lang="ts">
-// InformaciÃ³n sobre cÃ³mo comprar
+// Información sobre cómo comprar
 </script>
 
