@@ -16,7 +16,7 @@
             <div class="relative">
               <button @click.stop="toggleShopMenu"
                 class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">
-                SHOP â–¼
+                SHOP
               </button>
               <div v-if="isShopMenuOpen" @click.stop
                 class="absolute z-10 w-48 mt-2 bg-white border border-gray-100 shadow-lg">
@@ -56,7 +56,7 @@
             </div>
             
             <router-link to="/contact" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CONTACTO</router-link>
-            <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÃ“MO COMPRAR</router-link>
+            <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÓMO COMPRAR</router-link>
             <router-link to="/shipping" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÃOS</router-link>
           </div>
 
@@ -96,7 +96,7 @@
                   <div class="border-t border-gray-100"></div>
                   <button @click="handleLogout" 
                     class="block w-full px-4 py-2 text-sm font-normal tracking-wide text-left text-gray-900 uppercase font-body hover:bg-gray-100" role="menuitem">
-                    Cerrar Sesion
+                    Cerrar Sesión
                   </button>
                 </div>
               </div>
@@ -180,7 +180,7 @@
         </div>
         
         <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CONTACTO</router-link>
-        <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÃ“MO COMPRAR</router-link>
+        <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÓMO COMPRAR</router-link>
         <router-link to="/shipping" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÃOS</router-link>
         
         <div class="pt-4 mt-4 border-t border-gray-200">
