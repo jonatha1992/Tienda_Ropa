@@ -18,25 +18,25 @@
         <nav class="flex -mb-px space-x-8">
           <router-link
             to="/admin/products"
-            class="py-4 px-1 border-b-2 font-medium text-sm"
-            active-class="border-blue-500 text-blue-600"
-            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            class="px-1 py-4 text-sm font-medium border-b-2"
+            active-class="text-blue-600 border-blue-500"
+            inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Productos
           </router-link>
           <router-link
             to="/admin/users"
-            class="py-4 px-1 border-b-2 font-medium text-sm"
-            active-class="border-blue-500 text-blue-600"
-            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            class="px-1 py-4 text-sm font-medium border-b-2"
+            active-class="text-blue-600 border-blue-500"
+            inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Usuarios
           </router-link>
           <router-link
             to="/admin/orders"
-            class="py-4 px-1 border-b-2 font-medium text-sm"
-            active-class="border-blue-500 text-blue-600"
-            inactive-class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            class="px-1 py-4 text-sm font-medium border-b-2"
+            active-class="text-blue-600 border-blue-500"
+            inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Pedidos
           </router-link>
@@ -172,7 +172,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="genero in ['unisex', 'masculino', 'femenino']"
                         as="template"
@@ -218,7 +218,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="estado in ['nuevo', 'usado']"
                         as="template"
@@ -269,7 +269,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="category in filteredCategories"
                         as="template"
@@ -328,7 +328,7 @@
 
           <!-- Sección de atributos únicos -->
           <div v-if="product.is_unique" class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-800">Atributos del Producto Ãšnico</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Atributos del Producto Único</h3>
             <div class="grid items-start grid-cols-1 gap-6 p-6 border-2 border-blue-200 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 md:grid-cols-3">
               <div>
                 <label class="block mb-2 text-sm font-semibold text-gray-700">Color</label>
@@ -349,7 +349,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="color in filteredColors"
                         as="template"
@@ -409,7 +409,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="size in filteredSizes"
                         as="template"
@@ -488,7 +488,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="color in filteredColors"
                         as="template"
@@ -548,7 +548,7 @@
                         <ChevronUpDownIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
                       </ComboboxButton>
                     </div>
-                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-gray-50 rounded-md shadow-lg max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
+                    <ComboboxOptions class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base rounded-md shadow-lg bg-gray-50 max-h-60 ring-1 ring-gray-200 focus:outline-none sm:text-sm">
                       <ComboboxOption
                         v-for="size in filteredSizes"
                         as="template"
@@ -1033,21 +1033,21 @@ async function loadMasterData() {
     availableCategories.value = categories;
     availableSizes.value = sizes;
     
-    console.log('âœ… Datos maestros cargados:', {
+    console.log('Datos maestros cargados:', {
       colores: availableColors.value.length,
       categorias: availableCategories.value.length,
       talles: availableSizes.value.length
     });
     
     // Debug: Verificar que los arrays reactivos se actualicen
-    console.log('ðŸ” Arrays reactivos actualizados:', {
+    console.log(' Arrays reactivos actualizados:', {
       availableColors: availableColors.value,
       availableCategories: availableCategories.value,
       availableSizes: availableSizes.value
     });
     
   } catch (error) {
-    console.error('âŒ Error cargando datos maestros:', error);
+    console.error('Error cargando datos maestros:', error);
     toast.error('Error cargando datos de colores, categorías y talles');
   }
 }
@@ -1055,28 +1055,28 @@ async function loadMasterData() {
 // --- Lógica de la API ---
 async function fetchProducts() {
   if (import.meta.env.VITEST) return;
-  console.log('ðŸ”„ Obteniendo productos...');
+  console.log('Obteniendo productos...');
 
   if (!authStore.token) {
-    console.warn('âš ï¸ No hay token de autenticación');
+    console.warn('No hay token de autenticación');
     return;
   }
 
   // Debug: verificar estado de autenticación
   try {
-    console.log('ðŸ” Verificando estado de autenticación...');
+    console.log(' Verificando estado de autenticación...');
     const debugResponse = await apiClient.get('/users/debug');
-    console.log('ðŸ” Debug info:', debugResponse.data);
+    console.log(' Debug info:', debugResponse.data);
     
     const hasPermissions = debugResponse.data.has_admin_role || debugResponse.data.has_manager_role;
-    console.log(`ðŸ” Usuario tiene permisos necesarios: ${hasPermissions}`);
+    console.log(`Usuario tiene permisos necesarios: ${hasPermissions}`);
     
     if (!hasPermissions) {
-      toast.error('âŒ No tienes permisos para gestionar productos. Contacta al administrador.');
+      toast.error('No tienes permisos para gestionar productos. Contacta al administrador.');
       return;
     }
   } catch (debugError) {
-    console.error('âŒ Error verificando autenticación:', debugError);
+    console.error('Error verificando autenticación:', debugError);
   }
 
   try {
@@ -1089,15 +1089,15 @@ async function fetchProducts() {
     if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
     const data = await response.json();
     products.value = data;
-    console.log('âœ… Productos obtenidos:', data);
+    console.log('Productos obtenidos:', data);
   } catch (error) {
-    console.error('âŒ Error al obtener productos:', error);
+    console.error('Error al obtener productos:', error);
     toast.error('Error al cargar productos. Verifica que el backend estÃ© funcionando.');
   }
 }
 
 async function saveProduct() {
-  console.log('ðŸ’¾ Guardando producto...', product.value);
+  console.log(' Guardando producto...', product.value);
   
   showLoading(
     editing.value ? 'Actualizando producto...' : 'Agregando producto...',
@@ -1112,20 +1112,20 @@ async function saveProduct() {
 
   // Debug: verificar permisos antes de guardar
   try {
-    console.log('ðŸ” Verificando permisos antes de guardar...');
+    console.log(' Verificando permisos antes de guardar...');
     const debugResponse = await apiClient.get('/users/debug');
-    console.log('ðŸ” Debug info al guardar:', debugResponse.data);
+    console.log(' Debug info al guardar:', debugResponse.data);
     
     const hasPermissions = debugResponse.data.has_admin_role || debugResponse.data.has_manager_role;
-    console.log(`ðŸ” Usuario tiene permisos para guardar: ${hasPermissions}`);
+    console.log(`Usuario tiene permisos para guardar: ${hasPermissions}`);
     
     if (!hasPermissions) {
-      toast.error('âŒ No tienes permisos para gestionar productos. Tu cuenta necesita rol de Admin o Manager.');
+      toast.error('No tienes permisos para gestionar productos. Tu cuenta necesita rol de Admin o Manager.');
       hideLoading();
       return;
     }
   } catch (debugError) {
-    console.error('âŒ Error verificando permisos:', debugError);
+    console.error('Error verificando permisos:', debugError);
     toast.error('Error verificando permisos. Verifica tu autenticación.');
     hideLoading();
     return;
@@ -1169,20 +1169,20 @@ async function saveProduct() {
   }
 
   try {
-    // Subir imÃ¡genes a Firebase Storage si hay archivos seleccionados
+    // Subir imagenes a Firebase Storage si hay archivos seleccionados
     if (selectedFiles.value.length > 0) {
-      console.log('ðŸ“¸ Subiendo imÃ¡genes a Firebase Storage...');
+      console.log(' Subiendo imagenes a Firebase Storage...');
       const imageUrls = await uploadImages();
       product.value.images = imageUrls;
-      console.log('âœ… Imágenes subidas:', imageUrls);
+      console.log('Imágenes subidas:', imageUrls);
     }
 
     const method = editing.value ? 'PUT' : 'POST';
     const editingProduct = editing.value ? products.value.find(p => p.name === product.value.name) : null;
     const url = editing.value ? `${API_URL}${editingProduct?.id}` : API_URL;
 
-    console.log(`ðŸŒ ${method} request to: ${url}`);
-    console.log('ðŸ“¦ Payload:', product.value);
+    console.log(`${method} request to: ${url}`);
+    console.log(' Payload:', product.value);
 
     const response = await fetch(url, {
       method,
@@ -1199,13 +1199,13 @@ async function saveProduct() {
     }
 
     const savedProduct = await response.json();
-    console.log('âœ… Producto guardado:', savedProduct);
+    console.log('Producto guardado:', savedProduct);
 
     await fetchProducts();
     resetForm();
-    toast.success(`ðŸŽ‰ Producto ${editing.value ? 'actualizado' : 'creado'} exitosamente!`);
+    toast.success(` Producto ${editing.value ? 'actualizado' : 'creado'} exitosamente!`);
   } catch (error) {
-    console.error('âŒ Error al guardar producto:', error);
+    console.error('Error al guardar producto:', error);
     toast.error(`Error al ${editing.value ? 'actualizar' : 'crear'} producto: ${error instanceof Error ? error.message : 'Error desconocido'}`);
   } finally {
     hideLoading();
@@ -1216,7 +1216,7 @@ async function deleteProduct(id?: number) {
   if (!id) return;
 
   if (!authStore.token) {
-    toast.error('âŒ No estás autenticado. Por favor inicia sesiÃ³n.');
+    toast.error('No estás autenticado. Por favor inicia sesiÃ³n.');
     return;
   }
 
@@ -1226,20 +1226,20 @@ async function deleteProduct(id?: number) {
     const response = await apiClient.delete(`/products/${id}`);
 
     if (response.status === 200) {
-      console.log('âœ… Producto eliminado');
+      console.log('Producto eliminado');
       await fetchProducts();
-      toast.success('ðŸŽ‰ Producto eliminado exitosamente!');
+      toast.success(' Producto eliminado exitosamente!');
     }
   } catch (error: any) {
-    console.error('âŒ Error al eliminar producto:', error);
+    console.error('Error al eliminar producto:', error);
     const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
-    toast.error(`âŒ ${errorMessage}`);
+    toast.error(`${errorMessage}`);
   }
 }// --- Lógica de Imágenes ---
 function handleFileSelect(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files) {
-    // Filtrar solo imÃ¡genes soportadas
+    // Filtrar solo imagenes soportadas
     const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const validFiles = Array.from(target.files).filter(file => 
       supportedTypes.includes(file.type)
@@ -1258,10 +1258,10 @@ function handleFileSelect(event: Event) {
 }
 
 async function compressToWebP(file: File): Promise<File> {
-  console.log('ðŸ”„ Comprimiendo imagen a WebP:', file.name);
+  console.log('Comprimiendo imagen a WebP:', file.name);
   
   const options = {
-    maxSizeMB: 1,                    // MÃ¡ximo 1MB
+    maxSizeMB: 1,                    // Maximo 1MB
     useWebWorker: true,              // Usar Web Worker para no bloquear UI
     fileType: 'image/webp',          // Convertir a WebP
     initialQuality: 0.85,            // Calidad inicial 85%
@@ -1270,20 +1270,20 @@ async function compressToWebP(file: File): Promise<File> {
   
   try {
     const compressedFile = await imageCompression(file, options);
-    console.log('âœ… Imagen comprimida:', {
+    console.log('Imagen comprimida:', {
       original: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
       compressed: `${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`,
       reduction: `${(((file.size - compressedFile.size) / file.size) * 100).toFixed(1)}%`
     });
     return compressedFile;
   } catch (error) {
-    console.error('âŒ Error comprimiendo imagen:', error);
+    console.error('Error comprimiendo imagen:', error);
     throw error;
   }
 }
 
 async function uploadImages(): Promise<string[]> {
-  console.log('ðŸ“¤ Subiendo y comprimiendo', selectedFiles.value.length, 'archivos...');
+  console.log(' Subiendo y comprimiendo', selectedFiles.value.length, 'archivos...');
 
   try {
     const uploadPromises = selectedFiles.value.map(async (file, index) => {
@@ -1295,20 +1295,20 @@ async function uploadImages(): Promise<string[]> {
       const fileName = `${Date.now()}_${originalName}.webp`;
       const fileRef = storageRef(storage, `products/${fileName}`);
 
-      console.log(`ðŸ“¸ Subiendo archivo ${index + 1}:`, fileName);
+      console.log(` Subiendo archivo ${index + 1}:`, fileName);
       const snapshot = await uploadBytes(fileRef, compressedFile);
       const downloadURL = await getDownloadURL(snapshot.ref);
-      console.log(`âœ… Archivo ${index + 1} subido:`, downloadURL);
+      console.log(`Archivo ${index + 1} subido:`, downloadURL);
 
       return downloadURL;
     });
 
     const imageUrls = await Promise.all(uploadPromises);
-    console.log('ðŸŽ‰ Todas las imÃ¡genes comprimidas y subidas exitosamente:', imageUrls);
+    console.log(' Todas las imágenes comprimidas y subidas exitosamente:', imageUrls);
     return imageUrls;
   } catch (error) {
-    console.error('âŒ Error al subir imÃ¡genes:', error);
-    throw new Error(`Error al subir imÃ¡genes: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    console.error('Error al subir imágenes:', error);
+    throw new Error(`Error al subir imágenes: ${error instanceof Error ? error.message : 'Error desconocido'}`);
   }
 }
 
@@ -1432,15 +1432,15 @@ function getDiscountAmount(): number {
 
 // --- Lógica del Modal ---
 function confirmSave() {
-  modalTitle.value = editing.value ? 'Confirmar ActualizaciÃ³n' : 'Confirmar CreaciÃ³n';
-  modalMessage.value = `Â¿Estás seguro de que deseas ${editing.value ? 'actualizar' : 'guardar'} este producto?`;
+  modalTitle.value = editing.value ? 'Confirmar Actualización' : 'Confirmar Creación';
+  modalMessage.value = `¿Estás seguro de que deseas ${editing.value ? 'actualizar' : 'guardar'} este producto?`;
   confirmAction.value = saveProduct;
   showModal.value = true;
 }
 
 function confirmDelete(id: number) {
-  modalTitle.value = 'Confirmar EliminaciÃ³n';
-  modalMessage.value = 'Â¿Estás seguro de que deseas eliminar este producto?';
+  modalTitle.value = 'Confirmar Eliminación';
+  modalMessage.value = '¿Estás seguro de que deseas eliminar este producto?';
   confirmAction.value = () => deleteProduct(id);
   showModal.value = true;
 }
@@ -1457,9 +1457,9 @@ function handleCancel() {
 }
 
 onMounted(async () => {
-  console.log('ðŸš€ Componente montado, iniciando carga de datos...');
-  console.log('ðŸ” Usuario Firebase:', authStore.firebaseUser);
-  console.log('ðŸŽ« Token disponible:', !!authStore.token);
+  console.log('Componente montado, iniciando carga de datos...');
+  console.log('Usuario Firebase:', authStore.firebaseUser);
+  console.log('Token disponible:', !!authStore.token);
   
   await loadMasterData();
   await fetchProducts();

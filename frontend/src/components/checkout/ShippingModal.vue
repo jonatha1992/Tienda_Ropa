@@ -10,7 +10,7 @@
           <!-- Header -->
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-medium leading-6 text-gray-900 font-heading">
-              Gestionar EnvÃ­o - Pedido #{{ order?.order_id }}
+              Gestionar Envío - Pedido #{{ order?.order_id }}
             </h3>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,7 +31,7 @@
                 <span class="text-gray-900 font-medium">${{ order.total?.toLocaleString() }}</span>
               </div>
               <div v-if="order.customer_phone">
-                <span class="font-medium text-gray-700">TelÃ©fono:</span>
+                <span class="font-medium text-gray-700">Teléfono:</span>
                 <span class="text-gray-900">{{ order.customer_phone }}</span>
               </div>
             </div>
@@ -42,7 +42,7 @@
             <!-- Tracking Number (only for shipping orders) -->
             <div v-if="isShippingOrder" class="mb-4">
               <label for="trackingNumber" class="block text-sm font-medium text-gray-700 mb-2">
-                NÃºmero de Seguimiento *
+                Número de Seguimiento *
               </label>
               <input
                 v-model="trackingNumber"
@@ -60,7 +60,7 @@
             <!-- Shipping Provider (only for shipping orders) -->
             <div v-if="isShippingOrder" class="mb-4">
               <label for="shippingProvider" class="block text-sm font-medium text-gray-700 mb-2">
-                Empresa de EnvÃ­o *
+                Empresa de Envío *
               </label>
               <select
                 v-model="shippingProvider"
@@ -98,7 +98,7 @@
                   <div class="flex-1">
                     <h4 class="text-sm font-medium text-purple-900 mb-2">Coordinar Retiro por WhatsApp</h4>
                     <p class="text-sm text-purple-700 mb-3">
-                      Este pedido es para retiro en local. Haz clic en el botÃ³n para contactar al cliente por WhatsApp.
+                      Este pedido es para retiro en local. Haz clic en el botón para contactar al cliente por WhatsApp.
                     </p>
                     <button type="button" @click="contactCustomerForPickup" 
                       class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">
@@ -115,7 +115,7 @@
             <!-- Shipping Notes -->
             <div class="mb-6">
               <label for="shippingNotes" class="block text-sm font-medium text-gray-700 mb-2">
-                Notas del EnvÃ­o (opcional)
+                Notas del Envío (opcional)
               </label>
               <textarea
                 v-model="shippingNotes"
@@ -141,7 +141,7 @@
                 class="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 <span v-if="loading">Guardando...</span>
-                <span v-else-if="isShippingOrder">Guardar EnvÃ­o</span>
+                <span v-else-if="isShippingOrder">Guardar Envío</span>
                 <span v-else>Marcar como Entregado</span>
               </button>
             </div>
@@ -194,12 +194,12 @@ const isShippingOrder = computed(() => {
 const getTrackingPlaceholder = () => {
   if (shippingProvider.value === 'andreani') return 'Ej: ABC12345678';
   if (shippingProvider.value === 'correo-argentino') return 'Ej: CC123456789AR';
-  return 'NÃºmero de seguimiento';
+  return 'Número de seguimiento';
 };
 
 const getTrackingHint = () => {
-  if (shippingProvider.value === 'andreani') return 'Formato: 8-15 caracteres alfanumÃ©ricos';
-  if (shippingProvider.value === 'correo-argentino') return 'Formato: 2 letras + 9 nÃºmeros + 2 letras';
+  if (shippingProvider.value === 'andreani') return 'Formato: 8-15 caracteres alfanuméricos';
+  if (shippingProvider.value === 'correo-argentino') return 'Formato: 2 letras + 9 números + 2 letras';
   return '';
 };
 
@@ -221,14 +221,14 @@ const closeModal = () => {
 const contactCustomerForPickup = () => {
   if (!props.order) return;
   
-  const message = `Hola ${props.order.customer_name}, tu pedido #${props.order.order_id} estÃ¡ listo para retirar. 
+  const message = `Hola ${props.order.customer_name}, tu pedido #${props.order.order_id} está listo para retirar. 
 
 ðŸ“¦ Total: $${props.order.total.toLocaleString()}
 
-ðŸ“ DirecciÃ³n: Av. Ejemplo 123, CABA
-ðŸ• Horarios: Lun-Vie 9-18hs, SÃ¡b 9-13hs
+ðŸ“ Dirección: Av. Ejemplo 123, CABA
+ðŸ• Horarios: Lun-Vie 9-18hs, Sáb 9-13hs
 
-Â¿CuÃ¡ndo te conviene pasar a retirarlo?`;
+¿Cuándo te conviene pasar a retirarlo?`;
 
   const encodedMessage = encodeURIComponent(message);
   const phoneNumber = props.order.customer_phone?.replace(/[^\d]/g, '') || '5491112345678';

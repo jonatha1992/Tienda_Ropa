@@ -34,7 +34,7 @@
             <!-- Admin Menu - Solo visible para administradores -->
             <div v-if="isAdmin" class="relative">
               <button @click.stop="toggleAdminMenu"
-                class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ADMIN â–¼</button>
+                class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ADMIN</button>
               <div v-if="isAdminMenuOpen" @click.stop
                 class="absolute z-50 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg"
                 style="top: 100%; left: 0; min-width: 200px;">
@@ -57,7 +57,7 @@
             
             <router-link to="/contact" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CONTACTO</router-link>
             <router-link to="/how-to-shop" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÓMO COMPRAR</router-link>
-            <router-link to="/shipping" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÃOS</router-link>
+            <router-link to="/shipping" class="px-3 py-2 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÍOS</router-link>
           </div>
 
           <!-- Desktop Auth & Cart -->
@@ -135,7 +135,7 @@
         <button @click.stop="toggleMobileShopMenu" class="block w-full px-3 py-3 text-sm font-normal tracking-wide text-left text-gray-900 uppercase transition-colors font-body hover:text-gray-600">SHOP</button>
         <div v-if="isMobileShopMenuOpen" class="pl-4 space-y-1">
           <div v-if="categories.length === 0" class="px-3 py-2 text-sm italic text-gray-500 font-body">
-            - No hay stock con categorÃ­as
+            - No hay stock con categorías
           </div>
           <router-link v-else v-for="category in categories" :key="category.id" :to="`/shop?category=${category.name.toLowerCase()}`" @click="closeMenus" class="block px-3 py-2 text-sm tracking-wide text-gray-700 uppercase transition-colors font-body hover:text-gray-900">- {{ category.name }}</router-link>
         </div>
@@ -181,7 +181,7 @@
         
         <router-link to="/contact" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CONTACTO</router-link>
         <router-link to="/how-to-shop" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">CÓMO COMPRAR</router-link>
-        <router-link to="/shipping" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÃOS</router-link>
+        <router-link to="/shipping" @click="closeMenus" class="block px-3 py-3 text-sm font-normal tracking-wide text-gray-900 uppercase transition-colors font-body hover:text-gray-600">ENVÍOS</router-link>
         
         <div class="pt-4 mt-4 border-t border-gray-200">
           <div v-if="authStore.isAuthenticated" class="flex items-center px-3 mb-3">
@@ -230,7 +230,7 @@ const router = useRouter();
 const { openCartModal } = useCartModal();
 const categories = ref<Category[]>([]);
 
-// Computed memoizado para admin access (evitar mÃºltiples evaluaciones)
+// Computed memoizado para admin access (evitar múltiples evaluaciones)
 const isAdmin = computed(() => authStore.hasAdminAccess);
 
 const toggleShopMenu = () => {
@@ -273,15 +273,15 @@ const handleLogout = async () => {
 
 const loadCategories = async () => {
   try {
-    // Usar endpoint que solo devuelve categorÃ­as con stock
+    // Usar endpoint que solo devuelve categorías con stock
     categories.value = await masterDataApi.getCategoriesWithStock();
   } catch (error) {
-    console.error('âŒ Error cargando categorÃ­as:', error);
-    // Fallback a todas las categorÃ­as si falla
+    console.error('âŒ Error cargando categorías:', error);
+    // Fallback a todas las categorías si falla
     try {
       categories.value = await masterDataApi.getCategories();
     } catch (fallbackError) {
-      console.error('âŒ Error cargando categorÃ­as (fallback):', fallbackError);
+      console.error('âŒ Error cargando categorías (fallback):', fallbackError);
     }
   }
 };

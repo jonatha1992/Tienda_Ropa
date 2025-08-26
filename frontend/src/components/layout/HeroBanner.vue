@@ -24,7 +24,6 @@
     <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center">
       <div class="max-w-2xl">
         <div class="flex items-center justify-center mb-6 space-x-3">
-          <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-12 h-12 md:h-16 md:w-16" />
           <h1 class="text-5xl font-light tracking-wide text-white font-heading md:text-7xl">
             M-VINTAGE
           </h1>
@@ -34,7 +33,7 @@
         </p>
         <div class="space-y-4">
           <button class="mr-4 btn-minimal btn-light font-body">
-            Ver ColecciÃ³n
+            Ver Colección
           </button>
           <button class="btn-minimal btn-dark font-body">
             Nuevos Arribos

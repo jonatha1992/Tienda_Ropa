@@ -182,7 +182,7 @@
             <button
               @click="loadOrders"
               :disabled="loading"
-              class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 disabled:bg-gray-100"
+              class="btn-outline"
             >
               <svg v-if="loading" class="w-4 h-4 mr-2 -ml-1 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -258,7 +258,7 @@
                   <button
                     v-if="order.payment_method === 'transfer' && !order.transfer_verified"
                     @click="openTransferModal(order)"
-                    class="text-blue-600 hover:text-blue-900"
+                    class="btn-blue btn-sm"
                   >
                     <span class="font-body">Verificar</span>
                   </button>
@@ -267,7 +267,7 @@
                   <button
                     v-if="order.payment_method === 'cash' && order.delivery_status === 'pending'"
                     @click="openDeliveryModal(order)"
-                    class="text-green-600 hover:text-green-900"
+                    class="btn-green btn-sm"
                   >
                     <span class="font-body">Programar</span>
                   </button>
@@ -275,7 +275,7 @@
                   <button
                     v-if="order.payment_method === 'cash' && order.delivery_status === 'scheduled'"
                     @click="markAsDelivered(order)"
-                    class="text-purple-600 hover:text-purple-900"
+                    class="btn-purple btn-sm"
                   >
                     <span class="font-body">Entregado</span>
                   </button>
@@ -283,7 +283,7 @@
                   <!-- View Details -->
                   <button
                     @click="openOrderModal(order)"
-                    class="text-gray-600 hover:text-gray-900"
+                    class="btn-primary btn-sm"
                   >
                     <span class="font-body">Ver</span>
                   </button>

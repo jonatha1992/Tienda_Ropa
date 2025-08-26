@@ -1,25 +1,25 @@
 ﻿<template>
-  <div class="w-full max-w-md mx-auto py-6">
+  <div class="w-full max-w-md py-6 mx-auto">
     <!-- Progress Steps -->
     <div class="flex items-center justify-between mb-8">
       <!-- Step 1: Carrito -->
       <div class="flex flex-col items-center">
         <button 
           @click="$emit('go-to-step', 1)"
-          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 cursor-pointer hover:shadow-lg"
+          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg"
           :class="getStepClasses(1)"
         >
           <CheckIcon v-if="currentStep > 1" class="w-4 h-4" />
           <ShoppingCartIcon v-else-if="currentStep === 1" class="w-4 h-4" />
           <span class="font-body" v-else>1</span>
         </button>
-        <span class="font-body text-xs mt-2 text-body-text">Carrito</span>
+        <span class="mt-2 text-xs font-body text-body-text">Carrito</span>
       </div>
 
       <!-- Progress Line 1 -->
       <div class="flex-1 h-0.5 mx-4 bg-gray-200 relative">
         <div 
-          class="h-full bg-gray-800 transition-all duration-500"
+          class="h-full transition-all duration-500 bg-gray-800"
           :style="{ width: currentStep > 1 ? '100%' : '0%' }"
         ></div>
       </div>
@@ -28,20 +28,20 @@
       <div class="flex flex-col items-center">
         <button 
           @click="$emit('go-to-step', 2)"
-          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 cursor-pointer hover:shadow-lg"
+          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg"
           :class="getStepClasses(2)"
         >
           <CheckIcon v-if="currentStep > 2" class="w-4 h-4" />
           <TruckIcon v-else-if="currentStep === 2" class="w-4 h-4" />
           <span class="font-body" v-else>2</span>
         </button>
-        <span class="font-body text-xs mt-2 text-body-text">Entrega</span>
+        <span class="mt-2 text-xs font-body text-body-text">Entrega</span>
       </div>
 
       <!-- Progress Line 2 -->
       <div class="flex-1 h-0.5 mx-4 bg-gray-200 relative">
         <div 
-          class="h-full bg-gray-800 transition-all duration-500"
+          class="h-full transition-all duration-500 bg-gray-800"
           :style="{ width: currentStep > 2 ? '100%' : '0%' }"
         ></div>
       </div>
@@ -49,25 +49,25 @@
       <!-- Step 3: Pago -->
       <div class="flex flex-col items-center">
         <div 
-          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300"
+          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full"
           :class="getStepClasses(3)"
         >
           <CheckIcon v-if="currentStep > 3" class="w-4 h-4" />
           <CreditCardIcon v-else-if="currentStep === 3" class="w-4 h-4" />
           <span class="font-body" v-else>3</span>
         </div>
-        <span class="font-body text-xs mt-2 text-body-text">Pago</span>
+        <span class="mt-2 text-xs font-body text-body-text">Pago</span>
       </div>
     </div>
 
     <!-- Delivery Method Selection (only show when on step 2) -->
-    <div v-if="currentStep === 2" class="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-4 font-heading">Seleccionar MÃ©todo de Entrega</h3>
+    <div v-if="currentStep === 2" class="p-6 mt-8 bg-white border border-gray-200 rounded-lg">
+      <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Seleccionar MÃ©todo de Entrega</h3>
       
       <!-- Loading State -->
-      <div v-if="isLoadingQuotes" class="text-center py-4">
+      <div v-if="isLoadingQuotes" class="py-4 text-center">
         <div class="inline-flex items-center">
-          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 mr-3 -ml-1 text-gray-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -76,7 +76,7 @@
       </div>
 
       <!-- Error/Warning Message -->
-      <div v-if="quotesError && !isLoadingQuotes" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+      <div v-if="quotesError && !isLoadingQuotes" class="p-3 mb-4 border border-yellow-200 rounded-lg bg-yellow-50">
         <div class="flex">
           <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -87,13 +87,13 @@
 
       <div class="space-y-4">
         <!-- EnvÃ­o por Andreani -->
-        <div class="flex items-center justify-between p-4 border rounded-lg hover:border-gray-300 cursor-pointer transition-colors"
+        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
              :class="selectedDeliveryMethod === 'envio_andreani' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
              @click="selectDeliveryMethod('envio_andreani')">
           <div class="flex items-center">
             <input type="radio" 
                    :checked="selectedDeliveryMethod === 'envio_andreani'"
-                   class="h-4 w-4 text-gray-800 border-gray-300 focus:ring-gray-500">
+                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">EnvÃ­o por Andreani</div>
               <div class="text-sm text-gray-500">
@@ -107,13 +107,13 @@
         </div>
 
         <!-- EnvÃ­o por Correo Argentino -->
-        <div class="flex items-center justify-between p-4 border rounded-lg hover:border-gray-300 cursor-pointer transition-colors"
+        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
              :class="selectedDeliveryMethod === 'envio_correo' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
              @click="selectDeliveryMethod('envio_correo')">
           <div class="flex items-center">
             <input type="radio" 
                    :checked="selectedDeliveryMethod === 'envio_correo'"
-                   class="h-4 w-4 text-gray-800 border-gray-300 focus:ring-gray-500">
+                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">EnvÃ­o por Correo Argentino</div>
               <div class="text-sm text-gray-500">
@@ -128,13 +128,13 @@
 
         <!-- EnvÃ­o por OCA (mostrar solo si hay cotizaciÃ³n disponible) -->
         <div v-if="getShippingOption('oca') || shippingOptions.length === 0"
-             class="flex items-center justify-between p-4 border rounded-lg hover:border-gray-300 cursor-pointer transition-colors"
+             class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
              :class="selectedDeliveryMethod === 'envio_oca' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
              @click="selectDeliveryMethod('envio_oca')">
           <div class="flex items-center">
             <input type="radio" 
                    :checked="selectedDeliveryMethod === 'envio_oca'"
-                   class="h-4 w-4 text-gray-800 border-gray-300 focus:ring-gray-500">
+                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">EnvÃ­o por OCA</div>
               <div class="text-sm text-gray-500">
@@ -148,13 +148,13 @@
         </div>
 
         <!-- Retiro en Local -->
-        <div class="flex items-center justify-between p-4 border rounded-lg hover:border-gray-300 cursor-pointer transition-colors"
+        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
              :class="selectedDeliveryMethod === 'retiro_local' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
              @click="selectDeliveryMethod('retiro_local')">
           <div class="flex items-center">
             <input type="radio" 
                    :checked="selectedDeliveryMethod === 'retiro_local'"
-                   class="h-4 w-4 text-gray-800 border-gray-300 focus:ring-gray-500">
+                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">Retiro en Local</div>
               <div class="text-sm text-gray-500">Coordinar horario de retiro con el vendedor</div>
@@ -166,14 +166,14 @@
 
       <!-- Contact Info for Local Pickup -->
       <div v-if="selectedDeliveryMethod === 'retiro_local'" 
-           class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+           class="p-4 mt-4 border border-blue-200 rounded-lg bg-blue-50">
         <div class="flex items-start">
           <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div class="ml-3">
             <h4 class="text-sm font-medium text-blue-900">Coordinar Retiro</h4>
-            <p class="text-sm text-blue-700 mt-1">
+            <p class="mt-1 text-sm text-blue-700">
               DespuÃ©s de completar tu compra, te contactaremos por WhatsApp para coordinar el horario de retiro.
             </p>
             <div class="mt-2 text-sm text-blue-700">
@@ -185,8 +185,8 @@
       </div>
 
       <!-- Delivery Cost Summary -->
-      <div v-if="selectedDeliveryMethod" class="mt-6 pt-4 border-t border-gray-200">
-        <div class="flex justify-between items-center">
+      <div v-if="selectedDeliveryMethod" class="pt-4 mt-6 border-t border-gray-200">
+        <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-gray-900">Costo de envÃ­o:</span>
           <span class="text-sm font-medium text-gray-900">
             {{ getDeliveryCost() === 0 ? 'Gratis' : `$${getDeliveryCost()}` }}
@@ -291,7 +291,7 @@ const loadShippingQuotes = async () => {
   quotesError.value = null
 
   try {
-    console.log(`ðŸšš Loading shipping quotes for CP: ${props.postalCode}, weight: ${props.totalWeightKg}kg`)
+    console.log(`Loading shipping quotes for CP: ${props.postalCode}, weight: ${props.totalWeightKg}kg`)
 
     const response = await shippingQuotesApi.getShippingQuotes({
       postal_code: props.postalCode,
@@ -303,7 +303,7 @@ const loadShippingQuotes = async () => {
 
     if (response.success && response.options) {
       shippingOptions.value = response.options
-      console.log('âœ… Shipping quotes loaded:', response.options)
+      console.log('Shipping quotes loaded:', response.options)
 
       // If current method is not available in new quotes, select first available
       const currentMethodAvailable = response.options.some((opt: ShippingOption) => 
@@ -338,7 +338,7 @@ const loadShippingQuotes = async () => {
     }
 
   } catch (error) {
-    console.error('âŒ Error loading shipping quotes:', error)
+    console.error('Error loading shipping quotes:', error)
     quotesError.value = 'Error al cargar cotizaciones, usando precios estimados'
     // Keep fallback prices
     shippingOptions.value = []

@@ -468,6 +468,13 @@ def delete_order(*, session: Session = Depends(get_session), order_id: int, user
     order = session.get(Order, order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Delete related OrderItems first to avoid foreign key constraint violation
+    order_items = session.exec(select(OrderItem).where(OrderItem.order_id == order_id)).all()
+    for order_item in order_items:
+        session.delete(order_item)
+    
+    # Delete the order
     session.delete(order)
     session.commit()
     return {"ok": True}

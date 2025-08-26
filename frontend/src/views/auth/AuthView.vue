@@ -3,10 +3,10 @@
         <div class="w-full max-w-md space-y-8">
             <div>
                 <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 font-heading">
-                    {{ isLogin ? 'Iniciar SesiÃ³n' : 'Crear Cuenta' }}
+                    {{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}
                 </h2>
                 <p class="mt-2 text-sm text-center font-body text-body-text">
-                    Accede a la administraciÃ³n de productos
+                    Accede a la administración de productos
                 </p>
             </div>
 
@@ -38,7 +38,7 @@
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-                        Se abrirÃ¡ una nueva pÃ¡gina de Google para autenticarte
+                        Se abrira una nueva pagina de Google para autenticarte
                     </p>
                 </div>
 
@@ -60,23 +60,23 @@
                             placeholder="Email" />
                     </div>
                     <div>
-                        <label for="password" class="sr-only">ContraseÃ±a</label>
+                        <label for="password" class="sr-only">Contraseña</label>
                         <input id="password" name="password" type="password" v-model="password" required
                             class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                            placeholder="ContraseÃ±a" />
+                            placeholder="Contraseña" />
                     </div>
 
                     <div>
                         <button type="submit" :disabled="loading"
                             class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-600 border border-transparent rounded-md group hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50">
-                            <span class="text-white">{{ isLogin ? 'Iniciar SesiÃ³n' : 'Crear Cuenta' }}</span>
+                            <span class="text-white">{{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}</span>
                         </button>
                     </div>
                 </form>
 
                 <div class="text-center">
                     <button @click="toggleMode" class="text-sm text-indigo-600 font-body hover:text-indigo-500">
-                        {{ isLogin ? 'Â¿No tienes cuenta? Crear cuenta' : 'Â¿Ya tienes cuenta? Iniciar sesiÃ³n' }}
+                        {{ isLogin ? '¿No tienes cuenta? Crear cuenta' : '¿Ya tienes cuenta? Iniciar sesión' }}
                     </button>
                 </div>
             </div>

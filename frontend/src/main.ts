@@ -4,6 +4,7 @@ import type { PluginOptions, POSITION } from 'vue-toastification'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import './style.css'
+import './styles/admin-buttons.css'
 import App from './App.vue'
 import router from './router'
 

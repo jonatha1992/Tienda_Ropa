@@ -30,7 +30,7 @@
           <div class="sticky top-20">
             <!-- Categories Filter -->
             <div class="pb-6 border-b border-gray-200">
-              <h3 class="mb-4 text-lg font-medium text-gray-900">CategorÃ­as</h3>
+              <h3 class="mb-4 text-lg font-medium text-gray-900">Categorias</h3>
               <div class="space-y-2">
                 <label v-for="category in categories" :key="category.id" class="flex items-center">
                   <input 
@@ -51,7 +51,7 @@
                     @change="applyFilters"
                     class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
-                  <span class="ml-3 text-sm text-gray-700">Todas las categorÃ­as</span>
+                  <span class="ml-3 text-sm text-gray-700">Todas las categorías</span>
                   <span class="ml-auto text-xs text-gray-500">({{ allProducts.length }})</span>
                 </label>
               </div>
@@ -97,7 +97,7 @@
                 <option value="price-desc">Precio: Mayor a Menor</option>
                 <option value="name-asc">Nombre: A-Z</option>
                 <option value="name-desc">Nombre: Z-A</option>
-                <option value="newest">MÃ¡s Nuevos</option>
+                <option value="newest">Mas Nuevos</option>
               </select>
             </div>
 
@@ -153,7 +153,7 @@
               @click="loadMoreProducts"
               class="btn-minimal btn-light"
             >
-              Ver MÃ¡s Productos
+              Ver más Productos
             </button>
           </div>
 
@@ -165,7 +165,7 @@
               </svg>
             </div>
             <h3 class="mb-2 text-lg font-medium text-gray-900">No se encontraron productos</h3>
-            <p class="mb-4 text-gray-500">Intenta ajustar los filtros o explorar otras categorÃ­as</p>
+            <p class="mb-4 text-gray-500">Intenta ajustar los filtros o explorar otras categorías</p>
             <button @click="clearFilters" class="btn-minimal btn-dark">
               Limpiar Filtros
             </button>
@@ -249,9 +249,9 @@ const selectedCategory = computed(() => {
 
 const collectionTitle = computed(() => {
   if (selectedCategory.value) {
-    return `ColecciÃ³n ${selectedCategory.value.charAt(0).toUpperCase() + selectedCategory.value.slice(1).toLowerCase()}`
+    return `Colección ${selectedCategory.value.charAt(0).toUpperCase() + selectedCategory.value.slice(1).toLowerCase()}`
   }
-  return 'Toda la ColecciÃ³n'
+  return 'Toda la Colección'
 })
 
 const filteredProducts = computed(() => {

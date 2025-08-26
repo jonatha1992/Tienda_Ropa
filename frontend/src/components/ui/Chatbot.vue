@@ -296,12 +296,12 @@ const getBotResponse = (userMessage: string): { text: string; action?: 'whatsapp
   }
   
   if (lowerMessage.includes('gracias')) {
-    return { text: 'Â¡De nada! Si necesitas más ayuda, contactanos via WhatsApp. Â¡Estamos aquÃ­ para ti! ðŸ˜Š' };
+    return { text: '¡De nada! Si necesitas más ayuda, contactanos via WhatsApp. ¡Estamos aquí para ti! 😊' };
   }
   
   // Respuesta por defecto
   return { 
-    text: 'Para obtener información personalizada y especÃ­fica, nuestro equipo te atenderá via WhatsApp ðŸ“±',
+    text: 'Para obtener información personalizada y específica, nuestro equipo te atenderá via WhatsApp 📱',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Tengo una consulta sobre M-VINTAGE.'
   };
@@ -353,7 +353,7 @@ onMounted(() => {
   /* Estilos específicos del chatbot si son necesarios */
 }
 
-/* Animación para el botÃ³n flotante */
+/* Animación para el botón flotante */
 @keyframes bounce {
   0%, 20%, 53%, 80%, 100% {
     transform: translate3d(0, 0, 0);

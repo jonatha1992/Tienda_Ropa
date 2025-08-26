@@ -97,13 +97,13 @@
               <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                 <button
                   @click="manageUserRoles(user)"
-                  class="mr-4 text-blue-600 hover:text-blue-900"
+                  class="btn-blue btn-sm mr-4"
                 >
                   <span >Gestionar Roles</span>
                 </button>
                 <button
                   @click="viewUserDetails(user)"
-                  class="text-green-600 hover:text-green-900"
+                  class="btn-green btn-sm"
                 >
                   <span >Ver Detalles</span>
                 </button>

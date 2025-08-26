@@ -142,7 +142,7 @@
 
             <!-- Shipping -->
             <div class="flex justify-between text-sm">
-              <span class="text-gray-600 font-body">EnvÃ­o</span>
+              <span class="text-gray-600 font-body">Envío</span>
               <span class="text-gray-900 font-body">Calculado en checkout</span>
             </div>
 
@@ -167,7 +167,7 @@
               </div>
               <div class="ml-3">
                 <p class="text-sm text-blue-700 font-body">
-                  Necesitas <strong>iniciar sesiÃ³n</strong> para proceder con la compra.
+                  Necesitas <strong>iniciar sesión</strong> para proceder con la compra.
                 </p>
               </div>
             </div>
@@ -179,7 +179,7 @@
               @click="proceedToCheckout"
               class="w-full px-4 py-3 font-medium text-white transition-colors bg-black rounded-md hover:bg-gray-800"
             >
-              {{ authStore.isAuthenticated ? 'Continuar con la compra' : 'Iniciar sesiÃ³n y continuar' }}
+              {{ authStore.isAuthenticated ? 'Continuar con la compra' : 'Iniciar sesión y continuar' }}
             </button>
           </div>
 
@@ -202,7 +202,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">Tu carrito estÃ¡ vacÃ­o</h3>
+        <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">Tu carrito está vacío</h3>
         <p class="mb-6 text-gray-600 font-body">Agrega algunos productos para comenzar</p>
         <button
           @click="continueShopping"
@@ -269,7 +269,7 @@ const proceedToCheckout = () => {
   cartStore.validateStock();
   
   if (cartStore.isEmpty) {
-    toast.error('Tu carrito estÃ¡ vacÃ­o');
+    toast.error('Tu carrito está vacío');
     return;
   }
   
@@ -280,7 +280,7 @@ const proceedToCheckout = () => {
   
   // Check if user is authenticated
   if (!authStore.isAuthenticated) {
-    toast.warning('Debes iniciar sesiÃ³n para continuar con la compra');
+    toast.warning('Debes iniciar sesión para continuar con la compra');
     router.push('/auth');
     return;
   }

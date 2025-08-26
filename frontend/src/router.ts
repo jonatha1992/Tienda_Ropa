@@ -111,8 +111,8 @@ router.beforeEach(async (to, from, next) => {
 
   // Esperar a que se inicialice la autenticaciÃ³n si aÃºn no se ha hecho
   if (authStore.loading) {
-    // Verificar si ya hay datos en cachÃ© para acelerar
-    await authStore.fetchUserRoles(false)
+    // fetchUserRoles se ejecuta automáticamente después de fetchBackendUser en auth.ts:30
+    // No necesitamos llamarlo aquí porque no hay token aún
     
     await new Promise(resolve => {
       const unsubscribe = auth.onAuthStateChanged((user: any) => {

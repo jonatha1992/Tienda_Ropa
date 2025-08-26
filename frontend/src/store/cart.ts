@@ -1,9 +1,9 @@
 ﻿import { defineStore } from 'pinia';
-import type { 
-  Product, 
-  ProductVariant, 
-  ColorType as Color, 
-  SizeType as Size 
+import type {
+  Product,
+  ProductVariant,
+  ColorType as Color,
+  SizeType as Size
 } from '../types/products';
 import { useCartNotification } from '../composables/useCartNotification';
 import { stockService } from '../services/stockService';
@@ -28,23 +28,23 @@ export const useCartStore = defineStore('cart', {
     lastSaved: null as number | null, // Timestamp when cart was last saved
     sessionTimeout: 60 * 60 * 1000, // 60 minutes in milliseconds (increased from 20 min)
   }),
-  
+
   getters: {
     // Calculate total price considering discounts
     totalPrice: (state) => {
       return state.items.reduce((total, item) => {
-        const price = item.product.has_discount && item.product.discounted_price 
-          ? item.product.discounted_price 
+        const price = item.product.has_discount && item.product.discounted_price
+          ? item.product.discounted_price
           : item.product.price;
         return total + (price * item.quantity);
       }, 0);
     },
-    
+
     // Calculate total price without discounts
     totalOriginalPrice: (state) => {
       return state.items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
     },
-    
+
     // Calculate total savings
     totalSavings: (state) => {
       return state.items.reduce((total, item) => {
@@ -54,12 +54,12 @@ export const useCartStore = defineStore('cart', {
         return total;
       }, 0);
     },
-    
+
     // Calculate average discount percentage across all items
     averageDiscountPercentage: (state) => {
       const discountedItems = state.items.filter(item => item.product.has_discount && item.product.discount_amount);
       if (discountedItems.length === 0) return 0;
-      
+
       const totalOriginal = discountedItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
       const totalSavings = discountedItems.reduce((total, item) => {
         if (item.product.discount_amount) {
@@ -67,17 +67,17 @@ export const useCartStore = defineStore('cart', {
         }
         return total;
       }, 0);
-      
+
       return totalOriginal > 0 ? Math.round((totalSavings / totalOriginal) * 100) : 0;
     },
-    
+
     itemCount: (state) => {
       return state.items.reduce((total, item) => total + item.quantity, 0);
     },
-    
+
     // Check if cart is empty
     isEmpty: (state) => state.items.length === 0,
-    
+
     // Get items with discount
     discountedItems: (state) => {
       return state.items.filter(item => item.product.has_discount);
@@ -89,7 +89,7 @@ export const useCartStore = defineStore('cart', {
       return state.items.reduce((total, item) => total + (estimatedWeightPerItem * item.quantity), 0);
     }
   },
-  
+
   actions: {
     // Generate unique ID for cart item
     generateCartItemId(product: Product, variantId?: number, colorId?: number, sizeId?: number): string {
@@ -99,9 +99,9 @@ export const useCartStore = defineStore('cart', {
         return `${product.id}-variant-${variantId}`;
       }
     },
-    
+
     addToCart(
-      product: Product, 
+      product: Product,
       quantity: number = 1,
       variantInfo?: { variant: ProductVariant; color: Color; size: Size },
       uniqueProductInfo?: { color?: Color; size?: Size }
@@ -109,16 +109,16 @@ export const useCartStore = defineStore('cart', {
       // Check session validity before adding
       if (!this.isSessionValid()) {
         const expiredMinutes = this.lastSaved ? Math.round((Date.now() - this.lastSaved) / 1000 / 60) : 0;
-        console.log('â° Cart session expired after', expiredMinutes, 'minutes, clearing before adding new item');
+        console.log('Cart session expired after', expiredMinutes, 'minutes, clearing before adding new item');
         this.clearCart();
       }
       let cartItemId: string;
-      
+
       if (product.is_unique) {
         // For unique products, use color and size if provided
         cartItemId = this.generateCartItemId(
-          product, 
-          undefined, 
+          product,
+          undefined,
           uniqueProductInfo?.color?.id,
           uniqueProductInfo?.size?.id
         );
@@ -146,13 +146,13 @@ export const useCartStore = defineStore('cart', {
           selectedColor: uniqueProductInfo?.color,
           selectedSize: uniqueProductInfo?.size
         };
-        
+
         this.items.push(newItem);
       }
-      
+
       // Save to localStorage
       this.saveToStorage();
-      
+
       // Mostrar notificaciÃ³n personalizada cuando se agrega producto
       const { showNotification } = useCartNotification();
       if (variantInfo) {
@@ -161,12 +161,12 @@ export const useCartStore = defineStore('cart', {
         showNotification(product, quantity);
       }
     },
-    
+
     removeFromCart(cartItemId: string) {
       this.items = this.items.filter(item => item.id !== cartItemId);
       this.saveToStorage();
     },
-    
+
     updateQuantity(cartItemId: string, quantity: number) {
       const itemIndex = this.items.findIndex(item => item.id === cartItemId);
 
@@ -179,12 +179,12 @@ export const useCartStore = defineStore('cart', {
         this.saveToStorage();
       }
     },
-    
+
     clearCart() {
       this.items = [];
       this.saveToStorage();
     },
-    
+
     // Persistence methods
     saveToStorage() {
       if (typeof window !== 'undefined') {
@@ -196,46 +196,46 @@ export const useCartStore = defineStore('cart', {
         this.lastSaved = Date.now();
       }
     },
-    
+
     loadFromStorage() {
       if (typeof window !== 'undefined') {
         const saved = localStorage.getItem('cart');
         if (saved) {
           try {
             const cartData = JSON.parse(saved);
-            
+
             // Handle legacy format (just items array)
             if (Array.isArray(cartData)) {
-              console.log('ðŸ”„ Converting legacy cart format');
+              console.log('Converting legacy cart format');
               this.items = this.validateCartItems(cartData);
               this.saveToStorage(); // Save in new format
               return;
             }
-            
+
             // Handle new format with timestamp
             if (cartData && typeof cartData === 'object' && cartData.items) {
               const now = Date.now();
               const timeDiff = now - (cartData.timestamp || 0);
-              
+
               // Check if cart has expired (60 minutes)
               if (timeDiff > this.sessionTimeout) {
-                console.log('â° Cart session expired after', Math.round(timeDiff / 1000 / 60), 'minutes, clearing cart');
+                console.log('Cart session expired after', Math.round(timeDiff / 1000 / 60), 'minutes, clearing cart');
                 this.clearStorage();
                 this.items = [];
                 return;
               }
-              
+
               // Load valid cart
               this.items = this.validateCartItems(cartData.items);
               this.lastSaved = cartData.timestamp;
-              
+
               // If we filtered out invalid items, save the cleaned cart
               if (this.items.length !== cartData.items.length) {
-                console.log('ðŸ§¹ Cleaned invalid cart items');
+                console.log('Cleaned invalid cart items');
                 this.saveToStorage();
               }
             } else {
-              console.log('ðŸ—‘ï¸ Invalid cart data format, clearing...');
+              console.log('Invalid cart data format, clearing...');
               this.clearStorage();
               this.items = [];
             }
@@ -249,7 +249,7 @@ export const useCartStore = defineStore('cart', {
         }
       }
     },
-    
+
     // Validate stock availability by checking with the backend
     async validateStock() {
       if (this.items.length === 0) return { hasStockIssues: false };
@@ -264,19 +264,19 @@ export const useCartStore = defineStore('cart', {
       try {
         // Check stock with backend
         const response = await stockService.checkStock(stockCheckItems);
-        
+
         const itemsToRemove: string[] = [];
         let hasStockIssues = false;
 
         // Process each item in the cart
         this.items.forEach((item, index) => {
           const stockResult = response.items[index];
-          
+
           if (!stockResult.available) {
             // Product is not available at all
             itemsToRemove.push(item.id);
             hasStockIssues = true;
-            console.log(`âš ï¸ Producto sin stock removido del carrito: ${item.product.name}`);
+            console.log(`Producto sin stock removido del carrito: ${item.product.name}`);
           } else if (!stockResult.has_enough_stock) {
             // Not enough stock for requested quantity
             const availableStock = stockResult.available_stock;
@@ -285,15 +285,15 @@ export const useCartStore = defineStore('cart', {
               const oldQuantity = item.quantity;
               this.updateQuantity(item.id, availableStock);
               hasStockIssues = true;
-              console.log(`âš ï¸ Cantidad reducida para ${item.product.name}: ${oldQuantity} â†’ ${availableStock}`);
+              console.log(`Cantidad reducida para ${item.product.name}: ${oldQuantity} → ${availableStock}`);
             } else {
               // No stock available, remove from cart
               itemsToRemove.push(item.id);
               hasStockIssues = true;
-              console.log(`âš ï¸ Producto sin stock removido del carrito: ${item.product.name}`);
+              console.log(`Producto sin stock removido del carrito: ${item.product.name}`);
             }
           }
-          
+
           // Update local stock information
           if (item.product.is_unique) {
             item.product.stock = stockResult.available_stock;
@@ -324,53 +324,53 @@ export const useCartStore = defineStore('cart', {
     // Show stock notification
     showStockNotification(itemsRemoved: boolean, isError: boolean = false) {
       if (typeof window === 'undefined') return;
-      
+
       try {
         const { useToast } = require('vue-toastification');
         const toast = useToast();
-        
+
         if (isError) {
           toast.error('Error al verificar el stock. Por favor, intente nuevamente.');
         } else if (itemsRemoved) {
           toast.warning('Algunos productos fueron removidos del carrito por falta de stock');
         } else {
-          toast.info('Se ajustÃ³ la cantidad de algunos productos por stock limitado');
+          toast.info('Se ajustó la cantidad de algunos productos por stock limitado');
         }
       } catch (error) {
-        console.log('â„¹ï¸ Stock validation completed with adjustments');
+        console.log('Stock validation completed with adjustments');
       }
     },
-    
+
     // Get item price (considering discounts)
     getItemPrice(item: CartItem): number {
-      return item.product.has_discount && item.product.discounted_price 
-        ? item.product.discounted_price 
+      return item.product.has_discount && item.product.discounted_price
+        ? item.product.discounted_price
         : item.product.price;
     },
-    
+
     // Get item total price
     getItemTotal(item: CartItem): number {
       return this.getItemPrice(item) * item.quantity;
     },
-    
+
     // Get item discount percentage
     getItemDiscountPercentage(item: CartItem): number {
       if (!item.product.has_discount || !item.product.discount_amount) {
         return 0;
       }
-      
+
       return Math.round((item.product.discount_amount / item.product.price) * 100);
     },
-    
+
     // Get item total savings
     getItemSavings(item: CartItem): number {
       if (!item.product.has_discount || !item.product.discount_amount) {
         return 0;
       }
-      
+
       return item.product.discount_amount * item.quantity;
     },
-    
+
     // Debug function to check cart state
     debugCart() {
       console.log('ðŸ›’ Cart Debug Info:');
@@ -380,48 +380,48 @@ export const useCartStore = defineStore('cart', {
       console.log('Is empty:', this.isEmpty);
       console.log('LocalStorage cart:', localStorage.getItem('cart'));
     },
-    
+
     // Validate cart items helper method
     validateCartItems(items: any[]): CartItem[] {
       if (!Array.isArray(items)) return [];
-      
-      return items.filter(item => 
-        item && 
-        typeof item === 'object' && 
-        item.id && 
-        item.product && 
-        typeof item.quantity === 'number' && 
+
+      return items.filter(item =>
+        item &&
+        typeof item === 'object' &&
+        item.id &&
+        item.product &&
+        typeof item.quantity === 'number' &&
         item.quantity > 0
       );
     },
-    
+
     // Check if cart session is still valid
     isSessionValid(): boolean {
       if (!this.lastSaved) return true; // No timestamp means fresh session
-      
+
       const now = Date.now();
       const timeDiff = now - this.lastSaved;
       return timeDiff <= this.sessionTimeout;
     },
-    
+
     // Clear localStorage cart data
     clearStorage() {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('cart');
         this.lastSaved = null;
-        console.log('ðŸ—‘ï¸ Cart localStorage cleared');
+        console.log('Cart localStorage cleared');
       }
     },
-    
+
     // Initialize cart - call this on app startup
     initializeCart() {
       this.loadFromStorage();
-      
+
       // Set up periodic session validation (every 10 minutes)
       if (typeof window !== 'undefined') {
         setInterval(() => {
           if (!this.isSessionValid() && !this.isEmpty) {
-            console.log('â° Cart session expired during use after', Math.round((Date.now() - (this.lastSaved || 0)) / 1000 / 60), 'minutes, clearing cart');
+            console.log('Cart session expired during use after', Math.round((Date.now() - (this.lastSaved || 0)) / 1000 / 60), 'minutes, clearing cart');
             this.clearCart();
           }
         }, 10 * 60 * 1000); // Check every 10 minutes (reduced frequency)

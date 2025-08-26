@@ -54,7 +54,7 @@
         class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
       >
         <div class="px-4 py-3 text-sm font-body text-gray-500">
-          No se encontraron direcciones. Intenta con mÃ¡s detalles.
+          No se encontraron direcciones. Intenta con más detalles.
         </div>
       </div>
     </div>
@@ -91,12 +91,12 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'DirecciÃ³n',
-  placeholder: 'ComenzÃ¡ a escribir tu direcciÃ³n...',
+  label: 'Dirección',
+  placeholder: 'Comenzá a escribir tu dirección...',
   required: false,
   inputId: 'address',
   countryCode: 'AR',
-  helperText: 'EscribÃ­ al menos 3 caracteres para ver sugerencias'
+  helperText: 'Escribí al menos 3 caracteres para ver sugerencias'
 })
 
 const emit = defineEmits<Emits>()

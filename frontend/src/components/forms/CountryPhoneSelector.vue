@@ -61,8 +61,8 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'TelÃ©fono',
-  placeholder: 'NÃºmero de telÃ©fono',
+  label: 'Teléfono',
+  placeholder: 'Número de teléfono',
   required: true,
   inputId: 'phone'
 });
@@ -76,7 +76,7 @@ const countries: Country[] = [
   { code: 'BR', name: 'Brasil', flag: 'ðŸ‡§ðŸ‡·', dialCode: '+55' },
   { code: 'PY', name: 'Paraguay', flag: 'ðŸ‡µðŸ‡¾', dialCode: '+595' },
   { code: 'BO', name: 'Bolivia', flag: 'ðŸ‡§ðŸ‡´', dialCode: '+591' },
-  { code: 'PE', name: 'PerÃº', flag: 'ðŸ‡µðŸ‡ª', dialCode: '+51' },
+  { code: 'PE', name: 'Perú', flag: 'ðŸ‡µðŸ‡ª', dialCode: '+51' },
   { code: 'EC', name: 'Ecuador', flag: 'ðŸ‡ªðŸ‡¨', dialCode: '+593' },
   { code: 'CO', name: 'Colombia', flag: 'ðŸ‡¨ðŸ‡´', dialCode: '+57' },
   { code: 'VE', name: 'Venezuela', flag: 'ðŸ‡»ðŸ‡ª', dialCode: '+58' }

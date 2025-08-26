@@ -3,7 +3,7 @@
     <div class="px-4 py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
       <!-- Section Header -->
       <div class="mb-16 text-center">
-        <h2 class="mb-4 text-3xl font-heading font-light tracking-wide text-gray-900 md:text-4xl">
+        <h2 class="mb-4 text-3xl font-light tracking-wide text-gray-900 font-heading md:text-4xl">
           {{ title }}
         </h2>
         <div class="w-24 h-0.5 bg-gray-900 mx-auto"></div>
@@ -17,7 +17,7 @@
       <!-- Load More Button -->
       <div v-if="hasMoreProducts" class="mt-16 text-center">
         <button @click="loadMoreProducts" class="btn-minimal btn-light font-body">
-          Ver MÃ¡s Productos
+          Ver Mas Productos
         </button>
       </div>
       
@@ -28,8 +28,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
           </svg>
         </div>
-        <h3 class="mb-2 text-lg font-heading font-medium text-gray-900">No hay productos disponibles</h3>
-        <p class="text-gray-500 font-body">Revisa mÃ¡s tarde o explora otras categorÃ­as</p>
+        <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">No hay productos disponibles</h3>
+        <p class="text-gray-500 font-body">Revisa más tarde o explora otras categorías</p>
       </div>
     </div>
   </div>
@@ -69,16 +69,16 @@ const hasMoreProducts = computed(() => {
   return displayProducts.value.length < filteredProducts.value.length;
 });
 
-// TÃ­tulo dinÃ¡mico basado en la categorÃ­a
+// Título dinámico basado en la categoría
 const title = computed(() => {
   const category = route.query.category as string;
   if (category) {
-    return `ColecciÃ³n ${category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}`;
+    return `Colección ${category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}`;
   }
-  return 'Nuestra ColecciÃ³n';
+  return 'Nuestra Colección';
 });
 
-// Cargar mÃ¡s productos
+// Cargar más productos
 const loadMoreProducts = () => {
   currentPage.value++;
 };

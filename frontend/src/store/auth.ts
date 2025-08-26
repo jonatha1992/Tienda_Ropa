@@ -29,8 +29,8 @@ export const useAuthStore = defineStore('auth', () => {
             // TambiÃ©n obtener los roles del usuario (con cachÃ©)
             await fetchUserRoles(false)
         } catch (error) {
-            console.error('âŒ Error fetching backend user:', error)
-            // Si falla, probablemente el token no es vÃ¡lido, desloguear
+            console.error('Error fetching backend user:', error)
+            // Si falla, probablemente el token no es valido, desloguear
             await logout()
         }
     }
@@ -48,11 +48,11 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const roles = await rolesApi.getMyRoles()
             userRoles.value = roles
-            // Guardar en cachÃ© por 5 minutos
+            // Guardar en cache por 5 minutos
             authCache.set('userRoles', roles, 300000)
             return roles
         } catch (error) {
-            console.error('âŒ Error fetching user roles:', error)
+            console.error('Error fetching user roles:', error)
             userRoles.value = []
             return []
         }
@@ -65,10 +65,10 @@ export const useAuthStore = defineStore('auth', () => {
                 const freshToken = await firebaseUser.value.getIdToken(true) // force refresh
                 token.value = freshToken
                 localStorage.setItem('firebase_jwt_token', freshToken)
-                console.log('ðŸ”„ Firebase token refreshed and saved to localStorage')
+                console.log('Firebase token refreshed and saved to localStorage')
                 return freshToken
             } catch (error) {
-                console.error('âŒ Error refreshing token:', error)
+                console.error('Error refreshing token:', error)
                 await logout()
                 return null
             }
@@ -86,15 +86,15 @@ export const useAuthStore = defineStore('auth', () => {
                     firebaseUser.value = fbUser
                     try {
                         token.value = await fbUser.getIdToken()
-                        
+
                         // ðŸ’¾ Guardar token en localStorage para frontend-test.html
                         localStorage.setItem('firebase_jwt_token', token.value)
-                        console.log('âœ… Firebase token saved to localStorage')
-                        
+                        console.log('Firebase token saved to localStorage')
+
                         // Sincronizar con el backend
                         await fetchBackendUser()
                     } catch (error) {
-                        console.error('âŒ Error obteniendo token de Firebase:', error)
+                        console.error('Error obteniendo token de Firebase:', error)
                         await logout()
                     }
 
@@ -102,10 +102,10 @@ export const useAuthStore = defineStore('auth', () => {
                     firebaseUser.value = null
                     backendUser.value = null
                     token.value = null
-                    
-                    // ðŸ—‘ï¸ Limpiar token de localStorage cuando no hay usuario
+
+                    // 🔒 Limpiar token de localStorage cuando no hay usuario
                     localStorage.removeItem('firebase_jwt_token')
-                    console.log('ðŸ—‘ï¸ Firebase token removed from localStorage')
+                    console.log('Firebase token removed from localStorage')
                 }
 
                 loading.value = false
@@ -123,18 +123,18 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await signOut(auth)
         } catch (error) {
-            console.error('âŒ Error en logout de Firebase:', error)
+            console.error('Error en logout de Firebase:', error)
         } finally {
             firebaseUser.value = null
             backendUser.value = null
             userRoles.value = []
             token.value = null
-            
-            // ðŸ—‘ï¸ Limpiar token de localStorage al hacer logout
+
+            // 🔒 Limpiar token de localStorage al hacer logout
             localStorage.removeItem('firebase_jwt_token')
-            console.log('ðŸ—‘ï¸ Firebase token removed from localStorage on logout')
-            
-            // Limpiar toda la cachÃ© de auth
+            console.log('Firebase token removed from localStorage on logout')
+
+            // Limpiar toda la caché de auth
             authCache.clear()
         }
     }

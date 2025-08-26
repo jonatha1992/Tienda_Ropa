@@ -31,7 +31,7 @@
 
                 <!-- Shipping Address -->
                 <div class="sm:col-span-6">
-                  <label for="shippingAddress" class="block text-sm font-medium text-gray-700">DirecciÃ³n de EnvÃ­o</label>
+                  <label for="shippingAddress" class="block text-sm font-medium text-gray-700">Dirección de Envío</label>
                   <textarea id="shippingAddress" v-model="editedOrder.shipping_address" rows="3"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                 </div>
@@ -50,7 +50,7 @@
 
                 <!-- Shipping Status -->
                 <div class="sm:col-span-3">
-                  <label for="shippingStatus" class="block text-sm font-medium text-gray-700">Estado de EnvÃ­o</label>
+                  <label for="shippingStatus" class="block text-sm font-medium text-gray-700">Estado de Envío</label>
                   <select id="shippingStatus" v-model="editedOrder.shipping_status"
                     class="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <option value="pending">Pendiente</option>
@@ -63,7 +63,7 @@
 
                 <!-- Tracking Info -->
                 <div class="sm:col-span-4">
-                  <label for="trackingNumber" class="block text-sm font-medium text-gray-700">NÃºmero de Seguimiento</label>
+                  <label for="trackingNumber" class="block text-sm font-medium text-gray-700">Número de Seguimiento</label>
                   <input type="text" id="trackingNumber" v-model="editedOrder.tracking_number"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
@@ -147,7 +147,7 @@ const getTrackingPlaceholder = (providerCode: string) => {
 
 const getTrackingHint = (providerCode: string) => {
   const provider = props.shippingProviders.find(p => p.code === providerCode);
-  return provider ? `Formato: ${provider.code.toUpperCase()} + 10 dÃ­gitos` : 'Ingrese el nÃºmero de seguimiento';
+  return provider ? `Formato: ${provider.code.toUpperCase()} + 10 dígitos` : 'Ingrese el número de seguimiento';
 };
 
 const saveChanges = async () => {
