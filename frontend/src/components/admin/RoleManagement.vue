@@ -99,13 +99,13 @@
                   @click="manageUserRoles(user)"
                   class="btn-blue btn-sm mr-4"
                 >
-                  <span >Gestionar Roles</span>
+                  <span class="text-white" >Gestionar Roles</span>
                 </button>
                 <button
                   @click="viewUserDetails(user)"
                   class="btn-green btn-sm"
                 >
-                  <span >Ver Detalles</span>
+                  <span class="text-white" >Ver Detalles</span>
                 </button>
               </td>
             </tr>
@@ -158,7 +158,7 @@
           
           <!-- Add Role -->
           <div class="mb-4">
-            <h4 class="mb-2 text-sm font-medium text-gray-700 font-heading">Agregar Rol</h4>
+            <h4 class="mb-2 text-sm font-medium text-gray-700 font-heading font-body">Agregar Rol</h4>
             <div class="flex gap-2">
               <select v-model="selectedRoleToAdd" class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md">
                 <option class="font-body" value="">Seleccionar rol</option>
@@ -166,7 +166,7 @@
                   v-for="role in availableRoles"
                   :key="role.id"
                   :value="role.id"
-                  class="text-sm font-body"
+                  class="text-sm "
                 >
                   {{ role.name.toUpperCase() }} - {{ role.description }}
                 </option>
@@ -174,15 +174,16 @@
               <button
                 @click="addUserRole"
                 :disabled="!selectedRoleToAdd || loading"
-                class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400"
+                class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-green-600"
               >
-                <span class="font-body">Agregar</span>
+                <span class="text-white">+</span>
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- Fin del Modal de Gestión de Roles -->
 
     <!-- Add User Modal -->
     <div v-if="showAddUserModal" class="fixed inset-0 z-50 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
