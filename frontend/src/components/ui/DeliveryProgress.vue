@@ -62,7 +62,7 @@
 
     <!-- Delivery Method Selection (only show when on step 2) -->
     <div v-if="currentStep === 2" class="p-6 mt-8 bg-white border border-gray-200 rounded-lg">
-      <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Seleccionar MÃ©todo de Entrega</h3>
+      <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Seleccionar Metodo de Entrega</h3>
       
       <!-- Loading State -->
       <div v-if="isLoadingQuotes" class="py-4 text-center">
@@ -95,9 +95,9 @@
                    :checked="selectedDeliveryMethod === 'envio_andreani'"
                    class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">EnvÃ­o por Andreani</div>
+              <div class="text-sm font-medium text-gray-900">Envio por Andreani</div>
               <div class="text-sm text-gray-500">
-                {{ getShippingOption('andreani')?.estimated_delivery_text || 'Entrega a domicilio en 3-5 dÃ­as hÃ¡biles' }}
+                {{ getShippingOption('andreani')?.estimated_delivery_text || 'Entrega a domicilio en 3-5 dias habiles' }}
               </div>
             </div>
           </div>
@@ -115,9 +115,9 @@
                    :checked="selectedDeliveryMethod === 'envio_correo'"
                    class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">EnvÃ­o por Correo Argentino</div>
+              <div class="text-sm font-medium text-gray-900">Envio por Correo Argentino</div>
               <div class="text-sm text-gray-500">
-                {{ getShippingOption('correo_argentino')?.estimated_delivery_text || 'Entrega a domicilio en 5-8 dÃ­as hÃ¡biles' }}
+                {{ getShippingOption('correo_argentino')?.estimated_delivery_text || 'Entrega a domicilio en 5-8 dias habiles' }}
               </div>
             </div>
           </div>
@@ -136,9 +136,9 @@
                    :checked="selectedDeliveryMethod === 'envio_oca'"
                    class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
             <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">EnvÃ­o por OCA</div>
+              <div class="text-sm font-medium text-gray-900">Envio por OCA</div>
               <div class="text-sm text-gray-500">
-                {{ getShippingOption('oca')?.estimated_delivery_text || 'Entrega a domicilio en 4-6 dÃ­as hÃ¡biles' }}
+                {{ getShippingOption('oca')?.estimated_delivery_text || 'Entrega a domicilio en 4-6 dias habiles' }}
               </div>
             </div>
           </div>
@@ -174,11 +174,11 @@
           <div class="ml-3">
             <h4 class="text-sm font-medium text-blue-900">Coordinar Retiro</h4>
             <p class="mt-1 text-sm text-blue-700">
-              DespuÃ©s de completar tu compra, te contactaremos por WhatsApp para coordinar el horario de retiro.
+              Despues de completar tu compra, te contactaremos por WhatsApp para coordinar el horario de retiro.
             </p>
             <div class="mt-2 text-sm text-blue-700">
               <strong>Contacto:</strong> +54 9 11 1234-5678<br>
-              <strong>DirecciÃ³n:</strong> Av. Ejemplo 123, CABA
+              <strong>Direccion:</strong> Av. Ejemplo 123, CABA
             </div>
           </div>
         </div>
@@ -187,7 +187,7 @@
       <!-- Delivery Cost Summary -->
       <div v-if="selectedDeliveryMethod" class="pt-4 mt-6 border-t border-gray-200">
         <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-gray-900">Costo de envÃ­o:</span>
+          <span class="text-sm font-medium text-gray-900">Costo de envio:</span>
           <span class="text-sm font-medium text-gray-900">
             {{ getDeliveryCost() === 0 ? 'Gratis' : `$${getDeliveryCost()}` }}
           </span>

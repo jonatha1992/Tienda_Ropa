@@ -85,6 +85,42 @@ def delete_inventory(*, session: Session = Depends(get_session), inventory_id: i
     return {"ok": True}
 
 
+def restore_stock(product_id: int, quantity: int, session: Session) -> bool:
+    """
+    Restaura el stock de un producto específico en la tabla products.
+    
+    Args:
+        product_id: ID del producto
+        quantity: Cantidad a restaurar
+        session: Sesión de base de datos
+        
+    Returns:
+        True si se restauró correctamente, False si hubo un error
+    """
+    try:
+        # Obtener el producto
+        product = session.get(Product, product_id)
+        if not product:
+            logger.error(f"Producto con ID {product_id} no encontrado")
+            return False
+            
+        # Actualizar el stock
+        if product.stock is not None:
+            product.stock += quantity
+        else:
+            product.stock = quantity
+            
+        session.add(product)
+        session.commit()
+        logger.info(f"Stock restaurado para producto {product_id}. Nuevo stock: {product.stock}")
+        return True
+        
+    except Exception as e:
+        session.rollback()
+        logger.error(f"Error al restaurar stock para producto {product_id}: {str(e)}")
+        return False
+
+
 def reduce_stock(product_id: int, quantity: int, session: Session) -> bool:
     """
     Reduce el stock de un producto específico desde la tabla products.

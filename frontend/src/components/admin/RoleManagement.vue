@@ -183,7 +183,6 @@
         </div>
       </div>
     </div>
-    <!-- Fin del Modal de Gestión de Roles -->
 
     <!-- Add User Modal -->
     <div v-if="showAddUserModal" class="fixed inset-0 z-50 w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">

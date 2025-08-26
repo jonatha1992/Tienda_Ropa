@@ -129,7 +129,7 @@
           <div v-if="currentStep === 3" class="mt-6">
             <div class="bg-white shadow rounded-lg p-6">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="font-heading text-lg font-medium text-gray-900">InformaciÃ³n de entrega</h3>
+                <h3 class="font-heading text-lg font-medium text-gray-900">Información de entrega</h3>
                 <button 
                   @click="showPaymentStep = false"
                   class="text-sm text-blue-600 hover:text-blue-800 font-body"
@@ -148,11 +148,11 @@
                   <span class="text-gray-900 font-body">{{ checkoutForm.email }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="font-medium text-gray-700 font-body">TelÃ©fono:</span>
+                  <span class="font-medium text-gray-700 font-body">Teléfono:</span>
                   <span class="text-gray-900 font-body">{{ checkoutForm.phone }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="font-medium text-gray-700 font-body">DirecciÃ³n:</span>
+                  <span class="font-medium text-gray-700 font-body">Dirección:</span>
                   <span class="text-gray-900 font-body">{{ checkoutForm.address }}, {{ checkoutForm.city }}</span>
                 </div>
               </div>
@@ -166,7 +166,7 @@
             <!-- Customer Information -->
             <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="font-heading text-lg font-medium text-gray-900">InformaciÃ³n de contacto</h3>
+                <h3 class="font-heading text-lg font-medium text-gray-900">Información de contacto</h3>
                 
                 <!-- Loading indicator -->
                 <div v-if="loadingUserData" class="flex items-center text-sm text-gray-500">
@@ -235,7 +235,7 @@
 
             <!-- Shipping Information -->
             <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
-              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">DirecciÃ³n de envÃ­o</h3>
+              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Dirección de envío</h3>
               
               <div class="space-y-4">
                 <div>
@@ -261,7 +261,7 @@
                   </div>
                   
                   <div>
-                    <label for="postalCode" class="font-body block text-sm font-medium text-body-text">CÃ³digo Postal</label>
+                    <label for="postalCode" class="font-body block text-sm font-medium text-body-text">Código Postal</label>
                     <input
                       v-model="checkoutForm.postalCode"
                       type="text"
@@ -285,7 +285,7 @@
                   </div>
                   
                   <div>
-                    <label for="country" class="font-body block text-sm font-medium text-body-text">PaÃ­s</label>
+                    <label for="country" class="font-body block text-sm font-medium text-body-text">País</label>
                     <select
                       v-model="checkoutForm.country"
                       id="country"
@@ -300,7 +300,7 @@
                 </div>
                 
                 <div>
-                  <label for="addressReference" class="font-body block text-sm font-medium text-body-text">Referencias de direcciÃ³n (opcional)</label>
+                  <label for="addressReference" class="font-body block text-sm font-medium text-body-text">Referencias de dirección (opcional)</label>
                   <input
                     v-model="checkoutForm.addressReference"
                     type="text"
@@ -317,7 +317,7 @@
                     id="deliveryNotes"
                     rows="2"
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    placeholder="Horarios de entrega, portero elÃ©ctrico, etc."
+                    placeholder="Horarios de entrega, portero eléctrico, etc."
                   ></textarea>
                 </div>
                 
@@ -329,7 +329,7 @@
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
                   >
                     <option class="font-body" value="cualquiera">Cualquier horario</option>
-                    <option class="font-body" value="maÃ±ana">MaÃ±ana (9:00 - 13:00)</option>
+                    <option class="font-body" value="mañana">Mañana (9:00 - 13:00)</option>
                     <option class="font-body" value="tarde">Tarde (14:00 - 18:00)</option>
                     <option class="font-body" value="noche">Noche (18:00 - 21:00)</option>
                   </select>
@@ -346,8 +346,8 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </div>
-                  <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">InformaciÃ³n de entrega completa</h3>
-                  <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el mÃ©todo de pago</p>
+                  <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Información de entrega completa</h3>
+                  <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el método de pago</p>
                 </div>
                 <button
                   type="button"
@@ -364,7 +364,7 @@
 
             <!-- Payment Method - Back to right column -->
             <div v-if="currentStep === 3" class="bg-white shadow rounded-lg p-6" data-payment-section>
-              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">MÃ©todo de pago</h3>
+              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
               
               <div class="space-y-3">
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
@@ -414,7 +414,7 @@
               </button>
               
               <p class="font-body mt-3 text-xs text-body-text text-center">
-                Al confirmar tu pedido, aceptas nuestros tÃ©rminos y condiciones
+                Al confirmar tu pedido, aceptas nuestros términos y condiciones
               </p>
             </div>
 
@@ -429,7 +429,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Tu carrito estÃ¡ vacÃ­o</h3>
+        <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
         <p class="font-body text-body-text mb-6">Agrega algunos productos antes de proceder al checkout</p>
         <router-link
           to="/shop"

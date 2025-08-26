@@ -29,6 +29,9 @@ class Product(ProductBase, table=True):
         back_populates="product", 
         sa_relationship_kwargs={"cascade": "all, delete-orphan"}
     )
+    
+    # Relationship with OrderItem
+    order_items: List["OrderItem"] = Relationship(back_populates="product")
 
 class ProductImage(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

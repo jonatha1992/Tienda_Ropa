@@ -1,5 +1,5 @@
 ﻿<template>
-  <router-link :to="`/product/${createSlug(product.name)}`" class="block h-full">
+  <router-link :to="`/product/${product.name}`" class="block h-full">
     <div class="h-full flex flex-col bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300">
       <!-- Imagen del producto -->
       <div class="relative aspect-square overflow-hidden bg-gray-50">
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <!-- InformaciÃ³n del producto -->
+      <!-- Información del producto -->
       <div class="p-3 flex-1 flex flex-col">
         <!-- Nombre del producto -->
         <h3 class="text-sm font-normal text-gray-800 mb-1 line-clamp-2 leading-tight">
@@ -113,23 +113,6 @@ const props = defineProps<{
 
 const imageError = ref(false);
 
-// Create URL-friendly slug from product name
-const createSlug = (name: string) => {
-  return name
-    .toLowerCase()
-    .replace(/[Ã¡Ã Ã¢Ã£]/g, 'a')
-    .replace(/[Ã©Ã¨Ãª]/g, 'e')
-    .replace(/[Ã­Ã¬Ã®]/g, 'i')
-    .replace(/[Ã³Ã²Ã´Ãµ]/g, 'o')
-    .replace(/[ÃºÃ¹Ã»]/g, 'u')
-    .replace(/[Ã±]/g, 'n')
-    .replace(/[Ã§]/g, 'c')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
-};
-
 // Improved image handling with error fallback
 const imageToShow = computed(() => {
   if (imageError.value) {
@@ -150,9 +133,9 @@ const handleImageError = () => {
   imageError.value = true;
 };
 
-// Determinar si el producto estÃ¡ sin stock
+// Determinar si el producto está sin stock
 const isOutOfStock = computed(() => {
-  // Para productos Ãºnicos (is_unique = true), verificar el stock directo
+  // Para productos únicos (is_unique = true), verificar el stock directo
   if (props.product.is_unique) {
     return props.product.stock === 0 || props.product.stock === null;
   }
@@ -162,14 +145,14 @@ const isOutOfStock = computed(() => {
     return props.product.variants.every((variant: any) => variant.stock === 0);
   }
   
-  // Si no hay variantes y no es Ãºnico, asumir que estÃ¡ disponible
+  // Si no hay variantes y no es único, asumir que está disponible
   return false;
 });
 
 // Quick add function (placeholder)
 const quickAdd = () => {
   console.log('Quick add clicked for:', props.product.name);
-  // TODO: Implementar lÃ³gica de quick add
+  // TODO: Implementar lógica de quick add
 };
 </script>
 
@@ -186,12 +169,12 @@ const quickAdd = () => {
 .aspect-square {
   position: relative;
   width: 100%;
-  padding-bottom: 100%; /* Mantener relaciÃ³n de aspecto 1:1 */
+  padding-bottom: 100%; /* Mantener relaci  ón de aspecto 1:1 */
   overflow: hidden;
   background-color: #f9fafb;
 }
 
-/* Contenedor de imÃ¡genes */
+/* Contenedor de imágenes */
 .aspect-square > div {
   position: absolute;
   top: 0;

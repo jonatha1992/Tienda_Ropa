@@ -61,8 +61,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,  # Uses dynamic origins
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],  # Allows all headers
+    expose_headers=["Content-Disposition"],
 )
 
 app.include_router(products_router, prefix="/api/v1")

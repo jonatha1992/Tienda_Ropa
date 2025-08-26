@@ -175,18 +175,18 @@
 
           <!-- Product Description -->
           <div class="space-y-4">
-            <h3 class="text-sm font-medium text-gray-900 font-body">DescripciÃ³n:</h3>
+            <h3 class="text-sm font-medium text-gray-900 font-body">Descripción:</h3>
             <div class="text-sm font-normal text-gray-800 leading-tight" v-html="product.description"></div>
           </div>
 
           <!-- Product Details -->
           <div class="mt-8 space-y-2">
             <div class="flex">
-              <span class="w-24 text-sm font-medium text-gray-900 font-body">CategorÃ­a:</span>
+              <span class="w-24 text-sm font-medium text-gray-900 font-body">Categoría:</span>
               <span class="text-sm text-gray-600 font-body">{{ product.categoria }}</span>
             </div>
             <div class="flex">
-              <span class="w-24 text-sm font-medium text-gray-900 font-body">GÃ©nero:</span>
+              <span class="w-24 text-sm font-medium text-gray-900 font-body">Género:</span>
               <span class="text-sm text-gray-600 font-body">{{ product.genero }}</span>
             </div>
             <div class="flex">

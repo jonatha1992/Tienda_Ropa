@@ -2,10 +2,11 @@ from typing import List, Optional
 import asyncio
 from datetime import datetime
 
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Body
 from app.core.security import get_current_user, require_admin
-from sqlmodel import Session, select
+from sqlmodel import Session, select, delete
 
 from app.db.session import get_session
 from app.models.order import Order
@@ -17,8 +18,10 @@ from app.controllers.transfer_controller import transfer_controller
 from app.controllers.cash_controller import cash_controller
 from app.core.mailer import send_email, render_template
 from app.core.config import settings
-from app.routes.inventory import reduce_stock
+from app.routes.inventory import reduce_stock, restore_stock
 
+# Configurar logger
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -463,18 +466,54 @@ def update_order_shipping(
     return {"message": "Order shipping updated successfully", "order_id": order.id}
 
 
-@router.delete("/orders/{order_id}")
+@router.delete("/orders/{order_id}", response_model=dict)
 def delete_order(*, session: Session = Depends(get_session), order_id: int, user=Depends(get_current_user)):
-    order = session.get(Order, order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    # Delete related OrderItems first to avoid foreign key constraint violation
-    order_items = session.exec(select(OrderItem).where(OrderItem.order_id == order_id)).all()
-    for order_item in order_items:
-        session.delete(order_item)
-    
-    # Delete the order
-    session.delete(order)
-    session.commit()
-    return {"ok": True}
+    try:
+        # Obtener la orden con sus items
+        order = session.get(Order, order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        # Obtener los items de la orden antes de eliminarla
+        order_items = session.exec(
+            select(OrderItem)
+            .where(OrderItem.order_id == order_id)
+        ).all()
+        
+        try:
+            logger.info(f"Attempting to delete order {order_id}")
+            
+            # Restaurar el stock de cada producto
+            for item in order_items:
+                if not restore_stock(item.product_id, item.quantity, session):
+                    logger.warning(f"No se pudo restaurar el stock para el producto {item.product_id}")
+            
+            # Eliminar la orden (los order_items se eliminarán en cascada)
+            session.delete(order)
+            session.commit()
+            
+            logger.info(f"Order {order_id} deleted successfully and stock restored")
+            return {
+                "status": "success",
+                "message": "Order deleted successfully and stock restored",
+                "ok": True
+            }
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error deleting order {order_id}: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error deleting order: {str(e)}"
+            )
+        
+    except HTTPException:
+        # Re-lanzar las excepciones HTTP
+        raise
+        
+    except Exception as e:
+        logger.error(f"Unexpected error deleting order {order_id}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"An unexpected error occurred while deleting the order"
+        )

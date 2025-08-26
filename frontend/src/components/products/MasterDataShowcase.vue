@@ -2,18 +2,18 @@
   <div class="bg-gray-100 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-8">
-        <h2 class="font-heading text-3xl font-extrabold text-gray-900">Explora Nuestra ColecciÃ³n</h2>
+        <h2 class="font-heading text-3xl font-extrabold text-gray-900">Explora Nuestra Colección</h2>
         <p class="font-body mt-4 text-lg text-body-text">Encuentra exactamente lo que buscas</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- CategorÃ­as -->
+        <!-- Categorías -->
         <div class="bg-white rounded-lg shadow-md p-6">
           <h3 class="font-heading text-xl font-bold text-gray-900 mb-4 flex items-center">
             <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7l-7 7-7-7m14 0H5"></path>
             </svg>
-            <span class="font-heading">CategorÃ­as</span>
+            <span class="font-heading">Categorias</span>
           </h3>
           <div class="space-y-2">
             <div v-if="loading.categories" class="animate-pulse">
@@ -22,7 +22,7 @@
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
             <div v-else-if="categories.length === 0" class="font-body text-body-text text-sm">
-              No hay categorÃ­as disponibles
+              No hay categorías disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
               <router-link 

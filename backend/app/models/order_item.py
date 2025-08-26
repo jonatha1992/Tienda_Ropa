@@ -1,6 +1,6 @@
 
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 
 class OrderItem(SQLModel, table=True):
@@ -9,3 +9,7 @@ class OrderItem(SQLModel, table=True):
     product_id: int = Field(foreign_key="product.id")
     quantity: int = Field(gt=0)
     price: float
+    
+    # Relationships
+    order: "Order" = Relationship(back_populates="items")
+    product: "Product" = Relationship(back_populates="order_items")

@@ -1,6 +1,6 @@
 
-from sqlmodel import SQLModel, Field
-from typing import Optional
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 from datetime import datetime
 
 class Order(SQLModel, table=True):
@@ -47,3 +47,6 @@ class Order(SQLModel, table=True):
     shipped_by: Optional[int] = Field(default=None, foreign_key="user.id", description="Admin que marcó como enviado")
     tracking_updated_at: Optional[datetime] = Field(default=None, description="Última actualización del tracking")
     delivery_notes_shipping: Optional[str] = Field(default=None, description="Notas específicas del envío")
+    
+    # Relationship with OrderItem
+    items: List["OrderItem"] = Relationship(back_populates="order", sa_relationship_kwargs={"cascade": "all, delete-orphan"})

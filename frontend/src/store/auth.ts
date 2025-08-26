@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    // ðŸ”„ FunciÃ³n para actualizar token manualmente (Ãºtil cuando expira)
+    // Función para actualizar token manualmente (Ãºtil cuando expira)
     const refreshToken = async () => {
         if (firebaseUser.value) {
             try {
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore('auth', () => {
                     try {
                         token.value = await fbUser.getIdToken()
 
-                        // ðŸ’¾ Guardar token en localStorage para frontend-test.html
+                        // Guardar token en localStorage para frontend-test.html
                         localStorage.setItem('firebase_jwt_token', token.value)
                         console.log('Firebase token saved to localStorage')
 
@@ -103,7 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
                     backendUser.value = null
                     token.value = null
 
-                    // 🔒 Limpiar token de localStorage cuando no hay usuario
+                    // Limpiar token de localStorage cuando no hay usuario
                     localStorage.removeItem('firebase_jwt_token')
                     console.log('Firebase token removed from localStorage')
                 }
@@ -130,7 +130,7 @@ export const useAuthStore = defineStore('auth', () => {
             userRoles.value = []
             token.value = null
 
-            // 🔒 Limpiar token de localStorage al hacer logout
+            // Limpiar token de localStorage al hacer logout
             localStorage.removeItem('firebase_jwt_token')
             console.log('Firebase token removed from localStorage on logout')
 

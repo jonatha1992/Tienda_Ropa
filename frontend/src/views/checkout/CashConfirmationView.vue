@@ -8,14 +8,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 class="text-3xl font-light text-gray-900">Â¡Pedido Confirmado!</h1>
+        <h1 class="text-3xl font-light text-gray-900">¡Pedido Confirmado!</h1>
         <p class="mt-2 text-lg text-gray-600">
           Orden #{{ orderData?.order_id || 'Cargando...' }}
         </p>
       </div>
 
       <div v-if="deliveryInfo" class="space-y-6">
-        <!-- InformaciÃ³n de Entrega -->
+        <!-- Información de Entrega -->
         <div class="bg-white rounded-lg shadow p-6">
           <h2 class="text-xl font-medium text-gray-900 mb-6 flex items-center">
             <svg class="h-6 w-6 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +44,7 @@
               </div>
               
               <div class="border border-gray-200 rounded p-4">
-                <h3 class="font-medium text-gray-900 mb-3">DirecciÃ³n de Entrega</h3>
+                <h3 class="font-medium text-gray-900 mb-3">Dirección de Entrega</h3>
                 <div class="text-sm">
                   <p class="font-medium">{{ deliveryInfo.customer_address }}</p>
                   <div v-if="customerInfo.address_reference || customerInfo.delivery_notes" class="mt-2 space-y-1">
@@ -134,20 +134,20 @@
           </div>
         </div>
 
-        <!-- InformaciÃ³n del Cliente -->
+        <!-- Información del Cliente -->
         <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-4">InformaciÃ³n de Contacto</h2>
+          <h2 class="text-xl font-medium text-gray-900 mb-4">Información de Contacto</h2>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <h3 class="font-medium text-gray-900 mb-2">Datos del Comprador</h3>
               <div class="text-sm space-y-1">
                 <p><span class="text-gray-600">Nombre:</span> {{ customerInfo.name }}</p>
                 <p><span class="text-gray-600">Email:</span> {{ customerInfo.email }}</p>
-                <p><span class="text-gray-600">TelÃ©fono:</span> {{ customerInfo.phone }}</p>
+                <p><span class="text-gray-600">Teléfono:</span> {{ customerInfo.phone }}</p>
               </div>
             </div>
             <div>
-              <h3 class="font-medium text-gray-900 mb-2">MÃ©todo de Pago</h3>
+              <h3 class="font-medium text-gray-900 mb-2">Método de Pago</h3>
               <div class="flex items-center text-sm">
                 <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -163,7 +163,7 @@
 
         <!-- Estado del Pedido -->
         <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-4">Â¿QuÃ© sigue?</h2>
+          <h2 class="text-xl font-medium text-gray-900 mb-4">¿Qué sigue?</h2>
           
           <div class="space-y-4">
             <div class="flex items-start">
@@ -181,8 +181,8 @@
                 2
               </div>
               <div>
-                <h3 class="font-medium text-gray-900">CoordinaciÃ³n de Entrega</h3>
-                <p class="text-sm text-gray-600">Te contactaremos en las prÃ³ximas 24 horas para coordinar la entrega</p>
+                <h3 class="font-medium text-gray-900">Coordinación de Entrega</h3>
+                <p class="text-sm text-gray-600">Te contactaremos en las próximas 24 horas para coordinar la entrega</p>
               </div>
             </div>
             
@@ -217,7 +217,7 @@
           </div>
           
           <p class="mt-4 text-xs text-gray-500 text-center">
-            RecibirÃ¡s un email de confirmaciÃ³n con estos datos. Te contactaremos pronto para coordinar la entrega.
+            Recibirás un email de confirmación con estos datos. Te contactaremos pronto para coordinar la entrega.
           </p>
         </div>
       </div>
@@ -225,7 +225,7 @@
       <!-- Loading state -->
       <div v-else class="text-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p class="text-gray-600">Cargando informaciÃ³n de entrega...</p>
+        <p class="text-gray-600">Cargando información de entrega...</p>
       </div>
     </div>
   </div>
@@ -268,8 +268,8 @@ onMounted(() => {
 
 const formatDeliveryTime = (time: string) => {
   const timeMap: Record<string, string> = {
-    'maÃ±ana': 'MaÃ±ana (9:00 - 13:00)',
-    'tarde': 'Tarde (14:00 - 18:00)',
+    'mañana': 'Mañana (9:00 - 13:00)',
+    'tarde': 'Tarde (14:00 - 18:00)', 
     'noche': 'Noche (18:00 - 21:00)',
     'cualquiera': 'Cualquier horario'
   };
