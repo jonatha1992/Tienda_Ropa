@@ -213,7 +213,7 @@
             </div>
 
             <!-- Step 4: Payment Method -->
-            <div v-if="currentStep === 4" class="p-6 bg-white rounded-lg shadow" data-payment-section>
+            <div v-if="currentStep === 4" class="p-6 bg-white rounded-lg shadow" data-payment-section ref="paymentSection">
               <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Método de pago</h3>
               
               <div class="space-y-3">
@@ -315,6 +315,9 @@ const router = useRouter();
 const toast = useToast();
 const { loadCustomerData, getCheckoutFormData, hasCustomerData } = useUserData();
 
+// Ref para la sección de método de pago
+const paymentSection = ref<HTMLElement | null>(null);
+
 const processing = ref(false);
 const loadingUserData = ref(false);
 const usingPreviousData = ref(false);
@@ -376,9 +379,17 @@ const goToDeliveryStep = () => {
   }
 };
 
+
 const goToPaymentStep = () => {
   if (isDeliveryInfoComplete.value) {
     currentStep.value = 4;
+    setTimeout(() => {
+      if (paymentSection.value) {
+        paymentSection.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
   }
 };
 
@@ -487,7 +498,7 @@ const processOrder = async () => {
   
   try {
     // Validate stock with backend using the new stock service
-    console.log('ðŸ” Validating real-time stock with backend...');
+    console.log('Validating real-time stock with backend...');
     processing.value = true;
     
     // Prepare items for stock check
@@ -527,7 +538,7 @@ const processOrder = async () => {
       }
       // address and city required
       if (!checkoutForm.value.address || !checkoutForm.value.city) {
-        toast.error('La direcciÃ³n y la ciudad son obligatorias.');
+        toast.error('La dirección y la ciudad son obligatorias.');
         return false;
       }
       return true;
@@ -573,7 +584,7 @@ const processOrder = async () => {
     // Step 3: Create order items
     for (const item of cartStore.items) {
       // FINAL stock check right before creating order item
-      console.log(`ðŸ”„ FINAL stock check for product ${item.product.id} before order item creation...`);
+      console.log(`FINAL stock check for product ${item.product.id} before order item creation...`);
       
       try {
         // Use the stock service for final verification
@@ -594,7 +605,7 @@ const processOrder = async () => {
         });
         
         if (!itemResult.has_enough_stock) {
-          console.error(`âŒ FINAL STOCK CHECK FAILED: Product ${item.product.id} now has ${itemResult.available_stock} stock but ${item.quantity} requested`);
+          console.error(`FINAL STOCK CHECK FAILED: Product ${item.product.id} now has ${itemResult.available_stock} stock but ${item.quantity} requested`);
           throw new Error(`Stock insuficiente para "${item.product.name}". Stock disponible: ${itemResult.available_stock}, solicitado: ${item.quantity}`);
         }
         
@@ -652,7 +663,7 @@ const processOrder = async () => {
       console.log('Cart item selectedColor:', item.selectedColor);
       console.log('Cart item selectedSize:', item.selectedSize);
       console.log('Product is_unique:', item.product.is_unique);
-      console.log('ðŸ” STOCK INFORMATION:');
+      console.log('STOCK INFORMATION:');
       console.log('Frontend shows stock:', item.product.stock);
       console.log('Product variants with stock:', item.product.variants?.map(v => ({
         variant_id: v.id,
@@ -671,7 +682,7 @@ const processOrder = async () => {
         await orderItemsApi.createOrderItem(orderItemData);
         console.log('Order item created successfully for product:', item.product.id);
       } catch (error: any) {
-        console.error('âŒ ERROR CREATING ORDER ITEM:');
+        console.error('ERROR CREATING ORDER ITEM:');
         console.error('Backend error message:', JSON.stringify(error.response?.data, null, 2));
         console.error('Error status:', error.response?.status);
         console.error('Data we sent:', JSON.stringify(orderItemData, null, 2));
@@ -714,7 +725,7 @@ const processOrder = async () => {
         transfer_info: response.transfer_info
       }));
       
-      toast.success('Â¡Pedido confirmado! Te mostraremos los datos de transferencia.');
+      toast.success('Pedido confirmado! Te mostraremos los datos de transferencia.');
       router.push('/payment/transfer-instructions');
     } else if (checkoutForm.value.paymentMethod === 'cash') {
       // Clear cart and redirect to cash confirmation
@@ -727,12 +738,12 @@ const processOrder = async () => {
         delivery_info: response.delivery_info
       }));
       
-      toast.success('Â¡Pedido confirmado! Te mostraremos los detalles de entrega.');
+      toast.success('¡Pedido confirmado! Te mostraremos los detalles de entrega.');
       router.push('/payment/cash-confirmation');
     } else {
       // Fallback for unknown payment methods
       cartStore.clearCart();
-      toast.success('Â¡Pedido confirmado! RecibirÃ¡s informaciÃ³n por email.');
+      toast.success('¡Pedido confirmado! Recibirás información por email.');
       router.push('/');
     }
     

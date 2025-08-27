@@ -361,9 +361,9 @@ const getDeliveryMethodClass = (deliveryMethod: string | undefined) => {
 const getDeliveryMethodText = (deliveryMethod: string | undefined) => {
   switch (deliveryMethod) {
     case 'envio_andreani':
-      return 'EnvÃ­o por Andreani';
+      return 'Envio por Andreani';
     case 'envio_correo':
-      return 'EnvÃ­o por Correo Argentino';
+      return 'Envio por Correo Argentino';
     case 'retiro_local':
       return 'Retiro en Local';
     default:

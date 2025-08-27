@@ -1,9 +1,9 @@
 ﻿<template>
-  <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-3xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <div class="mx-auto h-16 w-16 text-green-600 mb-4">
+      <div class="mb-8 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 text-green-600">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -16,18 +16,18 @@
 
       <div v-if="deliveryInfo" class="space-y-6">
         <!-- Información de Entrega -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-6 flex items-center">
-            <svg class="h-6 w-6 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="flex items-center mb-6 text-xl font-medium text-gray-900">
+            <svg class="w-6 h-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             Entrega a Domicilio
           </h2>
           
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div class="space-y-4">
-              <div class="border border-gray-200 rounded p-4">
-                <h3 class="font-medium text-gray-900 mb-3">Zona de Entrega</h3>
+              <div class="p-4 border border-gray-200 rounded">
+                <h3 class="mb-3 font-medium text-gray-900">Zona de Entrega</h3>
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
                     <span class="text-gray-600">Zona:</span>
@@ -37,14 +37,14 @@
                     <span class="text-gray-600">Tiempo estimado:</span>
                     <span class="font-medium">{{ deliveryInfo.estimated_delivery }}</span>
                   </div>
-                  <p class="text-gray-600 text-xs mt-2">
+                  <p class="mt-2 text-xs text-gray-600">
                     {{ deliveryInfo.delivery_info.zone_description }}
                   </p>
                 </div>
               </div>
               
-              <div class="border border-gray-200 rounded p-4">
-                <h3 class="font-medium text-gray-900 mb-3">Dirección de Entrega</h3>
+              <div class="p-4 border border-gray-200 rounded">
+                <h3 class="mb-3 font-medium text-gray-900">Dirección de Entrega</h3>
                 <div class="text-sm">
                   <p class="font-medium">{{ deliveryInfo.customer_address }}</p>
                   <div v-if="customerInfo.address_reference || customerInfo.delivery_notes" class="mt-2 space-y-1">
@@ -63,8 +63,8 @@
             </div>
             
             <div class="space-y-4">
-              <div class="border border-gray-200 rounded p-4">
-                <h3 class="font-medium text-gray-900 mb-3">Resumen de Costos</h3>
+              <div class="p-4 border border-gray-200 rounded">
+                <h3 class="mb-3 font-medium text-gray-900">Resumen de Costos</h3>
                 <div class="space-y-2">
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-600">Subtotal productos:</span>
@@ -72,9 +72,9 @@
                   </div>
                   
                   <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Costo de envÃ­o:</span>
+                    <span class="text-gray-600">Costo de envío:</span>
                     <span class="font-medium">
-                      <span v-if="deliveryInfo.delivery_info.is_free" class="line-through text-gray-400">
+                      <span v-if="deliveryInfo.delivery_info.is_free" class="text-gray-400 line-through">
                         ${{ deliveryInfo.delivery_info.original_cost.toLocaleString() }}
                       </span>
                       <span :class="deliveryInfo.delivery_info.is_free ? 'text-green-600 ml-2' : ''">
@@ -84,11 +84,11 @@
                   </div>
                   
                   <div v-if="deliveryInfo.delivery_info.is_free" class="flex justify-between text-sm text-green-600">
-                    <span>Ahorro en envÃ­o:</span>
+                    <span>Ahorro en envío:</span>
                     <span class="font-medium">${{ deliveryInfo.delivery_info.savings.toLocaleString() }}</span>
                   </div>
                   
-                  <div class="border-t border-gray-200 pt-2 mt-3">
+                  <div class="pt-2 mt-3 border-t border-gray-200">
                     <div class="flex justify-between">
                       <span class="font-medium text-gray-900">Total a pagar:</span>
                       <span class="text-xl font-bold text-green-600">
@@ -99,15 +99,15 @@
                 </div>
               </div>
               
-              <div v-if="!deliveryInfo.delivery_info.is_free" class="border border-green-200 bg-green-50 rounded p-4">
-                <h4 class="font-medium text-green-900 mb-2 flex items-center">
-                  <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div v-if="!deliveryInfo.delivery_info.is_free" class="p-4 border border-green-200 rounded bg-green-50">
+                <h4 class="flex items-center mb-2 font-medium text-green-900">
+                  <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Â¡EnvÃ­o Gratis!
+                  ¡Envio Gratis!
                 </h4>
-                <p class="text-green-800 text-sm">
-                  El envÃ­o es gratuito para compras superiores a 
+                <p class="text-sm text-green-800">
+                  El envío es gratuito para compras superiores a
                   <span class="font-medium">${{ deliveryInfo.delivery_info.free_threshold.toLocaleString() }}</span>
                 </p>
               </div>
@@ -116,9 +116,9 @@
         </div>
 
         <!-- Instrucciones -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-4 flex items-center">
-            <svg class="h-6 w-6 text-orange-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="flex items-center mb-4 text-xl font-medium text-gray-900">
+            <svg class="w-6 h-6 mr-2 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Instrucciones para la Entrega
@@ -135,26 +135,26 @@
         </div>
 
         <!-- Información del Cliente -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-4">Información de Contacto</h2>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-4 text-xl font-medium text-gray-900">Información de Contacto</h2>
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div>
-              <h3 class="font-medium text-gray-900 mb-2">Datos del Comprador</h3>
-              <div class="text-sm space-y-1">
+              <h3 class="mb-2 font-medium text-gray-900">Datos del Comprador</h3>
+              <div class="space-y-1 text-sm">
                 <p><span class="text-gray-600">Nombre:</span> {{ customerInfo.name }}</p>
                 <p><span class="text-gray-600">Email:</span> {{ customerInfo.email }}</p>
                 <p><span class="text-gray-600">Teléfono:</span> {{ customerInfo.phone }}</p>
               </div>
             </div>
             <div>
-              <h3 class="font-medium text-gray-900 mb-2">Método de Pago</h3>
+              <h3 class="mb-2 font-medium text-gray-900">Método de Pago</h3>
               <div class="flex items-center text-sm">
-                <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span class="font-medium">Efectivo contra entrega</span>
               </div>
-              <p class="text-xs text-gray-600 mt-1">
+              <p class="mt-1 text-xs text-gray-600">
                 Paga cuando recibas tu pedido
               </p>
             </div>
@@ -162,12 +162,12 @@
         </div>
 
         <!-- Estado del Pedido -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-medium text-gray-900 mb-4">¿Qué sigue?</h2>
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-4 text-xl font-medium text-gray-900">¿Qué sigue?</h2>
           
           <div class="space-y-4">
             <div class="flex items-start">
-              <div class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm font-medium mr-4">
+              <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-4 text-sm font-medium text-green-600 bg-green-100 rounded-full">
                 âœ“
               </div>
               <div>
@@ -177,7 +177,7 @@
             </div>
             
             <div class="flex items-start">
-              <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-medium mr-4">
+              <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-4 text-sm font-medium text-blue-600 bg-blue-100 rounded-full">
                 2
               </div>
               <div>
@@ -187,7 +187,7 @@
             </div>
             
             <div class="flex items-start">
-              <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-medium mr-4">
+              <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-4 text-sm font-medium text-gray-600 bg-gray-100 rounded-full">
                 3
               </div>
               <div>
@@ -199,32 +199,32 @@
         </div>
 
         <!-- Acciones -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="flex flex-col sm:flex-row gap-4">
+        <div class="p-6 bg-white rounded-lg shadow">
+          <div class="flex flex-col gap-4 sm:flex-row">
             <button
               @click="goHome"
-              class="flex-1 bg-gray-900 text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 transition-colors"
+              class="flex-1 px-4 py-3 font-medium text-white transition-colors bg-gray-900 rounded-md hover:bg-gray-800"
             >
               Volver al Inicio
             </button>
             
             <button
               @click="goToShop"
-              class="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-md font-medium hover:bg-gray-50 transition-colors"
+              class="flex-1 px-4 py-3 font-medium text-gray-700 transition-colors border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Seguir Comprando
             </button>
           </div>
           
-          <p class="mt-4 text-xs text-gray-500 text-center">
+          <p class="mt-4 text-xs text-center text-gray-500">
             Recibirás un email de confirmación con estos datos. Te contactaremos pronto para coordinar la entrega.
           </p>
         </div>
       </div>
 
       <!-- Loading state -->
-      <div v-else class="text-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+      <div v-else class="py-12 text-center">
+        <div class="w-12 h-12 mx-auto mb-4 border-b-2 border-green-600 rounded-full animate-spin"></div>
         <p class="text-gray-600">Cargando información de entrega...</p>
       </div>
     </div>

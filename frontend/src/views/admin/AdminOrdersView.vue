@@ -114,7 +114,7 @@
           <div class="flex items-center space-x-2">
             <label for="statusFilter" class="text-sm font-medium text-gray-700">Filtrar por estado:</label>
             <select v-model="statusFilter" @change="loadOrders" 
-              class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              class="border-gray-500 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
               <option value="">Todos</option>
               <option value="pending_shipment">Pendientes de Envío</option>
               <option value="with_tracking">Con Tracking</option>
@@ -124,10 +124,9 @@
           
           <button @click="loadOrders" 
             class="btn-outline">
-            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-4 h-4 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            Actualizar
           </button>
         </div>
 
@@ -171,8 +170,8 @@
                         :checked="selectedOrders.length === orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length && orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length > 0"
                         @change="toggleSelectAll"
                         class="sr-only peer">
-                      <div class="relative w-5 h-5 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50 transition-colors duration-200">
-                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-opacity duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -188,8 +187,8 @@
                         :checked="selectedOrdersForDeletion.length === orders.length && orders.length > 0"
                         @change="toggleSelectAllForDeletion"
                         class="sr-only peer">
-                      <div class="relative w-5 h-5 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50 transition-colors duration-200">
-                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-colors duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-colors duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
@@ -232,8 +231,8 @@
                         v-model="selectedOrders"
                         class="sr-only peer"
                         :title="order.can_mark_shipped ? 'Marcar como enviado' : 'Agregar seguimiento'">
-                      <div class="relative w-5 h-5 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50 transition-colors duration-200">
-                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-opacity duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -249,8 +248,8 @@
                         :value="order.order_id"
                         v-model="selectedOrdersForDeletion"
                         class="sr-only peer">
-                      <div class="relative w-5 h-5 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50 transition-colors duration-200">
-                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-opacity duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </div>
