@@ -52,7 +52,7 @@
                     class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-500"
                   >
                   <span class="ml-3 text-sm text-gray-700">Todas las categorías</span>
-                  <span class="ml-auto text-xs text-gray-500">({{ allProducts.length }})</span>
+                  <span class="ml-auto text-xs text-gray-500">({{ allProducts?.length || 0 }})</span>
                 </label>
               </div>
             </div>
@@ -190,7 +190,7 @@
           <!-- Mobile filters content (same as desktop) -->
           <!-- Categories -->
           <div>
-            <h3 class="mb-3 text-base font-medium text-gray-900">CategorÃ­as</h3>
+            <h3 class="mb-3 text-base font-medium text-gray-900">Categorías</h3>
             <div class="space-y-2">
               <label v-for="category in categories" :key="category.id" class="flex items-center">
                 <input 
@@ -214,7 +214,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductCard from '../../components/products/ProductCard.vue'
-import { masterDataApi, apiClient } from '../../config/index'
+import { masterDataApi, productsApi } from '../../config/index'
 import type { Product, Category } from '../../types'
 
 const route = useRoute()
@@ -255,6 +255,7 @@ const collectionTitle = computed(() => {
 })
 
 const filteredProducts = computed(() => {
+  if (!allProducts.value) return []
   let products = [...allProducts.value]
 
   // Filter by category
@@ -326,6 +327,7 @@ const activeFiltersCount = computed(() => {
 
 // Methods
 const getCategoryCount = (categoryName: string) => {
+  if (!allProducts.value) return 0
   return allProducts.value.filter(product => 
     product.categoria?.toLowerCase() === categoryName.toLowerCase()
   ).length
@@ -359,8 +361,8 @@ const loadMoreProducts = () => {
 const loadProducts = async () => {
   if (import.meta.env.VITEST) return
   try {
-    const response = await apiClient.get('/products/')
-    allProducts.value = response.data
+    const response = await productsApi.getProducts()
+    allProducts.value = response.products
   } catch (error) {
     console.error('Error fetching products:', error)
   }

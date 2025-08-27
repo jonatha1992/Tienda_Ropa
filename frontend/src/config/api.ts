@@ -1,41 +1,111 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import { auth } from './firebase';
 import { config } from './app';
+
+// Importar tipos de usuarios
 import type { 
   Role, 
-  RoleType, 
-  UserWithRoles 
+  RoleType
 } from '../types/users/role.types';
-import type { User } from '../types/users/user.types';
+import type { 
+  User,
+  UserWithRoles,
+  UserCreateData,
+  UserUpdateData,
+  Customer,
+  CustomerCreate
+} from '../types/users/user.types';
+
+// Importar tipos de productos
 import type { 
   Color, 
   Category, 
   Size, 
-  Product 
-} from '../types/products';
+  Product,
+  ProductImage,
+  ProductVariant,
+  ProductCreateData,
+  ProductUpdateData
+} from '../types/products/product.types';
+
+// Importar tipos de stock
 import type { 
   StockCheckItem, 
   StockCheckResponse 
 } from '../types/stock';
 
-const apiClient = axios.create({
-  baseURL: config.backendUrl,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true, // Asegura que se envíen las cookies y encabezados de autenticación
-});
+// Importar tipos de órdenes
+import type {
+  Order,
+  OrderItem
+} from '../types/orders/order.types';
 
+// User interfaces moved to types/users/user.types.ts
+// Configuración base del cliente HTTP
+const createApiClient = (): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: config.backendUrl,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+    timeout: 30000, // 30 segundos de timeout
+  });
+
+  return instance;
+};
+
+const apiClient = createApiClient();
+
+// Interceptor para manejar errores comunes
+const setupResponseInterceptors = (client: AxiosInstance) => {
+  client.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      
+      // Si el error es 401 (no autorizado) y no es una solicitud de refresco
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        
+        try {
+          // Intentar refrescar el token
+          const user = auth.currentUser;
+          if (user) {
+            const token = await user.getIdToken(true);
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return apiClient(originalRequest);
+          }
+        } catch (refreshError) {
+          console.error('Error al refrescar el token:', refreshError);
+          // Si falla el refresh, redirigir al login
+          if (window.location.pathname !== '/auth') {
+            window.location.href = '/auth?session_expired=true';
+          }
+          return Promise.reject(refreshError);
+        }
+      }
+      
+      return Promise.reject(error);
+    }
+  );
+};
+
+setupResponseInterceptors(apiClient);
+
+// Interceptor para agregar el token de autenticación a cada petición
 apiClient.interceptors.request.use(
   async (config) => {
-    const user = auth.currentUser;
-    if (user) {
-      try {
+    try {
+      const user = auth.currentUser;
+      if (user) {
         const token = await user.getIdToken();
-        config.headers.Authorization = `Bearer ${token}`;
-      } catch (error) {
-        console.error('❌ Error getting Firebase token:', error);
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
       }
+    } catch (error) {
+      console.error('❌ Error al obtener el token de Firebase:', error);
     }
     return config;
   },
@@ -43,52 +113,157 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+// Interceptor para manejar errores de respuesta
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
       const { status, data } = error.response;
       
-      // Check if the response is HTML instead of JSON
+      // Manejar respuestas HTML inesperadas
       if (typeof data === 'string' && data.startsWith('<!DOCTYPE html>')) {
-        console.error('❌ Server returned HTML instead of JSON. This usually means:', {
+        console.error('❌ El servidor devolvió HTML en lugar de JSON. Posibles causas:', {
           url: error.config.url,
           status,
-          possibleCauses: [
-            'Backend server is not running',
-            'Incorrect API base URL',
-            'Authentication failed',
-            'Server error'
+          posiblesCausas: [
+            'El servidor backend no está en ejecución',
+            'URL de la API incorrecta',
+            'Error de autenticación',
+            'Error interno del servidor'
           ]
         });
         
-        // Create a more helpful error
-        const htmlError = new Error(`Server returned HTML response. Check if the backend is running at ${config.backendUrl}`);
-        (htmlError as any).isHtmlResponse = true;
-        return Promise.reject(htmlError);
+        const errorHtml = new Error(`El servidor devolvió una respuesta HTML. Verifica si el backend está en ejecución en ${config.backendUrl}`);
+        (errorHtml as any).isHtmlResponse = true;
+        return Promise.reject(errorHtml);
       }
       
-      // Log other errors (except 401 which is expected for unauthenticated users)
+      // Registrar errores (excepto 401 que ya se maneja en el interceptor de respuesta)
       if (status !== 401) {
-        console.error(`❌ API error: ${status} ${error.config.method?.toUpperCase()} ${error.config.url}`, {
+        console.error(`❌ Error de API (${status}): ${error.config.method?.toUpperCase()} ${error.config.url}`, {
           data,
           headers: error.response.headers
         });
       }
     } else if (error.request) {
-      // The request was made but no response was received
-      console.error('❌ No response from server. Check if the backend is running at', config.backendUrl, error);
+      // No se recibió respuesta del servidor
+      console.error('❌ No se recibió respuesta del servidor. Verifica si el backend está en ejecución en', config.backendUrl, error);
     } else {
-      // Something happened in setting up the request
-      console.error('❌ Request setup error:', error.message);
+      // Error al configurar la petición
+      console.error('❌ Error al configurar la petición:', error.message);
     }
     
     return Promise.reject(error);
   }
 );
+
+// API functions for authentication
+export const authApi = {
+  // Login with email and password
+  async login(email: string, password: string): Promise<{ user: User; token: string }> {
+    const response = await apiClient.post('/auth/login', { email, password });
+    return response.data;
+  },
+
+  // Register new user
+  async register(userData: UserCreateData): Promise<User> {
+    const response = await apiClient.post('/auth/register', userData);
+    return response.data;
+  },
+
+  // Get current user info
+  async getCurrentUser(): Promise<User> {
+    const response = await apiClient.get('/auth/me');
+    return response.data;
+  },
+
+  // Update current user
+  async updateCurrentUser(updates: Partial<UserUpdateData>): Promise<User> {
+    const response = await apiClient.patch('/auth/me', updates);
+    return response.data;
+  },
+
+  // Request password reset
+  async requestPasswordReset(email: string): Promise<void> {
+    await apiClient.post('/auth/forgot-password', { email });
+  },
+
+  // Reset password with token
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    await apiClient.post('/auth/reset-password', { token, newPassword });
+  },
+
+  // Verify email with token
+  async verifyEmail(token: string): Promise<void> {
+    await apiClient.post('/auth/verify-email', { token });
+  },
+
+  // Logout
+  async logout(): Promise<void> {
+    // Clear any stored tokens or session data
+    localStorage.removeItem('firebase_jwt_token');
+    // Call backend logout if needed
+    try {
+      await apiClient.post('/auth/logout');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  },
+};
+
+// API functions for users
+export const usersApi = {
+  // Get all users (admin only)
+  async getAllUsers(): Promise<UserWithRoles[]> {
+    const response = await apiClient.get('/users');
+    return response.data;
+  },
+
+  // Get user by ID
+  async getUserById(id: number): Promise<UserWithRoles> {
+    const response = await apiClient.get(`/users/${id}`);
+    return response.data;
+  },
+
+  // Create new user (admin only)
+  async createUser(userData: UserCreateData): Promise<User> {
+    const response = await apiClient.post('/users', userData);
+    return response.data;
+  },
+
+  // Update user (admin only)
+  async updateUser(id: number, updates: Partial<UserUpdateData>): Promise<User> {
+    const response = await apiClient.patch(`/users/${id}`, updates);
+    return response.data;
+  },
+
+  // Delete user (admin only)
+  async deleteUser(id: number): Promise<void> {
+    await apiClient.delete(`/users/${id}`);
+  },
+
+  // Get current user roles
+  async getMyRoles(): Promise<Role[]> {
+    const response = await apiClient.get('/me/roles');
+    return response.data;
+  },
+
+  // Assign role to user (admin only)
+  async assignRole(userId: number, roleId: number): Promise<void> {
+    await apiClient.post(`/users/${userId}/roles`, { roleId });
+  },
+
+  // Remove role from user (admin only)
+  async removeRole(userId: number, roleId: number): Promise<void> {
+    await apiClient.delete(`/users/${userId}/roles/${roleId}`);
+  },
+
+  // Debug endpoint to check user authentication and permissions
+  async getUserDebugInfo(): Promise<any> {
+    const response = await apiClient.get('/users/debug');
+    return response.data;
+  },
+};
 
 // API functions for roles
 export const rolesApi = {
@@ -104,15 +279,15 @@ export const rolesApi = {
     return response.data;
   },
 
-  // Create new role
-  async createRole(role: { name: RoleType; description?: string }): Promise<Role> {
-    const response = await apiClient.post('/roles/', role);
+  // Create role
+  async createRole(roleData: { name: RoleType; description?: string }): Promise<Role> {
+    const response = await apiClient.post('/roles', roleData);
     return response.data;
   },
 
   // Update role
   async updateRole(id: number, updates: Partial<Role>): Promise<Role> {
-    const response = await apiClient.put(`/roles/${id}`, updates);
+    const response = await apiClient.patch(`/roles/${id}`, updates);
     return response.data;
   },
 
@@ -121,31 +296,7 @@ export const rolesApi = {
     await apiClient.delete(`/roles/${id}`);
   },
 
-  // Initialize default roles
-  async initializeRoles(): Promise<void> {
-    await apiClient.post('/roles/initialize');
-  },
-
-  // Assign role to user
-  async assignRole(userId: number, roleId: number): Promise<void> {
-    await apiClient.post('/roles/assign', {
-      user_id: userId,
-      role_id: roleId
-    });
-  },
-
-  // Remove role from user
-  async removeRole(userId: number, roleId: number): Promise<void> {
-    await apiClient.delete(`/roles/assign/${userId}/${roleId}`);
-  },
-
-  // Get user roles
-  async getUserRoles(userId: number): Promise<Role[]> {
-    const response = await apiClient.get(`/roles/user/${userId}`);
-    return response.data;
-  },
-
-  // Get my roles
+  // Get roles for current user
   async getMyRoles(): Promise<Role[]> {
     const response = await apiClient.get('/roles/me/roles');
     return response.data;
@@ -155,31 +306,21 @@ export const rolesApi = {
   async getUsersWithRole(roleId: number): Promise<User[]> {
     const response = await apiClient.get(`/roles/${roleId}/users`);
     return response.data;
-  }
-};
-
-// API functions for users
-export const usersApi = {
-  // Get current user info
-  async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get('/users/me');
-    return response.data;
   },
 
-  // Get all users with roles
-  async getAllUsers(): Promise<UserWithRoles[]> {
-    const response = await apiClient.get('/users/');
-    return Array.isArray(response.data) ? response.data : [];
+  // Assign role to user (admin only)
+  async assignRole(userId: number, roleId: number): Promise<void> {
+    await apiClient.post(`/users/${userId}/roles`, { roleId });
   },
 
-  // Create new user
-  async createUser(userData: {
-    email: string;
-    password: string;
-    username?: string;
-    role_id: number;
-  }): Promise<any> {
-    const response = await apiClient.post('/users/create', userData);
+  // Remove role from user (admin only)  
+  async removeRole(userId: number, roleId: number): Promise<void> {
+    await apiClient.delete(`/users/${userId}/roles/${roleId}`);
+  },
+
+  // Get specific user's roles (for role management)
+  async getUserRoles(userId: number): Promise<Role[]> {
+    const response = await apiClient.get(`/users/${userId}/roles`);
     return response.data;
   }
 };
@@ -207,44 +348,6 @@ export const masterDataApi = {
   // Get all sizes
   async getSizes(): Promise<Size[]> {
     const response = await apiClient.get('/sizes');
-    return response.data;
-  }
-};
-
-// API functions for products
-export const productsApi = {
-  // Get all products
-  async getProducts(): Promise<Product[]> {
-    const response = await apiClient.get('/products/');
-    return response.data;
-  },
-
-  // Get product by ID
-  async getProduct(id: number): Promise<Product> {
-    const response = await apiClient.get(`/products/${id}`);
-    return response.data;
-  },
-
-  // Create new product
-  async createProduct(product: Omit<Product, 'id'>): Promise<Product> {
-    const response = await apiClient.post('/products/', product);
-    return response.data;
-  },
-
-  // Update product
-  async updateProduct(id: number, updates: Partial<Product>): Promise<Product> {
-    const response = await apiClient.put(`/products/${id}`, updates);
-    return response.data;
-  },
-
-  // Delete product
-  async deleteProduct(id: number): Promise<void> {
-    await apiClient.delete(`/products/${id}`);
-  },
-
-  // Check stock for multiple products/variants
-  async checkStock(items: StockCheckItem[]): Promise<StockCheckResponse> {
-    const response = await apiClient.post('/products/check-stock/', items);
     return response.data;
   }
 };
@@ -476,6 +579,8 @@ export const orderItemsApi = {
   }
 };
 
+// Product interfaces moved to types/products/product.types.ts
+
 // API functions for shipping quotes
 export const shippingQuotesApi = {
   // Get shipping quotes for a destination and weight
@@ -501,6 +606,204 @@ export const shippingQuotesApi = {
     const response = await apiClient.get('/shipping/test-api');
     return response.data;
   }
+};
+
+// API functions for products
+export const productsApi = {
+  // Get all products
+  async getProducts(params?: {
+    categoryId?: number;
+    colorId?: number;
+    sizeId?: number;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    inStock?: boolean;
+    sortBy?: 'name' | 'price' | 'created_at';
+    sortOrder?: 'asc' | 'desc';
+    page?: number;
+    limit?: number;
+  }): Promise<{ products: Product[]; total: number }> {
+    const response = await apiClient.get('/products/', { params });
+    // Backend returns array directly, not wrapped in object
+    const products = Array.isArray(response.data) ? response.data : [];
+    return { products, total: products.length };
+  },
+
+  // Get product by ID
+  async getProduct(id: number): Promise<Product> {
+    const response = await apiClient.get(`/products/${id}`);
+    return response.data;
+  },
+
+  // Create new product (admin only)
+  async createProduct(productData: ProductCreateData): Promise<Product> {
+    const response = await apiClient.post('/products', productData);
+    return response.data;
+  },
+
+  // Update product (admin only)
+  async updateProduct(id: number, updates: ProductUpdateData): Promise<Product> {
+    const response = await apiClient.patch(`/products/${id}`, updates);
+    return response.data;
+  },
+
+  // Delete product (admin only)
+  async deleteProduct(id: number): Promise<void> {
+    await apiClient.delete(`/products/${id}`);
+  },
+
+  // Upload product image (admin only)
+  async uploadProductImage(productId: number, file: File): Promise<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    const response = await apiClient.post(`/products/${productId}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Delete product image (admin only)
+  async deleteProductImage(productId: number, imageId: number): Promise<void> {
+    await apiClient.delete(`/products/${productId}/images/${imageId}`);
+  },
+
+  // Check product stock
+  async checkStock(items: StockCheckItem[]): Promise<StockCheckResponse> {
+    const response = await apiClient.post('/products/check-stock/', items);
+    return response.data;
+  },
+
+  // Get featured products
+  async getFeaturedProducts(limit: number = 8): Promise<Product[]> {
+    const response = await apiClient.get('/products/featured', {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  // Get related products
+  async getRelatedProducts(productId: number, limit: number = 4): Promise<Product[]> {
+    const response = await apiClient.get(`/products/${productId}/related`, {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  // Get products by category
+  async getProductsByCategory(categoryId: number, params?: {
+    colorId?: number;
+    sizeId?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    sortBy?: 'name' | 'price' | 'created_at';
+    sortOrder?: 'asc' | 'desc';
+    page?: number;
+    limit?: number;
+  }): Promise<{ products: Product[]; total: number }> {
+    const response = await apiClient.get(`/categories/${categoryId}/products`, { params });
+    return response.data;
+  },
+};
+
+// API functions for categories
+export const categoriesApi = {
+  // Get all categories
+  async getCategories(params?: { includeInactive?: boolean }): Promise<Category[]> {
+    const response = await apiClient.get('/categories', { params });
+    return response.data;
+  },
+
+  // Get category by ID
+  async getCategory(id: number): Promise<Category> {
+    const response = await apiClient.get(`/categories/${id}`);
+    return response.data;
+  },
+
+  // Create category (admin only)
+  async createCategory(categoryData: Omit<Category, 'id'>): Promise<Category> {
+    const response = await apiClient.post('/categories', categoryData);
+    return response.data;
+  },
+
+  // Update category (admin only)
+  async updateCategory(id: number, updates: Partial<Category>): Promise<Category> {
+    const response = await apiClient.patch(`/categories/${id}`, updates);
+    return response.data;
+  },
+
+  // Delete category (admin only)
+  async deleteCategory(id: number): Promise<void> {
+    await apiClient.delete(`/categories/${id}`);
+  },
+
+  // Get category tree
+  async getCategoryTree(includeInactive: boolean = false): Promise<Category[]> {
+    const response = await apiClient.get('/categories/tree', {
+      params: { includeInactive },
+    });
+    return response.data;
+  },
+};
+
+// API functions for colors
+export const colorsApi = {
+  // Get all colors
+  async getColors(includeInactive: boolean = false): Promise<Color[]> {
+    const response = await apiClient.get('/colors', {
+      params: { includeInactive },
+    });
+    return response.data;
+  },
+
+  // Create color (admin only)
+  async createColor(colorData: Omit<Color, 'id'>): Promise<Color> {
+    const response = await apiClient.post('/colors', colorData);
+    return response.data;
+  },
+
+  // Update color (admin only)
+  async updateColor(id: number, updates: Partial<Color>): Promise<Color> {
+    const response = await apiClient.patch(`/colors/${id}`, updates);
+    return response.data;
+  },
+
+  // Delete color (admin only)
+  async deleteColor(id: number): Promise<void> {
+    await apiClient.delete(`/colors/${id}`);
+  },
+};
+
+// API functions for sizes
+export const sizesApi = {
+  // Get all sizes
+  async getSizes(includeInactive: boolean = false): Promise<Size[]> {
+    const response = await apiClient.get('/sizes', {
+      params: { includeInactive },
+    });
+    return response.data;
+  },
+
+  // Create size (admin only)
+  async createSize(sizeData: Omit<Size, 'id'>): Promise<Size> {
+    const response = await apiClient.post('/sizes', sizeData);
+    return response.data;
+  },
+
+  // Update size (admin only)
+  async updateSize(id: number, updates: Partial<Size>): Promise<Size> {
+    const response = await apiClient.patch(`/sizes/${id}`, updates);
+    return response.data;
+  },
+
+  // Delete size (admin only)
+  async deleteSize(id: number): Promise<void> {
+    await apiClient.delete(`/sizes/${id}`);
+  },
 };
 
 export default apiClient;

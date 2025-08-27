@@ -1,5 +1,5 @@
 ﻿<template>
-  <router-link :to="`/product/${product.name}`" class="block h-full">
+  <router-link :to="`/product/${product.id}/${createSlug(product.name)}`" class="block h-full">
     <div class="h-full flex flex-col bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300">
       <!-- Imagen del producto -->
       <div class="relative aspect-square overflow-hidden bg-gray-50">
@@ -131,6 +131,25 @@ const imageToShow = computed(() => {
 const handleImageError = () => {
   console.warn(`Failed to load image for product: ${props.product.name}`);
   imageError.value = true;
+};
+
+// Create URL-friendly slug from product name
+const createSlug = (name: string) => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[áàâã]/g, 'a')
+    .replace(/[éèê]/g, 'e')
+    .replace(/[íìî]/g, 'i')
+    .replace(/[óòôõ]/g, 'o')
+    .replace(/[úùû]/g, 'u')
+    .replace(/[ñ]/g, 'n')
+    .replace(/[ç]/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
+    .trim();
 };
 
 // Determinar si el producto está sin stock

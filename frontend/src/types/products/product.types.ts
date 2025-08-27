@@ -69,3 +69,47 @@ export interface Product {
   images: ProductImage[];
   variants: ProductVariant[];
 }
+
+// Product creation data
+export interface ProductCreateData {
+  name: string;
+  description: string;
+  price: number;
+  compare_at_price?: number;
+  cost_per_item?: number;
+  sku?: string;
+  barcode?: string;
+  quantity: number;
+  is_active: boolean;
+  is_featured?: boolean;
+  requires_shipping?: boolean;
+  weight?: number;
+  weight_unit?: string;
+  category_id: number;
+  images?: File[];
+  variants?: Array<{
+    color_id: number;
+    size_id: number;
+    image_url: string;
+    stock: number;
+    price?: number;
+    sku?: string;
+    barcode?: string;
+  }>;
+}
+
+// Product update data
+export interface ProductUpdateData extends Partial<Omit<ProductCreateData, 'images' | 'variants'>> {
+  images_to_remove?: number[];
+  variants_to_remove?: number[];
+  variants_to_update?: Array<{
+    id?: number;
+    color_id: number;
+    size_id: number;
+    image_url: string;
+    stock: number;
+    price?: number;
+    sku?: string;
+    barcode?: string;
+  }>;
+}

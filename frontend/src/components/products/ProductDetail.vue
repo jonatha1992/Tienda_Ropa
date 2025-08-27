@@ -354,7 +354,7 @@
               :key="similarProduct.id"
               class="group"
             >
-              <router-link :to="`/product/${createSlug(similarProduct.name)}`" class="block">
+              <router-link :to="`/product/${similarProduct.id}/${createSlug(similarProduct.name)}`" class="block">
                 <div class="relative overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
                   <!-- Image -->
                   <div class="overflow-hidden bg-gray-100 aspect-square">
@@ -391,7 +391,7 @@
                 :key="similarProduct.id"
                 class="flex-shrink-0 w-48 group"
               >
-                <router-link :to="`/product/${createSlug(similarProduct.name)}`" class="block">
+                <router-link :to="`/product/${similarProduct.id}/${createSlug(similarProduct.name)}`" class="block">
                   <div class="relative overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
                     <!-- Image -->
                     <div class="overflow-hidden bg-gray-100 aspect-square">
@@ -596,17 +596,19 @@ const decrementQuantity = () => {
 // Create URL-friendly slug from product name
 const createSlug = (name: string) => {
   return name
+    .trim()
     .toLowerCase()
-    .replace(/[Ã¡Ã Ã¢Ã£]/g, 'a')
-    .replace(/[Ã©Ã¨Ãª]/g, 'e')
-    .replace(/[Ã­Ã¬Ã®]/g, 'i')
-    .replace(/[Ã³Ã²Ã´Ãµ]/g, 'o')
-    .replace(/[ÃºÃ¹Ã»]/g, 'u')
-    .replace(/[Ã±]/g, 'n')
-    .replace(/[Ã§]/g, 'c')
+    .replace(/[áàâã]/g, 'a')
+    .replace(/[éèê]/g, 'e')
+    .replace(/[íìî]/g, 'i')
+    .replace(/[óòôõ]/g, 'o')
+    .replace(/[úùû]/g, 'u')
+    .replace(/[ñ]/g, 'n')
+    .replace(/[ç]/g, 'c')
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
     .trim();
 };
 
@@ -623,10 +625,10 @@ const getSimilarProductImage = (product: Product) => {
 // Function to load similar products
 const loadSimilarProducts = async (categoria: string, currentProductId: number) => {
   try {
-    const allProducts = await productsApi.getProducts();
+    const response = await productsApi.getProducts();
     
     // Filter products by same category, excluding current product
-    const filtered = allProducts.filter((p: Product) => 
+    const filtered = response.products.filter((p: Product) => 
       p.categoria === categoria && 
       p.id !== currentProductId &&
       p.estado === 'activo' // Only show active products
@@ -642,14 +644,14 @@ const loadSimilarProducts = async (categoria: string, currentProductId: number) 
 };
 
 onMounted(async () => {
-  const productName = route.params.name as string;
+  const productId = parseInt(route.params.id as string);
   try {
-    // Load all products and find by name slug
-    const allProducts = await productsApi.getProducts();
-    const foundProduct = allProducts.find((p: Product) => createSlug(p.name) === productName);
+    // Load all products and find by ID
+    const response = await productsApi.getProducts();
+    const foundProduct = response.products.find((p: Product) => p.id === productId);
     
     if (!foundProduct) {
-      console.error('Product not found:', productName);
+      console.error('Product not found:', productId);
       return;
     }
     

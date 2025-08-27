@@ -1,5 +1,6 @@
 // Re-export all product related types
 export * from './product.types';
+export * from './admin.types';
 
 export type { 
   Color as ColorType,

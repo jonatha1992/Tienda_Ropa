@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="bg-[#dedede]">
     <div class="px-4 py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
       <!-- Section Header -->
@@ -40,7 +40,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductCard from './ProductCard.vue';
 import type { Product } from '../../types/products/product.types';
-import { apiClient } from '../../config/index';
+import { productsApi } from '../../config/index';
 
 const route = useRoute();
 const allProducts = ref<Product[]>([]);
@@ -50,11 +50,14 @@ const currentPage = ref(1);
 // Filtrar productos basado en la categorÃ­a del query parameter
 const filteredProducts = computed(() => {
   const category = route.query.category as string;
+  if (!allProducts.value) {
+    return [];
+  }
   if (!category) {
     return allProducts.value;
   }
   return allProducts.value.filter(product => 
-    product.categoria?.toUpperCase() === category.toUpperCase()
+    product.categoria && product.categoria.toUpperCase() === category.toUpperCase()
   );
 });
 
@@ -87,8 +90,8 @@ const loadMoreProducts = () => {
 const loadProducts = async () => {
   if (import.meta.env.VITEST) return;
   try {
-    const response = await apiClient.get('/products/');
-    allProducts.value = response.data;
+    const response = await productsApi.getProducts();
+    allProducts.value = response.products;
   } catch (error) {
     console.error('Error fetching products:', error);
   }

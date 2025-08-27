@@ -301,7 +301,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { rolesApi, usersApi } from '../../config/index'
-import type { Role, UserWithRoles } from '../../types/users/role.types'
+import type { Role } from '../../types/users/role.types'
+import type { UserWithRoles } from '../../types/users/user.types'
 
 const toast = useToast()
 
@@ -525,7 +526,7 @@ const addNewUser = async () => {
     const requestPayload = {
       email: newUserForm.value.email,
       password: newUserForm.value.password,
-      username: newUserForm.value.username || undefined,
+      name: newUserForm.value.username || newUserForm.value.email,
       role_id: newUserForm.value.roleId as number
     }
     console.log('🔍 Creating user with payload:', { 
@@ -536,7 +537,7 @@ const addNewUser = async () => {
     // Crear usuario usando la API
     const result = await usersApi.createUser(requestPayload)
     
-    toast.success(`✅ ${result.message}`)
+    toast.success(`✅ Usuario ${result.name} creado exitosamente`)
     
     // Cerrar modal y resetear formulario
     closeAddUserModal()

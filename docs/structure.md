@@ -9,69 +9,120 @@ El proyecto está organizado como un monorepo con dos carpetas principales:
 
 ## Frontend (`frontend/`)
 
+A continuación se detalla la estructura del directorio `frontend`, explicando el propósito de cada archivo y carpeta relevante.
+
 ```
 frontend/
-├── public/ # Archivos estáticos
-├── src/
-│   ├── assets/ # Imágenes, fuentes, etc.
-│   ├── components/ # Componentes de Vue reutilizables
-│   │   ├── admin/ # Componentes específicos para admin
-│   │   │   ├── AdminOrdersTable.vue
-│   │   │   ├── ShippingManager.vue
-│   │   │   └── AdminDashboard.vue
-│   │   ├── customer/ # Componentes para área de cliente
-│   │   │   ├── AccountDashboard.vue
-│   │   │   ├── OrderTimeline.vue
-│   │   │   └── TrackingDisplay.vue
-│   │   └── shared/ # Componentes compartidos
-│   │       ├── Navbar.vue
-│   │       ├── Footer.vue
-│   │       └── LoadingSpinner.vue
-│   ├── views/ # Vistas de página completas
-│   │   ├── admin/ # Vistas solo para administradores
-│   │   │   ├── AdminOrdersView.vue
-│   │   │   ├── AdminDashboardView.vue
-│   │   │   └── AdminUsersView.vue
-│   │   ├── account/ # Vistas del área de cliente
-│   │   │   ├── AccountDashboard.vue
-│   │   │   ├── ProfileView.vue
-│   │   │   └── OrdersView.vue
-│   │   ├── public/ # Vistas públicas (sin auth)
-│   │   │   ├── HomeView.vue
-│   │   │   ├── ShopView.vue
-│   │   │   └── ContactView.vue
-│   │   └── shared/ # Vistas accesibles por múltiples roles
-│   │       ├── OrderDetailView.vue (mejorado con tracking)
-│   │       ├── CheckoutView.vue (con redirección post-compra)
-│   │       └── AuthView.vue
-│   ├── composables/ # Composables de Vue 3
-│   │   ├── useAddressAutocomplete.ts (✅ implementado)
-│   │   ├── useShipping.ts (futuro)
-│   │   ├── useTracking.ts (futuro)
-│   │   └── useOrderManagement.ts (futuro)
-│   ├── router/ # Configuración de Vue Router
-│   │   ├── index.ts # Rutas principales
-│   │   ├── admin.ts # Rutas protegidas admin
-│   │   ├── account.ts # Rutas área de cliente
-│   │   └── guards.ts # Guards de autenticación y roles
-│   ├── store/ # Módulos de Pinia para gestión de estado
-│   │   ├── auth.ts # Autenticación y roles
-│   │   ├── cart.ts # Carrito de compras
-│   │   ├── orders.ts # Gestión de pedidos
-│   │   └── admin.ts # Estado específico admin (futuro)
-│   ├── services/ # Lógica de negocio y comunicación con APIs
-│   │   ├── api.ts # Configuración base de axios
-│   │   ├── orders.ts # APIs de pedidos
-│   │   ├── shipping.ts # APIs de seguimiento (futuro)
-│   │   └── admin.ts # APIs administrativas (futuro)
-│   ├── types/ # Definiciones de tipos de TypeScript
-│   │   ├── index.ts # Tipos principales
-│   │   ├── shipping.ts # Tipos de seguimiento (futuro)
-│   │   └── admin.ts # Tipos administrativos (futuro)
-│   ├── main.ts # Punto de entrada de la aplicación
-│   └── App.vue # Componente raíz de Vue
-├── package.json # Dependencias y scripts
-└── vite.config.ts # Configuración de Vite
+├── public/                     # Archivos estáticos que se sirven directamente.
+│   ├── imagen portada.jpg
+│   ├── imagen-portada.svg
+│   ├── logo_redondo.png
+│   ├── logo.jpg
+│   ├── modelo_card.jpg
+│   ├── user-avatar-placeholder.png
+│   ├── Video.mp4
+│   └── vite.svg
+├── src/                        # Directorio principal del código fuente de la aplicación.
+│   ├── assets/                 # Recursos estáticos procesados por Vite (imágenes, fuentes, etc.).
+│   │   ├── modelo_card.jpg
+│   │   └── vue.svg
+│   ├── components/             # Componentes de Vue reutilizables.
+│   │   ├── admin/              # Componentes específicos para el panel de administración.
+│   │   │   └── RoleManagement.vue
+│   │   ├── cart/               # Componentes relacionados con el carrito de compras.
+│   │   │   ├── CartAddedNotification.vue
+│   │   │   ├── CartModal.vue
+│   │   │   └── ShoppingCart.vue
+│   │   ├── checkout/           # Componentes para el proceso de pago.
+│   │   │   └── ShippingModal.vue
+│   │   ├── common/             # Componentes comunes (actualmente vacío).
+│   │   ├── forms/              # Componentes de formularios.
+│   │   │   ├── AddressAutocomplete.vue
+│   │   │   └── CountryPhoneSelector.vue
+│   │   ├── layout/             # Componentes principales de la estructura de la página.
+│   │   │   ├── Footer.vue
+│   │   │   ├── HeroBanner.vue
+│   │   │   ├── Home.vue
+│   │   │   └── Navbar.vue
+│   │   ├── orders/             # Componentes para la gestión de pedidos.
+│   │   │   ├── EditOrderModal.vue
+│   │   │   └── OrderStatusModal.vue
+│   │   ├── products/           # Componentes para mostrar productos.
+│   │   │   ├── MasterDataShowcase.vue
+│   │   │   ├── OptimizedImage.vue
+│   │   │   ├── ProductCard.vue
+│   │   │   ├── ProductDetail.vue
+│   │   │   └── ProductGrid.vue
+│   │   └── ui/                 # Componentes de interfaz de usuario genéricos.
+│   │       ├── Chatbot.vue
+│   │       ├── ConfirmationModal.vue
+│   │       ├── DeliveryProgress.vue
+│   │       ├── ImageGalleryModal.vue
+│   │       ├── LoadingSpinner.vue
+│   │       └── ProgressBar.vue
+│   ├── composables/            # Funciones "composables" de Vue 3 para lógica reutilizable.
+│   │   ├── useAddressAutocomplete.ts
+│   │   ├── useCartModal.ts
+│   │   ├── useCartNotification.ts
+│   │   ├── useImageLoading.ts
+│   │   ├── useLoading.ts
+│   │   ├── useProgressBar.ts
+│   │   ├── useUserData.ts
+│   │   └── useValidators.ts
+│   ├── config/                 # Archivos de configuración de la aplicación.
+│   │   ├── api.ts
+│   │   ├── app.ts
+│   │   ├── firebase.ts
+│   │   └── index.ts
+│   ├── services/               # Servicios para la comunicación con APIs y lógica de negocio.
+│   │   ├── emailService.ts
+│   │   ├── emailVerificationService.ts
+│   │   └── stockService.ts
+│   ├── store/                  # Módulos de Pinia para la gestión del estado global.
+│   │   ├── auth.ts
+│   │   └── cart.ts
+│   ├── styles/                 # Archivos de estilos globales.
+│   │   └── admin-buttons.css
+│   ├── types/                  # Definiciones de tipos de TypeScript.
+│   │   ├── cart/
+│   │   ├── orders/
+│   │   ├── products/
+│   │   ├── users/
+│   │   ├── index.ts
+│   │   ├── orders.ts
+│   │   ├── stock.ts
+│   │   └── vue.d.ts
+│   ├── utils/                  # Utilidades y funciones de ayuda.
+│   │   ├── cache.ts
+│   │   ├── debounce.ts
+│   │   └── orderUtils.ts
+│   ├── views/                  # Componentes de página completa (rutas de Vue Router).
+│   │   ├── admin/
+│   │   ├── auth/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── orders/
+│   │   ├── products/
+│   │   ├── profile/
+│   │   └── shared/
+│   ├── App.vue                 # Componente raíz de la aplicación.
+│   ├── components.d.ts         # Declaraciones de tipos para componentes.
+│   ├── env.d.ts                # Declaraciones de tipos para variables de entorno.
+│   ├── main.ts                 # Punto de entrada de la aplicación Vue.
+│   ├── router.ts               # Configuración de Vue Router.
+│   └── style.css               # Hoja de estilos principal.
+├── .gitignore                  # Archivos y carpetas ignorados por Git.
+├── firebase.json               # Configuración para el despliegue en Firebase.
+├── index.html                  # Punto de entrada HTML de la aplicación.
+├── package.json                # Dependencias del proyecto y scripts de NPM.
+├── package-lock.json           # Versiones exactas de las dependencias.
+├── postcss.config.js           # Configuración de PostCSS.
+├── tailwind.config.js          # Configuración de Tailwind CSS.
+├── tsconfig.json               # Configuración principal de TypeScript.
+├── tsconfig.app.json           # Configuración de TypeScript específica para la aplicación.
+├── tsconfig.node.json          # Configuración de TypeScript para el entorno de Node.js.
+├── vite.config.ts              # Configuración de Vite.
+└── vitest.config.ts            # Configuración de Vitest para las pruebas.
 ```
 
 ## Backend (`backend/`)

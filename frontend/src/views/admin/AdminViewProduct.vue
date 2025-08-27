@@ -742,67 +742,20 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal.vue';
 import ProductCard from '../../components/products/ProductCard.vue';
 import { useAuthStore } from '../../store/auth';
 import { useLoading } from '../../composables/useLoading';
-import { masterDataApi, config, apiClient } from '../../config/index';
-import type { Color, Category, Size } from '../../types/products/product.types';
+import { masterDataApi, productsApi, usersApi, config } from '../../config/index';
+import type { Color, Category, Size, Product } from '../../types/products/product.types';
 import type { Product as GlobalProduct } from '../../types/products/product.types';
+import type { AdminProduct, AdminProductVariant, AdminProductImage, AdminProductCreate } from '../../types/products/admin.types';
 
 const toast = useToast();
 const authStore = useAuthStore();
 const { showLoading, hideLoading } = useLoading();
 
-// === INTERFACES ===
-interface ProductVariant {
-  id?: number;
-  color: string | null;
-  talle: string | null;
-  stock: number;
-}
+// === INTERFACES MOVED TO TYPES FOLDER ===
 
-interface ProductImage {
-  id: number;
-  image_url: string;
-}
-
-interface Product {
-  id?: number;
-  name: string;
-  description: string | null;
-  price: number;
-  genero: string;
-  estado: string;
-  categoria?: string | null;
-  is_unique: boolean;
-  color?: string | null;
-  talle?: string | null;
-  stock?: number | null;
-  has_discount: boolean;
-  discount_percentage?: number | null;
-  images: ProductImage[];
-  variants: ProductVariant[];
-}
-
-interface ProductCreate {
-  name: string;
-  description: string | null;
-  price: number;
-  genero: string;
-  estado: string;
-  categoria?: string | null;
-  is_unique: boolean;
-  color?: string | null;
-  talle?: string | null;
-  stock?: number | null;
-  has_discount: boolean;
-  discount_percentage?: number | null;
-  images: string[];
-  variants: Omit<ProductVariant, 'id'>[];
-}
-
-const API_URL = config.backendUrl + '/products/';
-
-const products = ref<Product[]>([]);
+const products = ref<AdminProduct[]>([]);
 const editing = ref(false);
-const product = ref<ProductCreate>({
+const product = ref<AdminProductCreate>({
   name: '',
   description: null,
   price: 0,
@@ -1013,21 +966,21 @@ const previewProduct = computed((): GlobalProduct => {
 // === LÃ“GICA DE DATOS MAESTROS ===
 async function loadMasterData() {
   try {
-    console.log('ðŸ“‹ Cargando datos maestros...');
-    console.log('ðŸ”— URL base API:', config.backendUrl);
+    console.log('Cargando datos maestros...');
+    console.log('URL base API:', config.backendUrl);
     
     // Cargar colores, categorías y talles usando la nueva API
-    console.log('ðŸŒˆ Cargando colores...');
+    console.log('Cargando colores...');
     const colors = await masterDataApi.getColors();
-    console.log('ðŸŒˆ Colores recibidos:', colors);
+    console.log('Colores recibidos:', colors);
     
-    console.log('ðŸ“‚ Cargando categorías...');
+    console.log('Cargando categorías...');
     const categories = await masterDataApi.getCategories();
-    console.log('ðŸ“‚ Categorías recibidas:', categories);
+    console.log('Categorías recibidas:', categories);
     
-    console.log('ðŸ“ Cargando talles...');
+    console.log('Cargando talles...');
     const sizes = await masterDataApi.getSizes();
-    console.log('ðŸ“ Talles recibidos:', sizes);
+    console.log('Talles recibidos:', sizes);
     
     availableColors.value = colors;
     availableCategories.value = categories;
@@ -1065,10 +1018,10 @@ async function fetchProducts() {
   // Debug: verificar estado de autenticación
   try {
     console.log(' Verificando estado de autenticación...');
-    const debugResponse = await apiClient.get('/users/debug');
-    console.log(' Debug info:', debugResponse.data);
+    const debugResponse = await usersApi.getUserDebugInfo();
+    console.log(' Debug info:', debugResponse);
     
-    const hasPermissions = debugResponse.data.has_admin_role || debugResponse.data.has_manager_role;
+    const hasPermissions = debugResponse.has_admin_role || debugResponse.has_manager_role;
     console.log(`Usuario tiene permisos necesarios: ${hasPermissions}`);
     
     if (!hasPermissions) {
@@ -1080,16 +1033,10 @@ async function fetchProducts() {
   }
 
   try {
-    const response = await fetch(API_URL, {
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`,
-        'Content-Type': 'application/json'
-      },
-    });
-    if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
-    const data = await response.json();
-    products.value = data;
-    console.log('Productos obtenidos:', data);
+    const { products: fetchedProducts } = await productsApi.getProducts();
+    // Convertir Product[] a AdminProduct[] para compatibilidad temporal
+    products.value = fetchedProducts as any[];
+    console.log('Productos obtenidos:', fetchedProducts);
   } catch (error) {
     console.error('Error al obtener productos:', error);
     toast.error('Error al cargar productos. Verifica que el backend estÃ© funcionando.');
@@ -1113,10 +1060,10 @@ async function saveProduct() {
   // Debug: verificar permisos antes de guardar
   try {
     console.log(' Verificando permisos antes de guardar...');
-    const debugResponse = await apiClient.get('/users/debug');
-    console.log(' Debug info al guardar:', debugResponse.data);
+    const debugResponse = await usersApi.getUserDebugInfo();
+    console.log(' Debug info al guardar:', debugResponse);
     
-    const hasPermissions = debugResponse.data.has_admin_role || debugResponse.data.has_manager_role;
+    const hasPermissions = debugResponse.has_admin_role || debugResponse.has_manager_role;
     console.log(`Usuario tiene permisos para guardar: ${hasPermissions}`);
     
     if (!hasPermissions) {
@@ -1177,28 +1124,20 @@ async function saveProduct() {
       console.log('Imágenes subidas:', imageUrls);
     }
 
-    const method = editing.value ? 'PUT' : 'POST';
     const editingProduct = editing.value ? products.value.find(p => p.name === product.value.name) : null;
-    const url = editing.value ? `${API_URL}${editingProduct?.id}` : API_URL;
 
-    console.log(`${method} request to: ${url}`);
+    console.log(`${editing.value ? 'PUT' : 'POST'} request for product:`, product.value);
     console.log(' Payload:', product.value);
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.token}`,
-      },
-      body: JSON.stringify(product.value),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error ${response.status}: ${errorText}`);
+    let savedProduct;
+    if (editing.value && editingProduct?.id) {
+      // Conversión temporal para compatibilidad de tipos
+      savedProduct = await productsApi.updateProduct(editingProduct.id, product.value as any);
+    } else {
+      // Conversión temporal para compatibilidad de tipos
+      savedProduct = await productsApi.createProduct(product.value as any);
     }
 
-    const savedProduct = await response.json();
     console.log('Producto guardado:', savedProduct);
 
     await fetchProducts();
@@ -1223,13 +1162,10 @@ async function deleteProduct(id?: number) {
   console.log('ðŸ—‘ï¸ Eliminando producto ID:', id);
 
   try {
-    const response = await apiClient.delete(`/products/${id}`);
-
-    if (response.status === 200) {
-      console.log('Producto eliminado');
-      await fetchProducts();
-      toast.success(' Producto eliminado exitosamente!');
-    }
+    await productsApi.deleteProduct(id);
+    console.log('Producto eliminado');
+    await fetchProducts();
+    toast.success(' Producto eliminado exitosamente!');
   } catch (error: any) {
     console.error('Error al eliminar producto:', error);
     const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
@@ -1313,7 +1249,7 @@ async function uploadImages(): Promise<string[]> {
 }
 
 // --- Lógica del Formulario ---
-function editProduct(p: Product) {
+function editProduct(p: any) {
   editing.value = true;
   product.value = {
     name: p.name,
@@ -1328,10 +1264,10 @@ function editProduct(p: Product) {
     stock: p.stock || null,
     has_discount: p.has_discount,
     discount_percentage: p.discount_percentage,
-    images: p.images.map((img) => img.image_url),
-    variants: p.variants.map(v => ({ color: v.color, talle: v.talle, stock: v.stock }))
+    images: p.images.map((img: any) => img.image_url),
+    variants: p.variants?.map((v: any) => ({ color: v.color || v.size, talle: v.talle || v.size, stock: v.stock })) || []
   };
-  imagePreviews.value = p.images.map((img) => img.image_url);
+  imagePreviews.value = p.images.map((img: any) => img.image_url);
   selectedFiles.value = [];
 }
 
@@ -1378,11 +1314,11 @@ function onUniqueProductChange() {
   }
 }
 
-function getProductStock(p: Product): number {
+function getProductStock(p: any): number {
   if (p.is_unique) {
     return p.stock || 0;
   } else {
-    return p.variants.reduce((total, variant) => total + variant.stock, 0);
+    return p.variants.reduce((total: number, variant: any) => total + variant.stock, 0);
   }
 }
 

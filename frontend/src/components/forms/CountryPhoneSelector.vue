@@ -1,15 +1,15 @@
 ﻿<template>
   <div class="relative">
-    <label :for="inputId" class="font-body block text-sm font-medium text-body-text">
+    <label :for="inputId" class="block text-sm font-medium font-body text-body-text">
       {{ label }}
     </label>
-    <div class="mt-1 flex rounded-md shadow-sm">
+    <div class="flex mt-1 rounded-md shadow-sm">
       <!-- Country Code Selector -->
       <div class="relative">
         <select
           v-model="selectedCountry"
           @change="onCountryChange"
-          class="h-full rounded-l-md border border-gray-300 bg-transparent py-2 pl-3 pr-7 text-sm focus:border-black focus:ring-black"
+          class="h-full py-2 pl-3 text-sm bg-transparent border border-gray-300 rounded-l-md pr-7 focus:border-black focus:ring-black"
         >
           <option 
             v-for="country in countries" 
@@ -30,7 +30,7 @@
         type="tel"
         :required="required"
         :placeholder="placeholder"
-        class="flex-1 min-w-0 block w-full rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 py-2 focus:border-black focus:ring-black"
+        class="flex-1 block w-full min-w-0 px-3 py-2 border border-l-0 border-gray-300 rounded-none rounded-r-md focus:border-black focus:ring-black"
       />
     </div>
   </div>
@@ -70,16 +70,16 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const countries: Country[] = [
-  { code: 'AR', name: 'Argentina', flag: 'ðŸ‡¦ðŸ‡·', dialCode: '+54' },
-  { code: 'UY', name: 'Uruguay', flag: 'ðŸ‡ºðŸ‡¾', dialCode: '+598' },
-  { code: 'CL', name: 'Chile', flag: 'ðŸ‡¨ðŸ‡±', dialCode: '+56' },
-  { code: 'BR', name: 'Brasil', flag: 'ðŸ‡§ðŸ‡·', dialCode: '+55' },
-  { code: 'PY', name: 'Paraguay', flag: 'ðŸ‡µðŸ‡¾', dialCode: '+595' },
-  { code: 'BO', name: 'Bolivia', flag: 'ðŸ‡§ðŸ‡´', dialCode: '+591' },
-  { code: 'PE', name: 'Perú', flag: 'ðŸ‡µðŸ‡ª', dialCode: '+51' },
-  { code: 'EC', name: 'Ecuador', flag: 'ðŸ‡ªðŸ‡¨', dialCode: '+593' },
-  { code: 'CO', name: 'Colombia', flag: 'ðŸ‡¨ðŸ‡´', dialCode: '+57' },
-  { code: 'VE', name: 'Venezuela', flag: 'ðŸ‡»ðŸ‡ª', dialCode: '+58' }
+  { code: 'AR', name: 'Argentina', flag: '', dialCode: '+54' },
+  { code: 'UY', name: 'Uruguay', flag: '', dialCode: '+598' },
+  { code: 'CL', name: 'Chile', flag: '', dialCode: '+56' },
+  { code: 'BR', name: 'Brasil', flag: '', dialCode: '+55' },
+  { code: 'PY', name: 'Paraguay', flag: '', dialCode: '+595' },
+  { code: 'BO', name: 'Bolivia', flag: '', dialCode: '+591' },
+  { code: 'PE', name: 'Perú', flag: '', dialCode: '+51' },
+  { code: 'EC', name: 'Ecuador', flag: '', dialCode: '+593' },
+  { code: 'CO', name: 'Colombia', flag: '', dialCode: '+57' },
+  { code: 'VE', name: 'Venezuela', flag: '', dialCode: '+58' }
 ];
 
 const selectedCountry = ref(props.countryCode);

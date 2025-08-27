@@ -56,14 +56,16 @@ async def startup_event():
             raise
 
 
-# CORS Middleware
+# CORS Middleware Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,  # Uses dynamic origins
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Explicitly allow frontend origins
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.web\.app",  # Allow Vercel and Firebase
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["*"],  # Allows all headers
-    expose_headers=["Content-Disposition"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["Content-Disposition", "Set-Cookie"],  # Expose additional headers
+    max_age=600,  # Cache preflight requests for 10 minutes
 )
 
 app.include_router(products_router, prefix="/api/v1")

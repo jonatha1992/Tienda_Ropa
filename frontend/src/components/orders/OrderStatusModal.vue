@@ -20,7 +20,7 @@
           </div>
 
           <!-- Order Info -->
-          <div v-if="order" class="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div v-if="order" class="p-4 mb-6 rounded-lg bg-gray-50">
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span class="font-medium text-gray-700">Cliente:</span>
@@ -29,8 +29,8 @@
               </div>
               <div>
                 <span class="font-medium text-gray-700">Total:</span>
-                <div class="text-gray-900 font-medium">${{ order.total?.toLocaleString() }}</div>
-                <span class="font-medium text-gray-700 block mt-1">MÃ©todo:</span>
+                <div class="font-medium text-gray-900">${{ order.total?.toLocaleString() }}</div>
+                <span class="block mt-1 font-medium text-gray-700">Metodo de Pago:</span>
                 <div class="text-gray-600">{{ getPaymentMethodText(order.payment_method) }}</div>
               </div>
             </div>
@@ -39,7 +39,7 @@
           <!-- Status Selection -->
           <form @submit.prevent="updateStatus">
             <div class="mb-4">
-              <label for="newStatus" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="newStatus" class="block mb-2 text-sm font-medium text-gray-700">
                 Nuevo Estado de Pago
               </label>
               <select
@@ -57,7 +57,7 @@
 
             <!-- Admin Notes -->
             <div class="mb-6">
-              <label for="adminNotes" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="adminNotes" class="block mb-2 text-sm font-medium text-gray-700">
                 Notas del Administrador (opcional)
               </label>
               <textarea
@@ -65,7 +65,7 @@
                 id="adminNotes"
                 rows="3"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Agregar comentarios sobre la verificaciÃ³n del pago..."
+                placeholder="Agregar comentarios sobre la verificación del pago..."
               ></textarea>
             </div>
 
@@ -81,10 +81,10 @@
               <button
                 type="submit"
                 :disabled="!selectedStatus || loading"
-                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                class="px-4 py-2 text-sm text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                <span v-if="loading">Actualizando...</span>
-                <span v-else>Actualizar Estado</span>
+                <span class="text-white" v-if="loading">Actualizando...</span>
+                <span class="text-white" v-else>Actualizar Estado</span>
               </button>
             </div>
           </form>

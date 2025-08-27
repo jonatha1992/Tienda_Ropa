@@ -29,13 +29,7 @@
         <div class="mt-6">
           <DeliveryProgress 
             :current-step="currentStep" 
-            :initial-delivery-method="deliveryMethod"
-            :postal-code="checkoutForm.postalCode"
-            :city="checkoutForm.city"
-            :province="checkoutForm.province"
-            :total-weight-kg="cartStore.totalWeight"
             @go-to-step="handleGoToStep"
-            @delivery-method-changed="handleDeliveryMethodChanged"
           />
         </div>
       </div>
@@ -125,13 +119,13 @@
             </div>
           </div>
 
-          <!-- Delivery Summary (Step 3) - Only in left column -->
-          <div v-if="currentStep === 3" class="mt-6">
+          <!-- Delivery Summary (Step 4) - Only in left column -->
+          <div v-if="currentStep === 4" class="mt-6">
             <div class="bg-white shadow rounded-lg p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="font-heading text-lg font-medium text-gray-900">Información de entrega</h3>
                 <button 
-                  @click="showPaymentStep = false"
+                  @click="currentStep = 3"
                   class="text-sm text-blue-600 hover:text-blue-800 font-body"
                 >
                   Editar
@@ -151,9 +145,18 @@
                   <span class="font-medium text-gray-700 font-body">Teléfono:</span>
                   <span class="text-gray-900 font-body">{{ checkoutForm.phone }}</span>
                 </div>
-                <div class="flex justify-between">
+                <div v-if="deliveryMethod !== 'retiro_local'" class="flex justify-between">
                   <span class="font-medium text-gray-700 font-body">Dirección:</span>
                   <span class="text-gray-900 font-body">{{ checkoutForm.address }}, {{ checkoutForm.city }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700 font-body">Método de entrega:</span>
+                  <span class="text-gray-900 font-body">
+                    {{ deliveryMethod === 'retiro_local' ? 'Retiro en local' : 
+                       deliveryMethod === 'envio_andreani' ? 'Envío por Andreani' :
+                       deliveryMethod === 'envio_correo' ? 'Envío por Correo Argentino' :
+                       deliveryMethod === 'envio_oca' ? 'Envío por OCA' : 'N/A' }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -163,207 +166,54 @@
         <!-- Checkout Form -->
         <div class="order-1 lg:order-2">
           <form @submit.prevent="processOrder" class="space-y-6">
-            <!-- Customer Information -->
-            <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="font-heading text-lg font-medium text-gray-900">Información de contacto</h3>
-                
-                <!-- Loading indicator -->
-                <div v-if="loadingUserData" class="flex items-center text-sm text-gray-500">
-                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Cargando datos...
-                </div>
-                
-                <!-- Previous data indicator -->
-                <div v-else-if="usingPreviousData" class="flex items-center text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                  <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Datos de compra anterior
-                </div>
-              </div>
-              
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label for="firstName" class="font-body block text-sm font-medium text-body-text">Nombre</label>
-                  <input
-                    v-model="checkoutForm.firstName"
-                    type="text"
-                    id="firstName"
-                    required
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                  >
-                </div>
-                
-                <div>
-                  <label for="lastName" class="font-body block text-sm font-medium text-body-text">Apellido</label>
-                  <input
-                    v-model="checkoutForm.lastName"
-                    type="text"
-                    id="lastName"
-                    required
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                  >
-                </div>
-              </div>
-              
-              <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label for="email" class="font-body block text-sm font-medium text-body-text">Email</label>
-                  <input
-                    v-model="checkoutForm.email"
-                    type="email"
-                    id="email"
-                    required
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                  >
-                </div>
-                
-                <div>
-                  <CountryPhoneSelector
-                    v-model="checkoutForm.phone"
-                    v-model:country-code="checkoutForm.phoneCountryCode"
-                    input-id="phone"
-                    required
-                  />
-                </div>
-              </div>
+            <!-- Step 2: Contact Info -->
+            <div v-if="currentStep === 2">
+              <ContactInfoStep
+                :first-name="checkoutForm.firstName"
+                :last-name="checkoutForm.lastName"
+                :email="checkoutForm.email"
+                :phone="checkoutForm.phone"
+                :phone-country-code="checkoutForm.phoneCountryCode"
+                :loading-user-data="loadingUserData"
+                :using-previous-data="usingPreviousData"
+                @update:first-name="checkoutForm.firstName = $event"
+                @update:last-name="checkoutForm.lastName = $event"
+                @update:email="checkoutForm.email = $event"
+                @update:phone="checkoutForm.phone = $event"
+                @update:phone-country-code="checkoutForm.phoneCountryCode = $event"
+                @continue="goToDeliveryStep"
+              />
             </div>
 
-            <!-- Shipping Information -->
-            <div v-if="currentStep === 2" class="bg-white shadow rounded-lg p-6">
-              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Dirección de envío</h3>
-              
-              <div class="space-y-4">
-                <div>
-                  <AddressAutocomplete
-                    v-model="checkoutForm.address"
-                    input-id="address"
-                    :country-code="checkoutForm.country"
-                    required
-                    @address-selected="onAddressSelected"
-                  />
-                </div>
-                
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label for="city" class="font-body block text-sm font-medium text-body-text">Ciudad</label>
-                    <input
-                      v-model="checkoutForm.city"
-                      type="text"
-                      id="city"
-                      required
-                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    >
-                  </div>
-                  
-                  <div>
-                    <label for="postalCode" class="font-body block text-sm font-medium text-body-text">Código Postal</label>
-                    <input
-                      v-model="checkoutForm.postalCode"
-                      type="text"
-                      id="postalCode"
-                      required
-                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    >
-                  </div>
-                </div>
-                
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label for="province" class="font-body block text-sm font-medium text-body-text">Provincia</label>
-                    <input
-                      v-model="checkoutForm.province"
-                      type="text"
-                      id="province"
-                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                      placeholder="Buenos Aires"
-                    >
-                  </div>
-                  
-                  <div>
-                    <label for="country" class="font-body block text-sm font-medium text-body-text">País</label>
-                    <select
-                      v-model="checkoutForm.country"
-                      id="country"
-                      required
-                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    >
-                      <option class="font-body" value="AR">Argentina</option>
-                      <option class="font-body" value="UY">Uruguay</option>
-                      <option class="font-body" value="CL">Chile</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div>
-                  <label for="addressReference" class="font-body block text-sm font-medium text-body-text">Referencias de dirección (opcional)</label>
-                  <input
-                    v-model="checkoutForm.addressReference"
-                    type="text"
-                    id="addressReference"
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    placeholder="Entre calles, piso, depto, etc."
-                  >
-                </div>
-                
-                <div>
-                  <label for="deliveryNotes" class="font-body block text-sm font-medium text-body-text">Notas para la entrega (opcional)</label>
-                  <textarea
-                    v-model="checkoutForm.deliveryNotes"
-                    id="deliveryNotes"
-                    rows="2"
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                    placeholder="Horarios de entrega, portero eléctrico, etc."
-                  ></textarea>
-                </div>
-                
-                <div>
-                  <label for="preferredDeliveryTime" class="font-body block text-sm font-medium text-body-text">Horario preferido de entrega</label>
-                  <select
-                    v-model="checkoutForm.preferredDeliveryTime"
-                    id="preferredDeliveryTime"
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-                  >
-                    <option class="font-body" value="cualquiera">Cualquier horario</option>
-                    <option class="font-body" value="mañana">Mañana (9:00 - 13:00)</option>
-                    <option class="font-body" value="tarde">Tarde (14:00 - 18:00)</option>
-                    <option class="font-body" value="noche">Noche (18:00 - 21:00)</option>
-                  </select>
-                </div>
-              </div>
+            <!-- Step 3: Delivery Info -->
+            <div v-if="currentStep === 3">
+              <DeliveryStep
+                :selected-delivery-method="deliveryMethod"
+                :address="checkoutForm.address"
+                :city="checkoutForm.city"
+                :postal-code="checkoutForm.postalCode"
+                :province="checkoutForm.province"
+                :country="checkoutForm.country"
+                :address-reference="checkoutForm.addressReference"
+                :delivery-notes="checkoutForm.deliveryNotes"
+                :preferred-delivery-time="checkoutForm.preferredDeliveryTime"
+                :total-weight-kg="cartStore.totalWeight"
+                @update:selected-delivery-method="deliveryMethod = $event"
+                @update:address="checkoutForm.address = $event"
+                @update:city="checkoutForm.city = $event"
+                @update:postal-code="checkoutForm.postalCode = $event"
+                @update:province="checkoutForm.province = $event"
+                @update:country="checkoutForm.country = $event"
+                @update:address-reference="checkoutForm.addressReference = $event"
+                @update:delivery-notes="checkoutForm.deliveryNotes = $event"
+                @update:preferred-delivery-time="checkoutForm.preferredDeliveryTime = $event"
+                @delivery-method-changed="handleDeliveryMethodChanged"
+                @continue="goToPaymentStep"
+              />
             </div>
 
-            <!-- Continue to Payment Button -->
-            <div v-if="currentStep === 2 && deliveryInfoCompleted && !showPaymentStep" class="bg-white shadow rounded-lg p-6">
-              <div class="text-center">
-                <div class="mb-4">
-                  <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-3">
-                    <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Información de entrega completa</h3>
-                  <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el método de pago</p>
-                </div>
-                <button
-                  type="button"
-                  @click="goToPaymentStep"
-                  class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
-                >
-                  <span class="text-white">Continuar al pago</span>
-                  <svg class="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Payment Method - Back to right column -->
-            <div v-if="currentStep === 3" class="bg-white shadow rounded-lg p-6" data-payment-section>
+            <!-- Step 4: Payment Method -->
+            <div v-if="currentStep === 4" class="bg-white shadow rounded-lg p-6" data-payment-section>
               <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
               
               <div class="space-y-3">
@@ -402,8 +252,8 @@
               </div>
             </div>
 
-            <!-- Submit Button - Back to right column -->
-            <div v-if="currentStep === 3" class="bg-white shadow rounded-lg p-6">
+            <!-- Submit Button -->
+            <div v-if="currentStep === 4" class="bg-white shadow rounded-lg p-6">
               <button
                 type="submit"
                 :disabled="processing"
@@ -454,8 +304,8 @@ import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from 
 import { useUserData } from '../../composables/useUserData';
 import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../../types';
 import DeliveryProgress from '../../components/ui/DeliveryProgress.vue';
-import CountryPhoneSelector from '../../components/forms/CountryPhoneSelector.vue';
-import AddressAutocomplete from '../../components/forms/AddressAutocomplete.vue';
+import ContactInfoStep from '../../components/checkout/ContactInfoStep.vue';
+import DeliveryStep from '../../components/checkout/DeliveryStep.vue';
 import type { ParsedAddress } from '../../composables/useAddressAutocomplete';
 import { BanknotesIcon, CreditCardIcon, CurrencyDollarIcon } from '@heroicons/vue/24/outline';
 
@@ -486,62 +336,64 @@ const checkoutForm = ref({
   paymentMethod: 'transfer'
 });
 
-// Track if delivery info was just completed
-const deliveryInfoCompleted = ref(false);
-// Track if user wants to proceed to payment
-const showPaymentStep = ref(false);
 
 // Delivery method and cost
 const deliveryMethod = ref('envio_andreani');
 const deliveryCost = ref(500);
 
-// Determine current step based on form completion
-const currentStep = computed(() => {
-  // Step 1: Carrito (already completed when we're in checkout)
-  // Step 2: Entrega (delivery info being filled)
-  const hasDeliveryInfo = checkoutForm.value.firstName && 
-                         checkoutForm.value.lastName && 
-                         checkoutForm.value.email && 
-                         checkoutForm.value.phone && 
-                         checkoutForm.value.address && 
-                         checkoutForm.value.city && 
-                         checkoutForm.value.postalCode;
-  
-  // Track delivery info completion
-  if (hasDeliveryInfo && !deliveryInfoCompleted.value) {
-    deliveryInfoCompleted.value = true;
-  } else if (!hasDeliveryInfo && deliveryInfoCompleted.value) {
-    deliveryInfoCompleted.value = false;
-    showPaymentStep.value = false; // Reset payment step if delivery info becomes incomplete
-  }
-  
-  // Step 3: Pago (when user explicitly wants to proceed or processing)
-  if (processing.value) {
-    return 3;
-  } else if (hasDeliveryInfo && showPaymentStep.value) {
-    return 3; // Show payment step when user clicked continue
-  } else {
-    return 2; // Step 2 - filling delivery info (or showing continue button when complete)
-  }
+// New 4-step flow state management
+const currentStep = ref(2); // Start at step 2 (Contact Info)
+
+// Check if each step is complete
+const isContactInfoComplete = computed(() => {
+  return checkoutForm.value.firstName.trim() && 
+         checkoutForm.value.lastName.trim() && 
+         checkoutForm.value.email.trim() && 
+         checkoutForm.value.phone.trim();
 });
 
-// Function to proceed to payment step
-const goToPaymentStep = () => {
-  showPaymentStep.value = true;
-  // Scroll to top for better UX since payment section is now in left column
-  setTimeout(() => {
-    window.scrollTo({ 
-      top: 0, 
-      behavior: 'smooth' 
-    });
-  }, 100);
+const isDeliveryInfoComplete = computed(() => {
+  // Always need delivery method selected
+  if (!deliveryMethod.value) return false;
+  
+  // If local pickup, no address needed
+  if (deliveryMethod.value === 'retiro_local') return true;
+  
+  // For delivery methods, need address info
+  return checkoutForm.value.address.trim() && 
+         checkoutForm.value.city.trim() && 
+         checkoutForm.value.postalCode.trim();
+});
+
+// Navigation functions for 4-step flow
+const goToContactStep = () => {
+  currentStep.value = 2;
 };
+
+const goToDeliveryStep = () => {
+  if (isContactInfoComplete.value) {
+    currentStep.value = 3;
+  }
+};
+
+const goToPaymentStep = () => {
+  if (isDeliveryInfoComplete.value) {
+    currentStep.value = 4;
+  }
+};
+
 
 // Function to handle step navigation
 const handleGoToStep = (step: number) => {
   if (step === 1) {
     // Navigate back to cart
     router.push('/cart');
+  } else if (step === 2) {
+    goToContactStep();
+  } else if (step === 3 && isContactInfoComplete.value) {
+    goToDeliveryStep();
+  } else if (step === 4 && isDeliveryInfoComplete.value) {
+    goToPaymentStep();
   }
 };
 
@@ -613,16 +465,14 @@ onMounted(async () => {
   cartStore.validateStock();
 });
 
-const onAddressSelected = (parsedAddress: ParsedAddress) => {
-  // Auto-fill address fields when user selects from suggestions
-  checkoutForm.value.address = parsedAddress.street
-  checkoutForm.value.city = parsedAddress.city
-  checkoutForm.value.postalCode = parsedAddress.postalCode
-  checkoutForm.value.province = parsedAddress.province
-  checkoutForm.value.country = parsedAddress.country
-}
 
 const processOrder = async () => {
+  // Ensure we're on the payment step
+  if (currentStep.value !== 4) {
+    toast.error('Debes completar todos los pasos antes de confirmar el pedido');
+    return;
+  }
+
   // Double-check authentication
   if (!authStore.isAuthenticated) {
     toast.error('Debes iniciar sesiÃ³n para completar la compra');

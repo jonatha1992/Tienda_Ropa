@@ -33,7 +33,7 @@
                     <div class="flex-1">
                       <h3 class="text-base font-medium text-gray-900 font-heading">
                         <router-link 
-                          :to="`/product/${item.product.id}`" 
+                          :to="`/product/${item.product.name}`" 
                           class="hover:text-gray-700 font-body"
                         >
                           {{ item.product.name }}
@@ -187,9 +187,9 @@
           <div class="mt-4 text-center">
             <button
               @click="continueShopping"
-              class="text-sm text-gray-600 font-body hover:text-gray-800 cursor-pointer"
+              class="text-sm text-gray-600 cursor-pointer font-body hover:text-gray-800"
             >
-              â† Continuar comprando
+              Continuar comprando
             </button>
           </div>
         </div>
@@ -206,7 +206,7 @@
         <p class="mb-6 text-gray-600 font-body">Agrega algunos productos para comenzar</p>
         <button
           @click="continueShopping"
-          class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md font-body hover:bg-gray-800"
+          class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800"
         >
           Explorar productos
         </button>
@@ -236,6 +236,8 @@ const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
 const { closeCartModal } = useCartModal();
+
+
 
 onMounted(() => {
   // Cart is already initialized in main.ts, just validate stock if needed

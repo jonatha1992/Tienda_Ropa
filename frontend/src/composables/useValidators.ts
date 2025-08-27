@@ -49,8 +49,8 @@ export function asYouType(phone: string, country: string = 'AR') {
 }
 
 export const validationMessages = {
-    phone: 'Ingresa un telÃ©fono vÃ¡lido (ej: +54 9 11 1234-5678).',
-    postal: 'Ingresa un cÃ³digo postal vÃ¡lido (solo nÃºmeros, 4-8 dÃ­gitos para AR).',
+    phone: 'Ingresa un teléfono válido (ej: +54 9 11 1234-5678).',
+    postal: 'Ingresa un código postal válido (solo números, 4-8 dígitos para AR).',
     required: 'Este campo es obligatorio.'
 };
 

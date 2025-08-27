@@ -26,9 +26,5 @@ export interface UserRole {
   role?: Role;
 }
 
-export interface UserWithRoles extends User {
-  roles?: Role[];
-}
-
-// Import the User type
+// Import the User type for UserRole interface
 import { User } from './user.types';

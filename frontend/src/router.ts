@@ -33,7 +33,7 @@ import SizeGuideView from './views/shared/SizeGuideView.vue';
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
   { path: '/shop', component: CollectionView },
-  { path: '/product/:name', component: ProductDetailView },
+  { path: '/product/:id/:name?', component: ProductDetailView },
   { path: '/cart', component: CartView },
   { path: '/checkout', component: CheckoutView, meta: { requiresAuth: true } },
   { path: '/auth', component: AuthView },
