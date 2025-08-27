@@ -319,9 +319,40 @@
             <label class="block text-sm font-medium text-gray-700">Imágenes</label>
             <input type="file" @change="handleFileSelect" multiple
               class="block w-full mt-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
-            <div v-if="imagePreviews.length" class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-4">
-              <div v-for="(preview, index) in imagePreviews" :key="index" class="relative">
-                <img :src="preview" class="object-cover w-full h-24 rounded-md" />
+            
+            <!-- Imágenes existentes -->
+            <div v-if="existingImages.length > 0" class="mt-4">
+              <h4 class="mb-2 text-sm font-medium text-gray-600">Imágenes actuales</h4>
+              <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div v-for="(image, index) in existingImages" :key="`existing-${index}`" class="relative">
+                  <img :src="image.image_url" class="object-cover w-full h-24 rounded-md" />
+                  <button 
+                    type="button"
+                    @click="removeExistingImage(index)"
+                    class="absolute flex items-center justify-center w-6 h-6 text-xs text-white transition-colors bg-red-500 rounded-full -top-2 -right-2 hover:bg-red-600"
+                    title="Eliminar imagen"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nuevas imágenes seleccionadas -->
+            <div v-if="imagePreviews.length > 0" class="mt-4">
+              <h4 class="mb-2 text-sm font-medium text-gray-600">Nuevas imágenes seleccionadas</h4>
+              <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div v-for="(preview, index) in imagePreviews" :key="`new-${index}`" class="relative">
+                  <img :src="preview" class="object-cover w-full h-24 rounded-md" />
+                  <button 
+                    type="button"
+                    @click="removeNewImage(index)"
+                    class="absolute flex items-center justify-center w-6 h-6 text-xs text-white transition-colors bg-red-500 rounded-full -top-2 -right-2 hover:bg-red-600"
+                    title="Eliminar imagen"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -692,7 +723,7 @@
               <div class="flex justify-center">
                 <span :class="p.is_unique ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'" 
                       class="inline-flex px-2 py-1 text-xs font-medium rounded-full">
-                  {{ p.is_unique ? 'Ãšnico' : 'Variantes' }}
+                  {{ p.is_unique ? 'Unico' : 'Variantes' }}
                 </span>
               </div>
             </td>
@@ -774,6 +805,7 @@ const product = ref<AdminProductCreate>({
 
 const selectedFiles = ref<File[]>([]);
 const imagePreviews = ref<string[]>([]);
+const existingImages = ref<{ id?: number; image_url: string }[]>([]);
 const showModal = ref(false);
 const modalTitle = ref('');
 const modalMessage = ref('');
@@ -929,6 +961,33 @@ const clearVariantSizeSearch = (inputElement: HTMLInputElement, variantIndex: nu
 
 // Vista previa del producto para el ProductCard
 const previewProduct = computed((): GlobalProduct => {
+  // Combinar imágenes existentes y nuevas para el preview
+  const allImages = [];
+  
+  // Agregar imágenes existentes
+  if (existingImages.value.length > 0) {
+    allImages.push(...existingImages.value.map((img, index) => ({ 
+      id: index, 
+      image_url: img.image_url 
+    })));
+  }
+  
+  // Agregar nuevas imágenes seleccionadas
+  if (imagePreviews.value.length > 0) {
+    allImages.push(...imagePreviews.value.map((url, index) => ({ 
+      id: existingImages.value.length + index, 
+      image_url: url 
+    })));
+  }
+  
+  // Si no hay imágenes, usar imagen por defecto
+  if (allImages.length === 0) {
+    allImages.push({ 
+      id: 0, 
+      image_url: 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a' 
+    });
+  }
+
   return {
     id: 1, // ID temporal para la vista previa
     name: product.value.name || 'Nombre del producto',
@@ -949,9 +1008,7 @@ const previewProduct = computed((): GlobalProduct => {
     discount_amount: product.value.has_discount && product.value.discount_percentage 
       ? getDiscountAmount() 
       : undefined,
-    images: imagePreviews.value.length > 0
-      ? imagePreviews.value.map((url, index) => ({ id: index, image_url: url }))
-      : [{ id: 0, image_url: 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a' }],
+    images: allImages,
     variants: product.value.is_unique ? [] : product.value.variants.map((v, index) => ({
       id: index,
       color_id: 0, // Placeholder ID
@@ -1116,13 +1173,22 @@ async function saveProduct() {
   }
 
   try {
-    // Subir imagenes a Firebase Storage si hay archivos seleccionados
+    // Preparar array de imágenes final
+    let finalImageUrls = [];
+    
+    // Agregar imágenes existentes que no fueron eliminadas
+    finalImageUrls.push(...existingImages.value.map(img => img.image_url));
+    
+    // Subir nuevas imágenes a Firebase Storage si hay archivos seleccionados
     if (selectedFiles.value.length > 0) {
-      console.log(' Subiendo imagenes a Firebase Storage...');
-      const imageUrls = await uploadImages();
-      product.value.images = imageUrls;
-      console.log('Imágenes subidas:', imageUrls);
+      console.log('🔼 Subiendo nuevas imágenes a Firebase Storage...');
+      const newImageUrls = await uploadImages();
+      finalImageUrls.push(...newImageUrls);
+      console.log('Nuevas imágenes subidas:', newImageUrls);
     }
+    
+    // Asignar todas las imágenes al producto
+    product.value.images = finalImageUrls;
 
     const editingProduct = editing.value ? products.value.find(p => p.name === product.value.name) : null;
 
@@ -1191,6 +1257,24 @@ function handleFileSelect(event: Event) {
       imagePreviews.value.push(URL.createObjectURL(file));
     }
   }
+}
+
+// Función para eliminar imagen existente
+function removeExistingImage(index: number) {
+  existingImages.value.splice(index, 1);
+  toast.info('Imagen existente marcada para eliminación');
+}
+
+// Función para eliminar nueva imagen seleccionada
+function removeNewImage(index: number) {
+  // Liberar memoria del objeto URL
+  URL.revokeObjectURL(imagePreviews.value[index]);
+  
+  // Eliminar de ambos arrays
+  imagePreviews.value.splice(index, 1);
+  selectedFiles.value.splice(index, 1);
+  
+  toast.info('Nueva imagen eliminada del preview');
 }
 
 async function compressToWebP(file: File): Promise<File> {
@@ -1267,7 +1351,15 @@ function editProduct(p: any) {
     images: p.images.map((img: any) => img.image_url),
     variants: p.variants?.map((v: any) => ({ color: v.color || v.size, talle: v.talle || v.size, stock: v.stock })) || []
   };
-  imagePreviews.value = p.images.map((img: any) => img.image_url);
+  
+  // Separar imágenes existentes de nuevas imágenes
+  existingImages.value = p.images.map((img: any) => ({ 
+    id: img.id, 
+    image_url: img.image_url 
+  }));
+  
+  // Limpiar arrays de nuevas imágenes
+  imagePreviews.value = [];
   selectedFiles.value = [];
 }
 
@@ -1340,8 +1432,20 @@ function resetForm() {
     images: [], 
     variants: [] 
   };
+  
+  // Limpiar URLs de objeto para liberar memoria antes de limpiar arrays
+  imagePreviews.value.forEach(url => {
+    try {
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      // Ignorar errores al liberar URLs
+    }
+  });
+  
+  // Limpiar arrays de imágenes
   selectedFiles.value = [];
   imagePreviews.value = [];
+  existingImages.value = [];
 }
 
 // --- Lógica de Descuentos ---

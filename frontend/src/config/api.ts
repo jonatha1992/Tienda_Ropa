@@ -644,7 +644,7 @@ export const productsApi = {
 
   // Update product (admin only)
   async updateProduct(id: number, updates: ProductUpdateData): Promise<Product> {
-    const response = await apiClient.patch(`/products/${id}`, updates);
+    const response = await apiClient.put(`/products/${id}`, updates);
     return response.data;
   },
 

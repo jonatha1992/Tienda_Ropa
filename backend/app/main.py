@@ -13,6 +13,7 @@ from app.routes.admin_payments import router as admin_payments_router
 from app.routes.admin_shipping import router as admin_shipping_router
 from app.routes.email_verification import router as email_verification_router
 from app.routes.shipping_quotes import router as shipping_quotes_router
+
 # Email functionality moved to /routes/ (standard approach)
 from app.core.config import settings
 from fastapi import Depends
@@ -59,7 +60,7 @@ async def startup_event():
 # CORS Middleware Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Explicitly allow frontend origins
+    allow_origins=settings.allowed_origins,  # Use dynamic origins from settings
     allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.web\.app",  # Allow Vercel and Firebase
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods

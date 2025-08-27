@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-6">
-    <!-- Delivery Method Selection -->
+    
+    <!-- 1. MÉTODO DE ENTREGA (PRIMERO - LISTA COMPACTA) -->
     <div class="bg-white shadow rounded-lg p-6">
-      <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Seleccionar Método de Entrega</h3>
       
       <!-- Loading State -->
       <div v-if="isLoadingQuotes" class="py-4 text-center">
@@ -24,119 +24,118 @@
           <p class="ml-2 text-sm text-yellow-800">{{ quotesError }}</p>
         </div>
       </div>
-
-      <div class="space-y-4">
-        <!-- Envío por Andreani -->
-        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
-             :class="selectedDeliveryMethod === 'envio_andreani' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
-             @click="selectDeliveryMethod('envio_andreani')">
-          <div class="flex items-center">
-            <input type="radio" 
-                   :checked="selectedDeliveryMethod === 'envio_andreani'"
-                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
-            <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">Envío por Andreani</div>
-              <div class="text-sm text-gray-500">
-                {{ getShippingOption('andreani')?.estimated_delivery_text || 'Entrega a domicilio en 3-5 días hábiles' }}
+      
+      <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Seleccionar Método de Entrega</h3>
+      
+      <!-- PASO 1: Lista compacta de proveedores -->
+      <div v-if="showProviderSelection" class="space-y-4">
+        <div class="space-y-2">
+          
+          <!-- Andreani -->
+          <div class="provider-option-compact flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+               :class="selectedDeliveryMethod === 'envio_andreani' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
+               @click="selectDeliveryMethod('envio_andreani')">
+            <div class="flex items-center">
+              <div class="w-8 h-8 mr-3 flex items-center justify-center bg-gray-100 rounded text-lg">📦</div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">Andreani</h4>
+                <p class="text-xs text-gray-500">3-5 días hábiles</p>
               </div>
             </div>
+            <span class="text-sm font-medium text-gray-900">
+              ${{ deliveryCosts['envio_andreani']?.toLocaleString() || '500' }}
+            </span>
           </div>
-          <div class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_andreani']?.toLocaleString() || '500' }}
-          </div>
-        </div>
-
-        <!-- Envío por Correo Argentino -->
-        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
-             :class="selectedDeliveryMethod === 'envio_correo' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
-             @click="selectDeliveryMethod('envio_correo')">
-          <div class="flex items-center">
-            <input type="radio" 
-                   :checked="selectedDeliveryMethod === 'envio_correo'"
-                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
-            <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">Envío por Correo Argentino</div>
-              <div class="text-sm text-gray-500">
-                {{ getShippingOption('correo_argentino')?.estimated_delivery_text || 'Entrega a domicilio en 5-8 días hábiles' }}
+          
+          <!-- Correo Argentino -->
+          <div class="provider-option-compact flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+               :class="selectedDeliveryMethod === 'envio_correo' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
+               @click="selectDeliveryMethod('envio_correo')">
+            <div class="flex items-center">
+              <div class="w-8 h-8 mr-3 flex items-center justify-center bg-gray-100 rounded text-lg">📮</div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">Correo Argentino</h4>
+                <p class="text-xs text-gray-500">5-8 días hábiles</p>
               </div>
             </div>
+            <span class="text-sm font-medium text-gray-900">
+              ${{ deliveryCosts['envio_correo']?.toLocaleString() || '400' }}
+            </span>
           </div>
-          <div class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_correo']?.toLocaleString() || '400' }}
-          </div>
-        </div>
-
-        <!-- Envío por OCA -->
-        <div v-if="getShippingOption('oca') || shippingOptions.length === 0"
-             class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
-             :class="selectedDeliveryMethod === 'envio_oca' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
-             @click="selectDeliveryMethod('envio_oca')">
-          <div class="flex items-center">
-            <input type="radio" 
-                   :checked="selectedDeliveryMethod === 'envio_oca'"
-                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
-            <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">Envío por OCA</div>
-              <div class="text-sm text-gray-500">
-                {{ getShippingOption('oca')?.estimated_delivery_text || 'Entrega a domicilio en 4-6 días hábiles' }}
+          
+          <!-- OCA -->
+          <div v-if="getShippingOption('oca') || shippingOptions.length === 0"
+               class="provider-option-compact flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+               :class="selectedDeliveryMethod === 'envio_oca' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
+               @click="selectDeliveryMethod('envio_oca')">
+            <div class="flex items-center">
+              <div class="w-8 h-8 mr-3 flex items-center justify-center bg-gray-100 rounded text-lg">🚚</div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">OCA</h4>
+                <p class="text-xs text-gray-500">4-6 días hábiles</p>
               </div>
             </div>
+            <span class="text-sm font-medium text-gray-900">
+              ${{ deliveryCosts['envio_oca']?.toLocaleString() || '450' }}
+            </span>
           </div>
-          <div class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_oca']?.toLocaleString() || '450' }}
+          
+          <!-- Retiro Local -->
+          <div class="provider-option-compact flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+               :class="selectedDeliveryMethod === 'retiro_local' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
+               @click="selectDeliveryMethod('retiro_local')">
+            <div class="flex items-center">
+              <div class="w-8 h-8 mr-3 flex items-center justify-center bg-gray-100 rounded text-lg">🏪</div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">Retiro en Local</h4>
+                <p class="text-xs text-gray-500">Coordinar horario</p>
+              </div>
+            </div>
+            <span class="text-sm font-medium text-gray-900">Gratis</span>
           </div>
         </div>
-
-        <!-- Retiro en Local -->
-        <div class="flex items-center justify-between p-4 transition-colors border rounded-lg cursor-pointer hover:border-gray-300"
-             :class="selectedDeliveryMethod === 'retiro_local' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
-             @click="selectDeliveryMethod('retiro_local')">
-          <div class="flex items-center">
-            <input type="radio" 
-                   :checked="selectedDeliveryMethod === 'retiro_local'"
-                   class="w-4 h-4 text-gray-800 border-gray-300 focus:ring-gray-500">
-            <div class="ml-3">
-              <div class="text-sm font-medium text-gray-900">Retiro en Local</div>
-              <div class="text-sm text-gray-500">Coordinar horario de retiro con el vendedor</div>
-            </div>
-          </div>
-          <div class="text-sm font-medium text-gray-900">Gratis</div>
+        
+        <!-- Botón confirmar (solo aparece cuando hay selección) -->
+        <div v-if="selectedDeliveryMethod" class="text-center pt-4">
+          <button @click="confirmSelection" 
+                  class="px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors">
+            Confirmar {{ getProviderDisplayName(selectedDeliveryMethod) }}
+          </button>
         </div>
       </div>
-
-      <!-- Contact Info for Local Pickup -->
-      <div v-if="selectedDeliveryMethod === 'retiro_local'" 
-           class="p-4 mt-4 border border-blue-200 rounded-lg bg-blue-50">
-        <div class="flex items-start">
-          <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div class="ml-3">
-            <h4 class="text-sm font-medium text-blue-900">Coordinar Retiro</h4>
-            <p class="mt-1 text-sm text-blue-700">
-              Después de completar tu compra, te contactaremos por WhatsApp para coordinar el horario de retiro.
-            </p>
-            <div class="mt-2 text-sm text-blue-700">
-              <strong>Contacto:</strong> +54 9 11 1234-5678<br>
-              <strong>Dirección:</strong> Av. Ejemplo 123, CABA
+      
+      <!-- PASO 2: Proveedor confirmado (header compacto) -->
+      <div v-if="!showProviderSelection && selectedDeliveryMethod">
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-6">
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">{{ getProviderIcon(selectedDeliveryMethod) }}</span>
+            <div>
+              <h3 class="font-medium text-gray-900">{{ getProviderDisplayName(selectedDeliveryMethod) }}</h3>
+              <p class="text-sm text-gray-500">{{ getProviderDescription(selectedDeliveryMethod) }}</p>
             </div>
           </div>
+          <div class="text-right">
+            <p class="font-medium text-gray-900">{{ getProviderPrice(selectedDeliveryMethod) }}</p>
+            <button @click="changeProvider" class="text-sm text-blue-600 hover:underline">
+              Cambiar proveedor
+            </button>
+          </div>
         </div>
-      </div>
-
-      <!-- Delivery Cost Summary -->
-      <div v-if="selectedDeliveryMethod" class="pt-4 mt-6 border-t border-gray-200">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-gray-900">Costo de envío:</span>
-          <span class="text-sm font-medium text-gray-900">
-            {{ getDeliveryCost() === 0 ? 'Gratis' : `$${getDeliveryCost().toLocaleString()}` }}
-          </span>
+        
+        <!-- Delivery Cost Summary -->
+        <div class="pt-4 mt-6 border-t border-gray-200">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-900">Costo de envío:</span>
+            <span class="text-sm font-medium text-gray-900">
+              {{ getDeliveryCost() === 0 ? 'Gratis' : `$${getDeliveryCost().toLocaleString()}` }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Shipping Address (only show for delivery methods, not local pickup) -->
-    <div v-if="selectedDeliveryMethod !== 'retiro_local'" class="bg-white shadow rounded-lg p-6">
+    <!-- 2. DIRECCIÓN DE ENVÍO (SEGUNDA) -->
+    <div v-if="!showProviderSelection && selectedDeliveryMethod !== 'retiro_local'" class="bg-white shadow rounded-lg p-6">
       <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Dirección de envío</h3>
       
       <div class="space-y-4">
@@ -247,8 +246,29 @@
       </div>
     </div>
 
-    <!-- Continue to Payment Button -->
-    <div v-if="isDeliveryInfoComplete" class="bg-white shadow rounded-lg p-6">
+    <!-- 3. INFORMACIÓN DE RETIRO LOCAL -->
+    <div v-if="!showProviderSelection && selectedDeliveryMethod === 'retiro_local'" class="bg-white shadow rounded-lg p-6">
+      <div class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-blue-900">Coordinar Retiro</h4>
+            <p class="mt-1 text-sm text-blue-700">
+              Después de completar tu compra, te contactaremos por WhatsApp para coordinar el horario de retiro.
+            </p>
+            <div class="mt-2 text-sm text-blue-700">
+              <strong>Contacto:</strong> +54 9 11 1234-5678<br>
+              <strong>Dirección:</strong> Av. Ejemplo 123, CABA
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. BOTÓN CONTINUAR AL PAGO -->
+    <div v-if="!showProviderSelection && isDeliveryInfoComplete" class="bg-white shadow rounded-lg p-6">
       <div class="text-center">
         <div class="mb-4">
           <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-3">
@@ -327,6 +347,8 @@ const emit = defineEmits<{
 const shippingOptions = ref<ShippingOption[]>([])
 const isLoadingQuotes = ref(false)
 const quotesError = ref<string | null>(null)
+const showProviderSelection = ref(true)     // Controla mostrar paso 1
+const providerSelected = ref(false)         // Si ya confirmó proveedor
 
 // Fallback delivery costs
 const fallbackDeliveryCosts = {
@@ -362,6 +384,55 @@ const isDeliveryInfoComplete = computed(() => {
          props.city.trim() && 
          props.postalCode.trim()
 })
+
+// Método para confirmar selección de proveedor
+const confirmSelection = () => {
+  showProviderSelection.value = false
+  providerSelected.value = true
+}
+
+// Método para cambiar proveedor (volver al paso 1)
+const changeProvider = () => {
+  showProviderSelection.value = true
+  providerSelected.value = false
+  emit('update:selectedDeliveryMethod', '')
+}
+
+// Métodos helper para mostrar información del proveedor
+const getProviderDisplayName = (method: string): string => {
+  const names: Record<string, string> = {
+    'envio_andreani': 'Andreani',
+    'envio_correo': 'Correo Argentino',
+    'envio_oca': 'OCA', 
+    'retiro_local': 'Retiro en Local'
+  }
+  return names[method] || method
+}
+
+const getProviderIcon = (method: string): string => {
+  const icons: Record<string, string> = {
+    'envio_andreani': '📦',
+    'envio_correo': '📮', 
+    'envio_oca': '🚚',
+    'retiro_local': '🏪'
+  }
+  return icons[method] || '📦'
+}
+
+const getProviderDescription = (method: string): string => {
+  const descriptions: Record<string, string> = {
+    'envio_andreani': 'Entrega a domicilio en 3-5 días hábiles',
+    'envio_correo': 'Entrega a domicilio en 5-8 días hábiles',
+    'envio_oca': 'Entrega a domicilio en 4-6 días hábiles',
+    'retiro_local': 'Coordinar horario de retiro con el vendedor'
+  }
+  return descriptions[method] || ''
+}
+
+const getProviderPrice = (method: string): string => {
+  const cost = deliveryCosts.value[method] || 0
+  return cost === 0 ? 'Gratis' : `$${cost.toLocaleString()}`
+}
 
 // Methods
 const selectDeliveryMethod = (method: string) => {
@@ -457,3 +528,13 @@ onMounted(() => {
   emit('delivery-method-changed', { method: props.selectedDeliveryMethod, cost })
 })
 </script>
+
+<style scoped>
+.provider-option-compact {
+  @apply transition-all duration-200;
+}
+
+.provider-option-compact:hover {
+  @apply bg-gray-50 border-gray-300;
+}
+</style>

@@ -1,13 +1,13 @@
 ﻿<template>
-  <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50">
+    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
         <nav class="flex" aria-label="Breadcrumb">
           <ol class="flex items-center space-x-4">
             <li>
               <router-link to="/cart" class="text-gray-400 hover:text-gray-500">
-                <svg class="flex-shrink-0 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="flex-shrink-0 w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
                 <span class="ml-1 font-body">Carrito</span>
@@ -15,15 +15,15 @@
             </li>
             <li>
               <div class="flex items-center">
-                <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span class="ml-4 text-sm font-body font-medium text-body-text">Checkout</span>
+                <span class="ml-4 text-sm font-medium font-body text-body-text">Checkout</span>
               </div>
             </li>
           </ol>
         </nav>
-        <h1 class="mt-4 text-3xl font-heading font-light text-gray-900">Finalizar compra</h1>
+        <h1 class="mt-4 text-3xl font-light text-gray-900 font-heading">Finalizar compra</h1>
         
         <!-- Delivery Progress -->
         <div class="mt-6">
@@ -38,26 +38,26 @@
       <div v-if="!cartStore.isEmpty" class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
         <!-- Order Summary -->
         <div class="order-2 lg:order-1">
-          <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-heading font-medium text-gray-900 mb-4">Resumen del pedido</h2>
+          <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="mb-4 text-lg font-medium text-gray-900 font-heading">Resumen del pedido</h2>
             
             <!-- Items -->
-            <ul class="divide-y divide-gray-200 mb-6">
-              <li v-for="item in cartStore.items" :key="item.id" class="py-4 flex">
+            <ul class="mb-6 divide-y divide-gray-200">
+              <li v-for="item in cartStore.items" :key="item.id" class="flex py-4">
                 <!-- Image -->
                 <div class="flex-shrink-0">
                   <img 
                     :src="item.product.images[0]?.image_url || '/placeholder-image.jpg'"
                     :alt="item.product.name"
-                    class="w-16 h-16 rounded-md object-cover object-center"
+                    class="object-cover object-center w-16 h-16 rounded-md"
                   >
                 </div>
                 
                 <!-- Details -->
-                <div class="ml-4 flex-1">
+                <div class="flex-1 ml-4">
                   <div class="flex justify-between">
                     <div>
-                      <h3 class="text-sm font-heading font-medium text-gray-900">{{ item.product.name }}</h3>
+                      <h3 class="text-sm font-medium text-gray-900 font-heading">{{ item.product.name }}</h3>
                       
                       <!-- Variant Info -->
                       <div v-if="item.variant" class="mt-1 text-sm font-body text-body-text">
@@ -71,14 +71,14 @@
                         <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
                       </div>
                       
-                      <p class="font-body mt-1 text-sm text-body-text">Cantidad: {{ item.quantity }}</p>
+                      <p class="mt-1 text-sm font-body text-body-text">Cantidad: {{ item.quantity }}</p>
                     </div>
                     
                     <div class="text-right">
-                      <p class="font-body text-sm font-medium text-body-text">
+                      <p class="text-sm font-medium font-body text-body-text">
                         ${{ cartStore.getItemTotal(item).toLocaleString() }}
                       </p>
-                      <p v-if="item.product.has_discount" class="font-body text-xs text-body-text line-through">
+                      <p v-if="item.product.has_discount" class="text-xs line-through font-body text-body-text">
                         ${{ (item.product.price * item.quantity).toLocaleString() }}
                       </p>
                     </div>
@@ -88,7 +88,7 @@
             </ul>
 
             <!-- Totals -->
-            <div class="border-t border-gray-200 pt-4 space-y-2">
+            <div class="pt-4 space-y-2 border-t border-gray-200">
               <div class="flex justify-between text-sm">
                 <span class="font-body text-body-text">Subtotal</span>
                 <span class="font-body text-body-text">
@@ -97,8 +97,8 @@
               </div>
               
               <div v-if="cartStore.totalSavings > 0" class="flex justify-between text-sm">
-                <span class="font-body text-red-600">Descuentos</span>
-                <span class="font-body text-red-600">-${{ cartStore.totalSavings.toLocaleString() }}</span>
+                <span class="text-red-600 font-body">Descuentos</span>
+                <span class="text-red-600 font-body">-${{ cartStore.totalSavings.toLocaleString() }}</span>
               </div>
               
               <div class="flex justify-between text-sm">
@@ -108,10 +108,10 @@
                 </span>
               </div>
               
-              <div class="border-t border-gray-200 pt-2">
+              <div class="pt-2 border-t border-gray-200">
                 <div class="flex justify-between">
-                  <span class="font-body text-base font-medium text-body-text">Total</span>
-                  <span class="font-body text-base font-medium text-body-text">
+                  <span class="text-base font-medium font-body text-body-text">Total</span>
+                  <span class="text-base font-medium font-body text-body-text">
                     ${{ (cartStore.totalPrice + deliveryCost).toLocaleString() }}
                   </span>
                 </div>
@@ -121,9 +121,9 @@
 
           <!-- Delivery Summary (Step 4) - Only in left column -->
           <div v-if="currentStep === 4" class="mt-6">
-            <div class="bg-white shadow rounded-lg p-6">
+            <div class="p-6 bg-white rounded-lg shadow">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="font-heading text-lg font-medium text-gray-900">Información de entrega</h3>
+                <h3 class="text-lg font-medium text-gray-900 font-heading">Información de entrega</h3>
                 <button 
                   @click="currentStep = 3"
                   class="text-sm text-blue-600 hover:text-blue-800 font-body"
@@ -132,7 +132,7 @@
                 </button>
               </div>
               
-              <div class="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+              <div class="p-4 space-y-2 text-sm rounded-lg bg-gray-50">
                 <div class="flex justify-between">
                   <span class="font-medium text-gray-700 font-body">Nombre:</span>
                   <span class="text-gray-900 font-body">{{ checkoutForm.firstName }} {{ checkoutForm.lastName }}</span>
@@ -213,57 +213,57 @@
             </div>
 
             <!-- Step 4: Payment Method -->
-            <div v-if="currentStep === 4" class="bg-white shadow rounded-lg p-6" data-payment-section>
-              <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Método de pago</h3>
+            <div v-if="currentStep === 4" class="p-6 bg-white rounded-lg shadow" data-payment-section>
+              <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Método de pago</h3>
               
               <div class="space-y-3">
-                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="transfer"
-                    class="focus:ring-black h-4 w-4 text-black border-gray-300"
+                    class="w-4 h-4 text-black border-gray-300 focus:ring-black"
                   >
-                  <BanknotesIcon class="ml-3 h-5 w-5 text-blue-600" />
-                  <span class="font-body ml-2 text-sm">Transferencia bancaria</span>
+                  <BanknotesIcon class="w-5 h-5 ml-3 text-blue-600" />
+                  <span class="ml-2 text-sm font-body">Transferencia bancaria</span>
                 </label>
                 
-                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="mercadopago"
-                    class="focus:ring-black h-4 w-4 text-black border-gray-300"
+                    class="w-4 h-4 text-black border-gray-300 focus:ring-black"
                   >
-                  <CreditCardIcon class="ml-3 h-5 w-5 text-purple-600" />
-                  <span class="font-body ml-2 text-sm">MercadoPago</span>
+                  <CreditCardIcon class="w-5 h-5 ml-3 text-purple-600" />
+                  <span class="ml-2 text-sm font-body">MercadoPago</span>
                 </label>
                 
-                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     v-model="checkoutForm.paymentMethod"
                     type="radio"
                     value="cash"
-                    class="focus:ring-black h-4 w-4 text-black border-gray-300"
+                    class="w-4 h-4 text-black border-gray-300 focus:ring-black"
                   >
-                  <CurrencyDollarIcon class="ml-3 h-5 w-5 text-green-600" />
-                  <span class="font-body ml-2 text-sm">Efectivo contra entrega</span>
+                  <CurrencyDollarIcon class="w-5 h-5 ml-3 text-green-600" />
+                  <span class="ml-2 text-sm font-body">Efectivo contra entrega</span>
                 </label>
               </div>
             </div>
 
             <!-- Submit Button -->
-            <div v-if="currentStep === 4" class="bg-white shadow rounded-lg p-6">
+            <div v-if="currentStep === 4" class="p-6 bg-white rounded-lg shadow">
               <button
                 type="submit"
                 :disabled="processing"
-                class="w-full bg-black text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
+                class="w-full px-4 py-3 font-medium text-white transition-colors bg-black rounded-md hover:bg-gray-800 disabled:bg-gray-400"
               >
-                <span class="font-body" v-if="processing">Procesando...</span>
-                <span class="font-body" v-else>Confirmar pedido</span>
+                <span class="text-white" v-if="processing">Procesando...</span>
+                <span class="text-white" v-else>Confirmar pedido</span>
               </button>
               
-              <p class="font-body mt-3 text-xs text-body-text text-center">
+              <p class="mt-3 text-xs text-center font-body text-body-text">
                 Al confirmar tu pedido, aceptas nuestros términos y condiciones
               </p>
             </div>
@@ -273,17 +273,17 @@
       </div>
 
       <!-- Empty Cart Message -->
-      <div v-else class="text-center py-12">
-        <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+      <div v-else class="py-12 text-center">
+        <div class="w-24 h-24 mx-auto mb-4 text-gray-400">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Tu carrito está vacío</h3>
-        <p class="font-body text-body-text mb-6">Agrega algunos productos antes de proceder al checkout</p>
+        <h3 class="mb-2 text-lg font-medium text-gray-900 font-heading">Tu carrito está vacío</h3>
+        <p class="mb-6 font-body text-body-text">Agrega algunos productos antes de proceder al checkout</p>
         <router-link
           to="/shop"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"
+          class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800"
         >
           <span class="font-body">Continuar comprando</span>
         </router-link>
@@ -406,7 +406,7 @@ const handleDeliveryMethodChanged = (data: { method: string; cost: number }) => 
 onMounted(async () => {
   // Check authentication first
   if (!authStore.isAuthenticated) {
-    toast.warning('Debes iniciar sesiÃ³n para acceder al checkout');
+    toast.warning('Debes iniciar sesión para acceder al checkout');
     router.push('/auth');
     return;
   }
@@ -416,7 +416,7 @@ onMounted(async () => {
   
   // Redirect if cart is empty
   if (cartStore.isEmpty) {
-    toast.warning('Tu carrito estÃ¡ vacÃ­o');
+    toast.warning('Tu carrito está vacío');
     router.push('/cart');
     return;
   }
