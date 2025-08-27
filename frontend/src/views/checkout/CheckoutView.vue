@@ -102,7 +102,7 @@
               </div>
               
               <div class="flex justify-between text-sm">
-                <span class="font-body text-body-text">EnvÃ­o</span>
+                <span class="font-body text-body-text">Envío</span>
                 <span class="font-body text-body-text">
                   {{ deliveryCost === 0 ? 'Gratis' : `$${deliveryCost.toLocaleString()}` }}
                 </span>

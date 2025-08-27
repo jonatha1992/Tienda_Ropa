@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="min-h-screen bg-gray-50">
     <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <!-- Header -->
@@ -164,19 +164,39 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="relative w-8 px-2 sm:w-10 sm:px-3">
-                  <input type="checkbox" 
-                    :checked="selectedOrders.length === orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length && orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length > 0"
-                    @change="toggleSelectAll"
-                    title="Seleccionar para envío"
-                    class="absolute w-4 h-4 -mt-2 text-blue-600 border-gray-300 rounded left-2 top-1/2 focus:ring-blue-500">
+                <th scope="col" class="relative w-10 px-2 sm:px-3">
+                  <div class="flex items-center justify-center">
+                    <label class="inline-flex items-center cursor-pointer group">
+                      <input type="checkbox" 
+                        :checked="selectedOrders.length === orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length && orders.filter(order => order.can_add_tracking || order.can_mark_shipped).length > 0"
+                        @change="toggleSelectAll"
+                        class="sr-only peer">
+                      <div class="relative w-5 h-5 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50 transition-colors duration-200">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="sr-only">Seleccionar todo para envío</span>
+                    </label>
+                  </div>
+                  <div class="absolute inset-0" title="Seleccionar todo para envío" data-tooltip-placement="bottom"></div>
                 </th>
-                <th scope="col" class="relative w-8 px-2 sm:w-10 sm:px-3">
-                  <input type="checkbox" 
-                    :checked="selectedOrdersForDeletion.length === orders.length && orders.length > 0"
-                    @change="toggleSelectAllForDeletion"
-                    title="Seleccionar para eliminar"
-                    class="absolute w-4 h-4 -mt-2 text-red-600 border-gray-300 rounded left-2 top-1/2 focus:ring-red-500">
+                <th scope="col" class="relative w-10 px-2 sm:px-3">
+                  <div class="flex items-center justify-center">
+                    <label class="inline-flex items-center cursor-pointer group">
+                      <input type="checkbox" 
+                        :checked="selectedOrdersForDeletion.length === orders.length && orders.length > 0"
+                        @change="toggleSelectAllForDeletion"
+                        class="sr-only peer">
+                      <div class="relative w-5 h-5 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50 transition-colors duration-200">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-colors duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                      <span class="sr-only">Seleccionar todo para eliminar</span>
+                    </label>
+                  </div>
+                  <div class="absolute inset-0" title="Seleccionar todo para eliminar" data-tooltip-placement="bottom"></div>
                 </th>
                 <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                   Pedido
@@ -203,20 +223,40 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="order in orders" :key="order.order_id" class="hover:bg-gray-50">
-                <td class="relative w-8 px-2 sm:w-10 sm:px-3">
-                  <input v-if="order.can_add_tracking || order.can_mark_shipped" 
-                    type="checkbox" 
-                    :value="order.order_id"
-                    v-model="selectedOrders"
-                    title="Seleccionar para envío"
-                    class="absolute w-4 h-4 -mt-2 text-blue-600 border-gray-300 rounded left-2 top-1/2 focus:ring-blue-500">
+                <td class="relative w-10 px-2 sm:px-3">
+                  <div class="flex items-center justify-center">
+                    <label v-if="order.can_add_tracking || order.can_mark_shipped" class="inline-flex items-center cursor-pointer group">
+                      <input 
+                        type="checkbox" 
+                        :value="order.order_id"
+                        v-model="selectedOrders"
+                        class="sr-only peer"
+                        :title="order.can_mark_shipped ? 'Marcar como enviado' : 'Agregar seguimiento'">
+                      <div class="relative w-5 h-5 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50 transition-colors duration-200">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="sr-only">{{ order.can_mark_shipped ? 'Marcar como enviado' : 'Agregar seguimiento' }}</span>
+                    </label>
+                  </div>
                 </td>
-                <td class="relative w-8 px-2 sm:w-10 sm:px-3">
-                  <input type="checkbox" 
-                    :value="order.order_id"
-                    v-model="selectedOrdersForDeletion"
-                    title="Seleccionar para eliminar"
-                    class="absolute w-4 h-4 -mt-2 text-red-600 border-gray-300 rounded left-2 top-1/2 focus:ring-red-500">
+                <td class="relative w-10 px-2 sm:px-3">
+                  <div class="flex items-center justify-center">
+                    <label class="inline-flex items-center cursor-pointer group">
+                      <input 
+                        type="checkbox" 
+                        :value="order.order_id"
+                        v-model="selectedOrdersForDeletion"
+                        class="sr-only peer">
+                      <div class="relative w-5 h-5 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50 transition-colors duration-200">
+                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                      <span class="sr-only">Eliminar pedido</span>
+                    </label>
+                  </div>
                 </td>
                 <td class="px-3 py-3 whitespace-nowrap">
                   <div class="flex items-center">
@@ -1085,14 +1125,14 @@ const closeShippingModal = () => {
 // Update order status
 const updateOrderStatus = async (orderId: number, status: string, notes: string) => {
   try {
-    console.log('ðŸ”„ Updating order status:', { orderId, status, notes });
+    console.log('Updating order status:', { orderId, status, notes });
     await ordersApi.updateOrderStatus(orderId, { status, adminNotes: notes });
     
     toast.success('Estado del pedido actualizado exitosamente');
     closeStatusModal();
     await loadOrders();
   } catch (error) {
-    console.error('âŒ Error updating order status:', error);
+    console.error('Error updating order status:', error);
     toast.error('Error al actualizar el estado del pedido');
   }
 };
@@ -1100,21 +1140,21 @@ const updateOrderStatus = async (orderId: number, status: string, notes: string)
 // Update order shipping
 const updateOrderShipping = async (orderId: number, shippingData: any) => {
   try {
-    console.log('ðŸ”„ Updating order shipping:', { orderId, shippingData });
+    console.log('Updating order shipping:', { orderId, shippingData });
     await ordersApi.updateOrderShipping(orderId, shippingData);
     
-    toast.success('Información de envÃ­o actualizada exitosamente');
+    toast.success('Información de envío actualizada exitosamente');
     closeShippingModal();
     await loadOrders();
   } catch (error) {
-    console.error('âŒ Error updating order shipping:', error);
-    toast.error('Error al actualizar la información de envÃ­o');
+    console.error('Error updating order shipping:', error);
+    toast.error('Error al actualizar la información de envío');
   }
 };
 
 // Initialize
 onMounted(async () => {
-  console.log('ðŸš€ Admin Orders View mounted');
+  console.log('Admin Orders View mounted');
   
   // Check admin access
   if (!authStore.hasAdminAccess) {

@@ -179,7 +179,7 @@
               @click="proceedToCheckout"
               class="w-full px-4 py-3 font-medium text-white transition-colors bg-black rounded-md hover:bg-gray-800"
             >
-              {{ authStore.isAuthenticated ? 'Continuar con la compra' : 'Iniciar sesión y continuar' }}
+              {{ authStore.isAuthenticated ? 'Finalizar la compra' : 'Iniciar sesión y finalizar la compra' }}
             </button>
           </div>
 
