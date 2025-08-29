@@ -1,8 +1,10 @@
 ﻿<template>
   <!-- Modal Overlay -->
-  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
-    <!-- Contenedor principal -->
-    <div class="relative flex flex-col w-full h-full max-w-6xl p-4 mx-auto">
+  <transition name="overlay-fade">
+    <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+      <!-- Contenedor principal -->
+      <transition name="dialog-scale" appear>
+        <div class="relative flex flex-col w-full h-full max-w-6xl p-4 mx-auto">
       
       <!-- Header con boton cerrar -->
       <div class="absolute z-10 top-4 right-4">
@@ -16,13 +18,14 @@
       
       <!-- Imagen principal -->
       <div class="relative flex items-center justify-center flex-1 min-h-0">
-        <img 
-          :src="currentImage" 
-          :alt="alt" 
-          class="object-contain max-w-full max-h-full"
-          @load="handleImageLoad"
-          @error="handleImageError"
-        />
+          <img 
+            ref="modalImgRef"
+            :src="currentImage" 
+            :alt="alt" 
+            class="object-contain max-w-full max-h-full modal-image"
+            @load="handleImageLoad"
+            @error="handleImageError"
+          />
         
         <!-- Loading spinner -->
         <div v-if="imageLoading" class="absolute inset-0 flex items-center justify-center">
@@ -49,34 +52,72 @@
         </button>
       </div>
       
-      <!-- Thumbnails y contador -->
-      <div v-if="images.length > 1" class="flex flex-col items-center mt-4 space-y-4">
-        <!-- Thumbnails -->
-        <div class="flex justify-center max-w-full pb-2 space-x-2 overflow-x-auto">
-          <div 
-            v-for="(image, index) in images" 
-            :key="index" 
-            @click="selectImage(index)"
-            class="flex-shrink-0 w-16 h-16 transition-colors border-2 rounded cursor-pointer"
-            :class="currentIndex === index ? 'border-white' : 'border-transparent hover:border-gray-400'"
-          >
-            <img 
-              :src="image.image_url" 
-              :alt="`Thumbnail ${index + 1}`"
-              class="object-cover w-full h-full rounded"
-              loading="lazy"
-            />
-          </div>
-        </div>
-        
-        <!-- Contador de imÃ¡genes -->
+      <!-- Contador (se eliminó la tira de thumbnails para evitar recuadro abajo) -->
+      <div v-if="images.length > 1" class="flex items-center justify-center mt-4">
         <div class="text-sm text-center text-white font-body">
           {{ currentIndex + 1 }} / {{ images.length }}
         </div>
       </div>
+        </div>
+      </transition>
     </div>
-  </div>
+  </transition>
 </template>
+
+<style scoped>
+/* Improved overlay fade with smoother timing */
+.overlay-fade-enter-active {
+  transition: opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.overlay-fade-leave-active {
+  transition: opacity 250ms cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+.overlay-fade-enter-from,
+.overlay-fade-leave-to {
+  opacity: 0;
+}
+.overlay-fade-enter-to,
+.overlay-fade-leave-from {
+  opacity: 1;
+}
+
+/* Enhanced dialog transitions with better easing */
+.dialog-scale-enter-active {
+  transition: 
+    opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.dialog-scale-leave-active {
+  transition: 
+    opacity 250ms cubic-bezier(0.55, 0.06, 0.68, 0.19),
+    transform 250ms cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+.dialog-scale-enter-from {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+}
+.dialog-scale-leave-to {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+.dialog-scale-enter-to,
+.dialog-scale-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Smooth image transitions */
+.modal-image {
+  transition: opacity 200ms ease-out;
+}
+
+/* Hardware acceleration for better performance */
+.dialog-scale-enter-active,
+.dialog-scale-leave-active {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
@@ -87,6 +128,8 @@ interface Props {
   images: ProductImage[];
   initialIndex?: number;
   alt?: string;
+  // Optional CSS selector for the image in product detail to create a shared-element animation
+  sharedSelector?: string;
 }
 
 interface Emits {
@@ -102,6 +145,81 @@ const emit = defineEmits<Emits>();
 
 const currentIndex = ref(0);
 const imageLoading = ref(false);
+const modalImgRef = ref<HTMLImageElement | null>(null);
+const isAnimatingShared = ref(false);
+
+/**
+ * Improved shared-element animation with smoother transitions and better timing
+ */
+const animateSharedElement = async (fromEl: HTMLElement | null, toEl: HTMLElement | null, isClosing: boolean = false) => {
+  if (!fromEl || !toEl) return;
+  isAnimatingShared.value = true;
+  
+  const fromRect = fromEl.getBoundingClientRect();
+  const toRect = toEl.getBoundingClientRect();
+
+  // Create a more accurate clone
+  const clone = fromEl.cloneNode(true) as HTMLElement;
+  
+  // Enhanced clone styling for smoother animation
+  Object.assign(clone.style, {
+    position: 'fixed',
+    left: `${fromRect.left}px`,
+    top: `${fromRect.top}px`,
+    width: `${fromRect.width}px`,
+    height: `${fromRect.height}px`,
+    margin: '0',
+    padding: '0',
+    border: 'none',
+    borderRadius: fromEl.style.borderRadius || '0',
+    transition: 'all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    transformOrigin: 'center center',
+    zIndex: '10000',
+    pointerEvents: 'none',
+    willChange: 'transform, opacity',
+    backfaceVisibility: 'hidden'
+  });
+  
+  document.body.appendChild(clone);
+
+  // Calculate transform values
+  const scaleX = toRect.width / fromRect.width;
+  const scaleY = toRect.height / fromRect.height;
+  const translateX = toRect.left - fromRect.left + (toRect.width - fromRect.width) / 2;
+  const translateY = toRect.top - fromRect.top + (toRect.height - fromRect.height) / 2;
+
+  // Start animation immediately after next frame
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  
+  // Apply the transform
+  clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
+  
+  // Handle opacity based on animation direction
+  if (isClosing) {
+    clone.style.opacity = '0';
+  }
+
+  // Wait for animation to complete
+  return new Promise<void>((resolve) => {
+    const cleanup = () => {
+      clone.remove();
+      isAnimatingShared.value = false;
+      resolve();
+    };
+    
+    const onTransitionEnd = (e: TransitionEvent) => {
+      if (e.target === clone && (e.propertyName === 'transform' || e.propertyName === 'all')) {
+        clone.removeEventListener('transitionend', onTransitionEnd);
+        cleanup();
+      }
+    };
+    
+    clone.addEventListener('transitionend', onTransitionEnd);
+    
+    // Fallback cleanup
+    setTimeout(cleanup, 450);
+  });
+};
 
 const currentImage = computed(() => {
   if (props.images && props.images[currentIndex.value]) {
@@ -110,7 +228,26 @@ const currentImage = computed(() => {
   return '';
 });
 
-const closeModal = () => {
+const closeModal = async () => {
+  // If there's a shared-element target on the product detail, animate back first
+  if (props.sharedSelector && modalImgRef.value) {
+    const target = document.querySelector(props.sharedSelector) as HTMLElement | null;
+    if (target) {
+      // Hide modal content immediately to prevent double image
+      if (modalImgRef.value) {
+        modalImgRef.value.style.opacity = '0';
+      }
+      
+      // Animate from modal image to target, then emit close
+      try {
+        await animateSharedElement(modalImgRef.value, target, true);
+      } finally {
+        emit('close');
+      }
+      return;
+    }
+  }
+
   emit('close');
 };
 
@@ -188,6 +325,36 @@ watch(() => props.isOpen, (newValue) => {
   if (newValue) {
     currentIndex.value = props.initialIndex;
     imageLoading.value = true;
+    
+    // Enhanced shared-element opening animation
+    if (props.sharedSelector) {
+      const source = document.querySelector(props.sharedSelector) as HTMLElement | null;
+      
+      if (source && modalImgRef.value) {
+        // Hide modal image initially to prevent double image
+        modalImgRef.value.style.opacity = '0';
+        
+        // Start animation after modal is fully rendered
+        requestAnimationFrame(() => {
+          requestAnimationFrame(async () => {
+            if (modalImgRef.value && source) {
+              try {
+                await animateSharedElement(source, modalImgRef.value, false);
+                // Show modal image after animation
+                if (modalImgRef.value) {
+                  modalImgRef.value.style.opacity = '1';
+                }
+              } catch (error) {
+                // Fallback: just show the modal image
+                if (modalImgRef.value) {
+                  modalImgRef.value.style.opacity = '1';
+                }
+              }
+            }
+          });
+        });
+      }
+    }
   }
 });
 

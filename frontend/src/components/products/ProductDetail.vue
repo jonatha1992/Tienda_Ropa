@@ -27,7 +27,7 @@
         <!-- Left Side - Images (mÃ¡s compacto) -->
         <div class="flex flex-shrink-0 gap-4">
           <!-- Main Image (mÃ¡s grande) -->
-          <div class="w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative cursor-pointer" @click="openImageGallery(selectedImage)">
+          <div class="product-main-image w-[26rem] h-[32rem] overflow-hidden bg-gray-100 rounded-lg flex-shrink-0 border-4 border-white shadow-lg ring-1 ring-gray-200 relative cursor-pointer" @click="openImageGallery(selectedImage)">
             <OptimizedImage
               :src="mainImage"
               :alt="product.name"
@@ -250,12 +250,14 @@
       <div class="lg:hidden">
         <!-- Mobile Images -->
         <div class="px-4 py-6">
-          <div class="relative mb-4 overflow-hidden bg-gray-100 rounded-lg cursor-pointer" style="aspect-ratio: 26/32;" @click="openImageGallery(selectedImage)">
-            <img 
-              :src="mainImage" 
-              :alt="product.name" 
+          <div class="product-main-image relative mb-4 overflow-hidden bg-gray-100 rounded-lg cursor-pointer" style="aspect-ratio: 26/32;" @click="openImageGallery(selectedImage)">
+            <OptimizedImage
+              :src="mainImage"
+              :alt="product.name"
               loading="eager"
-              class="object-cover object-center w-full h-full"
+              :show-spinner="true"
+              :fallback-src="'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a'"
+              image-class="object-cover object-center w-full h-full"
             />
             <!-- Sin Stock Overlay Mobile -->
             <div v-if="isOutOfStock" class="absolute inset-0 flex items-center justify-center bg-black rounded-lg bg-opacity-40">
@@ -281,11 +283,13 @@
               class="flex-shrink-0 w-16 h-16 overflow-hidden transition-colors bg-gray-100 border-2 rounded-md cursor-pointer"
               :class="selectedImage === index ? 'border-black' : 'border-transparent'"
             >
-              <img 
-                :src="image.image_url" 
-                :alt="`${product.name} - imagen ${index + 1}`" 
-                loading="eager"
-                class="object-cover object-center w-full h-full"
+              <OptimizedImage
+                :src="image.image_url"
+                :alt="`${product.name} - imagen ${index + 1}`"
+                loading="lazy"
+                aspect-ratio="square"
+                :show-spinner="true"
+                image-class="object-cover object-center w-full h-full"
               />
             </div>
           </div>
@@ -537,6 +541,7 @@
       :images="product?.images || []"
       :initial-index="galleryInitialIndex"
       :alt="product?.name || ''"
+      :shared-selector="'.product-main-image'"
       @close="closeImageGallery"
     />
   </div>
