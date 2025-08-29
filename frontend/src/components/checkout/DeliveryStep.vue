@@ -430,19 +430,19 @@ const getProviderDescription = (method: string): string => {
 }
 
 const getProviderPrice = (method: string): string => {
-  const cost = deliveryCosts.value[method] || 0
+  const cost = (deliveryCosts.value as Record<string, number>)[method] || 0
   return cost === 0 ? 'Gratis' : `$${cost.toLocaleString()}`
 }
 
 // Methods
 const selectDeliveryMethod = (method: string) => {
   emit('update:selectedDeliveryMethod', method)
-  const cost = deliveryCosts.value[method] || 0
+  const cost = (deliveryCosts.value as Record<string, number>)[method] || 0
   emit('delivery-method-changed', { method, cost })
 }
 
 const getDeliveryCost = () => {
-  return deliveryCosts.value[props.selectedDeliveryMethod] || 0
+  return (deliveryCosts.value as Record<string, number>)[props.selectedDeliveryMethod] || 0
 }
 
 const onAddressSelected = (parsedAddress: ParsedAddress) => {
@@ -524,7 +524,7 @@ onMounted(() => {
   }
   
   // Emit initial delivery method cost
-  const cost = deliveryCosts.value[props.selectedDeliveryMethod] || 0
+  const cost = (deliveryCosts.value as Record<string, number>)[props.selectedDeliveryMethod] || 0
   emit('delivery-method-changed', { method: props.selectedDeliveryMethod, cost })
 })
 </script>

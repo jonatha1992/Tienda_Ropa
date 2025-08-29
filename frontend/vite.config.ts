@@ -45,14 +45,13 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
-    minify: 'terser',
+    minify: 'esbuild',
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor': ['vue', 'vue-router', 'pinia', 'axios'],
-          'ui': ['@headlessui/vue', '@heroicons/vue'],
-          'utils': ['lodash', 'date-fns']
+          'ui': ['@headlessui/vue', '@heroicons/vue']
         }
       }
     },

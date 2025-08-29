@@ -740,6 +740,7 @@ const product = ref<AdminProductCreate>({
   stock: 1, // Valor por defecto de 1
   images: [],
   variants: [],
+  has_discount: false,
 });
 
 const selectedFiles = ref<File[]>([]);
@@ -901,7 +902,7 @@ const clearVariantSizeSearch = (inputElement: HTMLInputElement, variantIndex: nu
 // Vista previa del producto para el ProductCard
 const previewProduct = computed((): GlobalProduct => {
   // Combinar imágenes existentes y nuevas para el preview
-  const allImages = [];
+  const allImages: { id: number; image_url: string; is_primary: boolean }[] = [];
   
   // Agregar imágenes existentes
   if (existingImages.value.length > 0) {
@@ -1120,7 +1121,7 @@ async function saveProduct() {
 
   try {
     // Preparar array de imágenes final
-    let finalImageUrls = [];
+    let finalImageUrls: string[] = [];
     
     // Agregar imágenes existentes que no fueron eliminadas
     finalImageUrls.push(...existingImages.value.map(img => img.image_url));
@@ -1293,7 +1294,8 @@ function editProduct(p: any) {
     talle: p.talle || null,
     stock: p.stock || null,
     images: p.images.map((img: any) => img.image_url),
-    variants: p.variants?.map((v: any) => ({ color: v.color || v.size, talle: v.talle || v.size, stock: v.stock })) || []
+    variants: p.variants?.map((v: any) => ({ color: v.color || v.size, talle: v.talle || v.size, stock: v.stock })) || [],
+    has_discount: p.has_discount || false
   };
   
   // Separar imágenes existentes de nuevas imágenes
@@ -1372,7 +1374,8 @@ function resetForm() {
     talle: null,
     stock: 1, // Stock por defecto 1
     images: [], 
-    variants: [] 
+    variants: [],
+    has_discount: false
   };
   
   // Limpiar URLs de objeto para liberar memoria antes de limpiar arrays
