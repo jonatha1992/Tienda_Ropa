@@ -60,8 +60,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const imageRef = ref<HTMLImageElement>()
 const { getImageState, setImageLoading, setImageLoaded, setImageError, observeImage } = useImageLoading()
-const eagerLoad = computed(() => props.loading === 'eager')
+const eagerLoad = computed(() => 
+  props.loading === 'eager' || 
+  props.src.startsWith('blob:') ||
+  props.src.includes('firebasestorage')
+)
 const imageState = computed(() => getImageState(props.src))
+
 const aspectRatioClass = computed(() => {
   switch (props.aspectRatio) {
     case 'square': return 'aspect-square'

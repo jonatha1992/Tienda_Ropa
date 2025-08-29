@@ -33,7 +33,7 @@
                 <div class="sm:col-span-6">
                   <label for="shippingAddress" class="block text-sm font-medium text-gray-700">Dirección de Envío</label>
                   <textarea id="shippingAddress" v-model="editedOrder.shipping_address" rows="3"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm  "></textarea>
                 </div>
 
                 <!-- Order Status -->
@@ -83,7 +83,7 @@
                 <div class="sm:col-span-6">
                   <label for="notes" class="block text-sm font-medium text-gray-700">Notas del Pedido</label>
                   <textarea id="notes" v-model="editedOrder.notes" rows="2"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     placeholder="Notas adicionales sobre el pedido"></textarea>
                 </div>
               </div>

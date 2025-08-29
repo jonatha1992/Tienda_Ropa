@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <div class="bg-white shadow">
@@ -19,7 +19,7 @@
           <router-link
             to="/admin/products"
             class="px-1 py-4 text-sm font-medium border-b-2"
-            active-class="text-blue-600 border-blue-500"
+            active-class="text-gray-800 border-gray-500"
             inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Productos
@@ -27,7 +27,7 @@
           <router-link
             to="/admin/users"
             class="px-1 py-4 text-sm font-medium border-b-2"
-            active-class="text-blue-600 border-blue-500"
+            active-class="text-gray-800 border-gray-500"
             inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Usuarios
@@ -35,7 +35,7 @@
           <router-link
             to="/admin/orders"
             class="px-1 py-4 text-sm font-medium border-b-2"
-            active-class="text-blue-600 border-blue-500"
+            active-class="text-gray-800 border-gray-500"
             inactive-class="text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
           >
             Pedidos
@@ -102,56 +102,6 @@
             </div>
           </div>
 
-          <!-- Sección de descuento -->
-          <div class="mt-6">
-            <div class="flex items-center mb-4">
-              <input 
-                type="checkbox" 
-                v-model="product.has_discount" 
-                @change="onDiscountChange"
-                class="mr-2 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-              >
-              <label class="text-sm font-semibold text-gray-700">
-                Aplicar descuento al producto
-              </label>
-            </div>
-            
-            <div v-if="product.has_discount" class="p-5 border-2 border-yellow-200 rounded-xl bg-gradient-to-br from-yellow-50 to-orange-50">
-              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label for="discount_percentage" class="block mb-2 text-sm font-semibold text-gray-700">Porcentaje de descuento (%)</label>
-                  <div class="relative mt-1">
-                    <input 
-                      type="number" 
-                      min="1" 
-                      max="100" 
-                      step="1"
-                      v-model.number="product.discount_percentage"
-                      placeholder="Ej: 20"
-                      class="w-full py-3 pl-3 pr-10 text-sm leading-5 text-gray-900 transition-all duration-200 bg-white border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" 
-                      required
-                    >
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                      <span class="text-sm text-gray-500">%</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div v-if="product.discount_percentage && product.price" class="flex flex-col justify-end">
-                  <div class="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-sm">
-                    <div class="mb-1 text-xs text-gray-500">Vista previa del descuento:</div>
-                    <div class="text-sm">
-                      <span class="text-gray-400 line-through">${{ product.price.toFixed(2) }}</span>
-                      <span class="ml-2 font-semibold text-green-600">${{ getDiscountedPrice().toFixed(2) }}</span>
-                    </div>
-                    <div class="mt-1 text-xs text-gray-500">
-                      Ahorras: ${{ getDiscountAmount().toFixed(2) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <!-- Sección de atributos de producto en tres columnas -->
           <div class="mt-6">
@@ -182,7 +132,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -192,7 +142,7 @@
                           <span
                             v-if="selected"
                             :class="[
-                              'absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600 ',
+                              'absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600 ',
                             ]"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
@@ -228,7 +178,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -242,7 +192,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -279,7 +229,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -293,7 +243,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -360,7 +310,7 @@
           <!-- Sección de atributos únicos -->
           <div v-if="product.is_unique" class="mt-6">
             <h3 class="text-lg font-semibold text-gray-800">Atributos del Producto Único</h3>
-            <div class="grid items-start grid-cols-1 gap-6 p-6 border-2 border-blue-200 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 md:grid-cols-3">
+            <div class="grid items-start grid-cols-1 gap-6 p-6 border-2 border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 md:grid-cols-3">
               <div>
                 <label class="block mb-2 text-sm font-semibold text-gray-700">Color</label>
                 
@@ -390,7 +340,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -411,7 +361,7 @@
                           </div>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -450,7 +400,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -465,7 +415,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -529,7 +479,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -550,7 +500,7 @@
                           </div>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -589,7 +539,7 @@
                       >
                         <li
                           :class="[
-                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-blue-600 hover:text-white',
+                            active ? 'bg-gray-300' : 'text-gray-900 hover:bg-gray-600 hover:text-white',
                             'relative cursor-default select-none py-2 pl-10 pr-4 transition-colors duration-150',
                           ]"
                         >
@@ -604,7 +554,7 @@
                           </span>
                           <span
                             v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
                           >
                             <CheckIcon class="w-5 h-5" aria-hidden="true" />
                           </span>
@@ -679,7 +629,7 @@
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Imagen</th>
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Nombre</th>
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Precio</th>
-            <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Descuento</th>
+            <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Pedido</th>
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Tipo</th>
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Stock</th>
             <th class="px-4 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase border-b">Acciones</th>
@@ -703,25 +653,16 @@
             </td>
             <!-- Precio -->
             <td class="px-4 py-3 text-center border-b">
-              <div v-if="p.has_discount && p.discount_percentage" class="text-sm">
-                <div class="text-xs text-gray-500 line-through">${{ p.price.toFixed(2) }}</div>
-                <div class="font-semibold text-green-600">${{ (p.price * (1 - p.discount_percentage / 100)).toFixed(2) }}</div>
-              </div>
-              <div v-else class="text-sm font-semibold text-gray-900">${{ p.price.toFixed(2) }}</div>
+              <div class="text-sm font-semibold text-gray-900">${{ p.price.toFixed(2) }}</div>
             </td>
-            <!-- Descuento -->
+            <!-- Pedido -->
             <td class="px-4 py-3 text-center border-b">
-              <div v-if="p.has_discount" class="flex justify-center">
-                <span class="inline-flex px-2 py-1 text-xs font-medium text-orange-800 bg-orange-100 rounded-full">
-                  {{ p.discount_percentage }}% OFF
-                </span>
-              </div>
-              <div v-else class="text-xs text-gray-400">Sin descuento</div>
+              <div class="text-xs text-gray-400">-</div>
             </td>
             <!-- Tipo -->
             <td class="px-4 py-3 text-center border-b">
               <div class="flex justify-center">
-                <span :class="p.is_unique ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'" 
+                <span :class="p.is_unique ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'" 
                       class="inline-flex px-2 py-1 text-xs font-medium rounded-full">
                   {{ p.is_unique ? 'Unico' : 'Variantes' }}
                 </span>
@@ -797,8 +738,6 @@ const product = ref<AdminProductCreate>({
   color: null,
   talle: null,
   stock: 1, // Valor por defecto de 1
-  has_discount: false,
-  discount_percentage: null,
   images: [],
   variants: [],
 });
@@ -968,15 +907,17 @@ const previewProduct = computed((): GlobalProduct => {
   if (existingImages.value.length > 0) {
     allImages.push(...existingImages.value.map((img, index) => ({ 
       id: index, 
-      image_url: img.image_url 
+      image_url: img.image_url,
+      is_primary: index === 0 // Marcar la primera imagen como principal
     })));
   }
   
   // Agregar nuevas imágenes seleccionadas
   if (imagePreviews.value.length > 0) {
-    allImages.push(...imagePreviews.value.map((url, index) => ({ 
+    allImages.push(...imagePreviews.value.map((url, index) => ({
       id: existingImages.value.length + index, 
-      image_url: url 
+      image_url: url,
+      is_primary: allImages.length === 0 && index === 0 // Marcar como principal si es la primera
     })));
   }
   
@@ -984,40 +925,53 @@ const previewProduct = computed((): GlobalProduct => {
   if (allImages.length === 0) {
     allImages.push({ 
       id: 0, 
-      image_url: 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a' 
+      image_url: 'https://firebasestorage.googleapis.com/v0/b/m-vintage.firebasestorage.app/o/modelo_card.jpg?alt=media&token=bfeea622-2abf-4d84-b570-96659c605f8a',
+      is_primary: true
     });
   }
 
-  return {
+  // Precio del producto
+  const price = Number(product.value.price) || 0;
+
+  // Crear variantes para la vista previa
+  const previewVariants = product.value.is_unique 
+    ? [] 
+    : product.value.variants.map((v, index) => ({
+        id: index,
+        color_id: 0, // Placeholder ID
+        size_id: 0, // Placeholder ID
+        image_url: '',
+        size: v.talle || '',
+        stock: v.stock || 0,
+        color: v.color || ''
+      }));
+
+  // Crear objeto de producto para la vista previa
+  const previewData: GlobalProduct = {
     id: 1, // ID temporal para la vista previa
     name: product.value.name || 'Nombre del producto',
     description: product.value.description || 'Descripción del producto',
-    price: product.value.price || 0,
-    genero: product.value.genero,
-    estado: product.value.estado,
+    price: price,
+    genero: product.value.genero || 'unisex',
+    estado: product.value.estado || 'nuevo',
     categoria: product.value.categoria || undefined,
-    is_unique: product.value.is_unique,
-    color: product.value.color || undefined,
-    talle: product.value.talle || undefined,
-    stock: product.value.stock || undefined,
-    has_discount: product.value.has_discount,
-    discount_percentage: product.value.discount_percentage,
-    discounted_price: product.value.has_discount && product.value.discount_percentage 
-      ? getDiscountedPrice() 
-      : undefined,
-    discount_amount: product.value.has_discount && product.value.discount_percentage 
-      ? getDiscountAmount() 
-      : undefined,
+    is_unique: product.value.is_unique || false,
+    color: product.value.color || null,
+    talle: product.value.talle || null,
+    stock: product.value.stock || 0,
+    has_discount: false,
+    discount_percentage: null,
+    discounted_price: undefined,
+    discount_amount: 0,
     images: allImages,
-    variants: product.value.is_unique ? [] : product.value.variants.map((v, index) => ({
-      id: index,
-      color_id: 0, // Placeholder ID
-      size_id: 0, // Placeholder ID
-      image_url: '',
-      size: v.talle || '', // Mapeamos talle -> size
-      stock: v.stock
-    }))
+    variants: previewVariants,
+    // Propiedades opcionales con valores por defecto
+    is_new: false,
+    is_sale: false,
+    original_price: price
   };
+
+  return previewData;
 });
 
 // === LÃ“GICA DE DATOS MAESTROS ===
@@ -1163,14 +1117,6 @@ async function saveProduct() {
     }
   }
 
-  // Validar campos de descuento
-  if (product.value.has_discount) {
-    if (!product.value.discount_percentage || product.value.discount_percentage <= 0 || product.value.discount_percentage > 100) {
-      toast.error('El porcentaje de descuento debe estar entre 1 y 100');
-      hideLoading();
-      return;
-    }
-  }
 
   try {
     // Preparar array de imágenes final
@@ -1346,8 +1292,6 @@ function editProduct(p: any) {
     color: p.color || null,
     talle: p.talle || null,
     stock: p.stock || null,
-    has_discount: p.has_discount,
-    discount_percentage: p.discount_percentage,
     images: p.images.map((img: any) => img.image_url),
     variants: p.variants?.map((v: any) => ({ color: v.color || v.size, talle: v.talle || v.size, stock: v.stock })) || []
   };
@@ -1427,8 +1371,6 @@ function resetForm() {
     color: null,
     talle: null,
     stock: 1, // Stock por defecto 1
-    has_discount: false,
-    discount_percentage: null,
     images: [], 
     variants: [] 
   };
@@ -1448,27 +1390,6 @@ function resetForm() {
   existingImages.value = [];
 }
 
-// --- Lógica de Descuentos ---
-function onDiscountChange() {
-  if (!product.value.has_discount) {
-    product.value.discount_percentage = null;
-  }
-}
-
-function getDiscountedPrice(): number {
-  if (product.value.has_discount && product.value.discount_percentage && product.value.price) {
-    const discountAmount = product.value.price * (product.value.discount_percentage / 100);
-    return product.value.price - discountAmount;
-  }
-  return product.value.price || 0;
-}
-
-function getDiscountAmount(): number {
-  if (product.value.has_discount && product.value.discount_percentage && product.value.price) {
-    return product.value.price * (product.value.discount_percentage / 100);
-  }
-  return 0;
-}
 
 // --- Lógica del Modal ---
 function confirmSave() {

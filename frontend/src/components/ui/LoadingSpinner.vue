@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg">
       <!-- Spinner -->
       <svg 
-        class="w-8 h-8 animate-spin text-indigo-600" 
+        class="w-8 h-8 animate-spin text-gray-600" 
         viewBox="0 0 24 24" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"

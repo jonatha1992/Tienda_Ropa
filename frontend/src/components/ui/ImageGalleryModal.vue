@@ -1,32 +1,32 @@
 ﻿<template>
   <!-- Modal Overlay -->
-  <div v-if="isOpen" class="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
     <!-- Contenedor principal -->
-    <div class="relative w-full h-full flex flex-col max-w-6xl mx-auto p-4">
+    <div class="relative flex flex-col w-full h-full max-w-6xl p-4 mx-auto">
       
       <!-- Header con botÃ³n cerrar -->
-      <div class="absolute top-4 right-4 z-10">
+      <div class="absolute z-10 top-4 right-4">
         <button 
           @click="closeModal" 
-          class="text-white hover:text-gray-300 text-3xl w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors"
+          class="flex items-center justify-center w-12 h-12 text-3xl text-white transition-colors bg-black bg-opacity-50 rounded-full hover:text-gray-300 hover:bg-opacity-70"
         >
-          Ã—
+          ×
         </button>
       </div>
       
       <!-- Imagen principal -->
-      <div class="flex-1 flex items-center justify-center relative min-h-0">
+      <div class="relative flex items-center justify-center flex-1 min-h-0">
         <img 
           :src="currentImage" 
           :alt="alt" 
-          class="max-h-full max-w-full object-contain"
+          class="object-contain max-w-full max-h-full"
           @load="handleImageLoad"
           @error="handleImageError"
         />
         
         <!-- Loading spinner -->
         <div v-if="imageLoading" class="absolute inset-0 flex items-center justify-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          <div class="w-12 h-12 border-b-2 border-white rounded-full animate-spin"></div>
         </div>
         
         <!-- Botones navegaciÃ³n -->
@@ -34,43 +34,43 @@
           v-if="images.length > 1"
           @click="previousImage" 
           :disabled="currentIndex === 0"
-          class="absolute left-4 text-white text-4xl hover:text-gray-300 w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          class="absolute flex items-center justify-center w-12 h-12 text-4xl text-white transition-colors bg-black bg-opacity-50 rounded-full left-4 hover:text-gray-300 hover:bg-opacity-70 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          â€¹
+          <
         </button>
         
         <button 
           v-if="images.length > 1"
           @click="nextImage" 
           :disabled="currentIndex === images.length - 1"
-          class="absolute right-4 text-white text-4xl hover:text-gray-300 w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          class="absolute flex items-center justify-center w-12 h-12 text-4xl text-white transition-colors bg-black bg-opacity-50 rounded-full right-4 hover:text-gray-300 hover:bg-opacity-70 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          â€º
+          >
         </button>
       </div>
       
       <!-- Thumbnails y contador -->
       <div v-if="images.length > 1" class="flex flex-col items-center mt-4 space-y-4">
         <!-- Thumbnails -->
-        <div class="flex justify-center space-x-2 overflow-x-auto max-w-full pb-2">
+        <div class="flex justify-center max-w-full pb-2 space-x-2 overflow-x-auto">
           <div 
             v-for="(image, index) in images" 
             :key="index" 
             @click="selectImage(index)"
-            class="flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded transition-colors"
+            class="flex-shrink-0 w-16 h-16 transition-colors border-2 rounded cursor-pointer"
             :class="currentIndex === index ? 'border-white' : 'border-transparent hover:border-gray-400'"
           >
             <img 
               :src="image.image_url" 
               :alt="`Thumbnail ${index + 1}`"
-              class="w-full h-full object-cover rounded"
+              class="object-cover w-full h-full rounded"
               loading="lazy"
             />
           </div>
         </div>
         
         <!-- Contador de imÃ¡genes -->
-        <div class="text-center text-white text-sm font-body">
+        <div class="text-sm text-center text-white font-body">
           {{ currentIndex + 1 }} / {{ images.length }}
         </div>
       </div>

@@ -114,7 +114,7 @@
           <div class="flex items-center space-x-2">
             <label for="statusFilter" class="text-sm font-medium text-gray-700">Filtrar por estado:</label>
             <select v-model="statusFilter" @change="loadOrders" 
-              class="border border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 p-2 w-full max-w-xs bg-white">
+              class="border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm w-full max-w-xs bg-white">
               <option value="">Todos</option>
               <option value="pending_shipment">Pendientes de Envío</option>
               <option value="with_tracking">Con Tracking</option>
@@ -131,22 +131,15 @@
         </div>
 
         <!-- Bulk Actions -->
-        <div v-if="selectedOrders.length > 0 || selectedOrdersForDeletion.length > 0" class="flex items-center space-x-2">
-          <span v-if="selectedOrders.length > 0" class="text-sm text-gray-500">{{ selectedOrders.length }} para envío</span>
-          <span v-if="selectedOrdersForDeletion.length > 0" class="text-sm text-red-500">{{ selectedOrdersForDeletion.length }} para eliminar</span>
-          <button v-if="selectedOrders.length > 0" @click="bulkMarkShipped" :disabled="loading"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 disabled:opacity-50">
-            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            Marcar como Enviados
-          </button>
-          <button v-if="selectedOrdersForDeletion.length > 0" @click="bulkDeleteOrders" :disabled="loading"
+        <div v-if="selectedOrders.length > 0" class="flex items-center space-x-2">
+          <span class="text-sm text-gray-500">{{ selectedOrders.length }} seleccionados</span>
+          
+          <button @click="deleteSelectedOrders" :disabled="loading"
             class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 disabled:opacity-50">
             <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            Eliminar Seleccionados
+            Eliminar
           </button>
         </div>
       </div>
@@ -200,7 +193,7 @@
                 <th scope="col" class="px-2 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                   Seguimiento
                 </th>
-                <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-right text-gray-500 uppercase">
                   Acciones
                 </th>
               </tr>
@@ -216,7 +209,6 @@
                         :checked="selectedOrders.includes(order.order_id)"
                         @change="(e) => toggleRowSelection(order.order_id, (e.target as HTMLInputElement).checked)"
                         class="sr-only peer"
-                        :disabled="!(order.can_add_tracking || order.can_mark_shipped)"
                         :title="order.can_mark_shipped ? 'Marcar como enviado' : 'Agregar seguimiento'">
                       <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-blue-500 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 peer-hover:bg-blue-50">
                         <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-opacity duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -224,23 +216,6 @@
                         </svg>
                       </div>
                       <span class="sr-only">{{ order.can_mark_shipped ? 'Marcar como enviado' : 'Agregar seguimiento' }}</span>
-                    </label>
-                  </div>
-                </td>
-                <td class="relative w-10 px-2 sm:px-3">
-                  <div class="flex items-center justify-center">
-                    <label class="inline-flex items-center cursor-pointer group">
-                      <input 
-                        type="checkbox" 
-                        :value="order.order_id"
-                        v-model="selectedOrdersForDeletion"
-                        class="sr-only peer">
-                      <div class="relative w-5 h-5 transition-colors duration-200 bg-white border-2 border-red-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 peer-hover:bg-red-50">
-                        <svg class="absolute inset-0 w-4 h-4 m-auto text-white transition-opacity duration-200 opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </div>
-                      <span class="sr-only">Eliminar pedido</span>
                     </label>
                   </div>
                 </td>
@@ -287,42 +262,21 @@
                 <td class="px-3 py-3 text-sm font-medium text-right whitespace-nowrap">
                   <div class="flex items-center justify-end space-x-2">
                     <!-- Edit Order Button -->
-                    <button @click="openEditModal(order)" class="p-1 text-blue-600 hover:text-blue-800">
+                    <button @click="openEditModal(order)" class="p-1 text-blue-600 hover:text-blue-800" title="Editar pedido">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </button>
 
-                    <!-- Change Payment Status Button -->
-                    <button v-if="order.status === 'pending'" @click="openStatusModal(order)" class="p-1 text-purple-600 hover:text-purple-800">
+                    <!-- Delete Order Button -->
+                    <button @click="deleteIndividualOrder(order.order_id)" class="p-1 text-red-600 hover:text-red-800" title="Eliminar pedido">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                    </button>
-
-                    <!-- Add Tracking Button (for shipping orders) -->
-                    <button v-if="order.can_add_tracking" @click="openTrackingModal(order)" class="p-1 text-blue-600 hover:text-blue-800">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </button>
-                    
-                    <!-- Coordinate Pickup Button (for local pickup orders) -->
-                    <button v-if="order.can_coordinate_pickup" @click="coordinatePickup(order)" class="p-1 text-purple-600 hover:text-purple-800">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                    </button>
-                    
-                    <!-- Mark as Shipped Button -->
-                    <button v-if="order.can_mark_shipped" @click="markAsShipped(order.order_id)" class="p-1 text-green-600 hover:text-green-800">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
                     
                     <!-- View Details Button -->
-                    <button @click="viewOrderDetails(order)" class="p-1 text-gray-600 hover:text-gray-800">
+                    <button @click="viewOrderDetails(order)" class="p-1 text-gray-600 hover:text-gray-800" title="Ver detalles">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -370,7 +324,7 @@
                         </label>
                         <select 
                           v-model="trackingForm.shippingProvider" 
-                          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
                         >
                           <option value="">Seleccionar transportista</option>
                           <option 
@@ -390,7 +344,7 @@
                         <input 
                           v-model="trackingForm.trackingNumber"
                           type="text" 
-                          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
                           :placeholder="getTrackingPlaceholder(trackingForm.shippingProvider)"
                         >
                       </div>
@@ -402,7 +356,7 @@
                         <input 
                           v-model="trackingForm.estimatedDelivery"
                           type="date" 
-                          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
                         >
                       </div>
 
@@ -413,7 +367,7 @@
                         <textarea 
                           v-model="trackingForm.shippingNotes"
                           rows="3"
-                          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
                           placeholder="Notas sobre el envío..."
                         ></textarea>
                       </div>
@@ -447,7 +401,7 @@
       />
 
       <!-- Edit Order Modal -->
-      <OrderEditModal 
+      <EditOrderModal 
         v-if="editingOrder"
         :is-open="!!editingOrder"
         :order="editingOrder"
@@ -705,14 +659,11 @@ const trackingForm = ref({
 const showTrackingModal = ref(false);
 const showOrderDetailsModal = ref(false);
 const showShippingModal = ref(false);
-const showEditModal = ref(false);
 const showStatusModal = ref(false);
 
 // Selection and data
 const selectedOrders = ref<number[]>([]);
-const selectedOrdersForDeletion = ref<number[]>([]);
 const selectAll = ref(false);
-const selectAllForDeletion = ref(false);
 const statistics = ref<any>(null);
 const shippingProviders = ref<any[]>([]);
 const statusFilter = ref('');
@@ -816,8 +767,7 @@ const closeOrderDetailsModal = () => {
 };
 
 const openEditModal = (order: Order) => {
-  selectedOrder.value = { ...order };
-  showEditModal.value = true;
+  editingOrder.value = { ...order };
 };
 
 const viewOrderDetails = (order: Order) => {
@@ -832,7 +782,7 @@ const handleSaveOrder = async (updatedOrder: Order) => {
     await ordersApi.updateOrder(updatedOrder.order_id, updatedOrder);
     await loadOrders();
     toast.success('Pedido actualizado correctamente');
-    showEditModal.value = false;
+    editingOrder.value = null;
   } catch (error) {
     console.error('Error al actualizar el pedido:', error);
     toast.error('Error al actualizar el pedido');
@@ -927,13 +877,9 @@ const updateOrderStatus = async (orderId: number, status: string, notes: string 
 const toggleSelectAll = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.checked) {
-    // Solo seleccionar los pedidos que se pueden marcar como enviados o necesitan seguimiento
-    const selectableOrders = filteredOrders.value
-      .filter((order: Order) => order.can_add_tracking || order.can_mark_shipped);
-    
-    // Agregar solo los IDs que no estén ya seleccionados
+    // Seleccionar todos los pedidos visibles
     const newSelected = new Set(selectedOrders.value);
-    selectableOrders.forEach((order: Order) => newSelected.add(order.order_id));
+    filteredOrders.value.forEach((order: Order) => newSelected.add(order.order_id));
     selectedOrders.value = Array.from(newSelected);
   } else {
     // Deseleccionar solo los pedidos visibles
@@ -945,16 +891,13 @@ const toggleSelectAll = (event: Event) => {
 
 // Actualizar el estado del checkbox de selección múltiple
 const updateSelectAllState = () => {
-  const selectableOrders = filteredOrders.value
-    .filter((order: Order) => order.can_add_tracking || order.can_mark_shipped);
-  
-  if (selectableOrders.length === 0) {
+  if (filteredOrders.value.length === 0) {
     selectAll.value = false;
     return;
   }
   
-  // Verificar si todos los pedidos seleccionables están seleccionados
-  const allSelected = selectableOrders.every((order: Order) => 
+  // Verificar si todos los pedidos visibles están seleccionados
+  const allSelected = filteredOrders.value.every((order: Order) => 
     selectedOrders.value.includes(order.order_id)
   );
   
@@ -1070,38 +1013,46 @@ const loadShippingProviders = async () => {
   }
 };
 
-// Toggle select all orders for deletion
-const toggleSelectAllForDeletion = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (target.checked) {
-    selectedOrdersForDeletion.value = allOrders.value.map((order: Order) => order.order_id);
-  } else {
-    selectedOrdersForDeletion.value = [];
-  }
-  selectAllForDeletion.value = target.checked;
-};
-
-// Bulk delete orders
-const bulkDeleteOrders = async () => {
-  if (selectedOrdersForDeletion.value.length === 0) {
+// Delete selected orders
+const deleteSelectedOrders = async () => {
+  if (selectedOrders.value.length === 0) {
     toast.warning('Por favor selecciona al menos un pedido para eliminar');
     return;
   }
 
-  if (!confirm(`¿Estás seguro de que quieres eliminar ${selectedOrdersForDeletion.value.length} pedidos?`)) {
+  if (!confirm(`¿Estás seguro de que quieres eliminar ${selectedOrders.value.length} pedido(s)?`)) {
     return;
   }
 
   try {
     loading.value = true;
-    await Promise.all(selectedOrdersForDeletion.value.map(id => ordersApi.deleteOrder(id)));
+    await Promise.all(selectedOrders.value.map(id => ordersApi.deleteOrder(id)));
     toast.success('Pedidos eliminados exitosamente');
-    selectedOrdersForDeletion.value = [];
-    selectAllForDeletion.value = false;
+    selectedOrders.value = [];
+    selectAll.value = false;
     await loadOrders();
   } catch (error) {
     console.error('Error al eliminar pedidos:', error);
     toast.error('Error al eliminar pedidos');
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Delete individual order
+const deleteIndividualOrder = async (orderId: number) => {
+  if (!confirm('¿Estás seguro de que quieres eliminar este pedido?')) {
+    return;
+  }
+
+  try {
+    loading.value = true;
+    await ordersApi.deleteOrder(orderId);
+    toast.success('Pedido eliminado exitosamente');
+    await loadOrders();
+  } catch (error) {
+    console.error('Error al eliminar pedido:', error);
+    toast.error('Error al eliminar pedido');
   } finally {
     loading.value = false;
   }
