@@ -4,7 +4,7 @@
     <!-- Contenedor principal -->
     <div class="relative flex flex-col w-full h-full max-w-6xl p-4 mx-auto">
       
-      <!-- Header con botÃ³n cerrar -->
+      <!-- Header con boton cerrar -->
       <div class="absolute z-10 top-4 right-4">
         <button 
           @click="closeModal" 

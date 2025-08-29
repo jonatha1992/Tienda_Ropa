@@ -4,18 +4,18 @@
     <nav class="px-4 py-4 mx-auto max-w-7xl lg:px-8" aria-label="Breadcrumb">
       <ol class="flex items-center space-x-2 text-sm font-body">
         <li>
-          <router-link to="/" class="text-gray-500 hover:text-gray-700 transition-colors">
+          <router-link to="/" class="text-gray-500 transition-colors hover:text-gray-700">
             Home
           </router-link>
         </li>
         <li class="text-gray-400">/</li>
         <li>
-          <router-link to="/shop" class="text-gray-500 hover:text-gray-700 transition-colors">
+          <router-link to="/shop" class="text-gray-500 transition-colors hover:text-gray-700">
             Shop
           </router-link>
         </li>
         <li v-if="product" class="text-gray-400">/</li>
-        <li v-if="product" class="text-gray-900 font-medium truncate max-w-xs">
+        <li v-if="product" class="max-w-xs font-medium text-gray-900 truncate">
           {{ product.name }}
         </li>
       </ol>
@@ -38,12 +38,12 @@
             />
             <!-- Sin Stock Overlay Desktop -->
             <div v-if="isOutOfStock" class="absolute top-0 left-0 z-10 mt-2 ml-4">
-              <span class="bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-lg">SIN STOCK</span>
+              <span class="px-3 py-1 text-xs font-bold text-white bg-gray-600 rounded-lg">SIN STOCK</span>
             </div>
             
             <!-- Discount Badge Desktop -->
             <div v-else-if="product.has_discount && product.discount_amount" class="absolute top-0 right-0 z-10 mt-2 mr-4">
-              <div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-lg">
+              <div class="px-3 py-1 text-xs font-bold text-white bg-red-600 rounded-lg">
                 -{{ discountPercentage }}% OFF
               </div>
             </div>
@@ -80,7 +80,7 @@
             <div v-if="product.has_discount && product.discounted_price" class="flex items-center space-x-3">
               <span class="text-2xl font-light text-red-600 font-body">${{ product.discounted_price.toLocaleString() }}</span>
               <span class="text-lg font-light text-gray-500 line-through font-body">${{ product.price.toLocaleString() }}</span>
-              <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+              <span class="px-2 py-1 text-xs font-bold text-red-800 bg-red-100 rounded-full">
                 {{ discountPercentage }}% OFF
               </span>
             </div>
@@ -176,7 +176,7 @@
           <!-- Product Description -->
           <div class="space-y-4">
             <h3 class="text-sm font-medium text-gray-900 font-body">Descripción:</h3>
-            <div class="text-sm font-normal text-gray-800 leading-tight" v-html="product.description"></div>
+            <div class="text-sm font-normal leading-tight text-gray-800" v-html="product.description"></div>
           </div>
 
           <!-- Product Details -->
@@ -199,7 +199,7 @@
           <div class="relative mt-6">
             <button
               @click="toggleShareDropdown"
-              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-gray-500"
             >
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -208,7 +208,7 @@
             </button>
             
             <!-- Dropdown -->
-            <div v-if="showShareDropdown" class="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+            <div v-if="showShareDropdown" class="absolute right-0 z-10 w-48 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
               <div class="py-1">
                 <button @click="shareProduct('whatsapp')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   <svg class="w-4 h-4 mr-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
@@ -265,8 +265,8 @@
             </div>
             
             <!-- Discount Badge Mobile -->
-            <div v-else-if="product.has_discount && product.discount_amount" class="absolute top-2 right-2 z-10">
-              <div class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg">
+            <div v-else-if="product.has_discount && product.discount_amount" class="absolute z-10 top-2 right-2">
+              <div class="px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-lg">
                 -{{ discountPercentage }}%
               </div>
             </div>
@@ -298,7 +298,7 @@
             <div v-if="product.has_discount && product.discounted_price" class="flex items-center space-x-2">
               <span class="text-xl font-light text-red-600 font-body">${{ product.discounted_price.toLocaleString() }}</span>
               <span class="text-sm font-light text-gray-500 line-through font-body">${{ product.price.toLocaleString() }}</span>
-              <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+              <span class="px-2 py-1 text-xs font-bold text-red-800 bg-red-100 rounded-full">
                 {{ discountPercentage }}% OFF
               </span>
             </div>
