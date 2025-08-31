@@ -5,8 +5,8 @@
         <!-- Logo -->
         <div class="flex-shrink-0">
           <router-link to="/" class="flex items-center space-x-2 text-2xl font-light tracking-wider text-gray-900 font-heading hover:text-gray-700">
-            <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-10 h-10" />
-            <span>M-VINTAGE</span>
+            <img src="/imagen-portada.svg" alt="MATILDA VINTAGE Logo" class="w-10 h-10" />
+            <span>MATILDA VINTAGE</span>
           </router-link>
         </div>
 

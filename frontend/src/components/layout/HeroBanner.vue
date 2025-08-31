@@ -25,7 +25,7 @@
       <div class="max-w-2xl">
         <div class="flex items-center justify-center mb-6 space-x-3">
           <h1 class="text-5xl font-light tracking-wide text-white font-heading md:text-7xl">
-            MATILDA-VINTAGE
+            MATILDA %VINTAGE
           </h1>
         </div>
         <p class="mb-8 text-xl font-light tracking-wide text-white font-body md:text-2xl" style="color: white;">

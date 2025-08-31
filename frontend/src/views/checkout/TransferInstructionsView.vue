@@ -136,7 +136,7 @@
           <div class="flex flex-col gap-4 sm:flex-row">
             <button
               @click="copyTransferData"
-              class="flex items-center justify-center flex-1 px-4 py-3 font-medium text-white transition-colors bg-blue-600 rounded-md hover:bg-blue-700"
+              class="flex items-center justify-center flex-1 px-4 py-3 font-medium text-white transition-colors bg-gray-500 rounded-md hover:bg-gray-700"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
