@@ -420,7 +420,7 @@
               :key="similarProduct.id"
               class="group"
             >
-              <router-link :to="`/product/${similarProduct.id}/${createSlug(similarProduct.name)}`" class="block">
+              <router-link :to="`/product/${similarProduct.id}/${similarProduct.name}`" class="block">
                 <div class="relative overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
                   <!-- Image -->
                   <div class="overflow-hidden bg-gray-100 aspect-square">
@@ -457,7 +457,7 @@
                 :key="similarProduct.id"
                 class="flex-shrink-0 w-48 group"
               >
-                <router-link :to="`/product/${similarProduct.id}/${createSlug(similarProduct.name)}`" class="block">
+                <router-link :to="`/product/${similarProduct.id}/${similarProduct.name}`" class="block">
                   <div class="relative overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
                     <!-- Image -->
                     <div class="overflow-hidden bg-gray-100 aspect-square">
