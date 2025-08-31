@@ -618,7 +618,7 @@ const scheduleDelivery = async () => {
 };
 
 const markAsDelivered = async (order: Order) => {
-  if (!confirm('Â¿Confirmar que la orden ha sido entregada?')) return;
+  if (!confirm('¿Confirmar que la orden ha sido entregada?')) return;
   
   try {
     await ordersApi.markAsDelivered(order.id, 'Entregado por admin');

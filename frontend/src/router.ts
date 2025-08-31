@@ -113,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
   if (authStore.loading) {
     // fetchUserRoles se ejecuta automáticamente después de fetchBackendUser en auth.ts:30
     // No necesitamos llamarlo aquí porque no hay token aún
-    
+
     await new Promise(resolve => {
       const unsubscribe = auth.onAuthStateChanged((user: any) => {
         unsubscribe();
@@ -135,7 +135,7 @@ router.beforeEach(async (to, from, next) => {
       try {
         await authStore.fetchUserRoles(false); // false = usar cachÃ© si estÃ¡ disponible
       } catch (error) {
-        console.error('âŒ Error cargando roles:', error);
+        console.error('Error cargando roles:', error);
       }
     }
 
@@ -151,12 +151,12 @@ router.beforeEach(async (to, from, next) => {
     console.log('ðŸ”’ Ruta protegida, redirigiendo a login');
     next('/auth');
   } else if (to.path === '/auth' && authStore.isAuthenticated) {
-    // Si el usuario ya estÃ¡ autenticado, redirigir segÃºn sus roles
+    // Si el usuario ya está autenticado, redirigir según sus roles
     if (authStore.hasAdminAccess) {
-      console.log('âœ… Admin autenticado, redirigiendo a admin');
+      console.log('✔ Admin autenticado, redirigiendo a admin');
       next('/admin/products');
     } else {
-      console.log('âœ… Usuario regular autenticado, redirigiendo a home');
+      console.log('✔ Usuario regular autenticado, redirigiendo a home');
       next('/');
     }
   } else {
@@ -164,7 +164,7 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-// Completar progress bar despuÃ©s de navegar
+// Completar progress bar después de navegar
 router.afterEach(() => {
   globalProgressBar.complete();
 });

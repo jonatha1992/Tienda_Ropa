@@ -261,7 +261,7 @@ const loadOrders = async () => {
     
     // Si no hay pedidos pero no hubo error, mostrar info
     if (orders.value.length === 0) {
-      console.log('â„¹ï¸ No se encontraron pedidos para el usuario');
+      console.log('🛒 No se encontraron pedidos para el usuario');
     }
     
   } catch (error: any) {
@@ -415,7 +415,7 @@ const contactForPickup = (order: any) => {
   const message = `Hola! Soy ${order.customer_name || 'un cliente'} y tengo el pedido #${order.id} listo para retirar.
 
 
-Â¿CuÃ¡ndo puedo pasar a retirarlo?`;
+¿Cuando puedo pasar a retirarlo?`;
 
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/5491112345678?text=${encodedMessage}`;

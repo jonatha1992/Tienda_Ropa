@@ -61,13 +61,13 @@
                       
                       <!-- Variant Info -->
                       <div v-if="item.variant" class="mt-1 text-sm font-body text-body-text">
-                        {{ item.variant.color.name }} â€¢ Talle {{ item.variant.size.name }}
+                        {{ item.variant.color.name }}Talle {{ item.variant.size.name }}
                       </div>
                       
                       <!-- Unique Product Info -->
-                      <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-body-text">
-                        <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
-                        <span v-if="item.selectedColor && item.selectedSize" class="font-body"> â€¢ </span>
+                        <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-body-text">
+                          <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
+                        <span v-if="item.selectedColor && item.selectedSize" class="font-body"></span>
                         <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
                       </div>
                       
@@ -443,7 +443,7 @@ onMounted(async () => {
       Object.assign(checkoutForm.value, formData);
       usingPreviousData.value = true;
       
-      console.log('âœ… Form auto-populated with previous customer data');
+      console.log('Form auto-populated with previous customer data');
       toast.success('Datos cargados desde compra anterior', { timeout: 2000 });
     } else {
       // First-time buyer - only pre-fill basic info from auth
@@ -455,10 +455,10 @@ onMounted(async () => {
           checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
         }
       }
-      console.log('â„¹ï¸ First-time buyer - basic info pre-filled');
+      console.log('First-time buyer - basic info pre-filled');
     }
   } catch (error) {
-    console.error('âŒ Error loading user data:', error);
+    console.error('Error loading user data:', error);
     // Fallback to basic auth info
     if (authStore.backendUser) {
       checkoutForm.value.email = authStore.backendUser.email;

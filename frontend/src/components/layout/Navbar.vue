@@ -276,12 +276,12 @@ const loadCategories = async () => {
     // Usar endpoint que solo devuelve categorías con stock
     categories.value = await masterDataApi.getCategoriesWithStock();
   } catch (error) {
-    console.error('âŒ Error cargando categorías:', error);
+    console.error('Error cargando categorías:', error);
     // Fallback a todas las categorías si falla
     try {
       categories.value = await masterDataApi.getCategories();
     } catch (fallbackError) {
-      console.error('âŒ Error cargando categorías (fallback):', fallbackError);
+      console.error('Error cargando categorías (fallback):', fallbackError);
     }
   }
 };

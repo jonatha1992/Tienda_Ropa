@@ -250,7 +250,7 @@
       <div class="lg:hidden">
         <!-- Mobile Images -->
         <div class="px-4 py-6">
-          <div class="product-main-image relative mb-4 overflow-hidden bg-gray-100 rounded-lg cursor-pointer" style="aspect-ratio: 26/32;" @click="openImageGallery(selectedImage)">
+          <div class="relative mb-4 overflow-hidden bg-gray-100 rounded-lg cursor-pointer product-main-image" style="aspect-ratio: 26/32;" @click="openImageGallery(selectedImage)">
             <OptimizedImage
               :src="mainImage"
               :alt="product.name"
@@ -704,25 +704,6 @@ const decrementQuantity = () => {
   if (quantity.value > 1) {
     quantity.value--;
   }
-};
-
-// Create URL-friendly slug from product name
-const createSlug = (name: string) => {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/[áàâã]/g, 'a')
-    .replace(/[éèê]/g, 'e')
-    .replace(/[íìî]/g, 'i')
-    .replace(/[óòôõ]/g, 'o')
-    .replace(/[úùû]/g, 'u')
-    .replace(/[ñ]/g, 'n')
-    .replace(/[ç]/g, 'c')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
-    .trim();
 };
 
 // Function to get similar product image

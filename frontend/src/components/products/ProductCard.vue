@@ -1,8 +1,8 @@
 ﻿<template>
   <router-link :to="`/product/${product.id}/${createSlug(product.name)}`" class="block h-full">
-    <div class="h-full flex flex-col bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300">
+    <div class="flex flex-col h-full overflow-hidden transition-all duration-200 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:border-gray-300">
       <!-- Imagen del producto -->
-      <div class="relative aspect-square overflow-hidden bg-gray-50">
+      <div class="relative overflow-hidden aspect-square bg-gray-50">
         <!-- Imagen principal -->
         <div class="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0">
           <OptimizedImage
@@ -12,13 +12,13 @@
             aspect-ratio="square"
             :show-spinner="true"
             :fallback-src="defaultImage"
-            image-class="w-full h-full object-cover"
+            image-class="object-cover w-full h-full"
             @error="handleImageError"
           />
         </div>
 
         <!-- Imagen secundaria (hover) -->
-        <div v-if="product.images && product.images[1]" class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div v-if="product.images && product.images[1]" class="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
           <OptimizedImage
             :src="product.images[1].image_url"
             :alt="product.name"
@@ -26,12 +26,12 @@
             aspect-ratio="square"
             :show-spinner="true"
             :fallback-src="defaultImage"
-            image-class="w-full h-full object-cover"
+            image-class="object-cover w-full h-full"
           />
         </div>
 
         <!-- Etiquetas de producto -->
-        <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute top-2 left-2 space-y-1">
+        <div v-if="product.is_new || product.is_sale || product.has_discount" class="absolute space-y-1 top-2 left-2">
           <span v-if="product.is_new" class="inline-block px-2 py-0.5 text-[10px] font-medium text-white bg-black uppercase">
             New
           </span>
@@ -44,35 +44,35 @@
         </div>
 
         <!-- Etiqueta de oferta o nuevo -->
-        <div v-if="(product.is_sale || product.is_new) && (product.stock ?? 0) > 0" class="absolute top-4 left-4 z-10 flex flex-col gap-2">
-          <span v-if="product.is_sale" class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+        <div v-if="(product.is_sale || product.is_new) && (product.stock ?? 0) > 0" class="absolute z-10 flex flex-col gap-2 top-4 left-4">
+          <span v-if="product.is_sale" class="px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-full">
             OFERTA
           </span>
-          <span v-if="product.is_new" class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full">
+          <span v-if="product.is_new" class="px-2 py-1 text-xs font-bold text-white bg-black rounded-full">
             NUEVO
           </span>
         </div>
 
         <!-- Etiqueta de SIN STOCK en esquina superior izquierda -->
         <div v-if="(product.stock ?? 0) <= 0" class="absolute top-0 left-0 z-10 mt-2 ml-4">
-          <span class="bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-lg">SIN STOCK</span>
+          <span class="px-3 py-1 text-xs font-bold text-white bg-gray-600 rounded-lg">SIN STOCK</span>
         </div>
       </div>
 
       <!-- Información del producto -->
-      <div class="p-3 flex-1 flex flex-col">
+      <div class="flex flex-col flex-1 p-3">
         <!-- Nombre del producto -->
-        <h3 class="text-sm font-normal text-gray-800 mb-1 line-clamp-2 leading-tight">
+        <h3 class="mb-1 text-sm font-normal leading-tight text-gray-800 line-clamp-2">
           {{ product.name }}
         </h3>
         
         <!-- CategorÃ­a -->
-        <p v-if="product.categoria" class="text-xs text-gray-500 uppercase tracking-wider mb-2">
+        <p v-if="product.categoria" class="mb-2 text-xs tracking-wider text-gray-500 uppercase">
           {{ product.categoria }}
         </p>
         
         <!-- Precios -->
-        <div class="mt-auto pt-2">
+        <div class="pt-2 mt-auto">
           <!-- Precio con descuento -->
           <div v-if="product.has_discount && product.discounted_price" class="space-y-0.5">
             <span class="block text-sm font-bold text-gray-900">
@@ -133,24 +133,6 @@ const handleImageError = () => {
   imageError.value = true;
 };
 
-// Create URL-friendly slug from product name
-const createSlug = (name: string) => {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/[áàâã]/g, 'a')
-    .replace(/[éèê]/g, 'e')
-    .replace(/[íìî]/g, 'i')
-    .replace(/[óòôõ]/g, 'o')
-    .replace(/[úùû]/g, 'u')
-    .replace(/[ñ]/g, 'n')
-    .replace(/[ç]/g, 'c')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
-    .trim();
-};
 
 // Determinar si el producto está sin stock
 const isOutOfStock = computed(() => {

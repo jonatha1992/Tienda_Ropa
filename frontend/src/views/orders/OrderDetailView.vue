@@ -1,12 +1,12 @@
 ﻿<template>
-  <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl px-4 py-8 mx-auto sm:py-12 sm:px-6 lg:px-8">
       <!-- Breadcrumb -->
       <nav class="flex mb-8" aria-label="Breadcrumb">
         <ol class="flex items-center space-x-4">
           <li>
-            <router-link to="/orders" class="text-gray-400 hover:text-gray-500 flex items-center">
-              <svg class="flex-shrink-0 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <router-link to="/orders" class="flex items-center text-gray-400 hover:text-gray-500">
+              <svg class="flex-shrink-0 w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
                   d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                   clip-rule="evenodd" />
@@ -16,7 +16,7 @@
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+              <svg class="flex-shrink-0 w-5 h-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
                   d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                   clip-rule="evenodd" />
@@ -28,15 +28,15 @@
       </nav>
 
       <!-- Loading State -->
-      <div v-if="loading" class="text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div v-if="loading" class="py-12 text-center">
+        <div class="inline-block w-8 h-8 border-b-2 border-gray-900 rounded-full animate-spin"></div>
         <p class="mt-2 text-gray-600">Cargando detalles del pedido...</p>
       </div>
 
       <!-- Order Details -->
       <div v-else-if="order" class="space-y-6">
         <!-- Order Header -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="p-6 bg-white rounded-lg shadow">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h1 class="text-2xl font-light text-gray-900">Pedido #{{ order.id }}</h1>
@@ -44,7 +44,7 @@
                 Realizado el {{ formatDate(order.created_at) }}
               </p>
             </div>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+            <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full"
               :class="getStatusClass(order.status)">
               {{ getStatusText(order.status) }}
             </span>
@@ -52,8 +52,8 @@
         </div>
 
         <!-- Order Status Timeline -->
-        <div class="bg-white shadow rounded-lg p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-6">Estado del Pedido</h2>
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-6 text-lg font-medium text-gray-900">Estado del Pedido</h2>
 
           <!-- Timeline -->
           <div class="relative">
@@ -63,14 +63,14 @@
             <ul class="space-y-6">
               <!-- Step 1: Order Created -->
               <li class="relative flex items-start">
-                <div class="relative flex h-8 w-8 flex-none items-center justify-center">
+                <div class="relative flex items-center justify-center flex-none w-8 h-8">
                   <div class="h-1.5 w-1.5 rounded-full bg-green-600 ring-4 ring-white border-2 border-green-600"></div>
                 </div>
-                <div class="ml-4 min-w-0 flex-1">
+                <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900">Pedido Realizado</p>
-                    <div class="ml-auto flex">
-                      <svg class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                    <div class="flex ml-auto">
+                      <svg class="w-5 h-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                           clip-rule="evenodd" />
@@ -78,121 +78,121 @@
                     </div>
                   </div>
                   <p class="text-sm text-gray-500">{{ formatDateTime(order.created_at) }}</p>
-                  <p class="text-xs text-gray-400 mt-1">Tu pedido ha sido recibido y estÃ¡ siendo procesado</p>
+                  <p class="mt-1 text-xs text-gray-400">Tu pedido ha sido recibido y estÃ¡ siendo procesado</p>
                 </div>
               </li>
 
               <!-- Step 2: Payment Status -->
               <li class="relative flex items-start">
-                <div class="relative flex h-8 w-8 flex-none items-center justify-center">
+                <div class="relative flex items-center justify-center flex-none w-8 h-8">
                   <div class="h-1.5 w-1.5 rounded-full ring-4 ring-white border-2"
                     :class="getPaymentTimelineClass(order.payment_status)"></div>
                 </div>
-                <div class="ml-4 min-w-0 flex-1">
+                <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900">{{ getPaymentStatusText(order.payment_status) }}</p>
-                    <div class="ml-auto flex">
-                      <svg v-if="order.payment_status === 'approved'" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
+                    <div class="flex ml-auto">
+                      <svg v-if="order.payment_status === 'approved'" class="w-5 h-5 text-green-600" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                           clip-rule="evenodd" />
                       </svg>
                       <svg v-else-if="order.payment_status === 'pending' || order.payment_status === 'pending_payment'"
-                        class="h-5 w-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                        class="w-5 h-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                         </circle>
                         <path class="opacity-75" fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                         </path>
                       </svg>
-                      <svg v-else class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg v-else class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </div>
                   </div>
                   <p v-if="order.approved_at" class="text-sm text-gray-500">{{ formatDateTime(order.approved_at) }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ getPaymentDescription(order.payment_method,
+                  <p class="mt-1 text-xs text-gray-400">{{ getPaymentDescription(order.payment_method,
                     order.payment_status) }}</p>
                 </div>
               </li>
 
               <!-- Step 3: Shipping Preparation -->
               <li class="relative flex items-start">
-                <div class="relative flex h-8 w-8 flex-none items-center justify-center">
+                <div class="relative flex items-center justify-center flex-none w-8 h-8">
                   <div class="h-1.5 w-1.5 rounded-full ring-4 ring-white border-2"
                     :class="getShippingPreparationClass(order)"></div>
                 </div>
-                <div class="ml-4 min-w-0 flex-1">
+                <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900">PreparaciÃ³n del EnvÃ­o</p>
-                    <div class="ml-auto flex">
-                      <svg v-if="order.tracking_number" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
+                    <div class="flex ml-auto">
+                      <svg v-if="order.tracking_number" class="w-5 h-5 text-green-600" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                           clip-rule="evenodd" />
                       </svg>
                       <svg v-else-if="order.status === 'approved' && order.payment_status === 'approved'"
-                        class="h-5 w-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                        class="w-5 h-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                         </circle>
                         <path class="opacity-75" fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                         </path>
                       </svg>
-                      <div v-else class="h-5 w-5 bg-gray-300 rounded-full"></div>
+                      <div v-else class="w-5 h-5 bg-gray-300 rounded-full"></div>
                     </div>
                   </div>
                   <p v-if="order.tracking_updated_at" class="text-sm text-gray-500">{{
                     formatDateTime(order.tracking_updated_at) }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ getPreparationDescription(order) }}</p>
+                  <p class="mt-1 text-xs text-gray-400">{{ getPreparationDescription(order) }}</p>
                 </div>
               </li>
 
               <!-- Step 4: Shipped -->
               <li class="relative flex items-start">
-                <div class="relative flex h-8 w-8 flex-none items-center justify-center">
+                <div class="relative flex items-center justify-center flex-none w-8 h-8">
                   <div class="h-1.5 w-1.5 rounded-full ring-4 ring-white border-2"
                     :class="getShippedTimelineClass(order)"></div>
                 </div>
-                <div class="ml-4 min-w-0 flex-1">
+                <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900">Enviado</p>
-                    <div class="ml-auto flex">
-                      <svg v-if="order.shipped_at" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
+                    <div class="flex ml-auto">
+                      <svg v-if="order.shipped_at" class="w-5 h-5 text-green-600" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                           clip-rule="evenodd" />
                       </svg>
-                      <div v-else class="h-5 w-5 bg-gray-300 rounded-full"></div>
+                      <div v-else class="w-5 h-5 bg-gray-300 rounded-full"></div>
                     </div>
                   </div>
                   <p v-if="order.shipped_at" class="text-sm text-gray-500">{{ formatDateTime(order.shipped_at) }}</p>
-                  <div v-if="order.tracking_number" class="mt-2 p-3 bg-blue-50 rounded-md">
+                  <div v-if="order.tracking_number" class="p-3 mt-2 rounded-md bg-blue-50">
                     <div class="flex items-center justify-between">
                       <div>
                         <p class="text-sm font-medium text-blue-900">NÃºmero de Seguimiento</p>
-                        <p class="text-sm text-blue-700 font-mono">{{ order.tracking_number }}</p>
-                        <p v-if="order.shipping_provider" class="text-xs text-blue-600 mt-1">
+                        <p class="font-mono text-sm text-blue-700">{{ order.tracking_number }}</p>
+                        <p v-if="order.shipping_provider" class="mt-1 text-xs text-blue-600">
                           Proveedor: {{ getProviderName(order.shipping_provider) }}
                         </p>
                       </div>
                       <a v-if="getTrackingUrl(order.tracking_number, order.shipping_provider)"
                         :href="getTrackingUrl(order.tracking_number, order.shipping_provider) || undefined"
                         target="_blank"
-                        class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700">
+                        class="inline-flex items-center px-3 py-1 text-xs font-medium text-white bg-blue-600 border border-transparent rounded hover:bg-blue-700">
                         Rastrear
-                        <svg class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-3 h-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                       </a>
                     </div>
                   </div>
-                  <p v-if="order.estimated_delivery" class="text-xs text-gray-400 mt-1">
+                  <p v-if="order.estimated_delivery" class="mt-1 text-xs text-gray-400">
                     Entrega estimada: {{ formatDate(order.estimated_delivery) }}
                   </p>
                 </div>
@@ -200,14 +200,14 @@
 
               <!-- Step 5: Delivered -->
               <li v-if="order.status === 'delivered'" class="relative flex items-start">
-                <div class="relative flex h-8 w-8 flex-none items-center justify-center">
+                <div class="relative flex items-center justify-center flex-none w-8 h-8">
                   <div class="h-1.5 w-1.5 rounded-full bg-green-600 ring-4 ring-white border-2 border-green-600"></div>
                 </div>
-                <div class="ml-4 min-w-0 flex-1">
+                <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900">Entregado</p>
-                    <div class="ml-auto flex">
-                      <svg class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                    <div class="flex ml-auto">
+                      <svg class="w-5 h-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                           clip-rule="evenodd" />
@@ -216,27 +216,27 @@
                   </div>
                   <p v-if="order.delivered_at" class="text-sm text-gray-500">{{ formatDateTime(order.delivered_at) }}
                   </p>
-                  <p class="text-xs text-gray-400 mt-1">Tu pedido ha sido entregado exitosamente</p>
+                  <p class="mt-1 text-xs text-gray-400">Tu pedido ha sido entregado exitosamente</p>
                 </div>
               </li>
             </ul>
           </div>
 
           <!-- Additional Shipping Notes -->
-          <div v-if="order.delivery_notes_shipping" class="mt-6 p-4 bg-gray-50 rounded-md">
-            <h3 class="text-sm font-medium text-gray-900 mb-2">Notas del EnvÃ­o</h3>
+          <div v-if="order.delivery_notes_shipping" class="p-4 mt-6 rounded-md bg-gray-50">
+            <h3 class="mb-2 text-sm font-medium text-gray-900">Notas del EnvÃ­o</h3>
             <p class="text-sm text-gray-600">{{ order.delivery_notes_shipping }}</p>
           </div>
         </div>
 
         <!-- Order Items -->
-        <div class="bg-white shadow rounded-lg p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-4">Productos</h2>
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-4 text-lg font-medium text-gray-900">Productos</h2>
           <ul class="divide-y divide-gray-200">
-            <li v-for="item in order.items" :key="item.id" class="py-4 flex">
+            <li v-for="item in order.items" :key="item.id" class="flex py-4">
               <img :src="item.product.images[0]?.image_url || '/placeholder-image.jpg'" :alt="item.product.name"
-                class="w-16 h-16 rounded-md object-cover object-center">
-              <div class="ml-4 flex-1">
+                class="object-cover object-center w-16 h-16 rounded-md">
+              <div class="flex-1 ml-4">
                 <div class="flex justify-between">
                   <div>
                     <h3 class="text-sm font-medium text-gray-900">{{ item.product.name }}</h3>
@@ -252,8 +252,8 @@
         </div>
 
         <!-- Order Summary -->
-        <div class="bg-white shadow rounded-lg p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-4">Resumen del Pedido</h2>
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-4 text-lg font-medium text-gray-900">Resumen del Pedido</h2>
           <dl class="space-y-3">
             <div class="flex justify-between">
               <dt class="text-sm text-gray-600">Subtotal</dt>
@@ -267,7 +267,7 @@
               <dt class="text-sm text-gray-600">EnvÃ­o</dt>
               <dd class="text-sm font-medium text-gray-900">${{ order.shipping_cost?.toLocaleString() }}</dd>
             </div>
-            <div class="flex justify-between border-t pt-3">
+            <div class="flex justify-between pt-3 border-t">
               <dt class="text-base font-medium text-gray-900">Total</dt>
               <dd class="text-base font-medium text-gray-900">${{ order.total.toLocaleString() }}</dd>
             </div>
@@ -275,8 +275,8 @@
         </div>
 
         <!-- Shipping Information -->
-        <div class="bg-white shadow rounded-lg p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-4">InformaciÃ³n de EnvÃ­o</h2>
+        <div class="p-6 bg-white rounded-lg shadow">
+          <h2 class="mb-4 text-lg font-medium text-gray-900">InformaciÃ³n de EnvÃ­o</h2>
           <div class="text-sm text-gray-600">
             <p class="font-medium text-gray-900">{{ order.customer_name }}</p>
             <p>{{ order.shipping_address }}</p>
@@ -289,17 +289,17 @@
       </div>
 
       <!-- Error State -->
-      <div v-else class="text-center py-12">
-        <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+      <div v-else class="py-12 text-center">
+        <div class="w-24 h-24 mx-auto mb-4 text-gray-400">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
               d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Pedido no encontrado</h3>
-        <p class="text-gray-600 mb-6">No se pudo cargar la informaciÃ³n del pedido</p>
+        <h3 class="mb-2 text-lg font-medium text-gray-900">Pedido no encontrado</h3>
+        <p class="mb-6 text-gray-600">No se pudo cargar la informaciÃ³n del pedido</p>
         <router-link to="/orders"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800">
+          class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800">
           Volver a mis pedidos
         </router-link>
       </div>
@@ -340,9 +340,9 @@ const loadOrderDetails = async () => {
     loading.value = true;
     console.log(' Cargando detalles del pedido:', orderId.value);
     order.value = await ordersApi.getOrder(parseInt(orderId.value));
-    console.log('âœ… Detalles del pedido cargados:', order.value);
+    console.log('✔️ Detalles del pedido cargados:', order.value);
   } catch (error) {
-    console.error('âŒ Error loading order details:', error);
+    console.error('Error loading order details:', error);
     toast.error('Error al cargar los detalles del pedido');
     order.value = null;
   } finally {

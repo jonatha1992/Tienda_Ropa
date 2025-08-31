@@ -1,15 +1,15 @@
 ﻿<template>
-  <div class="bg-gray-100 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-8">
-        <h2 class="font-heading text-3xl font-extrabold text-gray-900">Explora Nuestra Colección</h2>
-        <p class="font-body mt-4 text-lg text-body-text">Encuentra exactamente lo que buscas</p>
+  <div class="py-12 bg-gray-100">
+    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div class="mb-8 text-center">
+        <h2 class="text-3xl font-extrabold text-gray-900 font-heading">Explora Nuestra Colección</h2>
+        <p class="mt-4 text-lg font-body text-body-text">Encuentra exactamente lo que buscas</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
         <!-- Categorías -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="font-heading text-xl font-bold text-gray-900 mb-4 flex items-center">
+        <div class="p-6 bg-white rounded-lg shadow-md">
+          <h3 class="flex items-center mb-4 text-xl font-bold text-gray-900 font-heading">
             <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7l-7 7-7-7m14 0H5"></path>
             </svg>
@@ -17,11 +17,11 @@
           </h3>
           <div class="space-y-2">
             <div v-if="loading.categories" class="animate-pulse">
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="categories.length === 0" class="font-body text-body-text text-sm">
+            <div v-else-if="categories.length === 0" class="text-sm font-body text-body-text">
               No hay categorías disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
@@ -29,7 +29,7 @@
                 v-for="category in categories" 
                 :key="category.id"
                 :to="`/?category=${category.name.toUpperCase()}`"
-                class="font-body inline-block bg-primary text-white px-3 py-1 rounded-full text-sm hover:bg-accent transition-colors duration-200"
+                class="inline-block px-3 py-1 text-sm text-white transition-colors duration-200 rounded-full font-body bg-primary hover:bg-accent"
               >
                 {{ category.name }}
               </router-link>
@@ -38,8 +38,8 @@
         </div>
 
         <!-- Colores -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="font-heading text-xl font-bold text-gray-900 mb-4 flex items-center">
+        <div class="p-6 bg-white rounded-lg shadow-md">
+          <h3 class="flex items-center mb-4 text-xl font-bold text-gray-900 font-heading">
             <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 21h10a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a4 4 0 01-4 4z"></path>
             </svg>
@@ -47,21 +47,21 @@
           </h3>
           <div class="space-y-2">
             <div v-if="loading.colors" class="animate-pulse">
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="colors.length === 0" class="font-body text-body-text text-sm">
+            <div v-else-if="colors.length === 0" class="text-sm font-body text-body-text">
               No hay colores disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
               <span 
                 v-for="color in colors" 
                 :key="color.id"
-                class="font-body inline-flex items-center bg-gray-100 text-body-text px-3 py-1 rounded-full text-sm"
+                class="inline-flex items-center px-3 py-1 text-sm bg-gray-100 rounded-full font-body text-body-text"
               >
                 <span 
-                  class="w-3 h-3 rounded-full mr-2 border border-gray-300" 
+                  class="w-3 h-3 mr-2 border border-gray-300 rounded-full" 
                   :style="{ backgroundColor: color.hex_code || '#cccccc' }"
                 ></span>
                 {{ color.name }}
@@ -71,8 +71,8 @@
         </div>
 
         <!-- Talles -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="font-heading text-xl font-bold text-gray-900 mb-4 flex items-center">
+        <div class="p-6 bg-white rounded-lg shadow-md">
+          <h3 class="flex items-center mb-4 text-xl font-bold text-gray-900 font-heading">
             <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
             </svg>
@@ -80,18 +80,18 @@
           </h3>
           <div class="space-y-2">
             <div v-if="loading.sizes" class="animate-pulse">
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
-              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
+              <div class="h-4 mb-2 bg-gray-200 rounded"></div>
               <div class="h-4 bg-gray-200 rounded"></div>
             </div>
-            <div v-else-if="sizes.length === 0" class="font-body text-body-text text-sm">
+            <div v-else-if="sizes.length === 0" class="text-sm font-body text-body-text">
               No hay talles disponibles
             </div>
             <div v-else class="flex flex-wrap gap-2">
               <span 
                 v-for="size in sizes" 
                 :key="size.id"
-                class="font-body inline-block bg-gray-100 text-body-text px-3 py-1 rounded-full text-sm font-medium"
+                class="inline-block px-3 py-1 text-sm font-medium bg-gray-100 rounded-full font-body text-body-text"
               >
                 {{ size.name }}
               </span>
@@ -123,7 +123,7 @@ const loadMasterData = async () => {
   try {
     categories.value = await masterDataApi.getCategories();
   } catch (error) {
-    console.error('âŒ Error cargando categorÃ­as:', error);
+    console.error('Error cargando categorÃ­as:', error);
   } finally {
     loading.value.categories = false;
   }
@@ -132,7 +132,7 @@ const loadMasterData = async () => {
   try {
     colors.value = await masterDataApi.getColors();
   } catch (error) {
-    console.error('âŒ Error cargando colores:', error);
+    console.error('Error cargando colores:', error);
   } finally {
     loading.value.colors = false;
   }
@@ -141,7 +141,7 @@ const loadMasterData = async () => {
   try {
     sizes.value = await masterDataApi.getSizes();
   } catch (error) {
-    console.error('âŒ Error cargando talles:', error);
+    console.error('Error cargando talles:', error);
   } finally {
     loading.value.sizes = false;
   }

@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="text-center">
         <h2 class="text-3xl font-light text-gray-900">Verifica tu Email</h2>
@@ -10,34 +10,34 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
         
         <!-- Success State -->
         <div v-if="verificationStatus === 'success'" class="text-center">
-          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-green-100 rounded-full">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Â¡Email Verificado!</h3>
-          <p class="text-sm text-gray-600 mb-4">Tu email ha sido verificado exitosamente.</p>
-          <router-link to="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900">
+          <h3 class="mb-2 text-lg font-medium text-gray-900">¡Email Verificado!</h3>
+          <p class="mb-4 text-sm text-gray-600">Tu email ha sido verificado exitosamente.</p>
+          <router-link to="/" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-gray-900">
             Continuar a la Tienda
           </router-link>
         </div>
 
         <!-- Error State -->
         <div v-else-if="verificationStatus === 'error'" class="text-center">
-          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Error de VerificaciÃ³n</h3>
-          <p class="text-sm text-gray-600 mb-4">{{ errorMessage }}</p>
+          <h3 class="mb-2 text-lg font-medium text-gray-900">Error de VerificaciÃ³n</h3>
+          <p class="mb-4 text-sm text-gray-600">{{ errorMessage }}</p>
           <button 
             @click="showManualForm = true; verificationStatus = 'pending'"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-gray-900"
           >
             Intentar Nuevamente
           </button>
@@ -45,8 +45,8 @@
 
         <!-- Loading State -->
         <div v-else-if="verificationStatus === 'loading'" class="text-center">
-          <div class="mx-auto flex items-center justify-center h-12 w-12 mb-4">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+          <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4">
+            <div class="w-8 h-8 border-b-2 border-black rounded-full animate-spin"></div>
           </div>
           <p class="text-sm text-gray-600">Verificando tu email...</p>
         </div>
@@ -60,7 +60,7 @@
               type="email"
               id="email"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
               placeholder="tu@email.com"
             >
           </div>
@@ -73,7 +73,7 @@
               id="code"
               required
               maxlength="6"
-              class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black text-center text-lg font-mono tracking-widest"
+              class="block w-full px-3 py-2 mt-1 font-mono text-lg tracking-widest text-center border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
               placeholder="123456"
               @input="formatCode"
             >
@@ -83,10 +83,10 @@
           <button
             type="submit"
             :disabled="processing"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400"
+            class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-transparent rounded-md shadow-sm hover:bg-gray-900 disabled:bg-gray-400"
           >
             <span v-if="processing" class="flex items-center">
-              <div class="animate-spin -ml-1 mr-2 h-4 w-4 border-b-2 border-white rounded-full"></div>
+              <div class="w-4 h-4 mr-2 -ml-1 border-b-2 border-white rounded-full animate-spin"></div>
               Verificando...
             </span>
             <span v-else>Verificar Email</span>
@@ -101,7 +101,7 @@
             >
               <span v-if="resending">Reenviando...</span>
               <span v-else-if="resendCooldown > 0">Reenviar en {{ resendCooldown }}s</span>
-              <span v-else>Â¿No recibiste el cÃ³digo? Reenviar</span>
+              <span v-else>¿No recibiste el código? Reenviar</span>
             </button>
           </div>
         </form>

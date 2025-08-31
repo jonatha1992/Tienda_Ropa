@@ -106,45 +106,45 @@ const password = ref('')
 const loading = ref(false)
 const error = ref('')
 
-// Observar cambios en el estado de autenticaciÃ³n
+// Observar cambios en el estado de autenticación
 watch(() => authStore.isAuthenticated, (isAuth) => {
-    console.log(' Estado de autenticaciÃ³n cambiÃ³:', isAuth)
+    console.log(' Estado de autenticación cambió:', isAuth)
     if (isAuth) {
-        console.log('âœ… Usuario autenticado, redirigiendo a admin...')
+        console.log('Usuario autenticado, redirigiendo a admin...')
         router.push('/admin/products')
     }
 }, { immediate: true })
 
 // Verificar si hay resultado de redirect al cargar el componente
 onMounted(async () => {
-    console.log('ðŸ” Verificando resultado de redirect...')
-    console.log('ðŸ” Current user en firebase:', auth.currentUser)
-    console.log('ðŸ” Auth store user:', authStore.firebaseUser)
-    console.log('ðŸ” Auth store authenticated:', authStore.isAuthenticated)
+    console.log(' Verificando resultado de redirect...')
+    console.log(' Current user en firebase:', auth.currentUser)
+    console.log(' Auth store user:', authStore.firebaseUser)
+    console.log(' Auth store authenticated:', authStore.isAuthenticated)
 
     try {
         const result = await getRedirectResult(auth)
         if (result) {
-            // Usuario autenticado exitosamente despuÃ©s del redirect
-            console.log('âœ… Login con Google exitoso (redirect):', result.user.email)
-            console.log('ðŸŽ‰ Token obtenido, el store deberÃ­a actualizar automÃ¡ticamente...')
-            // No redirigir manualmente aquÃ­, el watch lo harÃ¡
+            // Usuario autenticado exitosamente después del redirect
+            console.log('Login con Google exitoso (redirect):', result.user.email)
+            console.log('✅ Token obtenido, el store debería actualizar automáticamente...')
+            // No redirigir manualmente aquí, el watch lo hará
         } else {
-            console.log('â„¹ï¸ No hay resultado de redirect pendiente')
+            console.log('🔍 No hay resultado de redirect pendiente')
         }
     } catch (err: any) {
-        console.error('âŒ Error procesando redirect result:', err)
+        console.error('🔴 Error procesando redirect result:', err)
         loading.value = false
 
-        // Mensajes de error mÃ¡s especÃ­ficos
+        // Mensajes de error más específicos
         if (err.code === 'auth/popup-blocked') {
-            error.value = 'El navegador bloqueÃ³ la ventana de autenticaciÃ³n.'
+            error.value = 'El navegador bloqueó la ventana de autenticación.'
         } else if (err.code === 'auth/cancelled-popup-request') {
-            error.value = 'AutenticaciÃ³n cancelada.'
+            error.value = 'Autenticación cancelada.'
         } else if (err.code === 'auth/network-request-failed') {
-            error.value = 'Error de conexiÃ³n. Verifica tu internet.'
+            error.value = 'Error de conexión. Verifica tu internet.'
         } else {
-            error.value = `Error de autenticaciÃ³n: ${err.message}`
+            error.value = `Error de autenticación: ${err.message}`
         }
     }
 })
@@ -174,15 +174,15 @@ const signInWithGoogle = async () => {
         try {
             // Intentar primero con popup
             const result = await signInWithPopup(auth, provider)
-            console.log('âœ… Login con Google exitoso (popup):', result.user.email)
+            console.log('Login con Google exitoso (popup):', result.user.email)
 
-            // El store detectarÃ¡ automÃ¡ticamente el cambio y redirigirÃ¡
-            // No necesitamos redirigir manualmente aquÃ­
+            // El store detectará automáticamente el cambio y redirigirá
+            // No necesitamos redirigir manualmente aquí
             loading.value = false
             return
 
         } catch (popupError: any) {
-            console.log('âš ï¸ Popup fallÃ³, intentando con redirect:', popupError.code)
+            console.log('Popup falló, intentando con redirect:', popupError.code)
 
             // Si el popup falla, usar redirect
             if (popupError.code === 'auth/popup-blocked' ||
@@ -197,7 +197,7 @@ const signInWithGoogle = async () => {
         }
 
     } catch (err: any) {
-        console.error('âŒ Error login Google:', err)
+        console.error('🔴 Error login Google:', err)
         loading.value = false
         error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesiÃ³n con Google'
     }
@@ -211,17 +211,17 @@ const handleSubmit = async () => {
         let result
         if (isLogin.value) {
             result = await signInWithEmailAndPassword(auth, email.value, password.value)
-            console.log('âœ… Login exitoso:', result.user.email)
+            console.log('Login exitoso:', result.user.email)
         } else {
             result = await createUserWithEmailAndPassword(auth, email.value, password.value)
-            console.log('âœ… Registro exitoso:', result.user.email)
+            console.log('Registro exitoso:', result.user.email)
         }
 
         // El store detectarÃ¡ automÃ¡ticamente el cambio y redirigirÃ¡
         // No necesitamos redirigir manualmente aquÃ­
         loading.value = false
     } catch (err: any) {
-        console.error('âŒ Error auth:', err)
+        console.error('Error auth:', err)
         error.value = getErrorMessage(err.code) || err.message || 'Error de autenticaciÃ³n'
         loading.value = false
     }

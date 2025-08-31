@@ -43,14 +43,14 @@
                       <!-- Variant Info -->
                       <div v-if="item.variant" class="mt-1 text-sm font-body text-body-text">
                         <span class="font-body">{{ item.variant.color.name }}</span>
-                        <span class="mx-1 font-body">â€¢</span>
+                        <span class="mx-1 font-body">•</span>
                         <span class="font-body">Talle {{ item.variant.size.name }}</span>
                       </div>
                       
                       <!-- Unique Product Info -->
                       <div v-else-if="item.selectedColor || item.selectedSize" class="mt-1 text-sm font-body text-body-text">
                         <span v-if="item.selectedColor" class="font-body">{{ item.selectedColor.name }}</span>
-                        <span v-if="item.selectedColor && item.selectedSize" class="mx-1 font-body">â€¢</span>
+                        <span v-if="item.selectedColor && item.selectedSize" class="mx-1 font-body">•</span>
                         <span v-if="item.selectedSize" class="font-body">Talle {{ item.selectedSize.name }}</span>
                       </div>
 

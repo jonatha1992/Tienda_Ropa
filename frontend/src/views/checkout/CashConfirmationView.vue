@@ -168,7 +168,6 @@
           <div class="space-y-4">
             <div class="flex items-start">
               <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-4 text-sm font-medium text-green-600 bg-green-100 rounded-full">
-                âœ“
               </div>
               <div>
                 <h3 class="font-medium text-gray-900">Pedido Confirmado</h3>

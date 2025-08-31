@@ -8,7 +8,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 class="text-3xl font-light text-gray-900">Â¡Pedido Confirmado!</h1>
+        <h1 class="text-3xl font-light text-gray-900">¡Pedido Confirmado!</h1>
         <p class="mt-2 text-lg text-gray-600">
           Orden #{{ orderData?.order_id || 'Cargando...' }}
         </p>
@@ -27,7 +27,7 @@
           <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div class="space-y-4">
               <div class="p-4 border border-gray-200 rounded">
-                <h3 class="mb-3 font-medium text-gray-900">InformaciÃ³n Bancaria</h3>
+                <h3 class="mb-3 font-medium text-gray-900">Información Bancaria</h3>
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
                     <span class="text-gray-600">Banco:</span>
@@ -38,7 +38,7 @@
                     <span class="font-medium">{{ transferInfo.bank_info.account_type }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">NÃºmero de cuenta:</span>
+                    <span class="text-gray-600">Número de cuenta:</span>
                     <span class="font-mono font-medium">{{ transferInfo.bank_info.account_number }}</span>
                   </div>
                   <div class="flex justify-between">
