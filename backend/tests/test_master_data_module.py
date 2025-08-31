@@ -141,7 +141,7 @@ class TestMasterDataIntegration:
         assert any(name in ["BLANCO", "NEGRO", "ROJO", "AZUL"] for name in color_names), f"Expected basic colors, found: {color_names}"
         
         category_names = [cat["name"] for cat in categories_data]
-        assert any(name in ["VESTIDOS", "REMERAS", "PANTOLONES"] for name in category_names), f"Expected basic categories, found: {category_names}"
+        assert any(name in ["VESTIDO", "BLUSA", "PANTALON"] for name in category_names), f"Expected basic categories, found: {category_names}"
         
         size_names = [size["name"] for size in sizes_data]
         assert any(name in ["S", "M", "L"] for name in size_names), f"Expected basic sizes, found: {size_names}"

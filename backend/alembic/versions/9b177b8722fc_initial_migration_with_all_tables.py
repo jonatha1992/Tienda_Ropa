@@ -1,8 +1,8 @@
-"""Recreate all tables with email verification fields
+"""Initial migration with all tables
 
-Revision ID: 4a7b6872410e
+Revision ID: 9b177b8722fc
 Revises:
-Create Date: 2025-08-18 19:26:11.961664
+Create Date: 2025-08-30 19:57:54.560500
 
 """
 
@@ -10,8 +10,9 @@ from alembic import op
 import sqlalchemy as sa
 import sqlmodel
 
+
 # revision identifiers, used by Alembic.
-revision = "4a7b6872410e"
+revision = "9b177b8722fc"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -143,28 +144,6 @@ def upgrade() -> None:
         batch_op.create_index(batch_op.f("ix_user_username"), ["username"], unique=True)
 
     op.create_table(
-        "email_verification_tokens",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("user_id", sa.Integer(), nullable=False),
-        sa.Column("email", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("token", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("code", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("expires_at", sa.DateTime(), nullable=False),
-        sa.Column("used_at", sa.DateTime(), nullable=True),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["user_id"],
-            ["user.id"],
-        ),
-        sa.PrimaryKeyConstraint("id"),
-    )
-    with op.batch_alter_table("email_verification_tokens", schema=None) as batch_op:
-        batch_op.create_index(batch_op.f("ix_email_verification_tokens_user_id"), ["user_id"], unique=False)
-        batch_op.create_index(batch_op.f("ix_email_verification_tokens_email"), ["email"], unique=False)
-        batch_op.create_index(batch_op.f("ix_email_verification_tokens_token"), ["token"], unique=True)
-        batch_op.create_index(batch_op.f("ix_email_verification_tokens_code"), ["code"], unique=False)
-
-    op.create_table(
         "inventory",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("product_id", sa.Integer(), nullable=False),
@@ -202,6 +181,11 @@ def upgrade() -> None:
             nullable=True,
         ),
         sa.Column(
+            "delivery_method",
+            sqlmodel.sql.sqltypes.AutoString(length=30),
+            nullable=True,
+        ),
+        sa.Column(
             "bank_account_info", sqlmodel.sql.sqltypes.AutoString(), nullable=True
         ),
         sa.Column(
@@ -221,9 +205,30 @@ def upgrade() -> None:
         sa.Column("verification_required", sa.Boolean(), nullable=False),
         sa.Column("verified_by_admin", sa.Boolean(), nullable=True),
         sa.Column("admin_verification_date", sa.DateTime(), nullable=True),
+        sa.Column(
+            "tracking_number",
+            sqlmodel.sql.sqltypes.AutoString(length=255),
+            nullable=True,
+        ),
+        sa.Column(
+            "shipping_provider",
+            sqlmodel.sql.sqltypes.AutoString(length=100),
+            nullable=True,
+        ),
+        sa.Column("shipped_at", sa.DateTime(), nullable=True),
+        sa.Column("estimated_delivery", sa.DateTime(), nullable=True),
+        sa.Column("shipped_by", sa.Integer(), nullable=True),
+        sa.Column("tracking_updated_at", sa.DateTime(), nullable=True),
+        sa.Column(
+            "delivery_notes_shipping", sqlmodel.sql.sqltypes.AutoString(), nullable=True
+        ),
         sa.ForeignKeyConstraint(
             ["customer_id"],
             ["customer.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["shipped_by"],
+            ["user.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -301,13 +306,6 @@ def downgrade() -> None:
     op.drop_table("productimage")
     op.drop_table("order")
     op.drop_table("inventory")
-    with op.batch_alter_table("email_verification_tokens", schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_code"))
-        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_token"))
-        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_email"))
-        batch_op.drop_index(batch_op.f("ix_email_verification_tokens_user_id"))
-
-    op.drop_table("email_verification_tokens")
     with op.batch_alter_table("user", schema=None) as batch_op:
         batch_op.drop_index(batch_op.f("ix_user_username"))
         batch_op.drop_index(batch_op.f("ix_user_firebase_uid"))

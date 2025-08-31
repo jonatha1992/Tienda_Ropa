@@ -1,33 +1,18 @@
 ﻿<template>
   <div class="chatbot-container">
     <!-- Botón flotante del chatbot -->
-    <button
-      @click="toggleChat"
+    <button @click="toggleChat"
       class="fixed z-50 flex items-center justify-center w-16 h-16 text-black transition-all duration-300 bg-white border border-black rounded-full shadow-lg bottom-6 right-6 hover:bg-gray-100"
-      :class="{ 'rotate-45': isChatOpen }"
-    >
-      <img 
-        v-if="!isChatOpen" 
-        src="/imagen-portada.svg" 
-        alt="M-VINTAGE Chat" 
-        class="w-14 h-14"
-      />
-      <svg 
-        v-else 
-        class="w-6 h-6" 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor"
-      >
+      :class="{ 'rotate-45': isChatOpen }">
+      <img v-if="!isChatOpen" src="/imagen-portada.svg" alt="M-VINTAGE Chat" class="w-14 h-14" />
+      <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
     <!-- Ventana del chat -->
-    <div
-      v-if="isChatOpen"
-      class="fixed z-40 flex flex-col bg-white border border-gray-200 rounded-lg shadow-xl bottom-24 right-6 w-80 h-96"
-    >
+    <div v-if="isChatOpen"
+      class="fixed z-40 flex flex-col bg-white border border-gray-200 rounded-lg shadow-xl bottom-24 right-6 w-80 h-96">
       <!-- Header del chat -->
       <div class="flex items-center p-4 space-x-3 text-white bg-black rounded-t-lg">
         <img src="/imagen-portada.svg" alt="M-VINTAGE" class="w-8 h-8" />
@@ -38,37 +23,26 @@
       </div>
 
       <!-- Área de mensajes -->
-      <div 
-        ref="messagesContainer"
-        class="flex-1 p-4 space-y-3 overflow-y-auto bg-gray-50"
-      >
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          class="flex"
-          :class="message.isUser ? 'justify-end' : 'justify-start'"
-        >
-          <div
-            class="max-w-xs px-4 py-2 rounded-lg"
-            :class="message.isUser 
-              ? 'bg-black text-white' 
-              : 'bg-white text-gray-900 border border-gray-200'"
-          >
+      <div ref="messagesContainer" class="flex-1 p-4 space-y-3 overflow-y-auto bg-gray-50">
+        <div v-for="message in messages" :key="message.id" class="flex"
+          :class="message.isUser ? 'justify-end' : 'justify-start'">
+          <div class="max-w-xs px-4 py-2 rounded-lg" :class="message.isUser
+            ? 'bg-black text-white'
+            : 'bg-white text-gray-900 border border-gray-200'">
             <p class="font-body text-sm">{{ message.text }}</p>
-            <button
-              v-if="message.action === 'whatsapp' && message.whatsappMessage"
+            <button v-if="message.action === 'whatsapp' && message.whatsappMessage"
               @click="openWhatsApp(message.whatsappMessage)"
-              class="flex items-center px-3 py-1 mt-2 space-x-1 text-xs text-white transition-colors bg-green-500 rounded-full hover:bg-green-600"
-            >
+              class="flex items-center px-3 py-1 mt-2 space-x-1 text-xs text-white transition-colors bg-green-500 rounded-full hover:bg-green-600">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.51 3.487"/>
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.51 3.487" />
               </svg>
               <span class="font-body">Abrir WhatsApp</span>
             </button>
             <span class="font-body block mt-1 text-xs opacity-70">{{ formatTime(message.timestamp) }}</span>
           </div>
         </div>
-        
+
         <!-- Indicador de escritura -->
         <div v-if="isTyping" class="flex justify-start">
           <div class="px-4 py-2 text-gray-900 bg-white border border-gray-200 rounded-lg">
@@ -84,20 +58,14 @@
       <!-- Input de mensaje -->
       <div class="p-4 bg-white border-t border-gray-200 rounded-b-lg">
         <div class="flex space-x-2">
-          <input
-            v-model="newMessage"
-            @keypress.enter="sendMessage"
-            @input="handleTyping"
+          <input v-model="newMessage" @keypress.enter="sendMessage" @input="handleTyping"
             placeholder="Escribe tu mensaje..."
-            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-          />
-          <button
-            @click="sendMessage"
-            :disabled="!newMessage.trim()"
-            class="px-4 py-2 text-white transition-colors bg-black rounded-md hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
+            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
+          <button @click="sendMessage" :disabled="!newMessage.trim()"
+            class="px-4 py-2 text-white transition-colors bg-black rounded-md hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
           </button>
         </div>
@@ -107,12 +75,8 @@
       <div v-if="showSuggestions" class="p-3 bg-gray-100 border-t border-gray-200">
         <p class="font-body mb-2 text-xs text-body-text">Preguntas frecuentes:</p>
         <div class="flex flex-wrap gap-1">
-          <button
-            v-for="suggestion in quickSuggestions"
-            :key="suggestion"
-            @click="sendQuickMessage(suggestion)"
-            class="px-2 py-1 text-xs transition-colors bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
+          <button v-for="suggestion in quickSuggestions" :key="suggestion" @click="sendQuickMessage(suggestion)"
+            class="px-2 py-1 text-xs transition-colors bg-white border border-gray-300 rounded-md hover:bg-gray-50">
             <span class="font-body">{{ suggestion }}</span>
           </button>
         </div>
@@ -160,43 +124,43 @@ const createWhatsAppLink = (message: string) => {
 // Respuestas predefinidas del bot que redirigen a WhatsApp
 const botResponses: { [key: string]: { text: string; action?: 'whatsapp'; whatsappMessage?: string } } = {
   'hola': { text: '¡Hola! Bienvenido a M-VINTAGE. Para una atención personalizada, te conectamos con nuestro equipo via WhatsApp ðŸ“±' },
-  'horarios de envío': { 
+  'horarios de envío': {
     text: 'Para consultar horarios de envío específicos, nuestro equipo te ayudará via WhatsApp ðŸ“¦',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría consultar sobre los horarios de envío.'
   },
-  'tallas disponibles': { 
+  'tallas disponibles': {
     text: 'Para verificar tallas disponibles de productos específicos, consulta con nuestro equipo via WhatsApp ðŸ‘•',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría consultar sobre tallas disponibles de productos.'
   },
-  'política de devolución': { 
-    text: 'Para información detallada sobre nuestra política de devoluciones, contacta via WhatsApp ðŸ”„',
+  'política de devolución': {
+    text: 'Para información detallada sobre nuestra política de devoluciones, contacta via WhatsApp ',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría conocer más sobre la política de devoluciones.'
   },
-  'métodos de pago': { 
+  'métodos de pago': {
     text: 'Para conocer todos nuestros métodos de pago disponibles, consulta via WhatsApp ðŸ’³',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría conocer los métodos de pago disponibles.'
   },
-  'contacto': { 
+  'contacto': {
     text: 'Te conectamos directamente con nuestro equipo de atención al cliente via WhatsApp ðŸ“ž',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría contactarme con el equipo de M-VINTAGE.'
   },
-  'envios': { 
+  'envios': {
     text: 'Para información sobre envíos y costos según tu ubicación, consulta via WhatsApp ðŸšš',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría consultar sobre envíos y costos.'
   },
   'tienda': { text: 'Somos M-VINTAGE, tu tienda de ropa con estilo único. Para conocer más sobre nosotros, ¡contáctanos via WhatsApp! ðŸª' },
-  'productos': { 
+  'productos': {
     text: 'Para consultar sobre productos específicos y disponibilidad, nuestro equipo te ayudará via WhatsApp ðŸ‘—',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Me gustaría consultar sobre productos disponibles.'
   },
-  'ayuda': { 
+  'ayuda': {
     text: 'Nuestro equipo está listo para ayudarte con cualquier consulta via WhatsApp ðŸ¤',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Necesito ayuda con una consulta sobre M-VINTAGE.'
@@ -205,7 +169,7 @@ const botResponses: { [key: string]: { text: string; action?: 'whatsapp'; whatsa
 
 const toggleChat = () => {
   isChatOpen.value = !isChatOpen.value;
-  
+
   if (isChatOpen.value && messages.value.length === 0) {
     // Mensaje de bienvenida
     setTimeout(() => {
@@ -224,7 +188,7 @@ const sendMessage = async () => {
 
   // Simular que el bot está escribiendo
   isTyping.value = true;
-  
+
   setTimeout(() => {
     isTyping.value = false;
     const response = getBotResponse(userMessage);
@@ -241,7 +205,7 @@ const sendQuickMessage = (suggestion: string) => {
     'Métodos de pago': 'Hola! Me gustaría conocer los métodos de pago disponibles.',
     'Contacto': 'Hola! Me gustaría contactarme con el equipo de M-VINTAGE.'
   };
-  
+
   const whatsappMessage = whatsappMessages[suggestion] || `Hola! Tengo una consulta sobre: ${suggestion}`;
   openWhatsApp(whatsappMessage);
 };
@@ -270,37 +234,37 @@ const addBotMessage = (response: { text: string; action?: 'whatsapp'; whatsappMe
 
 const getBotResponse = (userMessage: string): { text: string; action?: 'whatsapp'; whatsappMessage?: string } => {
   const lowerMessage = userMessage.toLowerCase();
-  
+
   // Buscar palabras clave en el mensaje
   for (const [key, response] of Object.entries(botResponses)) {
     if (lowerMessage.includes(key)) {
       return response;
     }
   }
-  
+
   // Respuestas por categorías más amplias
   if (lowerMessage.includes('precio') || lowerMessage.includes('costo') || lowerMessage.includes('cuanto')) {
-    return { 
+    return {
       text: 'Para consultar precios específicos y ofertas disponibles, nuestro equipo te ayudará via WhatsApp ðŸ’°',
       action: 'whatsapp',
       whatsappMessage: 'Hola! Me gustaría consultar sobre precios de productos.'
     };
   }
-  
+
   if (lowerMessage.includes('stock') || lowerMessage.includes('disponible')) {
-    return { 
+    return {
       text: 'Para verificar stock en tiempo real, consulta con nuestro equipo via WhatsApp ðŸ“¦',
       action: 'whatsapp',
       whatsappMessage: 'Hola! Me gustaría consultar sobre stock de productos.'
     };
   }
-  
+
   if (lowerMessage.includes('gracias')) {
     return { text: '¡De nada! Si necesitas más ayuda, contactanos via WhatsApp. ¡Estamos aquí para ti! 😊' };
   }
-  
+
   // Respuesta por defecto
-  return { 
+  return {
     text: 'Para obtener información personalizada y específica, nuestro equipo te atenderá via WhatsApp 📱',
     action: 'whatsapp',
     whatsappMessage: 'Hola! Tengo una consulta sobre M-VINTAGE.'
@@ -308,9 +272,9 @@ const getBotResponse = (userMessage: string): { text: string; action?: 'whatsapp
 };
 
 const formatTime = (date: Date): string => {
-  return date.toLocaleTimeString('es-ES', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  return date.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
@@ -338,9 +302,9 @@ onMounted(() => {
       isChatOpen.value = false;
     }
   };
-  
+
   document.addEventListener('keydown', handleEscape);
-  
+
   // Cleanup
   return () => {
     document.removeEventListener('keydown', handleEscape);
@@ -355,15 +319,24 @@ onMounted(() => {
 
 /* Animación para el botón flotante */
 @keyframes bounce {
-  0%, 20%, 53%, 80%, 100% {
+
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
     transform: translate3d(0, 0, 0);
   }
-  40%, 43% {
+
+  40%,
+  43% {
     transform: translate3d(0, -8px, 0);
   }
+
   70% {
     transform: translate3d(0, -4px, 0);
   }
+
   90% {
     transform: translate3d(0, -2px, 0);
   }

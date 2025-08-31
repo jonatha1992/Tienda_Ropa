@@ -108,7 +108,7 @@ const error = ref('')
 
 // Observar cambios en el estado de autenticaciÃ³n
 watch(() => authStore.isAuthenticated, (isAuth) => {
-    console.log('ðŸ”„ Estado de autenticaciÃ³n cambiÃ³:', isAuth)
+    console.log(' Estado de autenticaciÃ³n cambiÃ³:', isAuth)
     if (isAuth) {
         console.log('âœ… Usuario autenticado, redirigiendo a admin...')
         router.push('/admin/products')
@@ -155,7 +155,7 @@ const toggleMode = () => {
 }
 
 const signInWithGoogle = async () => {
-    console.log('ðŸ”„ Iniciando login con Google...')
+    console.log(' Iniciando login con Google...')
     loading.value = true
     error.value = ''
 
@@ -170,24 +170,24 @@ const signInWithGoogle = async () => {
         })
 
         console.log('ðŸªŸ Intentando abrir popup de Google...')
-        
+
         try {
             // Intentar primero con popup
             const result = await signInWithPopup(auth, provider)
             console.log('âœ… Login con Google exitoso (popup):', result.user.email)
-            
+
             // El store detectarÃ¡ automÃ¡ticamente el cambio y redirigirÃ¡
             // No necesitamos redirigir manualmente aquÃ­
             loading.value = false
             return
-            
+
         } catch (popupError: any) {
             console.log('âš ï¸ Popup fallÃ³, intentando con redirect:', popupError.code)
-            
+
             // Si el popup falla, usar redirect
-            if (popupError.code === 'auth/popup-blocked' || 
+            if (popupError.code === 'auth/popup-blocked' ||
                 popupError.code === 'auth/cancelled-popup-request') {
-                
+
                 console.log('ðŸŒ Redirigiendo a Google...')
                 await signInWithRedirect(auth, provider)
                 return
@@ -247,4 +247,3 @@ const getErrorMessage = (errorCode: string): string => {
     }
 }
 </script>
-

@@ -75,9 +75,10 @@ class TestUserManagement:
     def test_user_created_automatically_on_first_login(self, client, auth_cookie, db_session):
         """Test que el usuario se cree automáticamente en el primer login"""
         from app.models.user import User
+        from sqlmodel import select
         
         # Verificar que el usuario de test existe en la BD
-        user = db_session.query(User).filter(User.firebase_uid == "test_firebase_uid_api_test").first()
+        user = db_session.exec(select(User).where(User.firebase_uid == "test_firebase_uid_api_test")).first()
         assert user is not None
         assert user.email == "apitest@example.com"
         assert user.username == "apitest"
@@ -98,19 +99,20 @@ class TestRoleManagement:
         from app.models.user import User
         from app.models.role import Role
         from app.models.user_role import UserRole
+        from sqlmodel import select
         
         # Obtener el usuario de test
-        user = db_session.query(User).filter(User.firebase_uid == "test_firebase_uid_api_test").first()
+        user = db_session.exec(select(User).where(User.firebase_uid == "test_firebase_uid_api_test")).first()
         assert user is not None
         
         # Verificar que tiene rol de administrador
-        admin_role = db_session.query(Role).filter(Role.name == "admin").first()
+        admin_role = db_session.exec(select(Role).where(Role.name == "admin")).first()
         assert admin_role is not None
         
-        user_role = db_session.query(UserRole).filter(
+        user_role = db_session.exec(select(UserRole).where(
             UserRole.user_id == user.id,
             UserRole.role_id == admin_role.id
-        ).first()
+        )).first()
         assert user_role is not None
 
 

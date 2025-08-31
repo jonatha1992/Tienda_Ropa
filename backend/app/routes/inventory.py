@@ -166,7 +166,11 @@ def reduce_stock(product_id: int, quantity: int, session: Session) -> bool:
             
             if not inventory_item:
                 # Si no existe inventario, verificar stock total de variants
-                total_variant_stock = sum(variant.stock for variant in product.variants)
+                if not product.variants:
+                    print(f"❌ Producto {product_id} no tiene variantes ni inventario")
+                    return False
+                    
+                total_variant_stock = sum(variant.stock or 0 for variant in product.variants)
                 if total_variant_stock < quantity:
                     print(f"❌ Stock insuficiente en variantes para producto {product_id}. Disponible: {total_variant_stock}, Solicitado: {quantity}")
                     return False

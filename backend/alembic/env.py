@@ -47,11 +47,7 @@ target_metadata = SQLModel.metadata
 from app.core.config import settings
 
 # Use unified settings for the database URL
-# Force PostgreSQL connection for test environment
-if os.getenv("ENVIRONMENT", "dev").lower() == "test" or True:  # Force test mode
-    database_url = "postgresql://postgres:FzFzOKmypoHIhjvKOLCQSpiMHLyVPPPw@turntable.proxy.rlwy.net:48325/railway"
-else:
-    database_url = settings.DATABASE_URL
+database_url = settings.DATABASE_URL
 
 
 def run_migrations_offline() -> None:

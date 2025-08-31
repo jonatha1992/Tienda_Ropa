@@ -37,7 +37,8 @@ import type {
 // Importar tipos de órdenes
 import type {
   Order,
-  OrderItem
+  OrderItem,
+  OrderItemCreate
 } from '../types/orders/order.types';
 
 // User interfaces moved to types/users/user.types.ts
@@ -550,7 +551,7 @@ export const customersApi = {
 // API functions for order items
 export const orderItemsApi = {
   // Create new order item
-  async createOrderItem(orderItemData: any): Promise<any> {
+  async createOrderItem(orderItemData: OrderItemCreate): Promise<OrderItem> {
     const response = await apiClient.post('/order-items/', orderItemData);
     return response.data;
   },

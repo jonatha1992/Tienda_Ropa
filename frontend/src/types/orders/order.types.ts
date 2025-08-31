@@ -75,6 +75,14 @@ export interface OrderItem {
   };
 }
 
+// Tipo específico para crear OrderItems que coincide exactamente con el backend
+export interface OrderItemCreate {
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  price: number;
+}
+
 export interface OrderResponse {
   order: Order;
   payment_preference?: PaymentPreference;

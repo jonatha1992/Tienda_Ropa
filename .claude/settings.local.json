@@ -1,26 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir tests*.py)",
-      "Bash(find:*)",
-      "Bash(mkdir:*)",
-      "Bash(move test_integration_complete.py disabled )",
-      "Bash(move test_inventory_module.py disabled )",
-      "Bash(move test_ecommerce_module.py disabled )",
-      "Bash(move:*)",
-      "Bash(mv:*)",
-      "Bash(curl:*)",
-      "Bash(..venvScriptsActivate.ps1)",
-      "Bash(python -m pytest)",
-      "Bash(powershell.exe:*)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_auth_module.py -v)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_master_data_module.py -v)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_products_module.py -v)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_ecommerce_module.py -v --tb=short)",
-      "Bash(./backend/.venv/Scripts/python.exe -m pytest backend/tests/test_inventory_module.py -v --tb=short)",
       "Bash(dir:*)",
-      "Bash(del api.ts)",
-      "Bash(npm run build:test:*)"
+      "Bash(python:*)",
+      "Bash(alembic current:*)",
+      "Bash(source:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx vue-tsc:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": [],

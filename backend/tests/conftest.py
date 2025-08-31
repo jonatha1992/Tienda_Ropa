@@ -22,7 +22,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel, Session
+from sqlmodel import SQLModel, Session, select
 import sqlmodel
 from app.main import app
 from app.db.session import get_session
@@ -232,14 +232,13 @@ def auth_cookie(client, db_session, setup_database):
     }
 
     # Crear el usuario en la base de datos si no existe
-    existing_user = (
-        db_session.query(User)
-        .filter(User.firebase_uid == mock_firebase_user["uid"])
-        .first()
-    )
+    existing_user = db_session.exec(
+        select(User).where(User.firebase_uid == mock_firebase_user["uid"])
+    ).first()
+    
     if not existing_user:
         # Crear roles si no existen
-        admin_role = db_session.query(Role).filter(Role.name == "admin").first()
+        admin_role = db_session.exec(select(Role).where(Role.name == "admin")).first()
         if not admin_role:
             admin_role = Role(name="admin", description="Administrator role")
             db_session.add(admin_role)

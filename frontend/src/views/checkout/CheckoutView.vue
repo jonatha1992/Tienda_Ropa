@@ -302,7 +302,7 @@ import { ordersApi, customersApi, orderItemsApi, productsApi } from '../../confi
 import { stockService } from '../../services/stockService';
 import { isValidPhone, formatE164, isValidPostalCode, validationMessages } from '../../composables/useValidators';
 import { useUserData } from '../../composables/useUserData';
-import type { PaymentMethod, Order, CustomerCreate, OrderItem } from '../../types';
+import type { PaymentMethod, Order, CustomerCreate, OrderItem, OrderItemCreate } from '../../types';
 import DeliveryProgress from '../../components/ui/DeliveryProgress.vue';
 import ContactInfoStep from '../../components/checkout/ContactInfoStep.vue';
 import DeliveryStep from '../../components/checkout/DeliveryStep.vue';
@@ -629,34 +629,13 @@ const processOrder = async () => {
         ? item.product.discounted_price 
         : item.product.price;
       
-      // Base order item data
-      const orderItemData: Partial<Omit<OrderItem, 'id' | 'product'>> & {
-        order_id: number;
-        product_id: number;
-        quantity: number;
-        price: number;
-      } = {
+      // Crear order item data simplificado que coincide exactamente con el backend
+      const orderItemData: OrderItemCreate = {
         order_id: response.order.id,
         product_id: item.product.id,
         quantity: item.quantity,
         price: itemPrice
       };
-      
-      // Add variant information based on product type
-      if (item.product.is_unique) {
-        // For unique products, add color and size IDs if available
-        if (item.selectedColor) {
-          orderItemData.color_id = item.selectedColor.id;
-        }
-        if (item.selectedSize) {
-          orderItemData.size_id = item.selectedSize.id;
-        }
-      } else {
-        // For variant products, add variant_id
-        if (item.variant && item.variant.variant.id) {
-          orderItemData.variant_id = item.variant.variant.id;
-        }
-      }
       
       console.log('Creating order item:', JSON.stringify(orderItemData, null, 2));
       console.log('Cart item variant info:', item.variant);

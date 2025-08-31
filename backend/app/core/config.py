@@ -4,7 +4,7 @@ import json
 from functools import lru_cache
 from typing import List, Optional
 from pydantic_settings import BaseSettings
-from pydantic import validator
+from pydantic import field_validator
 from dotenv import load_dotenv
 
 """Configuración centralizada multi-entorno (nueva convención dev / test / pro).
@@ -105,9 +105,10 @@ class Settings(BaseSettings):
         case_sensitive = False
 
     # ----------------- Validaciones -----------------
-    @validator("SECRET_KEY")
-    def validate_secret_key(cls, v, values):  # type: ignore[override]
-        env = values.get("ENVIRONMENT", "dev")
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def validate_secret_key(cls, v, info):
+        env = info.data.get("ENVIRONMENT", "dev") if info.data else "dev"
         if env in ("pro",):
             if not v or v in ("your_secret", "change-me"):
                 raise ValueError("SECRET_KEY debe configurarse para entornos pro")
@@ -115,9 +116,10 @@ class Settings(BaseSettings):
                 raise ValueError("SECRET_KEY debe tener al menos 32 caracteres")
         return v
 
-    @validator("DATABASE_URL")
-    def validate_database_url(cls, v, values):  # type: ignore[override]
-        env = values.get("ENVIRONMENT", "dev")
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def validate_database_url(cls, v, info):
+        env = info.data.get("ENVIRONMENT", "dev") if info.data else "dev"
         if env in ("test", "pro"):
             if v.startswith("sqlite:"):
                 raise ValueError(
