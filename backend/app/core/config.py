@@ -148,7 +148,6 @@ class Settings(BaseSettings):
             "http://127.0.0.1:5500",  # Live Server for frontend-test.html
             "https://m-vintage-test.web.app",
             "https://m-vintage.web.app",
-            "https://mvintage-frontend.vercel.app",
         ]
 
         for origin in common_origins:
