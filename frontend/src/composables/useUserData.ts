@@ -95,7 +95,7 @@ export function useUserData() {
   }
 }
 
-// FunciÃ³n auxiliar para readonly
+// Funcin auxiliar para readonly
 function readonly<T>(ref: any) {
   return ref
 }

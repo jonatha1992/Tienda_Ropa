@@ -84,11 +84,10 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // Si hay una posiciÃ³n guardada (botÃ³n atrÃ¡s/adelante), ir ahÃ­
     if (savedPosition) {
       return savedPosition;
     }
-    // Si hay un hash (#section), ir a esa secciÃ³n
+    // Si hay un hash (#section), ir a esa seccin
     if (to.hash) {
       return {
         el: to.hash,
@@ -109,7 +108,7 @@ router.beforeEach(async (to, from, next) => {
     globalProgressBar.start();
   }
 
-  // Esperar a que se inicialice la autenticaciÃ³n si aÃºn no se ha hecho
+  // Esperar a que se inicialice la autenticación si aún no se ha hecho
   if (authStore.loading) {
     // fetchUserRoles se ejecuta automáticamente después de fetchBackendUser en auth.ts:30
     // No necesitamos llamarlo aquí porque no hay token aún
@@ -139,14 +138,14 @@ router.beforeEach(async (to, from, next) => {
       }
     }
 
-    // VerificaciÃ³n final sin logs innecesarios
+    // Verificacin final sin logs innecesarios
     if (!authStore.hasAdminAccess) {
       next('/');
       return;
     }
   }
 
-  // Verificar si la ruta requiere autenticaciÃ³n
+  // Verificar si la ruta requiere autenticacin
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     console.log('ðŸ”’ Ruta protegida, redirigiendo a login');
     next('/auth');

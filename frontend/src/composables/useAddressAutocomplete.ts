@@ -35,7 +35,7 @@ export function useAddressAutocomplete() {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  // Rate limiting - mÃ¡ximo 1 consulta por segundo segÃºn tÃ©rminos de Nominatim
+  // Rate limiting - máximo 1 consulta por segundo según términos de Nominatim
   let lastRequestTime = 0
   const MIN_REQUEST_INTERVAL = 1000
 
@@ -57,7 +57,7 @@ export function useAddressAutocomplete() {
 
     try {
       const countryCodes = countryCode === 'AR' ? 'ar' : countryCode === 'UY' ? 'uy' : countryCode === 'CL' ? 'cl' : 'ar,uy,cl'
-      
+
       const url = new URL('https://nominatim.openstreetmap.org/search')
       url.searchParams.set('q', query)
       url.searchParams.set('format', 'json')
@@ -65,7 +65,7 @@ export function useAddressAutocomplete() {
       url.searchParams.set('limit', '5')
       url.searchParams.set('addressdetails', '1')
       url.searchParams.set('extratags', '1')
-      
+
       lastRequestTime = Date.now()
 
       const response = await fetch(url.toString(), {
@@ -87,7 +87,7 @@ export function useAddressAutocomplete() {
       console.error('Error searching addresses:', err)
       suggestions.value = []
       return []
-      
+
     } finally {
       loading.value = false
     }
@@ -95,8 +95,8 @@ export function useAddressAutocomplete() {
 
   const parseAddress = (suggestion: AddressSuggestion): ParsedAddress => {
     const { address } = suggestion
-    
-    // Construir direcciÃ³n completa
+
+    // Construir direccin completa
     let street = ''
     if (address.road) {
       street = address.road
@@ -114,7 +114,7 @@ export function useAddressAutocomplete() {
     // Determinar provincia/estado
     let province = address.state || address.province || ''
 
-    // Determinar paÃ­s
+    // Determinar país
     let country = address.country_code?.toUpperCase() || 'AR'
 
     return {
@@ -142,7 +142,7 @@ export function useAddressAutocomplete() {
   }
 }
 
-// FunciÃ³n auxiliar para readonly
+// Funcin auxiliar para readonly
 function readonly<T>(ref: any) {
   return ref
 }

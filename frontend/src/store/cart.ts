@@ -153,7 +153,7 @@ export const useCartStore = defineStore('cart', {
       // Save to localStorage
       this.saveToStorage();
 
-      // Mostrar notificaciÃ³n personalizada cuando se agrega producto
+      // Mostrar notificacin personalizada cuando se agrega producto
       const { showNotification } = useCartNotification();
       if (variantInfo) {
         showNotification(product, quantity, variantInfo);

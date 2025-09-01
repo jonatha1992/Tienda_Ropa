@@ -43,15 +43,6 @@
           </span>
         </div>
 
-        <!-- Etiqueta de oferta o nuevo -->
-        <div v-if="(product.is_sale || product.is_new) && (product.stock ?? 0) > 0" class="absolute z-10 flex flex-col gap-2 top-4 left-4">
-          <span v-if="product.is_sale" class="px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-full">
-            OFERTA
-          </span>
-          <span v-if="product.is_new" class="px-2 py-1 text-xs font-bold text-white bg-black rounded-full">
-            NUEVO
-          </span>
-        </div>
 
         <!-- Etiqueta de SIN STOCK en esquina superior izquierda -->
         <div v-if="(product.stock ?? 0) <= 0" class="absolute top-0 left-0 z-10 mt-2 ml-4">
@@ -65,8 +56,8 @@
         <h3 class="mb-1 text-sm font-normal leading-tight text-gray-800 line-clamp-2">
           {{ product.name }}
         </h3>
-        
-        <!-- CategorÃ­a -->
+
+        <!-- Categoría -->
         <p v-if="product.categoria" class="mb-2 text-xs tracking-wider text-gray-500 uppercase">
           {{ product.categoria }}
         </p>

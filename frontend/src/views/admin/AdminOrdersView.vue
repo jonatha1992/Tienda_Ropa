@@ -114,17 +114,19 @@
           <div class="flex items-center space-x-2">
             <label for="statusFilter" class="text-sm font-medium text-gray-700">Filtrar por estado:</label>
             <select v-model="statusFilter" @change="loadOrders" 
-              class="border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm w-full max-w-xs bg-white">
+              class="w-full max-w-xs px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
               <option value="">Todos</option>
-              <option value="pending_shipment">Pendientes de Envío</option>
-              <option value="with_tracking">Con Tracking</option>
+              <option value="pending">Pendientes</option>
+              <option value="prepared">Preparados</option>
               <option value="shipped">Enviados</option>
+              <option value="with_tracking">Con Tracking</option>
             </select>
           </div>
           
-          <button @click="loadOrders" 
-            class="btn-outline">
-            <svg class="w-4 h-4 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button @click="loadOrders" :disabled="loading"
+            class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            title="Actualizar lista de pedidos">
+            <svg class="w-4 h-4" :class="{ 'animate-spin': loading }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
@@ -185,6 +187,9 @@
                   Total
                 </th>
                 <th scope="col" class="px-2 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                  Dirección
+                </th>
+                <th scope="col" class="px-2 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                   Entrega
                 </th>
                 <th scope="col" class="px-2 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -235,9 +240,14 @@
                 <td class="px-2 py-3 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">${{ order.total.toLocaleString() }}</div>
                   <div class="text-xs">
-                    <span :class="getStatusClass(order.status)" class="inline-flex px-1 py-0.5 text-xs font-medium rounded">
-                      {{ getStatusText(order.status) }}
+                    <span :class="getPaymentStatusClass(order.payment_status)" class="inline-flex px-1 py-0.5 text-xs font-medium rounded">
+                      {{ getPaymentStatusText(order.payment_status) }}
                     </span>
+                  </div>
+                </td>
+                <td class="px-2 py-3 max-w-32">
+                  <div class="text-xs text-gray-900 truncate">
+                    {{ getFormattedAddress(order) || 'Sin dirección' }}
                   </div>
                 </td>
                 <td class="px-2 py-3 whitespace-nowrap">
@@ -247,9 +257,9 @@
                   </span>
                 </td>
                 <td class="px-2 py-3 whitespace-nowrap">
-                  <span :class="getShippingStatusClass(order.shipping_status)" 
+                  <span :class="getShippingStatusClass(order.shipping_status || order.status)" 
                     class="inline-flex px-1 py-0.5 text-xs font-medium rounded">
-                    {{ getShippingStatusText(order.shipping_status) }}
+                    {{ getShippingStatusText(order.shipping_status || order.status) }}
                   </span>
                 </td>
                 <td class="px-2 py-3 whitespace-nowrap">
@@ -261,10 +271,17 @@
                 </td>
                 <td class="px-3 py-3 text-sm font-medium text-right whitespace-nowrap">
                   <div class="flex items-center justify-end space-x-2">
-                    <!-- Edit Order Button -->
-                    <button @click="openEditModal(order)" class="p-1 text-blue-600 hover:text-blue-800" title="Editar pedido">
+                    <!-- Verify Payment Button -->
+                    <button @click="openPaymentVerificationModal(order)" class="p-1 text-orange-600 hover:text-orange-800" title="Verificar pago">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+
+                    <!-- Add Tracking Button -->
+                    <button @click="openTrackingModal(order)" class="p-1 text-green-600 hover:text-green-800" title="Agregar seguimiento">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                       </svg>
                     </button>
 
@@ -315,60 +332,59 @@
                   </div>
                   <div class="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
-                      Asignar Información de Envío
+                      Gestionar Envío - Pedido #{{ selectedOrder?.order_id }}
                     </h3>
                     <div class="grid grid-cols-1 gap-4">
+                      <!-- Current Status Display -->
+                      <div class="p-3 rounded-md bg-gray-50">
+                        <label class="block text-sm font-medium text-gray-700">Estado Actual:</label>
+                        <span :class="getShippingStatusClass(selectedOrder?.shipping_status || selectedOrder?.status)" class="inline-flex px-2 py-1 text-xs font-medium rounded">
+                          {{ getShippingStatusText(selectedOrder?.shipping_status || selectedOrder?.status) }}
+                        </span>
+                      </div>
+                      
+                      <!-- Status Change Selector -->
                       <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                          Transportista
+                        <label for="shippingStatusSelect" class="block mb-1 text-sm font-medium text-gray-700">
+                          Cambiar Estado de Envío
                         </label>
                         <select 
-                          v-model="trackingForm.shippingProvider" 
-                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
-                        >
-                          <option value="">Seleccionar transportista</option>
-                          <option 
-                            v-for="provider in shippingProviders" 
-                            :key="provider.id"
-                            :value="provider.id"
-                          >
-                            {{ provider.name }}
-                          </option>
+                          id="shippingStatusSelect" 
+                          v-model="newShippingStatus" 
+                          class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                          <option value="">Mantener estado actual</option>
+                          <option value="pending">🟡 Pendiente (pedido creado)</option>
+                          <option value="prepared">🔵 Preparado (listo para enviar)</option>
+                          <option value="shipped">🟣 Enviado (llevado al correo)</option>
                         </select>
                       </div>
-
+                      
+                      <!-- Divider -->
+                      <div class="pt-4 border-t border-gray-200">
+                        <h4 class="mb-3 text-sm font-medium text-gray-700">Información de Seguimiento (Opcional)</h4>
+                      </div>
+                      
                       <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <label class="block mb-1 text-sm font-medium text-gray-700">
                           Número de seguimiento
                         </label>
                         <input 
                           v-model="trackingForm.trackingNumber"
                           type="text" 
-                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
-                          :placeholder="getTrackingPlaceholder(trackingForm.shippingProvider)"
+                          class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Ingrese el número de seguimiento"
                         >
                       </div>
 
                       <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                          Fecha estimada de entrega
-                        </label>
-                        <input 
-                          v-model="trackingForm.estimatedDelivery"
-                          type="date" 
-                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
-                        >
-                      </div>
-
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                          Notas adicionales
+                        <label class="block mb-1 text-sm font-medium text-gray-700">
+                          Notas del pedido
                         </label>
                         <textarea 
                           v-model="trackingForm.shippingNotes"
                           rows="3"
-                          class="w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 text-sm"
-                          placeholder="Notas sobre el envío..."
+                          class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Notas sobre el pedido..."
                         ></textarea>
                       </div>
                     </div>
@@ -378,8 +394,8 @@
               <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button type="submit" :disabled="trackingLoading"
                   class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm">
-                  <span v-if="trackingLoading">Guardando...</span>
-                  <span v-else>Guardar</span>
+                  <span class="text-white" v-if="trackingLoading">Guardando...</span>
+                  <span class="text-white" v-else>Guardar</span>
                 </button>
                 <button type="button" @click="closeTrackingModal"
                   class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
@@ -387,6 +403,91 @@
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Verification Modal -->
+      <div v-if="showPaymentVerificationModal && selectedOrder" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="closePaymentVerificationModal"></div>
+          
+          <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-orange-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                  <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-lg font-medium leading-6 text-gray-900">
+                    Verificar Pago - Pedido #{{ selectedOrder.order_id }}
+                  </h3>
+                  
+                  <div class="mt-4 space-y-4">
+                    <!-- Payment Method Info -->
+                    <div class="p-3 rounded-md bg-gray-50">
+                      <p class="text-sm font-medium text-gray-700">Método de Pago:</p>
+                      <p class="text-sm text-gray-900">{{ getPaymentMethodText(selectedOrder.payment_method) }}</p>
+                    </div>
+                    
+                    <!-- Payment Status -->
+                    <div class="p-3 rounded-md bg-gray-50">
+                      <p class="text-sm font-medium text-gray-700">Estado de Pago Actual:</p>
+                      <span :class="getPaymentStatusClass(selectedOrder.payment_status)" 
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                        {{ getPaymentStatusText(selectedOrder.payment_status) }}
+                      </span>
+                    </div>
+                    
+                    <!-- Total Amount -->
+                    <div class="p-3 rounded-md bg-gray-50">
+                      <p class="text-sm font-medium text-gray-700">Total:</p>
+                      <p class="text-lg font-bold text-gray-900">${{ selectedOrder.total?.toLocaleString() }}</p>
+                    </div>
+                    
+                    <!-- Payment Status Selection -->
+                    <div>
+                      <label class="block mb-1 text-sm font-medium text-gray-700">
+                        Estado del Pago
+                      </label>
+                      <select 
+                        v-model="selectedPaymentStatus"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      >
+                        <option value="pending">Pendiente</option>
+                        <option value="paid">Pagado</option>
+                        <option value="cancelled">Cancelado</option>
+                      </select>
+                    </div>
+
+                    <!-- Admin Notes -->
+                    <div>
+                      <label class="block mb-1 text-sm font-medium text-gray-700">
+                        Notas de Verificación
+                      </label>
+                      <textarea 
+                        v-model="verificationNotes"
+                        rows="3"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        placeholder="Notas sobre la verificación del pago..."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button @click="updatePaymentStatus" :disabled="loading"
+                class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm">
+                Actualizar Estado
+              </button>
+              <button @click="closePaymentVerificationModal"
+                class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -400,15 +501,6 @@
         @update-status="updateOrderStatus"
       />
 
-      <!-- Edit Order Modal -->
-      <EditOrderModal 
-        v-if="editingOrder"
-        :is-open="!!editingOrder"
-        :order="editingOrder"
-        :shipping-providers="shippingProviders"
-        @save="handleSaveOrder"
-        @close="editingOrder = null"
-      />
 
       <!-- Shipping Modal -->
       <ShippingModal
@@ -444,28 +536,28 @@
                   <div class="space-y-2">
                     <div>
                       <span class="text-xs text-gray-500">Nombre:</span>
-                      <p class="text-sm text-gray-900">{{ selectedOrder.customer_name }}</p>
+                      <p class="text-sm text-gray-900">{{ getCustomerName(selectedOrder) }}</p>
                     </div>
                     <div>
                       <span class="text-xs text-gray-500">Email:</span>
-                      <p class="text-sm text-gray-900">{{ selectedOrder.customer_email }}</p>
+                      <p class="text-sm text-gray-900">{{ getCustomerEmail(selectedOrder) }}</p>
                     </div>
-                    <div v-if="selectedOrder.customer_phone">
+                    <div v-if="getCustomerPhone(selectedOrder) !== 'N/A'">
                       <span class="text-xs text-gray-500">Teléfono:</span>
-                      <p class="text-sm text-gray-900">{{ selectedOrder.customer_phone }}</p>
+                      <p class="text-sm text-gray-900">{{ getCustomerPhone(selectedOrder) }}</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Order Information -->
                 <div class="p-4 rounded-lg bg-gray-50">
-                  <h4 class="mb-3 text-sm font-semibold text-gray-900">Información del Pedido</h4>
+                  <h4 class="mb-3 text-sm font-semibold text-gray-900">Información del Pago</h4>
                   <div class="space-y-2">
                     <div>
-                      <span class="text-xs text-gray-500">Estado:</span>
-                      <span :class="getStatusClass(selectedOrder.status)" 
+                      <span class="text-xs text-gray-500">Estado del Pago:</span>
+                      <span :class="getPaymentStatusClass(selectedOrder.payment_status)" 
                         class="inline-flex px-2 py-1 ml-1 text-xs font-semibold rounded-full">
-                        {{ getStatusText(selectedOrder.status) }}
+                        {{ getPaymentStatusText(selectedOrder.payment_status) }}
                       </span>
                     </div>
                     <div>
@@ -478,7 +570,7 @@
                     </div>
                     <div>
                       <span class="text-xs text-gray-500">Método de Pago:</span>
-                      <p class="text-sm text-gray-900">{{ selectedOrder.payment_method }}</p>
+                      <p class="text-sm text-gray-900">{{ getPaymentMethodText(selectedOrder.payment_method) }}</p>
                     </div>
                   </div>
                 </div>
@@ -489,7 +581,9 @@
                   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                       <span class="text-xs text-gray-500">Dirección de Envío:</span>
-                      <p class="text-sm text-gray-900">{{ selectedOrder.shipping_address || 'No especificada' }}</p>
+                      <p class="text-sm text-gray-900">
+                        {{ getFormattedAddress(selectedOrder) || 'No especificada' }}
+                      </p>
                     </div>
                     <div>
                       <span class="text-xs text-gray-500">Método de Entrega:</span>
@@ -553,93 +647,71 @@ import {
   safeString, 
   toStringOrNull 
 } from '../../utils/orderUtils';
-import EditOrderModal from '../../components/orders/EditOrderModal.vue';
 import OrderStatusModal from '../../components/orders/OrderStatusModal.vue';
 import ShippingModal from '../../components/checkout/ShippingModal.vue';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 import { ordersApi } from '../../config/api';
+import { 
+  getPaymentStatusClass, 
+  getPaymentStatusText,
+  getShippingStatusClass, 
+  getShippingStatusText,
+  getDeliveryMethodClass,
+  getDeliveryMethodText 
+} from '../../utils/orderStatusUtils';
 
 const authStore = useAuthStore();
 const toast = useToast();
 const router = useRouter();
 
-const getStatusClass = (status: string | undefined): string => {
-  if (!status) return 'bg-gray-100 text-gray-800';
-  const statusClasses: Record<string, string> = {
-    'pending': 'bg-yellow-100 text-yellow-800',
-    'processing': 'bg-blue-100 text-blue-800',
-    'shipped': 'bg-green-100 text-green-800',
-    'delivered': 'bg-green-100 text-green-800',
-    'cancelled': 'bg-red-100 text-red-800',
-    'refunded': 'bg-gray-100 text-gray-800'
+// Status functions now imported from centralized orderStatusUtils
+
+// Shipping status and delivery method functions now imported from centralized orderStatusUtils
+
+
+const getFormattedAddress = (order: Order | null): string => {
+  if (!order) return '';
+  
+  // Handle both nested customer object and flat properties
+  const customer = order.customer || {
+    address: order.shipping_address,
+    city: undefined,
+    postal_code: undefined,
+    province: undefined
   };
-  return statusClasses[status.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  
+  const addressParts: string[] = [];
+  
+  if (customer.address) addressParts.push(customer.address);
+  if (customer.city) addressParts.push(customer.city);
+  if (customer.postal_code) addressParts.push(`CP ${customer.postal_code}`);
+  if (customer.province) addressParts.push(customer.province);
+  
+  return addressParts.join(', ');
 };
 
-const getStatusText = (status: string | undefined): string => {
-  if (!status) return 'Desconocido';
-  const statusText: Record<string, string> = {
-    'pending': 'Pendiente',
-    'processing': 'En proceso',
-    'shipped': 'Enviado',
-    'delivered': 'Entregado',
-    'cancelled': 'Cancelado',
-    'refunded': 'Reembolsado'
-  };
-  return statusText[status.toLowerCase()] || status;
+// Helper functions for customer data display with fallbacks
+const getCustomerName = (order: Order | null): string => {
+  return order?.customer?.name || order?.customer_name || 'N/A';
 };
 
-const getShippingStatusClass = (status: string | undefined): string => {
-  if (!status) return 'bg-gray-100 text-gray-800';
-  const statusClasses: Record<string, string> = {
-    'pending': 'bg-yellow-100 text-yellow-800',
-    'in_transit': 'bg-blue-100 text-blue-800',
-    'out_for_delivery': 'bg-purple-100 text-purple-800',
-    'delivered': 'bg-green-100 text-green-800',
-    'failed': 'bg-red-100 text-red-800'
-  };
-  return statusClasses[status.toLowerCase()] || 'bg-gray-100 text-gray-800';
+const getCustomerEmail = (order: Order | null): string => {
+  return order?.customer?.email || order?.customer_email || 'N/A';
 };
 
-const getShippingStatusText = (status: string | undefined): string => {
-  if (!status) return 'Desconocido';
-  const statusText: Record<string, string> = {
-    'pending': 'Pendiente',
-    'in_transit': 'En tránsito',
-    'out_for_delivery': 'En reparto',
-    'delivered': 'Entregado',
-    'failed': 'Error en entrega'
-  };
-  return statusText[status.toLowerCase()] || status;
+const getCustomerPhone = (order: Order | null): string => {
+  return order?.customer?.phone || order?.customer_phone || 'N/A';
 };
 
-const getDeliveryMethodClass = (method: string | null | undefined): string => {
-  if (!method) return 'bg-gray-100 text-gray-800';
-  const methodClasses: Record<string, string> = {
-    'standard': 'bg-blue-100 text-blue-800',
-    'express': 'bg-purple-100 text-purple-800',
-    'pickup': 'bg-green-100 text-green-800'
-  };
-  return methodClasses[method.toLowerCase()] || 'bg-gray-100 text-gray-800';
-};
-
-const getDeliveryMethodText = (method: string | null | undefined): string => {
+const getPaymentMethodText = (method: string | undefined): string => {
   if (!method) return 'No especificado';
-  const methodText: Record<string, string> = {
-    'standard': 'Estándar',
-    'express': 'Express',
-    'pickup': 'Recogida en tienda'
+  const methodTexts: Record<string, string> = {
+    'transfer': 'Transferencia Bancaria',
+    'mercadopago': 'MercadoPago',
+    'cash': 'Efectivo Contra Entrega'
   };
-  return methodText[method.toLowerCase()] || method;
-};
-
-const getTrackingPlaceholder = (providerCode: string | undefined): string => {
-  return providerCode ? `Ej: ${providerCode.toUpperCase()}1234567890` : 'Número de seguimiento';
-};
-
-const getTrackingHint = (providerCode: string | undefined): string => {
-  return providerCode ? `Formato: ${providerCode.toUpperCase()} + 10 dígitos` : 'Ingrese el número de seguimiento';
+  return methodTexts[method.toLowerCase()] || method;
 };
 
 // State
@@ -650,8 +722,6 @@ const allOrders = ref<Order[]>([]); // Almacena todos los pedidos
 // Form and modal state
 const trackingForm = ref({
   trackingNumber: '',
-  shippingProvider: '',
-  estimatedDelivery: '',
   shippingNotes: ''
 });
 
@@ -660,17 +730,19 @@ const showTrackingModal = ref(false);
 const showOrderDetailsModal = ref(false);
 const showShippingModal = ref(false);
 const showStatusModal = ref(false);
+const showPaymentVerificationModal = ref(false);
 
 // Selection and data
 const selectedOrders = ref<number[]>([]);
 const selectAll = ref(false);
 const statistics = ref<any>(null);
-const shippingProviders = ref<any[]>([]);
 const statusFilter = ref('');
 const selectedOrder = ref<Order | null>(null);
-const editingOrder = ref<Order | null>(null);
 const trackingNumber = ref('');
 const selectedProvider = ref('');
+const verificationNotes = ref('');
+const selectedPaymentStatus = ref('pending');
+const newShippingStatus = ref('');
 
 // Propiedad computada para los pedidos filtrados
 const filteredOrders = computed(() => {
@@ -678,22 +750,36 @@ const filteredOrders = computed(() => {
   
   return allOrders.value.filter(order => {
     switch(statusFilter.value) {
-      case 'pending_shipment':
-        return (order.shipping_status === 'pending' || order.shipping_status === 'preparing') && 
-               !order.tracking_number;
-      case 'with_tracking':
-        return order.tracking_number && 
-               order.shipping_status !== 'delivered' &&
-               order.shipping_status !== 'shipped';
+      case 'pending':
+        return order.status === 'pending';
+      case 'prepared':
+        return order.status === 'prepared';
       case 'shipped':
-        return order.shipping_status === 'shipped' || 
-               order.shipping_status === 'delivered' ||
-               order.shipping_status === 'in_transit';
+        return order.status === 'shipped';
+      case 'with_tracking':
+        return Boolean(order.tracking_number) && order.status === 'shipped';
       default:
         return true;
     }
   });
 });
+
+// Helper function to update selectedOrder with fresh data
+const updateSelectedOrder = () => {
+  if (selectedOrder.value) {
+    const updatedOrder = allOrders.value.find(order => order.order_id === selectedOrder.value!.order_id);
+    if (updatedOrder) {
+      console.log(`🔄 Updating selected order ${selectedOrder.value.order_id}:`);
+      console.log(`  - Old status: ${selectedOrder.value.status}`);
+      console.log(`  - New status: ${updatedOrder.status}`);
+      console.log(`  - Old payment_status: ${selectedOrder.value.payment_status}`);
+      console.log(`  - New payment_status: ${updatedOrder.payment_status}`);
+      selectedOrder.value = { ...updatedOrder };
+    } else {
+      console.error(`❌ Could not find updated order ${selectedOrder.value.order_id} in allOrders`);
+    }
+  }
+};
 
 // Modal handlers
 const openStatusModal = (order: Order) => {
@@ -730,14 +816,13 @@ const openTrackingModal = (order: Order) => {
     estimated_delivery: order.estimated_delivery || '',
     delivery_method: order.delivery_method || 'standard',
     total: order.total || 0,
-    payment_method: order.payment_method || 'unknown'
+    payment_method: order.payment_method || 'unknown',
+    payment_status: (order as any).payment_status || (order as any).paymentStatus || 'pending'
   };
   
   // Initialize tracking form with order data
   trackingForm.value = {
     trackingNumber: order.tracking_number || '',
-    shippingProvider: order.shipping_provider || '',
-    estimatedDelivery: order.estimated_delivery || '',
     shippingNotes: order.notes || ''
   };
   
@@ -749,10 +834,9 @@ const closeTrackingModal = () => {
   showTrackingModal.value = false;
   trackingForm.value = {
     trackingNumber: '',
-    shippingProvider: '',
-    estimatedDelivery: '',
     shippingNotes: ''
   };
+  newShippingStatus.value = '';
   selectedOrder.value = null;
 };
 
@@ -766,57 +850,135 @@ const closeOrderDetailsModal = () => {
   selectedOrder.value = null;
 };
 
-const openEditModal = (order: Order) => {
-  editingOrder.value = { ...order };
+const openPaymentVerificationModal = (order: Order) => {
+  selectedOrder.value = { ...order, payment_status: (order as any).payment_status || (order as any).paymentStatus || 'pending' };
+  // Initialize select with current payment status or general status
+  selectedPaymentStatus.value = order.payment_status || order.status || 'pending';
+  showPaymentVerificationModal.value = true;
 };
 
-const viewOrderDetails = (order: Order) => {
-  selectedOrder.value = { ...order };
-  showOrderDetailsModal.value = true;
+const closePaymentVerificationModal = () => {
+  showPaymentVerificationModal.value = false;
+  selectedOrder.value = null;
+  verificationNotes.value = '';
+  selectedPaymentStatus.value = 'pending';
 };
 
-// Handle save order
-const handleSaveOrder = async (updatedOrder: Order) => {
+const updatePaymentStatus = async () => {
+  if (!selectedOrder.value) return;
+  
   try {
     loading.value = true;
-    await ordersApi.updateOrder(updatedOrder.order_id, updatedOrder);
+    await ordersApi.updateOrderPaymentStatus(selectedOrder.value.order_id, {
+      status: selectedPaymentStatus.value,
+      adminNotes: verificationNotes.value
+    });
+    
     await loadOrders();
-    toast.success('Pedido actualizado correctamente');
-    editingOrder.value = null;
+    updateSelectedOrder();
+    
+    // Dynamic success message based on selected status
+    const statusMessages: Record<string, string> = {
+      'pending': 'Estado cambiado a pendiente',
+      'paid': 'Pedido marcado como pagado',
+      'cancelled': 'Pedido cancelado'
+    };
+
+    toast.success(statusMessages[selectedPaymentStatus.value] || 'Estado actualizado');
+    closePaymentVerificationModal();
   } catch (error) {
-    console.error('Error al actualizar el pedido:', error);
-    toast.error('Error al actualizar el pedido');
+    console.error('Error al actualizar el estado:', error);
+    toast.error('Error al actualizar el estado del pago');
   } finally {
     loading.value = false;
   }
 };
 
-// Save tracking information
+
+const viewOrderDetails = (order: Order) => {
+  console.log('🔍 Original order data:', order);
+  console.log('🔍 Customer object:', order.customer);
+  console.log('🔍 Customer properties:', {
+    name: order.customer_name,
+    email: order.customer_email,
+    phone: order.customer_phone
+  });
+  selectedOrder.value = { ...order };
+  console.log('🔍 Selected order after assignment:', selectedOrder.value);
+  showOrderDetailsModal.value = true;
+};
+
+// Save tracking information and status
 const saveTrackingInfo = async () => {
   if (!selectedOrder.value) return;
   
   try {
     trackingLoading.value = true;
-    const shippingData = {
-      trackingNumber: trackingForm.value.trackingNumber,
-      shippingProvider: trackingForm.value.shippingProvider,
-      estimatedDelivery: trackingForm.value.estimatedDelivery,
-      shippingNotes: trackingForm.value.shippingNotes
-    };
     
-    await ordersApi.updateOrderShipping(selectedOrder.value.order_id, shippingData);
+    // If admin provided both a manual shipping status and a tracking number,
+    // clarify precedence: we'll apply the tracking update first and then
+    // the manual shipping status so the explicit choice by the admin takes
+    // final precedence when both are sent together.
+    if (trackingForm.value.trackingNumber || trackingForm.value.shippingNotes) {
+      console.log(`🔄 Updating tracking info for order ${selectedOrder.value.order_id}`);
+      const shippingData = {
+        trackingNumber: trackingForm.value.trackingNumber,
+        // Include provider when available to satisfy API typing
+        shippingProvider: (selectedOrder.value as any)?.shipping_provider || (selectedOrder.value as any)?.provider_name || '',
+        shippingNotes: trackingForm.value.shippingNotes
+      };
+      await ordersApi.updateOrderShipping(selectedOrder.value.order_id, shippingData);
+      console.log(`✅ Tracking update completed`);
+
+      // If admin also changed the shipping status in the same form, warn in logs
+      if (newShippingStatus.value) {
+        console.warn(`⚠️ Both trackingNumber and manual shipping status provided. Applying tracking update first, then manual status: ${newShippingStatus.value}`);
+      }
+    }
+
+    // Finally, update shipping status if changed (apply last so admin explicit choice wins)
+    if (newShippingStatus.value) {
+      console.log(`🔄 Updating order ${selectedOrder.value.order_id} shipping status to: ${newShippingStatus.value}`);
+      await ordersApi.updateOrderShippingStatus(selectedOrder.value.order_id, newShippingStatus.value);
+      console.log(`✅ Status update completed`);
+    }
     
+    console.log(`🔄 Reloading orders...`);
+    // Small delay to ensure backend has processed the update
+    await new Promise(resolve => setTimeout(resolve, 500));
     await loadOrders();
+    updateSelectedOrder();
+    console.log(`✅ Orders reloaded and selected order updated`);
+    
     showTrackingModal.value = false;
-    toast.success('Información de envío actualizada');
+    
+    // Show appropriate message based on what was updated
+    if (newShippingStatus.value && trackingForm.value.trackingNumber) {
+      const statusMessages: Record<string, string> = {
+        'pending': 'Pendiente',
+        'prepared': 'Preparado', 
+        'shipped': 'Enviado'
+      };
+      toast.success(`Estado cambiado a ${statusMessages[newShippingStatus.value] || newShippingStatus.value} y tracking agregado`);
+    } else if (newShippingStatus.value) {
+      const statusMessages: Record<string, string> = {
+        'pending': 'Estado cambiado a Pendiente',
+        'prepared': 'Estado cambiado a Preparado',
+        'shipped': 'Estado cambiado a Enviado'
+      };
+      toast.success(statusMessages[newShippingStatus.value] || `Estado cambiado a ${newShippingStatus.value}`);
+    } else if (trackingForm.value.trackingNumber) {
+      toast.success('Número de seguimiento agregado - El pedido ahora está marcado como enviado');
+    } else {
+      toast.success('Información de envío actualizada');
+    }
     
     // Reset form
     trackingForm.value = {
       trackingNumber: '',
-      shippingProvider: '',
-      estimatedDelivery: '',
       shippingNotes: ''
     };
+    newShippingStatus.value = '';
   } catch (error) {
     console.error('Error al guardar la información de envío:', error);
     toast.error('Error al guardar la información de envío');
@@ -829,10 +991,7 @@ const saveTrackingInfo = async () => {
 const coordinatePickup = async (order: Order) => {
   try {
     loading.value = true;
-    await ordersApi.updateOrderStatus(order.order_id, {
-      status: 'ready_for_pickup',
-      adminNotes: 'El cliente será notificado para coordinar la recogida'
-    });
+    await ordersApi.updateOrderShippingStatus(order.order_id, 'ready_for_pickup');
     await loadOrders();
     toast.success('Pedido listo para recogida. Se notificará al cliente.');
   } catch (error) {
@@ -848,7 +1007,7 @@ const markAsShipped = async (order: Order | number) => {
   
   try {
     loading.value = true;
-    await ordersApi.updateOrderStatus(orderId, { status: 'shipped' });
+    await ordersApi.updateOrderShippingStatus(orderId, 'shipped');
     await loadOrders();
     toast.success('Pedido marcado como enviado');
   } catch (error) {
@@ -937,15 +1096,24 @@ const bulkMarkShipped = async () => {
 const loadOrders = async () => {
   try {
     loading.value = true;
+    console.log(`🔄 Loading orders from API...`);
     const response = await ordersApi.getOrdersWithCustomerInfo();
+    console.log(`📦 Received ${response.length} orders from API`);
     
     // Guardar todos los pedidos
     allOrders.value = response.map((order: any): Order => {
-      // Transformación de datos original
+      // Preserve original internal status and prefer backend-provided `shipping_status` when present
+      const origStatus = order.status || 'pending';
+      const normShippingStatus = order.shipping_status || origStatus;
+
       return {
         order_id: Number(order.order_id || order.id) || 0,
-        status: order.status || 'pending',
-        shipping_status: order.shipping_status || 'pending',
+        // Keep the original order.status as-is (internal status)
+        status: origStatus,
+        // Keep payment_status explicit
+        payment_status: order.payment_status || 'pending',
+        // Expose shipping_status separately (preferred for shipping UI)
+        shipping_status: normShippingStatus,
         customer_name: order.customer?.name || order.customer_name || 'Cliente no encontrado',
         customer_email: order.customer?.email || order.customer_email || '',
         shipping_address: order.shipping_address || '',
@@ -960,15 +1128,30 @@ const loadOrders = async () => {
         shipped_at: order.shipped_at || undefined,
         estimated_delivery: order.estimated_delivery || undefined,
         delivery_method: order.delivery_method || undefined,
-        can_add_tracking: Boolean(order.can_add_tracking) || (order.shipping_status === 'preparing' || order.shipping_status === 'ready_to_ship'),
-        can_mark_shipped: Boolean(order.can_mark_shipped) || (order.shipping_status === 'ready_to_ship' || order.tracking_number),
-        can_coordinate_pickup: Boolean(order.can_coordinate_pickup) || (order.delivery_method === 'local_pickup' && order.status === 'approved')
+        // Use normalized shipping status when deciding allowed actions
+        can_add_tracking: Boolean(order.can_add_tracking) || (normShippingStatus === 'preparing' || normShippingStatus === 'ready_to_ship'),
+        can_mark_shipped: Boolean(order.can_mark_shipped) || (normShippingStatus === 'ready_to_ship' || Boolean(order.tracking_number)),
+        can_coordinate_pickup: Boolean(order.can_coordinate_pickup) || (order.delivery_method === 'local_pickup' && order.payment_status === 'approved'),
+        // IMPORTANTE: Preservar el objeto customer completo con fallbacks
+        customer: order.customer ? {
+          ...order.customer,
+          name: order.customer.name || order.customer_name,
+          email: order.customer.email || order.customer_email,
+          phone: order.customer.phone || order.customer_phone,
+          address: order.customer.address || order.shipping_address
+        } : {
+          name: order.customer_name || '',
+          email: order.customer_email || '',
+          phone: order.customer_phone || '',
+          address: order.shipping_address || ''
+        }
       };
     });
     
-    // ...
   } catch (error: any) {
-    // ...
+    console.error('Error loading orders:', error);
+    toast.error('Error al cargar los pedidos');
+    allOrders.value = [];
   } finally {
     loading.value = false;
   }
@@ -1003,15 +1186,6 @@ const loadStatistics = async () => {
   }
 };
 
-// Load shipping providers
-const loadShippingProviders = async () => {
-  try {
-    const providers = await ordersApi.getShippingProviders();
-    shippingProviders.value = providers;
-  } catch (error) {
-    console.error('Error loading shipping providers:', error);
-  }
-};
 
 // Delete selected orders
 const deleteSelectedOrders = async () => {
@@ -1072,8 +1246,7 @@ onMounted(async () => {
   try {
     await Promise.all([
       loadOrders(),
-      loadStatistics(),
-      loadShippingProviders()
+      loadStatistics()
     ]);
   } catch (error) {
     console.error('Error initializing component:', error);

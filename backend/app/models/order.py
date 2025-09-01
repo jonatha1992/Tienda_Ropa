@@ -7,6 +7,7 @@ class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     customer_id: int = Field(foreign_key="customer.id")
     status: Optional[str] = None
+    shipping_status: str = Field(default="pending", max_length=20, description="pending, prepared, ready_to_ship, shipped, in_transit, delivered, failed")
     total: float = Field(ge=0)
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     

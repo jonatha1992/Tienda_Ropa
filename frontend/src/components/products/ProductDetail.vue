@@ -389,7 +389,7 @@
 
           <!-- Mobile Description -->
           <div class="space-y-3">
-            <h3 class="text-sm font-medium text-gray-900 font-heading">DescripciÃ³n</h3>
+            <h3 class="text-sm font-medium text-gray-900 font-heading">Descripcin</h3>
             <div class="text-sm text-gray-600 font-body" v-html="product.description"></div>
           </div>
 
@@ -670,7 +670,7 @@ const buttonText = computed(() => {
 const isOutOfStock = computed(() => {
   if (!product.value) return false;
   
-  // Para productos Ãºnicos (is_unique = true), verificar el stock directo
+  // Para productos unicos (is_unique = true), verificar el stock directo
   if (product.value.is_unique) {
     return (product.value.stock ?? 0) === 0;
   }
@@ -680,7 +680,7 @@ const isOutOfStock = computed(() => {
     return product.value.variants.every(variant => variant.stock === 0);
   }
   
-  // Si no hay variantes y no es Ãºnico, asumir que estÃ¡ disponible
+  // Si no hay variantes y no es unico, asumir que estÃ¡ disponible
   return false;
 });
 
@@ -793,7 +793,7 @@ const addToCart = () => {
       if (!selectedColor.value || !selectedSize.value) {
         toast.warning('Por favor selecciona color y talle');
       } else if (!selectedVariant.value || selectedVariant.value.stock <= 0) {
-        toast.warning('La combinaciÃ³n seleccionada no tiene stock disponible');
+        toast.warning('La combinacin seleccionada no tiene stock disponible');
       }
     }
     return;

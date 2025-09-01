@@ -212,7 +212,7 @@
             <p class="text-gray-700 leading-relaxed mb-4">
               Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos 
               sobre cambios significativos publicando la nueva política en nuestro sitio web 
-              y actualizando la fecha de "última actualizaciÃ³n".
+              y actualizando la fecha de "última actualizacin".
             </p>
             <p class="text-gray-700 leading-relaxed">
               Le recomendamos revisar esta política regularmente para mantenerse informado 

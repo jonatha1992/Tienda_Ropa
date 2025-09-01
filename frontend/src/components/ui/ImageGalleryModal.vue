@@ -32,7 +32,7 @@
           <div class="w-12 h-12 border-b-2 border-white rounded-full animate-spin"></div>
         </div>
         
-        <!-- Botones navegaciÃ³n -->
+        <!-- Botones navegacin -->
         <button 
           v-if="images.length > 1"
           @click="previousImage" 
@@ -276,7 +276,7 @@ const handleImageLoad = () => {
 
 const handleImageError = () => {
   imageLoading.value = false;
-  console.warn('Error cargando imagen en galerÃ­a');
+  console.warn('Error cargando imagen en galería');
 };
 
 const handleKeydown = (event: KeyboardEvent) => {

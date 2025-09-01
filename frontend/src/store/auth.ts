@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    // Función para actualizar token manualmente (Ãºtil cuando expira)
+    // Función para actualizar token manualmente (útil cuando expira)
     const refreshToken = async () => {
         if (firebaseUser.value) {
             try {

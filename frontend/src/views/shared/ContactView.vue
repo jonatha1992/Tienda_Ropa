@@ -5,7 +5,7 @@
         <h1 class="mb-6 text-3xl font-bold text-gray-900 font-heading">Contacto</h1>
         
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <!-- InformaciÃ³n de contacto -->
+          <!-- Informacin de contacto -->
           <div>
             <h2 class="mb-4 text-xl font-semibold text-gray-800 font-heading">Informaciòn de Contacto</h2>
             <div class="space-y-4">

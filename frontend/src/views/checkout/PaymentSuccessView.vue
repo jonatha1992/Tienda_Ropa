@@ -12,7 +12,7 @@
         <!-- Success Message -->
         <h1 class="mb-4 text-3xl font-bold text-gray-900">¡Pago exitoso!</h1>
         <p class="mb-8 text-lg text-gray-600">
-          Tu pago ha sido procesado correctamente. RecibirÃ¡s un email de confirmaciÃ³n en breve.
+          Tu pago ha sido procesado correctamente. RecibirÃ¡s un email de confirmacin en breve.
         </p>
         
         <!-- Order Details -->
@@ -22,7 +22,7 @@
             <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
               <div class="space-y-2">
                 <div class="flex justify-between">
-                  <span class="text-gray-600">NÃºmero de orden:</span>
+                  <span class="text-gray-600">Número de orden:</span>
                   <span class="font-medium">#{{ orderDetails.order_id }}</span>
                 </div>
                 <div class="flex justify-between">

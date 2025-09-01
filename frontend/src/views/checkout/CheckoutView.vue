@@ -486,13 +486,13 @@ const processOrder = async () => {
 
   // Double-check authentication
   if (!authStore.isAuthenticated) {
-    toast.error('Debes iniciar sesiÃ³n para completar la compra');
+    toast.error('Debes iniciar sesin para completar la compra');
     router.push('/auth');
     return;
   }
   
   if (cartStore.isEmpty) {
-    toast.error('Tu carrito estÃ¡ vacÃ­o');
+    toast.error('Tu carrito esta vacío');
     return;
   }
   

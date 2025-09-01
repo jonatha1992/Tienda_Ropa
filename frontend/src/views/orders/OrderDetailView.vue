@@ -45,8 +45,8 @@
               </p>
             </div>
             <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full"
-              :class="getStatusClass(order.status)">
-              {{ getStatusText(order.status) }}
+              :class="getShippingStatusClass(order.shipping_status || order.status)">
+              {{ getShippingStatusText(order.shipping_status || order.status) }}
             </span>
           </div>
         </div>
@@ -126,7 +126,7 @@
                 </div>
                 <div class="flex-1 min-w-0 ml-4">
                   <div class="flex items-center">
-                    <p class="text-sm font-medium text-gray-900">PreparaciÃ³n del EnvÃ­o</p>
+                    <p class="text-sm font-medium text-gray-900">Preparación del Envío</p>
                     <div class="flex ml-auto">
                       <svg v-if="order.tracking_number" class="w-5 h-5 text-green-600" viewBox="0 0 20 20"
                         fill="currentColor">
@@ -174,7 +174,7 @@
                   <div v-if="order.tracking_number" class="p-3 mt-2 rounded-md bg-blue-50">
                     <div class="flex items-center justify-between">
                       <div>
-                        <p class="text-sm font-medium text-blue-900">NÃºmero de Seguimiento</p>
+                        <p class="text-sm font-medium text-blue-900">Número de Seguimiento</p>
                         <p class="font-mono text-sm text-blue-700">{{ order.tracking_number }}</p>
                         <p v-if="order.shipping_provider" class="mt-1 text-xs text-blue-600">
                           Proveedor: {{ getProviderName(order.shipping_provider) }}
@@ -224,7 +224,7 @@
 
           <!-- Additional Shipping Notes -->
           <div v-if="order.delivery_notes_shipping" class="p-4 mt-6 rounded-md bg-gray-50">
-            <h3 class="mb-2 text-sm font-medium text-gray-900">Notas del EnvÃ­o</h3>
+            <h3 class="mb-2 text-sm font-medium text-gray-900">Notas del Envío</h3>
             <p class="text-sm text-gray-600">{{ order.delivery_notes_shipping }}</p>
           </div>
         </div>
@@ -264,7 +264,7 @@
               <dd class="text-sm font-medium text-green-600">-${{ order.discount.toLocaleString() }}</dd>
             </div>
             <div class="flex justify-between">
-              <dt class="text-sm text-gray-600">EnvÃ­o</dt>
+              <dt class="text-sm text-gray-600">Envío</dt>
               <dd class="text-sm font-medium text-gray-900">${{ order.shipping_cost?.toLocaleString() }}</dd>
             </div>
             <div class="flex justify-between pt-3 border-t">
@@ -276,7 +276,7 @@
 
         <!-- Shipping Information -->
         <div class="p-6 bg-white rounded-lg shadow">
-          <h2 class="mb-4 text-lg font-medium text-gray-900">InformaciÃ³n de EnvÃ­o</h2>
+          <h2 class="mb-4 text-lg font-medium text-gray-900">Informacin de Envio</h2>
           <div class="text-sm text-gray-600">
             <p class="font-medium text-gray-900">{{ order.customer_name }}</p>
             <p>{{ order.shipping_address }}</p>
@@ -297,7 +297,7 @@
           </svg>
         </div>
         <h3 class="mb-2 text-lg font-medium text-gray-900">Pedido no encontrado</h3>
-        <p class="mb-6 text-gray-600">No se pudo cargar la informaciÃ³n del pedido</p>
+        <p class="mb-6 text-gray-600">No se pudo cargar la informacin del pedido</p>
         <router-link to="/orders"
           class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800">
           Volver a mis pedidos
@@ -313,6 +313,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../../store/auth';
 import { useToast } from 'vue-toastification';
 import { ordersApi } from '../../config/api';
+import { 
+  getShippingStatusClass, 
+  getShippingStatusText,
+  getPaymentStatusClass,
+  getPaymentStatusText 
+} from '../../utils/orderStatusUtils';
 
 const route = useRoute();
 const router = useRouter();
@@ -327,7 +333,7 @@ const orderId = computed(() => route.params.id as string);
 onMounted(async () => {
   // Check authentication
   if (!authStore.isAuthenticated) {
-    toast.warning('Debes iniciar sesiÃ³n para ver tus pedidos');
+    toast.warning('Debes iniciar sesin para ver tus pedidos');
     router.push('/auth');
     return;
   }
@@ -339,8 +345,127 @@ const loadOrderDetails = async () => {
   try {
     loading.value = true;
     console.log(' Cargando detalles del pedido:', orderId.value);
-    order.value = await ordersApi.getOrder(parseInt(orderId.value));
-    console.log('✔️ Detalles del pedido cargados:', order.value);
+
+    // First, check if the OrdersView passed the order via history.state
+    const passedOrder = (window.history && (window.history.state as any)?.order) ? (window.history.state as any).order : null;
+    if (passedOrder) {
+      console.log('ℹ️ Order passed via history.state, using passed object:', passedOrder);
+      // Normalize minimal fields in the passed object
+      if (passedOrder.order_id && !passedOrder.id) passedOrder.id = passedOrder.order_id;
+      // Flatten customer if exists
+      if (passedOrder.customer) {
+        passedOrder.customer_name = passedOrder.customer.name || passedOrder.customer_name || '';
+        passedOrder.customer_email = passedOrder.customer.email || passedOrder.customer_email || '';
+        passedOrder.shipping_address = passedOrder.shipping_address || passedOrder.customer.address || '';
+        passedOrder.shipping_city = passedOrder.shipping_city || passedOrder.customer.city || '';
+        passedOrder.shipping_postal_code = passedOrder.shipping_postal_code || passedOrder.customer.postal_code || '';
+      }
+
+      // Use the passed order as the starting point
+      let enrichedOrder: any = passedOrder;
+
+      // If passed order already includes items and customer, skip network calls
+      const hasItems = enrichedOrder.items && enrichedOrder.items.length > 0;
+      const hasCustomer = enrichedOrder.customer || enrichedOrder.customer_name || enrichedOrder.customer_email;
+
+      if (!hasItems || !hasCustomer) {
+        // Fallback to fetching enriched data if necessary (admin/my-orders)
+        try {
+          console.log('ℹ️ Passed order missing nested data, attempting to load enriched order from endpoints...');
+
+          if (authStore.hasAdminAccess) {
+            const adminOrders: any[] = await ordersApi.getOrdersWithCustomerInfo();
+            const found = adminOrders.find(o => Number(o.id || o.order_id) === Number(passedOrder.id || passedOrder.order_id || orderId.value));
+            if (found) {
+              enrichedOrder = found;
+              console.log('✔️ Enriched order found via admin endpoint:', found);
+            }
+          } else {
+            const myOrders: any[] = await ordersApi.getMyOrders();
+            const found = myOrders.find(o => Number(o.id || o.order_id) === Number(passedOrder.id || passedOrder.order_id || orderId.value));
+            if (found) {
+              enrichedOrder = found;
+              console.log('✔️ Enriched order found via my-orders endpoint:', found);
+            }
+          }
+        } catch (err) {
+          console.warn('⚠️ Could not load enriched order data for passed order:', err);
+        }
+      }
+
+      // Final normalization
+      if (enrichedOrder && enrichedOrder.order_id && !enrichedOrder.id) {
+        enrichedOrder.id = enrichedOrder.order_id;
+      }
+
+      if (enrichedOrder && enrichedOrder.customer) {
+        enrichedOrder.customer_name = enrichedOrder.customer.name || enrichedOrder.customer_name || '';
+        enrichedOrder.customer_email = enrichedOrder.customer.email || enrichedOrder.customer_email || '';
+        enrichedOrder.shipping_address = enrichedOrder.shipping_address || enrichedOrder.customer.address || '';
+        enrichedOrder.shipping_city = enrichedOrder.shipping_city || enrichedOrder.customer.city || '';
+        enrichedOrder.shipping_postal_code = enrichedOrder.shipping_postal_code || enrichedOrder.customer.postal_code || '';
+      }
+
+      order.value = enrichedOrder;
+      console.log('✔️ Final order used in view (from passed state):', order.value);
+
+      return;
+    }
+
+    // No passed order: First attempt: basic order endpoint
+    console.log('ℹ️ No order passed via state — fetching basic order from API');
+    const basicOrder: any = await ordersApi.getOrder(parseInt(orderId.value));
+    console.log('✔️ Basic order loaded:', basicOrder);
+
+    let enrichedOrder: any = basicOrder;
+
+    // If the basic order is missing items or customer info, try to fetch an enriched version.
+    const missingItems = !basicOrder || !basicOrder.items || basicOrder.items.length === 0;
+    const missingCustomer = !basicOrder || (!basicOrder.customer && !basicOrder.customer_name && !basicOrder.customer_email);
+
+    if (missingItems || missingCustomer) {
+      try {
+        console.log('ℹ️ Basic order missing nested data, attempting to load enriched order...');
+
+        // Prefer admin endpoint when user has admin access (returns customer + items)
+        if (authStore.hasAdminAccess) {
+          const adminOrders: any[] = await ordersApi.getOrdersWithCustomerInfo();
+          const found = adminOrders.find(o => Number(o.id || o.order_id) === Number(basicOrder.id || basicOrder.order_id || orderId.value));
+          if (found) {
+            enrichedOrder = found;
+            console.log('✔️ Enriched order found via admin endpoint:', found);
+          }
+        } else {
+          // For regular users, try the my-orders endpoint (which includes items)
+          const myOrders: any[] = await ordersApi.getMyOrders();
+          const found = myOrders.find(o => Number(o.id || o.order_id) === Number(basicOrder.id || basicOrder.order_id || orderId.value));
+          if (found) {
+            enrichedOrder = found;
+            console.log('✔️ Enriched order found via my-orders endpoint:', found);
+          }
+        }
+      } catch (err) {
+        console.warn('⚠️ Could not load enriched order data:', err);
+      }
+    }
+
+    // Final normalization: ensure template fields exist (backwards compatible)
+    // Some endpoints use `id`, some admin logic may include `order_id` — normalize to `id`.
+    if (enrichedOrder && enrichedOrder.order_id && !enrichedOrder.id) {
+      enrichedOrder.id = enrichedOrder.order_id;
+    }
+
+    // Flatten simple customer fields for compatibility with template
+    if (enrichedOrder && enrichedOrder.customer) {
+      enrichedOrder.customer_name = enrichedOrder.customer.name || enrichedOrder.customer_name || '';
+      enrichedOrder.customer_email = enrichedOrder.customer.email || enrichedOrder.customer_email || '';
+      enrichedOrder.shipping_address = enrichedOrder.shipping_address || enrichedOrder.customer.address || '';
+      enrichedOrder.shipping_city = enrichedOrder.shipping_city || enrichedOrder.customer.city || '';
+      enrichedOrder.shipping_postal_code = enrichedOrder.shipping_postal_code || enrichedOrder.customer.postal_code || '';
+    }
+
+    order.value = enrichedOrder;
+    console.log('✔️ Final order used in view:', order.value);
   } catch (error) {
     console.error('Error loading order details:', error);
     toast.error('Error al cargar los detalles del pedido');
@@ -359,47 +484,7 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'pending_payment':
-      return 'bg-orange-100 text-orange-800';
-    case 'approved':
-      return 'bg-green-100 text-green-800';
-    case 'shipped':
-      return 'bg-blue-100 text-blue-800';
-    case 'delivered':
-      return 'bg-green-100 text-green-800';
-    case 'rejected':
-      return 'bg-red-100 text-red-800';
-    case 'cancelled':
-      return 'bg-red-100 text-red-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'Pendiente';
-    case 'pending_payment':
-      return 'Esperando Pago';
-    case 'approved':
-      return 'Aprobado';
-    case 'shipped':
-      return 'Enviado';
-    case 'delivered':
-      return 'Entregado';
-    case 'rejected':
-      return 'Rechazado';
-    case 'cancelled':
-      return 'Cancelado';
-    default:
-      return 'Desconocido';
-  }
-};
+// Status functions now imported from centralized orderStatusUtils
 
 const formatDateTime = (dateString: string) => {
   if (!dateString) return '';
@@ -413,22 +498,7 @@ const formatDateTime = (dateString: string) => {
   });
 };
 
-const getPaymentStatusText = (paymentStatus: string) => {
-  switch (paymentStatus) {
-    case 'pending':
-      return 'Pago Pendiente';
-    case 'pending_payment':
-      return 'Esperando Pago';
-    case 'approved':
-      return 'Pago Confirmado';
-    case 'rejected':
-      return 'Pago Rechazado';
-    case 'cancelled':
-      return 'Pago Cancelado';
-    default:
-      return 'Estado de Pago Desconocido';
-  }
-};
+// Payment status text function now imported from centralized orderStatusUtils
 
 const getPaymentTimelineClass = (paymentStatus: string) => {
   switch (paymentStatus) {
@@ -457,7 +527,7 @@ const getPaymentDescription = (paymentMethod: string, paymentStatus: string) => 
       case 'cash':
         return 'TendrÃ¡s que pagar en efectivo al recibir';
       default:
-        return 'Pago pendiente de confirmaciÃ³n';
+        return 'Pago pendiente de confirmacin';
     }
   } else if (paymentStatus === 'pending') {
     return 'Estamos verificando tu pago';
@@ -476,11 +546,11 @@ const getShippingPreparationClass = (order: any) => {
 
 const getPreparationDescription = (order: any) => {
   if (order.tracking_number) {
-    return 'Tu pedido estÃ¡ listo y tiene nÃºmero de seguimiento asignado';
+    return 'Tu pedido está listo y tiene número de seguimiento asignado';
   } else if (order.status === 'approved' && order.payment_status === 'approved') {
-    return 'Estamos preparando tu pedido para el envÃ­o';
+    return 'Estamos preparando tu pedido para el envío';
   }
-  return 'Esperando confirmaciÃ³n de pago para preparar envÃ­o';
+  return 'Esperando confirmación de pago para preparar envío';
 };
 
 const getShippedTimelineClass = (order: any) => {

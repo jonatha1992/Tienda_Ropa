@@ -1,26 +1,26 @@
 ﻿<template>
-  <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="bg-white shadow rounded-lg p-8 text-center">
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-3xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <div class="p-8 text-center bg-white rounded-lg shadow">
         <!-- Error Icon -->
-        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
-          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-red-100 rounded-full">
+          <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
         
         <!-- Error Message -->
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">Pago no procesado</h1>
-        <p class="text-lg text-gray-600 mb-8">
-          Hubo un problema al procesar tu pago. No te preocupes, no se realizÃ³ ningÃºn cargo.
+        <h1 class="mb-4 text-3xl font-bold text-gray-900">Pago no procesado</h1>
+        <p class="mb-8 text-lg text-gray-600">
+          Hubo un problema al procesar tu pago. No te preocupes, no se realizó ningún cargo.
         </p>
         
         <!-- Order Details -->
-        <div v-if="orderDetails" class="bg-gray-50 rounded-lg p-6 mb-8">
-          <h2 class="text-lg font-medium text-gray-900 mb-4">Detalles del pedido</h2>
+        <div v-if="orderDetails" class="p-6 mb-8 rounded-lg bg-gray-50">
+          <h2 class="mb-4 text-lg font-medium text-gray-900">Detalles del pedido</h2>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-600">NÃºmero de orden:</span>
+              <span class="text-gray-600">Número de orden:</span>
               <span class="font-medium">#{{ orderDetails.order_id }}</span>
             </div>
             <div class="flex justify-between">
@@ -39,21 +39,21 @@
           <button
             @click="retryPayment"
             :disabled="!orderDetails"
-            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400 transition-colors"
+            class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white transition-colors bg-gray-800 border border-transparent rounded-md sm:w-auto hover:bg-gray-900 disabled:bg-gray-400"
           >
             Intentar nuevamente
           </button>
           
           <router-link
             to="/cart"
-            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-md sm:w-auto hover:bg-gray-50"
           >
             Volver al carrito
           </router-link>
           
           <router-link
             to="/"
-            class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-md sm:w-auto hover:bg-gray-50"
           >
             Volver al inicio
           </router-link>

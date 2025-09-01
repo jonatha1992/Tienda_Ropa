@@ -1,5 +1,6 @@
 from typing import List
 from datetime import datetime
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Body
@@ -10,6 +11,8 @@ from app.db.session import get_session
 from app.models.inventory import Inventory
 from app.models.product import Product
 
+# Configurar logger
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 

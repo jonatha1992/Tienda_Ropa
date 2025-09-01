@@ -3,11 +3,11 @@ import { auth } from './firebase';
 import { config } from './app';
 
 // Importar tipos de usuarios
-import type { 
-  Role, 
+import type {
+  Role,
   RoleType
 } from '../types/users/role.types';
-import type { 
+import type {
   User,
   UserWithRoles,
   UserCreateData,
@@ -17,10 +17,10 @@ import type {
 } from '../types/users/user.types';
 
 // Importar tipos de productos
-import type { 
-  Color, 
-  Category, 
-  Size, 
+import type {
+  Color,
+  Category,
+  Size,
   Product,
   ProductImage,
   ProductVariant,
@@ -29,9 +29,9 @@ import type {
 } from '../types/products/product.types';
 
 // Importar tipos de stock
-import type { 
-  StockCheckItem, 
-  StockCheckResponse 
+import type {
+  StockCheckItem,
+  StockCheckResponse
 } from '../types/stock';
 
 // Importar tipos de órdenes
@@ -64,11 +64,11 @@ const setupResponseInterceptors = (client: AxiosInstance) => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
-      
+
       // Si el error es 401 (no autorizado) y no es una solicitud de refresco
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        
+
         try {
           // Intentar refrescar el token
           const user = auth.currentUser;
@@ -86,7 +86,7 @@ const setupResponseInterceptors = (client: AxiosInstance) => {
           return Promise.reject(refreshError);
         }
       }
-      
+
       return Promise.reject(error);
     }
   );
@@ -120,7 +120,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response) {
       const { status, data } = error.response;
-      
+
       // Manejar respuestas HTML inesperadas
       if (typeof data === 'string' && data.startsWith('<!DOCTYPE html>')) {
         console.error('❌ El servidor devolvió HTML en lugar de JSON. Posibles causas:', {
@@ -133,12 +133,12 @@ apiClient.interceptors.response.use(
             'Error interno del servidor'
           ]
         });
-        
+
         const errorHtml = new Error(`El servidor devolvió una respuesta HTML. Verifica si el backend está en ejecución en ${config.backendUrl}`);
         (errorHtml as any).isHtmlResponse = true;
         return Promise.reject(errorHtml);
       }
-      
+
       // Registrar errores (excepto 401 que ya se maneja en el interceptor de respuesta)
       if (status !== 401) {
         console.error(`❌ Error de API (${status}): ${error.config.method?.toUpperCase()} ${error.config.url}`, {
@@ -153,7 +153,7 @@ apiClient.interceptors.response.use(
       // Error al configurar la petición
       console.error('❌ Error al configurar la petición:', error.message);
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -459,9 +459,23 @@ export const ordersApi = {
     return response.data;
   },
 
-  // Update order status (admin)
-  async updateOrderStatus(orderId: number, statusData: { status: string; adminNotes?: string }): Promise<any> {
+  // Update order PAYMENT status only (admin)
+  async updateOrderPaymentStatus(orderId: number, statusData: { status: string; adminNotes?: string }): Promise<any> {
     const response = await apiClient.put(`/orders/${orderId}/status`, statusData);
+    return response.data;
+  },
+
+  // Update order shipping status manually (admin)
+  async updateOrderShippingStatus(orderId: number, shippingStatus: string): Promise<any> {
+    console.log(`🔄 API: Updating order ${orderId} shipping status to: ${shippingStatus}`);
+    console.log(`📡 Sending request to: /orders/${orderId}/shipping-status`);
+    console.log(`📦 Payload:`, { shipping_status: shippingStatus });
+
+    const response = await apiClient.put(`/orders/${orderId}/shipping-status`, {
+      shipping_status: shippingStatus
+    });
+
+    console.log(`✅ API response:`, response.data);
     return response.data;
   },
 
@@ -506,6 +520,12 @@ export const ordersApi = {
     const response = await apiClient.post(`/admin/shipping/orders/${orderId}/mark-shipped`, {
       send_notification: true
     });
+    return response.data;
+  }
+  ,
+  // Update order status (general purpose) — kept for compatibility with components
+  async updateOrderStatus(orderId: number, updates: any): Promise<any> {
+    const response = await apiClient.put(`/orders/${orderId}`, updates);
     return response.data;
   }
 };
@@ -658,13 +678,13 @@ export const productsApi = {
   async uploadProductImage(productId: number, file: File): Promise<{ imageUrl: string }> {
     const formData = new FormData();
     formData.append('image', file);
-    
+
     const response = await apiClient.post(`/products/${productId}/images`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     return response.data;
   },
 

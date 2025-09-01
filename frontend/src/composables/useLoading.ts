@@ -35,14 +35,14 @@ export function useLoading() {
   };
   const isRouteLoading = computed(() => routeLoading.value);
 
-  // NOTA: showSmartLoading ya no se usa para navegaciÃ³n de rutas,
-  // solo para operaciones especÃ­ficas como agregar al carrito, etc.
-  // La navegaciÃ³n de rutas ahora usa ProgressBar (globalProgressBar).
-  
-  // Loading inteligente - solo muestra loading si la operaciÃ³n tarda mÃ¡s del umbral
+  // NOTA: showSmartLoading ya no se usa para navegación de rutas,
+  // solo para operaciones específicas como agregar al carrito, etc.
+  // La navegación de rutas ahora usa ProgressBar (globalProgressBar).
+
+  // Loading inteligente - solo muestra loading si la operación tarda más del umbral
   const showSmartLoading = (
-    promise: Promise<any>, 
-    message: string = 'Cargando...', 
+    promise: Promise<any>,
+    message: string = 'Cargando...',
     threshold: number = 200
   ) => {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -55,11 +55,11 @@ export function useLoading() {
     }, threshold);
 
     return promise.finally(() => {
-      // Limpiar timeout si la operaciÃ³n terminÃ³ rÃ¡pido
+      // Limpiar timeout si la operacin termin rÃ¡pido
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      // Ocultar loading solo si se mostrÃ³
+      // Ocultar loading solo si se mostr
       if (loadingShown) {
         hideLoading();
       }

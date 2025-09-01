@@ -47,7 +47,7 @@ const allProducts = ref<Product[]>([]);
 const productsPerPage = ref(12);
 const currentPage = ref(1);
 
-// Filtrar productos basado en la categorÃ­a del query parameter
+// Filtrar productos basado en la categoría del query parameter
 const filteredProducts = computed(() => {
   const category = route.query.category as string;
   if (!allProducts.value) {
@@ -61,7 +61,7 @@ const filteredProducts = computed(() => {
   );
 });
 
-// PaginaciÃ³n de productos
+// Paginacin de productos
 const displayProducts = computed(() => {
   const endIndex = currentPage.value * productsPerPage.value;
   return filteredProducts.value.slice(0, endIndex);

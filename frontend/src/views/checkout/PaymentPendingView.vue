@@ -12,7 +12,7 @@
         <!-- Pending Message -->
         <h1 class="mb-4 text-3xl font-bold text-gray-900">Pago pendiente</h1>
         <p class="mb-8 text-lg text-gray-600">
-          Tu pago estÃ¡ siendo procesado. Te notificaremos cuando se complete la transacciÃ³n.
+          Tu pago estÃ¡ siendo procesado. Te notificaremos cuando se complete la transaccin.
         </p>
         
         <!-- Order Details -->
@@ -20,7 +20,7 @@
           <h2 class="mb-4 text-lg font-medium text-gray-900">Detalles de tu pedido</h2>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-600">NÃºmero de orden:</span>
+              <span class="text-gray-600">Número de orden:</span>
               <span class="font-medium">#{{ orderDetails.order_id }}</span>
             </div>
             <div class="flex justify-between">
@@ -103,7 +103,7 @@ const checkPaymentStatus = async () => {
     const updatedDetails = await paymentsApi.getPaymentStatus(orderDetails.value.order_id);
     orderDetails.value = updatedDetails;
     
-    // Redirigir segÃºn el nuevo estado
+    // Redirigir segun el nuevo estado
     if (updatedDetails.payment_status === 'approved') {
       toast.success('¡Pago aprobado!');
       router.push(`/payment/success?order_id=${updatedDetails.order_id}`);

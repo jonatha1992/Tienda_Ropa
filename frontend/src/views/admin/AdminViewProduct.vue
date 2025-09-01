@@ -1064,7 +1064,7 @@ async function saveProduct() {
   );
 
   if (!authStore.token) {
-    toast.error('No estás autenticado. Por favor inicia sesiÃ³n.');
+    toast.error('No estás autenticado. Por favor inicia sesin.');
     hideLoading();
     return;
   }
@@ -1168,7 +1168,7 @@ async function deleteProduct(id?: number) {
   if (!id) return;
 
   if (!authStore.token) {
-    toast.error('No estás autenticado. Por favor inicia sesiÃ³n.');
+    toast.error('No estás autenticado. Por favor inicia sesin.');
     return;
   }
 
@@ -1257,8 +1257,8 @@ async function uploadImages(): Promise<string[]> {
       // NUEVO: Comprimir y convertir a WebP
       const compressedFile = await compressToWebP(file);
       
-      // Generar nombre con extensiÃ³n .webp
-      const originalName = file.name.replace(/\.[^/.]+$/, ''); // Remover extensiÃ³n original
+      // Generar nombre con extensin .webp
+      const originalName = file.name.replace(/\.[^/.]+$/, ''); // Remover extensin original
       const fileName = `${Date.now()}_${originalName}.webp`;
       const fileRef = storageRef(storage, `products/${fileName}`);
 

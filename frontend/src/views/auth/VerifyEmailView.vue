@@ -4,7 +4,7 @@
       <div class="text-center">
         <h2 class="text-3xl font-light text-gray-900">Verifica tu Email</h2>
         <p class="mt-2 text-sm text-gray-600">
-          Te hemos enviado un cÃ³digo de verificaciÃ³n a tu email
+          Te hemos enviado un cdigo de verificacin a tu email
         </p>
       </div>
     </div>
@@ -33,7 +33,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <h3 class="mb-2 text-lg font-medium text-gray-900">Error de VerificaciÃ³n</h3>
+          <h3 class="mb-2 text-lg font-medium text-gray-900">Error de Verificacin</h3>
           <p class="mb-4 text-sm text-gray-600">{{ errorMessage }}</p>
           <button 
             @click="showManualForm = true; verificationStatus = 'pending'"
@@ -66,7 +66,7 @@
           </div>
 
           <div>
-            <label for="code" class="block text-sm font-medium text-gray-700">CÃ³digo de VerificaciÃ³n</label>
+            <label for="code" class="block text-sm font-medium text-gray-700">Cdigo de Verificacin</label>
             <input
               v-model="verificationForm.code"
               type="text"
@@ -77,7 +77,7 @@
               placeholder="123456"
               @input="formatCode"
             >
-            <p class="mt-1 text-xs text-gray-500">Ingresa el cÃ³digo de 6 dÃ­gitos que recibiste por email</p>
+            <p class="mt-1 text-xs text-gray-500">Ingresa el cdigo de 6 dígitos que recibiste por email</p>
           </div>
 
           <button
@@ -247,7 +247,7 @@ const resendVerificationEmail = async () => {
       email: verificationForm.value.email
     });
     
-    toast.success('CÃ³digo de verificaciÃ³n reenviado');
+    toast.success('Cdigo de verificacin reenviado');
     
     // Start cooldown
     resendCooldown.value = 60;
@@ -259,7 +259,7 @@ const resendVerificationEmail = async () => {
     }, 1000);
     
   } catch (error) {
-    toast.error('Error al reenviar el cÃ³digo');
+    toast.error('Error al reenviar el cdigo');
     console.error('Resend error:', error);
   } finally {
     resending.value = false;

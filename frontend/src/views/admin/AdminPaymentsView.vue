@@ -3,7 +3,7 @@
     <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 font-heading">GestiÃ³n de Pagos</h1>
+        <h1 class="text-3xl font-bold text-gray-900 font-heading">Gestin de Pagos</h1>
         <p class="mt-2 text-sm font-body text-body-text">
           Administra verificaciones de transferencias, entregas y estados de pago
         </p>
@@ -45,7 +45,7 @@
               </div>
               <div class="flex-1 w-0 ml-5">
                 <dl>
-                  <dt class="text-sm font-medium truncate font-body text-body-text">Pendientes de verificaciÃ³n</dt>
+                  <dt class="text-sm font-medium truncate font-body text-body-text">Pendientes de verificacin</dt>
                   <dd class="text-lg font-medium font-body text-body-text">{{ stats.pending_verification }}</dd>
                 </dl>
               </div>
@@ -144,7 +144,7 @@
           </div>
 
           <div>
-            <label for="verificationRequired" class="block text-sm font-medium font-body text-body-text">VerificaciÃ³n</label>
+            <label for="verificationRequired" class="block text-sm font-medium font-body text-body-text">Verificacin</label>
             <select
               v-model="filters.verification_required"
               id="verificationRequired"
@@ -152,8 +152,8 @@
               class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
             >
               <option class="font-body" value="">Todos</option>
-              <option class="font-body" value="true">Requiere verificaciÃ³n</option>
-              <option class="font-body" value="false">No requiere verificaciÃ³n</option>
+              <option class="font-body" value="true">Requiere verificacin</option>
+              <option class="font-body" value="false">No requiere verificacin</option>
             </select>
           </div>
 
@@ -197,8 +197,8 @@
           <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900 font-heading">No hay Ã³rdenes</h3>
-          <p class="mt-1 text-sm font-body text-body-text">No se encontraron Ã³rdenes con los filtros seleccionados.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 font-heading">No hay rdenes</h3>
+          <p class="mt-1 text-sm font-body text-body-text">No se encontraron rdenes con los filtros seleccionados.</p>
         </div>
 
         <div v-else class="overflow-x-auto">
@@ -219,7 +219,7 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium font-body text-body-text">#{{ order.id }}</div>
                   <div v-if="order.verification_required" class="text-xs text-orange-600 font-body">
-                    Requiere verificaciÃ³n
+                    Requiere verificacin
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -229,7 +229,7 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium font-body text-body-text">${{ order.total?.toLocaleString() }}</div>
                   <div v-if="order.delivery_cost" class="text-xs font-body text-body-text">
-                    EnvÃ­o: ${{ order.delivery_cost.toLocaleString() }}
+                    Envío: ${{ order.delivery_cost.toLocaleString() }}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -307,13 +307,13 @@
           </div>
           
           <div>
-            <label for="adminNotes" class="block text-sm font-medium font-body text-body-text">Notas de verificaciÃ³n</label>
+            <label for="adminNotes" class="block text-sm font-medium font-body text-body-text">Notas de verificacin</label>
             <textarea
               v-model="transferForm.admin_notes"
               id="adminNotes"
               rows="3"
               class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-black focus:ring-black"
-              placeholder="Detalles de la verificaciÃ³n..."
+              placeholder="Detalles de la verificacin..."
             ></textarea>
           </div>
           
@@ -428,7 +428,7 @@
           
           <!-- Address Info -->
           <div v-if="selectedOrder.customer" class="pt-4 border-t">
-            <h4 class="mb-2 font-medium font-heading">DirecciÃ³n de entrega</h4>
+            <h4 class="mb-2 font-medium font-heading">Direccin de entrega</h4>
             <p class="text-sm font-body text-body-text">{{ formatCustomerAddress(selectedOrder.customer) }}</p>
             <div v-if="selectedOrder.customer.address_reference" class="mt-1 text-sm font-body text-body-text">
               <strong>Ref:</strong> {{ selectedOrder.customer.address_reference }}
@@ -524,7 +524,7 @@ const loadOrders = async () => {
     orders.value = await ordersApi.getOrdersWithFilters(processedFilters);
   } catch (error) {
     console.error('Error loading orders:', error);
-    toast.error('Error cargando Ã³rdenes');
+    toast.error('Error cargando rdenes');
   } finally {
     loading.value = false;
   }
@@ -719,7 +719,7 @@ const formatCustomerAddress = (customer: any) => {
   if (customer.city) parts.push(customer.city);
   if (customer.postal_code) parts.push(`CP ${customer.postal_code}`);
   if (customer.province) parts.push(customer.province);
-  return parts.join(', ') || 'DirecciÃ³n no especificada';
+  return parts.join(', ') || 'Direccin no especificada';
 };
 
 // Initialize

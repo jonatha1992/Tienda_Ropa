@@ -10,13 +10,15 @@ export function createCompleteOrder(order: Partial<Order>): Order {
     order_id: order.order_id || 0,
     status: order.status || 'pending',
     shipping_status: order.shipping_status || 'pending',
+    // Payment status (important for admin modals)
+    payment_status: order.payment_status || 'pending',
     customer_name: order.customer_name || '',
     customer_email: order.customer_email || '',
     shipping_address: order.shipping_address || '',
     total: order.total || 0,
     payment_method: order.payment_method || 'credit_card',
     created_at: order.created_at || new Date().toISOString(),
-    
+
     // Optional fields with proper null handling
     ...(order.customer_phone !== undefined && { customer_phone: order.customer_phone }),
     ...(order.tracking_number !== undefined && { tracking_number: order.tracking_number }),
@@ -28,7 +30,7 @@ export function createCompleteOrder(order: Partial<Order>): Order {
     ...(order.updated_at !== undefined && { updated_at: order.updated_at }),
     ...(order.shipped_at !== undefined && { shipped_at: order.shipped_at }),
     ...(order.delivery_method !== undefined && { delivery_method: order.delivery_method }),
-    
+
     // Computed properties with defaults
     can_add_tracking: order.can_add_tracking || false,
     can_mark_shipped: order.can_mark_shipped || false,

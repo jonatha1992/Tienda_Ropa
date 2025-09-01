@@ -1,9 +1,9 @@
 ﻿import { ref } from 'vue'
-import type { 
-  Product, 
-  ProductVariant, 
-  ColorType as Color, 
-  SizeType as Size 
+import type {
+  Product,
+  ProductVariant,
+  ColorType as Color,
+  SizeType as Size
 } from '../types/products'
 
 interface NotificationProductData {
@@ -25,16 +25,16 @@ let autoHideTimer: number | null = null
 
 export function useCartNotification() {
   const showNotification = (
-    product: Product, 
-    quantity: number, 
+    product: Product,
+    quantity: number,
     variantInfo?: { variant: ProductVariant; color: Color; size: Size }
   ) => {
-    // Preparar datos del producto para la notificaciÃ³n
-    const price = product.has_discount && product.discounted_price 
-      ? product.discounted_price 
+    // Preparar datos del producto para la notificacin
+    const price = product.has_discount && product.discounted_price
+      ? product.discounted_price
       : product.price
-    const image = product.images && product.images.length > 0 
-      ? product.images[0].image_url 
+    const image = product.images && product.images.length > 0
+      ? product.images[0].image_url
       : '/placeholder-image.jpg'
 
     productData.value = {
@@ -51,7 +51,7 @@ export function useCartNotification() {
     }
 
     isNotificationVisible.value = true
-    
+
     // Auto hide despuÃ©s de 3 segundos
     if (autoHideTimer) clearTimeout(autoHideTimer)
     autoHideTimer = window.setTimeout(() => {

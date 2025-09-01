@@ -119,11 +119,11 @@ const loading = ref({
 });
 
 const loadMasterData = async () => {
-  // Cargar categorÃ­as (todas, no solo las con stock para mostrar variedad)
+  // Cargar categorías (todas, no solo las con stock para mostrar variedad)
   try {
     categories.value = await masterDataApi.getCategories();
   } catch (error) {
-    console.error('Error cargando categorÃ­as:', error);
+    console.error('Error cargando categorías:', error);
   } finally {
     loading.value.categories = false;
   }

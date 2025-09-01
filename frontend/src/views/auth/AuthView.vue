@@ -166,7 +166,7 @@ const signInWithGoogle = async () => {
 
         // Agregar parÃ¡metros adicionales para mejor experiencia
         provider.setCustomParameters({
-            prompt: 'select_account' // Permite seleccionar cuenta si hay mÃºltiples
+            prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
         console.log('ðŸªŸ Intentando abrir popup de Google...')
@@ -199,7 +199,7 @@ const signInWithGoogle = async () => {
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
         loading.value = false
-        error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesiÃ³n con Google'
+        error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesin con Google'
     }
 }
 
@@ -218,16 +218,16 @@ const handleSubmit = async () => {
         }
 
         // El store detectarÃ¡ automÃ¡ticamente el cambio y redirigirÃ¡
-        // No necesitamos redirigir manualmente aquÃ­
+        // No necesitamos redirigir manualmente aquí
         loading.value = false
     } catch (err: any) {
         console.error('Error auth:', err)
-        error.value = getErrorMessage(err.code) || err.message || 'Error de autenticaciÃ³n'
+        error.value = getErrorMessage(err.code) || err.message || 'Error de autenticacin'
         loading.value = false
     }
 }
 
-// FunciÃ³n para traducir cÃ³digos de error de Firebase
+// Funcin para traducir cdigos de error de Firebase
 const getErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
         case 'auth/user-not-found':
@@ -241,7 +241,7 @@ const getErrorMessage = (errorCode: string): string => {
         case 'auth/invalid-email':
             return 'Email invÃ¡lido'
         case 'auth/popup-blocked':
-            return 'El navegador bloqueÃ³ el popup. Intenta permitir popups para este sitio.'
+            return 'El navegador bloque el popup. Intenta permitir popups para este sitio.'
         default:
             return ''
     }

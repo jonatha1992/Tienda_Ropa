@@ -36,9 +36,9 @@
               <div class="text-right">
                 <span 
                   class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full"
-                  :class="getStatusClass(order.status || '')"
+                  :class="getShippingStatusClass(order.shipping_status || order.status || '')"
                 >
-                  {{ getStatusText(order.status || '') }}
+                  {{ getShippingStatusText(order.shipping_status || order.status || '') }}
                 </span>
                 <p class="mt-1 text-lg font-medium text-gray-900">
                   ${{ order.total.toLocaleString() }}
@@ -70,7 +70,7 @@
                 </div>
                 <div class="flex-shrink-0">
                   <router-link
-                    :to="`/orders/${order.id}`"
+                    :to="{ path: `/orders/${order.id}`, state: { order } }"
                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
                   >
                     Ver detalles
@@ -147,9 +147,9 @@
                         Tu pedido estÃ¡ listo para retirar. Coordina tu horario de retiro:
                       </p>
                       <div class="p-3 text-sm bg-white rounded">
-                        <div class="mb-1 font-medium text-gray-900">InformaciÃ³n de contacto:</div>
+                        <div class="mb-1 font-medium text-gray-900">Informacin de contacto:</div>
                         <div class="text-gray-700">ðŸ“± WhatsApp: +54 9 11 1234-5678</div>
-                        <div class="text-gray-700">ðŸ“ DirecciÃ³n: Av. Ejemplo 123, CABA</div>
+                        <div class="text-gray-700">ðŸ“ Direccin: Av. Ejemplo 123, CABA</div>
                         <div class="text-gray-700">ðŸ• Horarios: Lun-Vie 9-18hs, SÃ¡b 9-13hs</div>
                       </div>
                       <button @click="contactForPickup(order)" 
@@ -227,6 +227,12 @@ import { useAuthStore } from '../../store/auth';
 import { useToast } from 'vue-toastification';
 import { ordersApi } from '../../config/api';
 import type { Order, OrderItem } from '../../types';
+import { 
+  getShippingStatusClass, 
+  getShippingStatusText,
+  getDeliveryMethodClass,
+  getDeliveryMethodText 
+} from '../../utils/orderStatusUtils';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -239,7 +245,7 @@ const hasError = ref(false);
 onMounted(async () => {
   // Check authentication
   if (!authStore.isAuthenticated) {
-    toast.warning('Debes iniciar sesiÃ³n para ver tus pedidos');
+    toast.warning('Debes iniciar sesin para ver tus pedidos');
     router.push('/auth');
     return;
   }
@@ -269,8 +275,8 @@ const loadOrders = async () => {
     console.error('Error response:', error?.response);
     console.error('Error data:', error?.response?.data);
     console.error('Error status:', error?.response?.status);
-    
-    // Manejo de errores especÃ­ficos
+
+    // Manejo de errores específicos
     if (error?.response?.status === 401) {
       console.log('Error 401: Sesion expirada');
       toast.error('Sesion expirada. Por favor, inicia sesión nuevamente.');
@@ -310,66 +316,9 @@ const formatDate = (dateString: string | undefined) => {
   });
 };
 
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'pending_payment':
-      return 'bg-orange-100 text-orange-800';
-    case 'approved':
-      return 'bg-green-100 text-green-800';
-    case 'rejected':
-      return 'bg-red-100 text-red-800';
-    case 'cancelled':
-      return 'bg-red-100 text-red-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
+// Status functions now imported from centralized orderStatusUtils
 
-const getStatusText = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'Pendiente';
-    case 'pending_payment':
-      return 'Esperando Pago';
-    case 'approved':
-      return 'Aprobado';
-    case 'rejected':
-      return 'Rechazado';
-    case 'cancelled':
-      return 'Cancelado';
-    default:
-      return 'Desconocido';
-  }
-};
-
-// Delivery method functions
-const getDeliveryMethodClass = (deliveryMethod: string | undefined) => {
-  switch (deliveryMethod) {
-    case 'envio_andreani':
-      return 'bg-blue-100 text-blue-800';
-    case 'envio_correo':
-      return 'bg-green-100 text-green-800';
-    case 'retiro_local':
-      return 'bg-purple-100 text-purple-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
-
-const getDeliveryMethodText = (deliveryMethod: string | undefined) => {
-  switch (deliveryMethod) {
-    case 'envio_andreani':
-      return 'Envio por Andreani';
-    case 'envio_correo':
-      return 'Envio por Correo Argentino';
-    case 'retiro_local':
-      return 'Retiro en Local';
-    default:
-      return 'No definido';
-  }
-};
+// Delivery method functions now imported from centralized orderStatusUtils
 
 const isShippingOrder = (deliveryMethod: string | undefined) => {
   return deliveryMethod === 'envio_andreani' || deliveryMethod === 'envio_correo';
@@ -403,7 +352,7 @@ const trackShipment = (trackingNumber: string | undefined, provider: string | un
       trackingUrl = `https://www.correoargentino.com.ar/formularios/e-commerce?codigo=${trackingNumber}`;
       break;
     default:
-      toast.info('NÃºmero de tracking copiado al portapapeles');
+      toast.info('Número de tracking copiado al portapapeles');
       navigator.clipboard.writeText(trackingNumber);
       return;
   }
