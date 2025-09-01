@@ -16,7 +16,7 @@
                "console": "integratedTerminal",
                "justMyCode": false,
                "env": {
-                    "ENVIRONMENT": "test"
+                    "ENVIRONMENT": "dev"
                }
           },
      ]

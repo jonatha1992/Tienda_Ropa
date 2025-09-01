@@ -11,7 +11,7 @@ if DATABASE_URL.startswith("postgresql"):
         DATABASE_URL,
         echo=settings.ENVIRONMENT == "dev",
         pool_pre_ping=True,  # Verify connections before use
-        pool_recycle=300,    # Recycle connections every 5 minutes
+        pool_recycle=300,  # Recycle connections every 5 minutes
     )
 else:
     # SQLite configuration for local development
