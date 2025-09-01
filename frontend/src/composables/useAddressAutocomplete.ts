@@ -1,4 +1,4 @@
-﻿import { ref, reactive } from 'vue'
+﻿import { ref, readonly } from 'vue'
 
 export interface AddressSuggestion {
   place_id: number
@@ -142,7 +142,3 @@ export function useAddressAutocomplete() {
   }
 }
 
-// Funcin auxiliar para readonly
-function readonly<T>(ref: any) {
-  return ref
-}

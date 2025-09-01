@@ -15,7 +15,6 @@ import TransferInstructionsView from './views/checkout/TransferInstructionsView.
 import CashConfirmationView from './views/checkout/CashConfirmationView.vue'
 import { useAuthStore } from './store/auth';
 import { auth } from './config/index'; // Importar auth
-import { useLoading } from './composables/useLoading';
 import { globalProgressBar } from './composables/useProgressBar';
 import ContactView from './views/shared/ContactView.vue';
 import HowToShopView from './views/shared/HowToShopView.vue';
@@ -102,7 +101,6 @@ const router = createRouter({
 // Guard para rutas protegidas
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-  const { showLoading } = useLoading();
   // Mostrar progress bar al cambiar de ruta
   if (to.path !== from.path) {
     globalProgressBar.start();

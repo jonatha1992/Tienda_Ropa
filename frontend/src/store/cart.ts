@@ -8,6 +8,7 @@ import type {
 import { useCartNotification } from '../composables/useCartNotification';
 import { stockService } from '../services/stockService';
 import type { StockCheckItem, StockCheckResponse } from '../types/stock';
+import { useToast } from 'vue-toastification';
 
 export interface CartItem {
   id: string; // Unique identifier for cart item
@@ -326,7 +327,6 @@ export const useCartStore = defineStore('cart', {
       if (typeof window === 'undefined') return;
 
       try {
-        const { useToast } = require('vue-toastification');
         const toast = useToast();
 
         if (isError) {
