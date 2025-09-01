@@ -4,7 +4,7 @@
 // 2. Fallbacks solo para desarrollo local.
 // 3. Objeto único exportado (config) para facilitar refactors.
 
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env.ENVIRONMENT === 'dev';
 
 function required(name: string, fallback?: string): string {
     const value = (import.meta.env as any)[name] as string | undefined;
