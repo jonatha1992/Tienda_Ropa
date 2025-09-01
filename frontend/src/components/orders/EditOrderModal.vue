@@ -51,7 +51,7 @@
                 <div class="sm:col-span-3">
                   <label for="deliveryMethod" class="block text-sm font-medium text-gray-700">Método de Entrega</label>
                   <div class="block w-full px-3 py-2 mt-1 text-sm text-gray-700 border border-gray-300 rounded-md bg-gray-50">
-                    {{ getDeliveryMethodText(editedOrder.delivery_method) }}
+                    {{ getDeliveryMethodText(editedOrder.delivery_method || undefined) }}
                   </div>
                 </div>
 
@@ -129,7 +129,7 @@ const getCustomerAddress = (order: any): string => {
   }
   
   const customer = order.customer;
-  const addressParts = [];
+  const addressParts: string[] = [];
   
   if (customer.address) addressParts.push(customer.address);
   if (customer.city) addressParts.push(customer.city);
@@ -149,7 +149,7 @@ const getPaymentMethodText = (method: string | undefined): string => {
   return methodTexts[method.toLowerCase()] || method;
 };
 
-const getDeliveryMethodText = (method: string | undefined): string => {
+const getDeliveryMethodText = (method: string | null | undefined): string => {
   if (!method) return 'No especificado';
   const methodTexts: Record<string, string> = {
     'envio_andreani': 'Envío Andreani',
