@@ -555,9 +555,9 @@
                   <div class="space-y-2">
                     <div>
                       <span class="text-xs text-gray-500">Estado del Pago:</span>
-                      <span :class="getPaymentStatusClass(selectedOrder.payment_status)" 
+                      <span  
                         class="inline-flex px-2 py-1 ml-1 text-xs font-semibold rounded-full">
-                        {{ getPaymentStatusText(selectedOrder.payment_status) }}
+                        {{ getShippingStatusText(selectedOrder.payment_status) }}
                       </span>
                     </div>
                     <div>
