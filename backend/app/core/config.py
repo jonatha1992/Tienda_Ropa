@@ -142,12 +142,7 @@ class Settings(BaseSettings):
 
         # Always add common development and production origins
         common_origins = [
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:3000",
-            "http://127.0.0.1:5500",  # Live Server for frontend-test.html
             "https://m-vintage-test.web.app",
-            "https://m-vintage.web.app",
         ]
 
         for origin in common_origins:

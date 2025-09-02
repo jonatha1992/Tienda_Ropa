@@ -61,7 +61,6 @@ async def startup_event():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,  # Use dynamic origins from settings
-    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.web\.app",  # Allow Vercel and Firebase
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
