@@ -9,7 +9,7 @@ if DATABASE_URL.startswith("postgresql"):
     # PostgreSQL configuration for Railway
     engine = create_engine(
         DATABASE_URL,
-        echo=settings.ENVIRONMENT == "dev",
+        echo=settings.ENVIRONMENT == "test",
         pool_pre_ping=True,  # Verify connections before use
         pool_recycle=300,  # Recycle connections every 5 minutes
     )

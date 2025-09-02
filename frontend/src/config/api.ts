@@ -216,7 +216,7 @@ export const authApi = {
 export const usersApi = {
   // Get all users (admin only)
   async getAllUsers(): Promise<UserWithRoles[]> {
-    const response = await apiClient.get('/users');
+    const response = await apiClient.get('/users/');
     return response.data;
   },
 
@@ -659,7 +659,7 @@ export const productsApi = {
 
   // Create new product (admin only)
   async createProduct(productData: ProductCreateData): Promise<Product> {
-    const response = await apiClient.post('/products', productData);
+    const response = await apiClient.post('/products/', productData);
     return response.data;
   },
 

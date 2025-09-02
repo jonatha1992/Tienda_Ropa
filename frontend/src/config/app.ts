@@ -4,7 +4,7 @@
 // 2. Fallbacks solo para desarrollo local.
 // 3. Objeto único exportado (config) para facilitar refactors.
 
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env.ENVIRONMENT === 'dev';
 
 function required(name: string, fallback?: string): string {
     const value = (import.meta.env as any)[name] as string | undefined;
@@ -14,6 +14,14 @@ function required(name: string, fallback?: string): string {
 }
 
 const backendUrl = required('VITE_BACKEND_URL', 'http://localhost:8000/api/v1');
+
+// Debug temporal - remover después
+console.log('🔧 Config Debug:', {
+    mode: import.meta.env.MODE,
+    environment: import.meta.env.ENVIRONMENT,
+    backendUrl,
+    allEnv: import.meta.env
+});
 
 export const config = Object.freeze({
     backendUrl,
