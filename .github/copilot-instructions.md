@@ -1,4 +1,4 @@
-# Copilot Instructions: Tienda_Ropa
+# Copilot Instructions: mvintage
 
 ## ⚠️ COMANDOS OBLIGATORIOS PARA EJECUTAR SERVICIOS ⚠️
 
@@ -14,7 +14,7 @@ netstat -an | findstr :5173
 
 ### �🚀 BACKEND - Secuencia OBLIGATORIA:
 ```powershell
-cd c:\Repositorio\Tienda_Ropa\backend
+cd c:\Repositorio\mvintage\backend
 ; .\.venv\Scripts\Activate.ps1 ;
 python -m uvicorn app.main:app --reload
 ```
@@ -22,7 +22,7 @@ python -m uvicorn app.main:app --reload
 
 ### 🎨 FRONTEND - Secuencia OBLIGATORIA:
 ```powershell
-cd c:\Repositorio\Tienda_Ropa\frontend ;
+cd c:\Repositorio\mvintage\frontend ;
 npm run dev
 ```
 
@@ -31,14 +31,14 @@ npm run dev
 1. **PROTOCOLO OBLIGATORIO DE ARRANQUE:**
    - **ANTES DE INICIAR CUALQUIER SERVIDOR:** Verificar si ya está corriendo con `netstat -an | findstr :8000` (backend) o `netstat -an | findstr :5173` (frontend)
    - **Backend:** SIEMPRE ejecutar estos 3 comandos en orden:
-     1. `cd c:\Repositorio\Tienda_Ropa\backend`
+     1. `cd c:\Repositorio\mvintage\backend`
      2. `& .\.venv\Scripts\Activate.ps1`
      3. `python -m uvicorn app.main:app --reload`
    - **Frontend:** SIEMPRE ejecutar estos 2 comandos en orden:
-     1. `cd c:\Repositorio\Tienda_Ropa\frontend`
+     1. `cd c:\Repositorio\mvintage\frontend`
      2. `npm run dev`
    - **Tests Backend:** SIEMPRE ejecutar estos 3 comandos en orden:
-     1. `cd c:\Repositorio\Tienda_Ropa\backend`
+     1. `cd c:\Repositorio\mvintage\backend`
      2. `& .\.venv\Scripts\Activate.ps1`
      3. `python -m pytest`
    - NUNCA ejecutar servidores sin seguir estos pasos exactos.
@@ -78,7 +78,7 @@ npm run dev
   - **ARRANQUE OBLIGATORIO DEL BACKEND:**  
     ```powershell
     # SIEMPRE ejecutar en este orden exacto:
-    cd c:\Repositorio\Tienda_Ropa\backend
+    cd c:\Repositorio\mvintage\backend
     & .\.venv\Scripts\Activate.ps1
     python -m uvicorn app.main:app --reload
     ```
@@ -93,7 +93,7 @@ npm run dev
   - **ARRANQUE OBLIGATORIO DEL FRONTEND:**  
     ```powershell
     # SIEMPRE ejecutar en este orden exacto:
-    cd c:\Repositorio\Tienda_Ropa\frontend
+    cd c:\Repositorio\mvintage\frontend
     npm run dev
     ```
 

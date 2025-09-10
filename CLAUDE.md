@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 netstat -an | findstr :8000
 
 # If no output, start backend (IMPORTANT: execute from project root):
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
 ```
@@ -21,26 +21,26 @@ python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
 netstat -an | findstr :5173
 
 # If no output, start frontend:
-cd C:\Repositorio\Tienda_Ropa\frontend
+cd C:\Repositorio\mvintage\frontend
 npm run dev
 ```
 
 ### Testing
 ```powershell
 # Backend tests (execute from project root):
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 python -m pytest backend/tests/
 
 # Frontend tests:
-cd C:\Repositorio\Tienda_Ropa\frontend
+cd C:\Repositorio\mvintage\frontend
 npm run test
 ```
 
 ### Build Commands
 ```powershell
 # Frontend production build:
-cd C:\Repositorio\Tienda_Ropa\frontend
+cd C:\Repositorio\mvintage\frontend
 npm run build
 
 # Frontend build for different environments:
@@ -167,7 +167,7 @@ These documents are essential for understanding the full project context and sho
 ### Database Migrations
 When modifying models:
 ```powershell
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 alembic revision --autogenerate -m "Description of changes"
 alembic upgrade head
@@ -187,7 +187,7 @@ Available at `/docs` (Swagger) and `/redoc` when backend is running.
 ### Backend Individual Tests
 ```powershell
 # Run a specific test file (execute from project root):
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 python -m pytest backend/tests/test_auth_module.py -v
 
@@ -201,7 +201,7 @@ python -m pytest backend/tests/ --cov=backend/app --cov-report=html
 ### Frontend Individual Tests  
 ```powershell
 # Run specific test file:
-cd C:\Repositorio\Tienda_Ropa\frontend
+cd C:\Repositorio\mvintage\frontend
 npm run test -- test_file_name
 
 # Run tests in watch mode:
@@ -225,7 +225,7 @@ npm run lint
 
 ### Backend Code Quality
 ```powershell
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 # Manual type checking with mypy (if configured):
 python -m mypy backend/app/
@@ -256,7 +256,7 @@ python -m mypy backend/app/
 
 ```powershell
 # After model changes, generate migration:
-cd C:\Repositorio\Tienda_Ropa
+cd C:\Repositorio\mvintage
 & .\backend\.venv\Scripts\Activate.ps1
 alembic revision --autogenerate -m "Add new field to Product model"
 

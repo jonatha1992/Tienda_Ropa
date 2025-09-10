@@ -1,4 +1,4 @@
-# Nueva Estructura de Tests - Tienda Ropa
+# Nueva Estructura de Tests - mvintage
 
 ## 📋 Resumen de Reorganización
 
@@ -161,7 +161,7 @@ tests/
 
 ### Ejecutar todos los tests:
 ```powershell
-cd c:\Repositorio\Tienda_Ropa\backend
+cd c:\Repositorio\mvintage\backend
 & .\.venv\Scripts\Activate.ps1
 python -m pytest
 ```
