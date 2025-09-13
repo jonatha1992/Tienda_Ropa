@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-50 sm:px-6 lg:px-8">
         <div class="w-full max-w-md space-y-8">
             <div>
@@ -38,7 +38,7 @@
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-                        Se abrira una nueva pagina de Google para autenticarte
+                        Te redirigiremos a Google para autenticarte (sin popup)
                     </p>
                 </div>
 
@@ -164,42 +164,21 @@ const signInWithGoogle = async () => {
         provider.addScope('email')
         provider.addScope('profile')
 
-        // Agregar parÃ¡metros adicionales para mejor experiencia
+        // Agregar parámetros adicionales para mejor experiencia
         provider.setCustomParameters({
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('ðŸªŸ Intentando abrir popup de Google...')
-
-        try {
-            // Intentar primero con popup
-            const result = await signInWithPopup(auth, provider)
-            console.log('Login con Google exitoso (popup):', result.user.email)
-
-            // El store detectará automáticamente el cambio y redirigirá
-            // No necesitamos redirigir manualmente aquí
-            loading.value = false
-            return
-
-        } catch (popupError: any) {
-            console.log('Popup falló, intentando con redirect:', popupError.code)
-
-            // Si el popup falla, usar redirect
-            if (popupError.code === 'auth/popup-blocked' ||
-                popupError.code === 'auth/cancelled-popup-request') {
-
-                console.log('ðŸŒ Redirigiendo a Google...')
-                await signInWithRedirect(auth, provider)
-                return
-            } else {
-                throw popupError
-            }
-        }
+        console.log('🌐 Redirigiendo a Google (sin popup)...')
+        
+        // Usar directamente redirect (sin intentar popup)
+        await signInWithRedirect(auth, provider)
+        // El resultado se manejará en onMounted() con getRedirectResult()
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
         loading.value = false
-        error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesin con Google'
+        error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesión con Google'
     }
 }
 

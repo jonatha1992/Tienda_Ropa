@@ -86,14 +86,29 @@ class ShippingQuotesService:
         Cotiza con un transportista específico
         """
         try:
-            # Construir payload para la API
+            # Construir payload para la API según la documentación
             payload = {
-                "origin": self.origin,
+                "origin": {
+                    "street": settings.SHIPPING_ORIGIN_ADDRESS,
+                    "number": "405",
+                    "city": settings.SHIPPING_ORIGIN_CITY,
+                    "state": "BA",  # Buenos Aires
+                    "postal_code": settings.SHIPPING_ORIGIN_POSTAL_CODE,
+                    "country_code": settings.SHIPPING_ORIGIN_COUNTRY,
+                    "contact_name": "M-Vintage Store",
+                    "contact_email": "info@mvintage.com",
+                    "contact_phone": "1234567890"
+                },
                 "destination": {
+                    "street": "Calle Principal",
+                    "number": "123",
+                    "city": quote_request.destination_city or "Buenos Aires",
+                    "state": "BA",  # Por defecto Buenos Aires
                     "postal_code": quote_request.destination_postal_code,
-                    "city": quote_request.destination_city,
-                    "province": quote_request.destination_province,
-                    "country_code": "AR"
+                    "country_code": "AR",
+                    "contact_name": "Cliente",
+                    "contact_email": "cliente@email.com",
+                    "contact_phone": "1234567890"
                 },
                 "parcels": [{
                     "weight": quote_request.weight_kg,
@@ -102,10 +117,11 @@ class ShippingQuotesService:
                     "length": quote_request.length_cm,
                     "content": quote_request.content
                 }],
-                "carrier": carrier
+                "carrier": carrier,
+                "currency": "ARS"
             }
 
-            headers = {}
+            headers = {"Content-Type": "application/json"}
             if self.api_token:
                 headers["Authorization"] = f"Bearer {self.api_token}"
 
@@ -136,18 +152,17 @@ class ShippingQuotesService:
         Parsea la respuesta de la API y extrae la información relevante
         """
         try:
-            # La estructura exacta puede variar según la API
-            # Adaptamos según la documentación real
-            if 'quotes' in response_data and response_data['quotes']:
-                quote_data = response_data['quotes'][0]  # Tomar la primera cotización
+            # Estructura real de la API: {"meta": "rate", "data": [...]}
+            if 'data' in response_data and response_data['data']:
+                quote_data = response_data['data'][0]  # Tomar la primera cotización
                 
                 return ShippingQuote(
                     carrier=carrier,
                     carrier_name=self._get_carrier_display_name(carrier),
-                    price=float(quote_data.get('total_price', 0)),
+                    price=float(quote_data.get('totalPrice', quote_data.get('total_price', 0))),
                     currency=quote_data.get('currency', 'ARS'),
-                    estimated_days=quote_data.get('estimated_days'),
-                    service_type=quote_data.get('service_type')
+                    estimated_days=quote_data.get('estimatedDays', quote_data.get('estimated_days')),
+                    service_type=quote_data.get('serviceType', quote_data.get('service_type', 'standard'))
                 )
             else:
                 # Si no hay cotizaciones, usar fallback
@@ -155,6 +170,7 @@ class ShippingQuotesService:
 
         except Exception as e:
             logger.error(f"Error parseando respuesta para {carrier}: {e}")
+            logger.error(f"Response data: {response_data}")
             return self._create_fallback_quote(carrier, "Parse error")
 
     def _create_fallback_quote(self, carrier: str, error_msg: str) -> ShippingQuote:
