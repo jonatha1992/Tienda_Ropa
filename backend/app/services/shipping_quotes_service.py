@@ -226,6 +226,11 @@ class ShippingQuotesService:
         Método de conveniencia para cotizar basado en peso total del carrito y destino
         Retorna formato compatible con el frontend
         """
+        # Validar código postal - si es muy corto, usar fallback
+        if len(postal_code.strip()) < 4:
+            logger.info(f"Postal code too short ({postal_code}), using fallback prices")
+            return self._get_fallback_quotes_list()
+        
         quote_request = QuoteRequest(
             destination_postal_code=postal_code,
             destination_city=city,
@@ -255,6 +260,47 @@ class ShippingQuotesService:
             })
 
         return formatted_quotes
+
+    def _get_fallback_quotes_list(self) -> List[Dict[str, Any]]:
+        """
+        Retorna lista de cotizaciones fallback cuando el código postal es incompleto
+        """
+        fallback_quotes = [
+            {
+                'carrier': 'oca',
+                'name': 'OCA',
+                'price': 450.0,
+                'currency': 'ARS',
+                'estimated_days': 4,
+                'estimated_delivery_text': 'Entrega en 4-5 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            },
+            {
+                'carrier': 'andreani',
+                'name': 'Andreani',
+                'price': 500.0,
+                'currency': 'ARS',
+                'estimated_days': 4,
+                'estimated_delivery_text': 'Entrega en 3-5 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            },
+            {
+                'carrier': 'correo_argentino',
+                'name': 'Correo Argentino',
+                'price': 400.0,
+                'currency': 'ARS',
+                'estimated_days': 6,
+                'estimated_delivery_text': 'Entrega en 5-8 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            }
+        ]
+        return fallback_quotes
 
     def _format_delivery_time(self, estimated_days: Optional[int]) -> str:
         """

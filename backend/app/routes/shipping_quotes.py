@@ -17,7 +17,7 @@ router = APIRouter(prefix="/shipping", tags=["Shipping Quotes"])
 # Esquemas de entrada
 class ShippingQuoteRequest(BaseModel):
     """Esquema para solicitar cotización de envío"""
-    postal_code: str = Field(min_length=4, max_length=8, description="Código postal de destino")
+    postal_code: str = Field(min_length=1, max_length=8, description="Código postal de destino")
     city: Optional[str] = Field(None, max_length=100, description="Ciudad de destino")
     province: Optional[str] = Field(None, max_length=50, description="Provincia de destino")
     total_weight_kg: float = Field(default=1.0, ge=0.1, le=100.0, description="Peso total del pedido en kg")

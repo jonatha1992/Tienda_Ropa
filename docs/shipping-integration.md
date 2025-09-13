@@ -219,28 +219,6 @@ console.log('Shipping quote response:', response)
 console.error('Shipping calculation error:', error)
 ```
 
-## Próximos Pasos
-
-1. **Integración con Más Transportistas**
-   - Mercado Envíos
-   - Cruz del Sur
-   - Vía Cargo
-
-2. **Funcionalidades Avanzadas**
-   - Seguimiento de envíos
-   - Notificaciones automáticas
-   - Integración con sistema de inventario
-
-3. **Optimizaciones**
-   - Cache de cotizaciones
-   - Compresión de respuestas
-   - Rate limiting
-
-4. **Analytics**
-   - Métricas de uso por transportista
-   - Análisis de costos de envío
-   - Reportes de performance
-
 ## Troubleshooting
 
 ### Problemas Comunes
