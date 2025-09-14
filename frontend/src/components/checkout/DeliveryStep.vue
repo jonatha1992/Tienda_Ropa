@@ -372,6 +372,7 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import { shippingQuotesApi } from '../../config/api'
 import AddressAutocomplete from '../forms/AddressAutocomplete.vue'
+import type { ShippingQuoteOption } from '../../types/orders/shipping.types'
 import type { ParsedAddress } from '../../composables/useAddressAutocomplete'
 
 // Debounce utility
@@ -641,12 +642,12 @@ const loadShippingQuotes = async () => {
     })
     
     if (response.success && response.options) {
-      shippingOptions.value = response.options.map(quote => ({
+      shippingOptions.value = response.options.map((quote: ShippingQuoteOption) => ({
         carrier: quote.carrier,
-        service: quote.service_type || quote.service,
+        service: quote.service_type || quote.name,
         price: quote.price,
         estimatedDays: quote.estimated_days,
-        description: quote.estimated_delivery_text || quote.description
+        description: quote.estimated_delivery_text
       }))
       console.log('Shipping quotes loaded:', shippingOptions.value)
       
