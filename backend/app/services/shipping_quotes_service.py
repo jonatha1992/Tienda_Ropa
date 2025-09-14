@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ShippingQuote:
     """Cotización de envío de un transportista específico"""
-    carrier: str  # 'oca', 'andreani', 'correo_argentino'
+    carrier: str  # 'oca', 'andreani', 'correoArgentino'
     carrier_name: str
     price: float
     currency: str
@@ -56,7 +56,7 @@ class ShippingQuotesService:
         """
         Cotiza con todos los transportistas disponibles (OCA, Andreani, Correo)
         """
-        carriers = ['oca', 'andreani', 'correo_argentino']
+        carriers = ['oca', 'andreani', 'correoArgentino']
         quotes = []
 
         # Ejecutar cotizaciones en paralelo para mayor eficiencia
@@ -86,14 +86,29 @@ class ShippingQuotesService:
         Cotiza con un transportista específico
         """
         try:
-            # Construir payload para la API
+            # Construir payload para la API según la documentación
             payload = {
-                "origin": self.origin,
+                "origin": {
+                    "street": settings.SHIPPING_ORIGIN_ADDRESS,
+                    "number": "405",
+                    "city": settings.SHIPPING_ORIGIN_CITY,
+                    "state": "BA",  # Buenos Aires
+                    "postal_code": settings.SHIPPING_ORIGIN_POSTAL_CODE,
+                    "country_code": settings.SHIPPING_ORIGIN_COUNTRY,
+                    "contact_name": "M-Vintage Store",
+                    "contact_email": "info@mvintage.com",
+                    "contact_phone": "1234567890"
+                },
                 "destination": {
+                    "street": "Calle Principal",
+                    "number": "123",
+                    "city": quote_request.destination_city or "Buenos Aires",
+                    "state": "BA",  # Por defecto Buenos Aires
                     "postal_code": quote_request.destination_postal_code,
-                    "city": quote_request.destination_city,
-                    "province": quote_request.destination_province,
-                    "country_code": "AR"
+                    "country_code": "AR",
+                    "contact_name": "Cliente",
+                    "contact_email": "cliente@email.com",
+                    "contact_phone": "1234567890"
                 },
                 "parcels": [{
                     "weight": quote_request.weight_kg,
@@ -102,10 +117,11 @@ class ShippingQuotesService:
                     "length": quote_request.length_cm,
                     "content": quote_request.content
                 }],
-                "carrier": carrier
+                "carrier": carrier,
+                "currency": "ARS"
             }
 
-            headers = {}
+            headers = {"Content-Type": "application/json"}
             if self.api_token:
                 headers["Authorization"] = f"Bearer {self.api_token}"
 
@@ -119,9 +135,10 @@ class ShippingQuotesService:
 
                 if response.status_code == 200:
                     data = response.json()
+                    logger.info(f"✅ Respuesta exitosa de {carrier}: {data}")
                     return self._parse_quote_response(carrier, data)
                 else:
-                    logger.error(f"Error al cotizar con {carrier}: {response.status_code} - {response.text}")
+                    logger.error(f"❌ Error al cotizar con {carrier}: {response.status_code} - {response.text}")
                     return self._create_fallback_quote(carrier, f"API Error: {response.status_code}")
 
         except httpx.TimeoutException:
@@ -136,18 +153,17 @@ class ShippingQuotesService:
         Parsea la respuesta de la API y extrae la información relevante
         """
         try:
-            # La estructura exacta puede variar según la API
-            # Adaptamos según la documentación real
-            if 'quotes' in response_data and response_data['quotes']:
-                quote_data = response_data['quotes'][0]  # Tomar la primera cotización
+            # Estructura real de la API: {"meta": "rate", "data": [...]}
+            if 'data' in response_data and response_data['data']:
+                quote_data = response_data['data'][0]  # Tomar la primera cotización
                 
                 return ShippingQuote(
                     carrier=carrier,
                     carrier_name=self._get_carrier_display_name(carrier),
-                    price=float(quote_data.get('total_price', 0)),
+                    price=float(quote_data.get('totalPrice', quote_data.get('total_price', 0))),
                     currency=quote_data.get('currency', 'ARS'),
-                    estimated_days=quote_data.get('estimated_days'),
-                    service_type=quote_data.get('service_type')
+                    estimated_days=quote_data.get('estimatedDays', quote_data.get('estimated_days')),
+                    service_type=quote_data.get('serviceType', quote_data.get('service_type', 'standard'))
                 )
             else:
                 # Si no hay cotizaciones, usar fallback
@@ -155,6 +171,7 @@ class ShippingQuotesService:
 
         except Exception as e:
             logger.error(f"Error parseando respuesta para {carrier}: {e}")
+            logger.error(f"Response data: {response_data}")
             return self._create_fallback_quote(carrier, "Parse error")
 
     def _create_fallback_quote(self, carrier: str, error_msg: str) -> ShippingQuote:
@@ -164,7 +181,7 @@ class ShippingQuotesService:
         fallback_prices = {
             'oca': 450,
             'andreani': 500,
-            'correo_argentino': 400
+            'correoArgentino': 400
         }
 
         return ShippingQuote(
@@ -184,7 +201,7 @@ class ShippingQuotesService:
         names = {
             'oca': 'OCA',
             'andreani': 'Andreani',
-            'correo_argentino': 'Correo Argentino'
+            'correoArgentino': 'Correo Argentino'
         }
         return names.get(carrier, carrier.upper())
 
@@ -195,7 +212,7 @@ class ShippingQuotesService:
         days = {
             'oca': 4,
             'andreani': 4,
-            'correo_argentino': 6
+            'correoArgentino': 6
         }
         return days.get(carrier, 5)
 
@@ -210,6 +227,11 @@ class ShippingQuotesService:
         Método de conveniencia para cotizar basado en peso total del carrito y destino
         Retorna formato compatible con el frontend
         """
+        # Validar código postal - si es muy corto, usar fallback
+        if len(postal_code.strip()) < 4:
+            logger.info(f"Postal code too short ({postal_code}), using fallback prices")
+            return self._get_fallback_quotes_list()
+        
         quote_request = QuoteRequest(
             destination_postal_code=postal_code,
             destination_city=city,
@@ -239,6 +261,47 @@ class ShippingQuotesService:
             })
 
         return formatted_quotes
+
+    def _get_fallback_quotes_list(self) -> List[Dict[str, Any]]:
+        """
+        Retorna lista de cotizaciones fallback cuando el código postal es incompleto
+        """
+        fallback_quotes = [
+            {
+                'carrier': 'oca',
+                'name': 'OCA',
+                'price': 450.0,
+                'currency': 'ARS',
+                'estimated_days': 4,
+                'estimated_delivery_text': 'Entrega en 4-5 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            },
+            {
+                'carrier': 'andreani',
+                'name': 'Andreani',
+                'price': 500.0,
+                'currency': 'ARS',
+                'estimated_days': 4,
+                'estimated_delivery_text': 'Entrega en 3-5 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            },
+            {
+                'carrier': 'correoArgentino',
+                'name': 'Correo Argentino',
+                'price': 400.0,
+                'currency': 'ARS',
+                'estimated_days': 6,
+                'estimated_delivery_text': 'Entrega en 5-8 días hábiles',
+                'service_type': 'standard',
+                'has_error': True,
+                'error_message': 'Código postal incompleto - precio estimado'
+            }
+        ]
+        return fallback_quotes
 
     def _format_delivery_time(self, estimated_days: Optional[int]) -> str:
         """

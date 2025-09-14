@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import HomeView from './views/shared/HomeView.vue'
 import CollectionView from './views/products/CollectionView.vue'
 import ProductDetailView from './views/products/ProductDetailView.vue'
@@ -28,6 +28,7 @@ import VerifyEmailView from './views/auth/VerifyEmailView.vue';
 import ProfileView from './views/profile/ProfileView.vue';
 import AdminViewProduct from './views/admin/AdminViewProduct.vue';
 import SizeGuideView from './views/shared/SizeGuideView.vue';
+import ShippingTestView from './views/test/ShippingTestView.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -43,6 +44,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/terms', component: TermsView },
   { path: '/privacy', component: PrivacyView },
   { path: '/size-guide', component: SizeGuideView },
+  { path: '/test/shipping', component: ShippingTestView },
   // Orders routes
   { path: '/orders', component: OrdersView, meta: { requiresAuth: true } },
   { path: '/orders/:id', component: OrderDetailView, meta: { requiresAuth: true } },

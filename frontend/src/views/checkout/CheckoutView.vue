@@ -1,32 +1,32 @@
-﻿<template>
-  <div class="min-h-screen bg-gray-50">
-    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+<template>
+  <div class="min-h-screen bg-gray-50 lg:h-screen lg:overflow-hidden">
+    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:h-full lg:flex lg:flex-col">
       <!-- Header -->
-      <div class="mb-8">
+      <div class="mb-6">
         <nav class="flex" aria-label="Breadcrumb">
-          <ol class="flex items-center space-x-4">
+          <ol class="flex items-center space-x-2">
             <li>
-              <router-link to="/cart" class="text-gray-400 hover:text-gray-500">
-                <svg class="flex-shrink-0 w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <router-link to="/cart" class="text-gray-400 hover:text-gray-500 flex items-center">
+                <svg class="flex-shrink-0 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span class="ml-1 font-body">Carrito</span>
+                <span class="ml-1 text-sm font-body">Carrito</span>
               </router-link>
             </li>
             <li>
               <div class="flex items-center">
-                <svg class="flex-shrink-0 w-5 h-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="flex-shrink-0 w-4 h-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span class="ml-4 text-sm font-medium font-body text-body-text">Checkout</span>
+                <span class="ml-2 text-sm font-medium font-body text-body-text">Checkout</span>
               </div>
             </li>
           </ol>
         </nav>
-        <h1 class="mt-4 text-3xl font-light text-gray-900 font-heading">Finalizar compra</h1>
+        <h1 class="mt-3 text-2xl font-light text-gray-900 font-heading">Finalizar compra</h1>
         
         <!-- Delivery Progress -->
-        <div class="mt-6">
+        <div class="mt-4">
           <DeliveryProgress 
             :current-step="currentStep" 
             @go-to-step="handleGoToStep"
@@ -35,9 +35,9 @@
       </div>
 
       <!-- Content -->
-      <div v-if="!cartStore.isEmpty" class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+      <div v-if="!cartStore.isEmpty" class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start lg:flex-1 lg:overflow-hidden">
         <!-- Order Summary -->
-        <div class="order-2 lg:order-1">
+        <div class="order-2 lg:order-1 lg:h-full lg:flex lg:flex-col">
           <div class="p-6 bg-white rounded-lg shadow">
             <h2 class="mb-4 text-lg font-medium text-gray-900 font-heading">Resumen del pedido</h2>
             
@@ -92,19 +92,19 @@
               <div class="flex justify-between text-sm">
                 <span class="font-body text-body-text">Subtotal</span>
                 <span class="font-body text-body-text">
-                  ${{ (cartStore.totalSavings > 0 ? cartStore.totalOriginalPrice : cartStore.totalPrice).toLocaleString() }}
+                  ${{ (cartStore.totalSavings > 0 ? cartStore.totalOriginalPrice : cartStore.totalPrice).toLocaleString('es-AR') }}
                 </span>
               </div>
               
               <div v-if="cartStore.totalSavings > 0" class="flex justify-between text-sm">
                 <span class="text-red-600 font-body">Descuentos</span>
-                <span class="text-red-600 font-body">-${{ cartStore.totalSavings.toLocaleString() }}</span>
+                <span class="text-red-600 font-body">-${{ cartStore.totalSavings.toLocaleString('es-AR') }}</span>
               </div>
               
-              <div class="flex justify-between text-sm">
+              <div v-if="deliveryMethod && deliveryCost > 0" class="flex justify-between text-sm">
                 <span class="font-body text-body-text">Envío</span>
                 <span class="font-body text-body-text">
-                  {{ deliveryCost === 0 ? 'Gratis' : `$${deliveryCost.toLocaleString()}` }}
+                  {{ deliveryCost === 0 ? 'Gratis' : `$${deliveryCost.toLocaleString('es-AR')}` }}
                 </span>
               </div>
               
@@ -112,7 +112,7 @@
                 <div class="flex justify-between">
                   <span class="text-base font-medium font-body text-body-text">Total</span>
                   <span class="text-base font-medium font-body text-body-text">
-                    ${{ (cartStore.totalPrice + deliveryCost).toLocaleString() }}
+                    ${{ (cartStore.totalPrice + (deliveryMethod ? deliveryCost : 0)).toLocaleString('es-AR') }}
                   </span>
                 </div>
               </div>
@@ -164,56 +164,53 @@
         </div>
 
         <!-- Checkout Form -->
-        <div class="order-1 lg:order-2">
+        <div class="order-1 lg:order-2 lg:h-full lg:overflow-y-auto lg:pr-4">
           <form @submit.prevent="processOrder" class="space-y-6">
-            <!-- Step 2: Contact Info -->
+            <!-- Step 2: Delivery Info (incluye datos de contacto) -->
             <div v-if="currentStep === 2">
-              <ContactInfoStep
-                :first-name="checkoutForm.firstName"
-                :last-name="checkoutForm.lastName"
-                :email="checkoutForm.email"
-                :phone="checkoutForm.phone"
-                :phone-country-code="checkoutForm.phoneCountryCode"
-                :loading-user-data="loadingUserData"
-                :using-previous-data="usingPreviousData"
-                @update:first-name="checkoutForm.firstName = $event"
-                @update:last-name="checkoutForm.lastName = $event"
-                @update:email="checkoutForm.email = $event"
-                @update:phone="checkoutForm.phone = $event"
-                @update:phone-country-code="checkoutForm.phoneCountryCode = $event"
-                @continue="goToDeliveryStep"
-              />
-            </div>
-
-            <!-- Step 3: Delivery Info -->
-            <div v-if="currentStep === 3">
               <DeliveryStep
-                :selected-delivery-method="deliveryMethod"
-                :address="checkoutForm.address"
-                :city="checkoutForm.city"
-                :postal-code="checkoutForm.postalCode"
-                :province="checkoutForm.province"
-                :country="checkoutForm.country"
-                :address-reference="checkoutForm.addressReference"
-                :delivery-notes="checkoutForm.deliveryNotes"
-                :preferred-delivery-time="checkoutForm.preferredDeliveryTime"
-                :total-weight-kg="cartStore.totalWeight"
-                @update:selected-delivery-method="deliveryMethod = $event"
-                @update:address="checkoutForm.address = $event"
-                @update:city="checkoutForm.city = $event"
-                @update:postal-code="checkoutForm.postalCode = $event"
-                @update:province="checkoutForm.province = $event"
-                @update:country="checkoutForm.country = $event"
-                @update:address-reference="checkoutForm.addressReference = $event"
-                @update:delivery-notes="checkoutForm.deliveryNotes = $event"
-                @update:preferred-delivery-time="checkoutForm.preferredDeliveryTime = $event"
-                @delivery-method-changed="handleDeliveryMethodChanged"
-                @continue="goToPaymentStep"
+                :selected-delivery-method="selectedDeliveryMethod"
+                :address="address"
+                :street-number="streetNumber"
+                :full-address="fullAddress"
+                :city="city"
+                :postal-code="postalCode"
+                :province="province"
+                :country="country"
+                :address-reference="addressReference"
+                :delivery-notes="deliveryNotes"
+                :preferred-delivery-time="preferredDeliveryTime"
+                :total-weight-kg="totalWeightKg"
+                :first-name="firstName"
+                :last-name="lastName"
+                :phone="phone"
+                :street="street"
+                :apartment="apartment"
+                :neighborhood="neighborhood"
+                @update:selectedDeliveryMethod="selectedDeliveryMethod = $event"
+                @update:address="address = $event"
+                @update:streetNumber="streetNumber = $event"
+                @update:fullAddress="fullAddress = $event"
+                @update:city="city = $event"
+                @update:postalCode="postalCode = $event"
+                @update:province="province = $event"
+                @update:country="country = $event"
+                @update:addressReference="addressReference = $event"
+                @update:deliveryNotes="deliveryNotes = $event"
+                @update:preferredDeliveryTime="preferredDeliveryTime = $event"
+                @update:firstName="firstName = $event"
+                @update:lastName="lastName = $event"
+                @update:phone="phone = $event"
+                @update:street="street = $event"
+                @update:apartment="apartment = $event"
+                @update:neighborhood="neighborhood = $event"
+                @delivery-method-changed="handleDeliveryMethodChange"
+                @continue="handleContinueToPayment"
               />
             </div>
 
-            <!-- Step 4: Payment Method -->
-            <div v-if="currentStep === 4" class="p-6 bg-white rounded-lg shadow" data-payment-section ref="paymentSection">
+            <!-- Step 3: Payment Method -->
+            <div v-if="currentStep === 3" class="p-6 bg-white rounded-lg shadow" data-payment-section ref="paymentSection">
               <h3 class="mb-4 text-lg font-medium text-gray-900 font-heading">Método de pago</h3>
               
               <div class="space-y-3">
@@ -249,6 +246,22 @@
                   <CurrencyDollarIcon class="w-5 h-5 ml-3 text-green-600" />
                   <span class="ml-2 text-sm font-body">Efectivo contra entrega</span>
                 </label>
+              </div>
+              
+              <!-- Botón Finalizar Compra -->
+              <div v-if="checkoutForm.paymentMethod" class="mt-6">
+                <button
+                  type="submit"
+                  :disabled="processing"
+                  class="w-full px-6 py-3 font-medium text-white transition-all duration-200 bg-black rounded-md hover:bg-gray-800 hover:scale-105 active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  <span v-if="processing" class="text-white">Procesando...</span>
+                  <span v-else class="text-white">Finalizar compra</span>
+                </button>
+                
+                <p class="mt-3 text-xs text-center font-body text-body-text">
+                  Al finalizar tu compra, aceptas nuestros términos y condiciones
+                </p>
               </div>
             </div>
 
@@ -329,6 +342,8 @@ const checkoutForm = ref({
   phone: '',
   phoneCountryCode: 'AR',
   address: '',
+  streetNumber: '',
+  fullAddress: '',
   city: '',
   postalCode: '',
   province: '',
@@ -336,16 +351,46 @@ const checkoutForm = ref({
   addressReference: '',
   deliveryNotes: '',
   preferredDeliveryTime: 'cualquiera',
-  paymentMethod: 'transfer'
+  paymentMethod: 'transfer',
+  deliveryMethod: ''
+});
+
+// Variables reactivas para los nuevos campos del formulario
+const firstName = ref('');
+const lastName = ref('');
+const phone = ref('');
+const street = ref('');
+const apartment = ref('');
+const neighborhood = ref('');
+const selectedDeliveryMethod = ref('');
+const address = ref('');
+const streetNumber = ref('');
+const fullAddress = ref('');
+const city = ref('');
+const postalCode = ref('');
+const province = ref('');
+const country = ref('AR');
+const addressReference = ref('');
+const deliveryNotes = ref('');
+const preferredDeliveryTime = ref('cualquiera');
+// Calcular peso total del carrito
+const totalWeightKg = computed(() => {
+  if (cartStore.isEmpty) return 0.5; // Peso mínimo por defecto
+  
+  // Calcular peso basado en cantidad de items (estimado)
+  const totalItems = cartStore.items.reduce((sum, item) => sum + item.quantity, 0);
+  const estimatedWeight = Math.max(0.5, totalItems * 0.3); // 300g por item, mínimo 500g
+  
+  return Number(estimatedWeight.toFixed(1));
 });
 
 
 // Delivery method and cost
-const deliveryMethod = ref('envio_andreani');
-const deliveryCost = ref(500);
+const deliveryMethod = ref('');
+const deliveryCost = ref(0);
 
-// New 4-step flow state management
-const currentStep = ref(2); // Start at step 2 (Contact Info)
+// New 3-step flow state management
+const currentStep = ref(2); // Start at step 2 (Delivery Info)
 
 // Check if each step is complete
 const isContactInfoComplete = computed(() => {
@@ -362,10 +407,11 @@ const isDeliveryInfoComplete = computed(() => {
   // If local pickup, no address needed
   if (deliveryMethod.value === 'retiro_local') return true;
   
-  // For delivery methods, need address info
-  return checkoutForm.value.address.trim() && 
-         checkoutForm.value.city.trim() && 
-         checkoutForm.value.postalCode.trim();
+  // For delivery methods, need contact info and address info
+  const hasContactInfo = firstName.value.trim() && lastName.value.trim() && phone.value.trim();
+  const hasAddressInfo = street.value.trim() && city.value.trim() && postalCode.value.trim();
+  
+  return hasContactInfo && hasAddressInfo;
 });
 
 // Navigation functions for 4-step flow
@@ -382,7 +428,7 @@ const goToDeliveryStep = () => {
 
 const goToPaymentStep = () => {
   if (isDeliveryInfoComplete.value) {
-    currentStep.value = 4;
+    currentStep.value = 3;
     setTimeout(() => {
       if (paymentSection.value) {
         paymentSection.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -400,12 +446,22 @@ const handleGoToStep = (step: number) => {
     // Navigate back to cart
     router.push('/cart');
   } else if (step === 2) {
-    goToContactStep();
-  } else if (step === 3 && isContactInfoComplete.value) {
-    goToDeliveryStep();
-  } else if (step === 4 && isDeliveryInfoComplete.value) {
+    currentStep.value = 2;
+  } else if (step === 3 && isDeliveryInfoComplete.value) {
     goToPaymentStep();
   }
+};
+
+// Métodos para manejar eventos del DeliveryStep
+const handleDeliveryMethodChange = (data: { method: string; cost: number }) => {
+  selectedDeliveryMethod.value = data.method;
+  deliveryMethod.value = data.method;
+  deliveryCost.value = data.cost;
+  console.log('🚚 Delivery method changed:', data);
+};
+
+const handleContinueToPayment = () => {
+  goToPaymentStep();
 };
 
 const handleDeliveryMethodChanged = (data: { method: string; cost: number }) => {
@@ -441,6 +497,25 @@ onMounted(async () => {
       // User has previous purchase data - auto-populate form
       const formData = getCheckoutFormData();
       Object.assign(checkoutForm.value, formData);
+      
+      // También poblar las variables reactivas individuales
+      firstName.value = formData.firstName || '';
+      lastName.value = formData.lastName || '';
+      phone.value = formData.phone || '';
+      street.value = formData.address || '';
+      apartment.value = formData.addressReference || '';
+      neighborhood.value = '';
+      address.value = formData.address || '';
+      streetNumber.value = '';
+      fullAddress.value = formData.address || '';
+      city.value = formData.city || '';
+      postalCode.value = formData.postalCode || '';
+      province.value = formData.province || '';
+      country.value = formData.country || 'AR';
+      addressReference.value = formData.addressReference || '';
+      deliveryNotes.value = formData.deliveryNotes || '';
+      preferredDeliveryTime.value = formData.preferredDeliveryTime || 'cualquiera';
+      
       usingPreviousData.value = true;
       
       console.log('Form auto-populated with previous customer data');
@@ -453,6 +528,10 @@ onMounted(async () => {
           const nameParts = authStore.backendUser.name.split(' ');
           checkoutForm.value.firstName = nameParts[0] || '';
           checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
+          
+          // También poblar las variables reactivas individuales
+          firstName.value = nameParts[0] || '';
+          lastName.value = nameParts.slice(1).join(' ') || '';
         }
       }
       console.log('First-time buyer - basic info pre-filled');
@@ -466,6 +545,10 @@ onMounted(async () => {
         const nameParts = authStore.backendUser.name.split(' ');
         checkoutForm.value.firstName = nameParts[0] || '';
         checkoutForm.value.lastName = nameParts.slice(1).join(' ') || '';
+        
+        // También poblar las variables reactivas individuales
+        firstName.value = nameParts[0] || '';
+        lastName.value = nameParts.slice(1).join(' ') || '';
       }
     }
   } finally {
@@ -479,7 +562,7 @@ onMounted(async () => {
 
 const processOrder = async () => {
   // Ensure we're on the payment step
-  if (currentStep.value !== 4) {
+  if (currentStep.value !== 3) {
     toast.error('Debes completar todos los pasos antes de confirmar el pedido');
     return;
   }

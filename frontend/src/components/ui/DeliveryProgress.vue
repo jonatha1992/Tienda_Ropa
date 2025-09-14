@@ -1,7 +1,7 @@
-﻿<template>
-  <div class="w-full max-w-2xl py-6 mx-auto">
+<template>
+  <div class="w-full max-w-2xl py-3 mx-auto">
     <!-- Progress Steps -->
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center justify-between mb-4">
       <!-- Step 1: Carrito -->
       <div class="flex flex-col items-center">
         <button 
@@ -24,62 +24,60 @@
         ></div>
       </div>
 
-      <!-- Step 2: Contacto -->
+      <!-- Step 2: Entrega -->
       <div class="flex flex-col items-center">
         <button 
           @click="$emit('go-to-step', 2)"
-          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg"
-          :class="getStepClasses(2)"
+          :class="[
+            'flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg',
+            currentStep >= 2 
+              ? 'bg-gray-800 text-white' 
+              : 'bg-gray-200 text-gray-600',
+            currentStep === 2 ? 'ring-2 ring-gray-800 ring-offset-2' : ''
+          ]"
         >
-          <CheckIcon v-if="currentStep > 2" class="w-4 h-4" />
-          <UserIcon v-else-if="currentStep === 2" class="w-4 h-4" />
-          <span class="font-body" v-else>2</span>
+          <svg v-if="currentStep > 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="w-4 h-4">
+            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="w-4 h-4">
+            <path d="M3.375 4.5C2.339 4.5 1.5 5.34 1.5 6.375V13.5h12V6.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM13.5 15h-12v2.625c0 1.035.84 1.875 1.875 1.875h.375a3 3 0 1 1 6 0h3a.75.75 0 0 0 .75-.75V15Z" />
+            <path d="M8.25 19.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0ZM15.75 6.75a.75.75 0 0 0-.75.75v11.25c0 .087.015.17.042.248a3 3 0 0 1 5.958.464c.853-.175 1.522-.935 1.538-1.85l.8-8.566a.75.75 0 0 0-.729-.796h-6.109ZM21 18.75a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+          </svg>
         </button>
-        <span class="mt-2 text-xs font-body text-body-text">Contacto</span>
+        <span class="mt-2 text-xs font-body text-body-text">Entrega</span>
       </div>
 
       <!-- Progress Line 2 -->
       <div class="flex-1 h-0.5 mx-2 bg-gray-200 relative">
         <div 
           class="h-full transition-all duration-500 bg-gray-800"
-          :style="{ width: currentStep > 2 ? '100%' : '0%' }"
+          :style="{ width: currentStep >= 3 ? '100%' : '0%' }"
         ></div>
       </div>
 
-      <!-- Step 3: Entrega -->
+      <!-- Step 3: Pago -->
       <div class="flex flex-col items-center">
         <button 
           @click="$emit('go-to-step', 3)"
-          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg"
-          :class="getStepClasses(3)"
+          :class="[
+            'flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full cursor-pointer hover:shadow-lg',
+            currentStep >= 3 
+              ? 'bg-gray-800 text-white' 
+              : 'bg-gray-200 text-gray-600',
+            currentStep === 3 ? 'ring-2 ring-gray-800 ring-offset-2' : ''
+          ]"
         >
-          <CheckIcon v-if="currentStep > 3" class="w-4 h-4" />
-          <TruckIcon v-else-if="currentStep === 3" class="w-4 h-4" />
-          <span class="font-body" v-else>3</span>
+          <svg v-if="currentStep > 3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="w-4 h-4">
+            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="w-4 h-4">
+            <path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" />
+            <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clip-rule="evenodd" />
+          </svg>
         </button>
-        <span class="mt-2 text-xs font-body text-body-text">Entrega</span>
-      </div>
-
-      <!-- Progress Line 3 -->
-      <div class="flex-1 h-0.5 mx-2 bg-gray-200 relative">
-        <div 
-          class="h-full transition-all duration-500 bg-gray-800"
-          :style="{ width: currentStep > 3 ? '100%' : '0%' }"
-        ></div>
-      </div>
-
-      <!-- Step 4: Pago -->
-      <div class="flex flex-col items-center">
-        <div 
-          class="flex items-center justify-center w-8 h-8 text-sm font-medium transition-all duration-300 rounded-full"
-          :class="getStepClasses(4)"
-        >
-          <CheckIcon v-if="currentStep > 4" class="w-4 h-4" />
-          <CreditCardIcon v-else-if="currentStep === 4" class="w-4 h-4" />
-          <span class="font-body" v-else>4</span>
-        </div>
         <span class="mt-2 text-xs font-body text-body-text">Pago</span>
       </div>
+
     </div>
 
   </div>
