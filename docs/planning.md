@@ -10,8 +10,6 @@
 
 ### Frontend
 
-<<<<<<< HEAD
-=======
 - [ ] **Checkout Simplificado (Patrón Bohme Clothes):**
     - [x] Eliminar estado de loading innecesario de cotización de envíos
     - [x] Reducir espaciado y padding del formulario de dirección
@@ -23,7 +21,6 @@
     - [ ] **PENDIENTE**: Corregir errores de TypeScript en props y emits
     - [ ] **PENDIENTE**: Simplificar flujo a 3 pasos: Carrito → Entrega → Pago
 
->>>>>>> dev
 - [x] **Stock:**
     - [x] Mostrar etiqueta "Sin stock" superpuesta en la imagen del producto.
     - [x] Deshabilitar el botón de compra para productos sin stock.
