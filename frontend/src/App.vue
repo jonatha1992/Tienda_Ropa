@@ -2,7 +2,7 @@
   <div>
     <Navbar />
     <router-view />
-    <Footer />
+    <Footer v-if="!$route.path.includes('/checkout')" />
     <!-- Progress Bar Global para navegación -->
     <ProgressBar 
       :progress="progress" 

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ShippingQuote:
     """Cotización de envío de un transportista específico"""
-    carrier: str  # 'oca', 'andreani', 'correo_argentino'
+    carrier: str  # 'oca', 'andreani', 'correoArgentino'
     carrier_name: str
     price: float
     currency: str
@@ -56,7 +56,7 @@ class ShippingQuotesService:
         """
         Cotiza con todos los transportistas disponibles (OCA, Andreani, Correo)
         """
-        carriers = ['oca', 'andreani', 'correo_argentino']
+        carriers = ['oca', 'andreani', 'correoArgentino']
         quotes = []
 
         # Ejecutar cotizaciones en paralelo para mayor eficiencia
@@ -135,9 +135,10 @@ class ShippingQuotesService:
 
                 if response.status_code == 200:
                     data = response.json()
+                    logger.info(f"✅ Respuesta exitosa de {carrier}: {data}")
                     return self._parse_quote_response(carrier, data)
                 else:
-                    logger.error(f"Error al cotizar con {carrier}: {response.status_code} - {response.text}")
+                    logger.error(f"❌ Error al cotizar con {carrier}: {response.status_code} - {response.text}")
                     return self._create_fallback_quote(carrier, f"API Error: {response.status_code}")
 
         except httpx.TimeoutException:
@@ -180,7 +181,7 @@ class ShippingQuotesService:
         fallback_prices = {
             'oca': 450,
             'andreani': 500,
-            'correo_argentino': 400
+            'correoArgentino': 400
         }
 
         return ShippingQuote(
@@ -200,7 +201,7 @@ class ShippingQuotesService:
         names = {
             'oca': 'OCA',
             'andreani': 'Andreani',
-            'correo_argentino': 'Correo Argentino'
+            'correoArgentino': 'Correo Argentino'
         }
         return names.get(carrier, carrier.upper())
 
@@ -211,7 +212,7 @@ class ShippingQuotesService:
         days = {
             'oca': 4,
             'andreani': 4,
-            'correo_argentino': 6
+            'correoArgentino': 6
         }
         return days.get(carrier, 5)
 
@@ -289,7 +290,7 @@ class ShippingQuotesService:
                 'error_message': 'Código postal incompleto - precio estimado'
             },
             {
-                'carrier': 'correo_argentino',
+                'carrier': 'correoArgentino',
                 'name': 'Correo Argentino',
                 'price': 400.0,
                 'currency': 'ARS',

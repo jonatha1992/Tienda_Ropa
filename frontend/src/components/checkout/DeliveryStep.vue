@@ -1,18 +1,6 @@
 <template>
   <div class="space-y-6">
     
-    <!-- Loading State Global -->
-    <div v-if="isLoadingQuotes" class="bg-white shadow rounded-lg p-6">
-      <div class="py-4 text-center">
-        <div class="inline-flex items-center">
-          <svg class="w-5 h-5 mr-3 -ml-1 text-gray-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span class="text-sm text-gray-600">Cotizando envíos...</span>
-        </div>
-      </div>
-    </div>
 
     <!-- Error/Warning Message Global -->
     <div v-if="quotesError && !isLoadingQuotes" class="bg-white shadow rounded-lg p-6">
@@ -62,124 +50,182 @@
         </div>
       </div>
       
-      <!-- Botón continuar -->
-      <div v-if="deliveryType" class="text-center pt-4">
-        <button @click="confirmDeliveryType" 
-                class="px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors">
-          Continuar
-        </button>
-      </div>
     </div>
     
     <!-- PASO 2: DIRECCIÓN DE ENVÍO (Solo para envío a domicilio) -->
-    <div v-if="showAddressForm" class="bg-white shadow rounded-lg p-6">
-      <h3 class="font-heading text-lg font-medium text-gray-900 mb-4">Dirección de envío</h3>
+    <div v-if="showAddressForm" class="bg-white shadow rounded-lg p-4">
+      <h3 class="font-heading text-lg font-medium text-gray-900 mb-3">Dirección de envío</h3>
       
-      <div class="space-y-4">
-        <div>
-          <AddressAutocomplete
-            :model-value="address"
-            @update:model-value="$emit('update:address', $event)"
-            input-id="address"
-            :country-code="country"
-            required
-            @address-selected="onAddressSelected"
-          />
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-3">
+        <!-- Datos de contacto -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
             <input
               type="text"
-              :value="city"
-              @input="$emit('update:city', ($event.target as HTMLInputElement).value)"
-              id="city"
+              :value="firstName"
+              @input="$emit('update:firstName', ($event.target as HTMLInputElement).value)"
+              id="firstName"
+              placeholder="Nombre"
               class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
               required
             />
           </div>
-          
           <div>
-            <label for="postalCode" class="block text-sm font-medium text-gray-700 mb-1">Código postal</label>
+            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+            <input
+              type="text"
+              :value="lastName"
+              @input="$emit('update:lastName', ($event.target as HTMLInputElement).value)"
+              id="lastName"
+              placeholder="Apellido"
+              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <input
+            type="tel"
+            :value="phone"
+            @input="$emit('update:phone', ($event.target as HTMLInputElement).value)"
+            id="phone"
+            placeholder="Ej: 11 1234-5678"
+            class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+            required
+          />
+        </div>
+
+        <!-- Código Postal con ciudad autocompletada -->
+        <div class="flex items-center space-x-2 p-3 border border-gray-300 rounded-md bg-gray-50">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div class="flex-1">
+            <div class="text-sm font-medium text-gray-700">
+              Código Postal {{ postalCode || '____' }}
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ city || 'Ciudad' }}
+            </div>
+          </div>
+          <button 
+            @click="showPostalCodeEdit = true"
+            class="text-sm text-blue-600 hover:underline"
+          >
+            Cambiar
+          </button>
+        </div>
+
+        <!-- Modal para editar código postal -->
+        <div v-if="showPostalCodeEdit" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div class="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+            <h3 class="text-lg font-medium mb-4">Código Postal</h3>
             <input
               type="text"
               :value="postalCode"
-              @input="$emit('update:postalCode', ($event.target as HTMLInputElement).value)"
-              id="postalCode"
-              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              @input="handlePostalCodeChange"
+              placeholder="Ej: 1804"
+              maxlength="6"
+              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black mb-4"
               required
             />
+            <div class="flex justify-end space-x-2">
+              <button 
+                @click="showPostalCodeEdit = false"
+                class="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancelar
+              </button>
+              <button 
+                @click="showPostalCodeEdit = false"
+                class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700"
+              >
+                Confirmar
+              </button>
+            </div>
           </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="province" class="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
-            <input
-              type="text"
-              :value="province"
-              @input="$emit('update:province', ($event.target as HTMLInputElement).value)"
-              id="province"
-              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-              required
-            />
-          </div>
-          
-          <div>
-            <label for="country" class="block text-sm font-medium text-gray-700 mb-1">País</label>
-            <input
-              type="text"
-              :value="country"
-              @input="$emit('update:country', ($event.target as HTMLInputElement).value)"
-              id="country"
-              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-              required
-            />
-          </div>
-        </div>
-        
+
+        <!-- Dirección separada en campos -->
         <div>
-          <label for="addressReference" class="block text-sm font-medium text-gray-700 mb-1">Referencia (opcional)</label>
+          <label for="street" class="block text-sm font-medium text-gray-700 mb-1">Calle</label>
           <input
             type="text"
-            :value="addressReference"
-            @input="$emit('update:addressReference', ($event.target as HTMLInputElement).value)"
-            id="addressReference"
-            placeholder="Ej: Piso 2, Depto A, Entre calles..."
+            :value="street"
+            @input="$emit('update:street', ($event.target as HTMLInputElement).value)"
+            id="street"
+            placeholder="Ej: Av. Corrientes"
             class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+            required
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="streetNumber" class="block text-sm font-medium text-gray-700 mb-1">Número</label>
+            <input
+              type="text"
+              :value="streetNumber"
+              @input="$emit('update:streetNumber', ($event.target as HTMLInputElement).value)"
+              id="streetNumber"
+              placeholder="1234"
+              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+              required
+            />
+          </div>
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="noNumber"
+              class="mr-2"
+            />
+            <label for="noNumber" class="text-sm text-gray-600">Sin número</label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label for="apartment" class="block text-sm font-medium text-gray-700 mb-1">Departamento (opcional)</label>
+            <input
+              type="text"
+              :value="apartment"
+              @input="$emit('update:apartment', ($event.target as HTMLInputElement).value)"
+              id="apartment"
+              placeholder="Ej: 4B"
+              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <label for="neighborhood" class="block text-sm font-medium text-gray-700 mb-1">Barrio (opcional)</label>
+            <input
+              type="text"
+              :value="neighborhood"
+              @input="$emit('update:neighborhood', ($event.target as HTMLInputElement).value)"
+              id="neighborhood"
+              placeholder="Ej: Microcentro"
+              class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+          <input
+            type="text"
+            :value="city"
+            @input="$emit('update:city', ($event.target as HTMLInputElement).value)"
+            id="city"
+            class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black bg-gray-50"
+            readonly
           />
         </div>
         
-        <div>
-          <label for="deliveryNotes" class="block text-sm font-medium text-gray-700 mb-1">Notas de entrega (opcional)</label>
-          <textarea
-            :value="deliveryNotes"
-            @input="$emit('update:deliveryNotes', ($event.target as HTMLTextAreaElement).value)"
-            id="deliveryNotes"
-            rows="3"
-            placeholder="Instrucciones especiales para la entrega..."
-            class="block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-          ></textarea>
-        </div>
-        
-        <div>
-          <label for="preferredDeliveryTime" class="block text-sm font-medium text-gray-700 mb-1">Horario preferido</label>
-          <select
-            :value="preferredDeliveryTime"
-            @change="$emit('update:preferredDeliveryTime', ($event.target as HTMLSelectElement).value)"
-            id="preferredDeliveryTime"
-            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:border-black focus:ring-black"
-          >
-            <option class="font-body" value="cualquiera">Cualquier horario</option>
-            <option class="font-body" value="mañana">Mañana (9:00 - 13:00)</option>
-            <option class="font-body" value="tarde">Tarde (14:00 - 18:00)</option>
-            <option class="font-body" value="noche">Noche (18:00 - 21:00)</option>
-          </select>
-        </div>
-        
         <!-- Botón para continuar con selección de transportista -->
-        <div class="text-center pt-6">
+        <div class="text-center pt-4">
           <button @click="completeAddressAndShowCarriers" 
                   :disabled="!isAddressValid"
                   :class="[
@@ -203,14 +249,8 @@
         </button>
       </div>
       
-      <!-- Loading state -->
-      <div v-if="isLoadingQuotes" class="text-center py-8">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        <p class="mt-2 text-sm text-gray-600">Calculando costos de envío...</p>
-      </div>
-      
       <!-- Error state -->
-      <div v-else-if="quotesError" class="text-center py-8">
+      <div v-if="quotesError" class="text-center py-8">
         <p class="text-sm text-red-600 mb-4">{{ quotesError }}</p>
         <button @click="loadShippingQuotes" class="text-sm text-blue-600 hover:underline">
           Reintentar
@@ -231,7 +271,7 @@
             </div>
           </div>
           <span class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_andreani']?.toLocaleString() || '500' }}
+            ${{ (deliveryCosts['envio_andreani'] || 500).toLocaleString('es-AR') }}
           </span>
         </div>
         
@@ -247,7 +287,7 @@
             </div>
           </div>
           <span class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_correo']?.toLocaleString() || '400' }}
+            ${{ (deliveryCosts['envio_correo'] || 400).toLocaleString('es-AR') }}
           </span>
         </div>
         
@@ -263,35 +303,12 @@
             </div>
           </div>
           <span class="text-sm font-medium text-gray-900">
-            ${{ deliveryCosts['envio_oca']?.toLocaleString() || '450' }}
+            ${{ (deliveryCosts['envio_oca'] || 450).toLocaleString('es-AR') }}
           </span>
         </div>
         
-        <!-- Cotización personalizada -->
-        <div class="provider-option-compact flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-             :class="selectedCarrier === 'cotizacion_personalizada' ? 'border-gray-800 bg-gray-50' : 'border-gray-200'"
-             @click="selectCarrier('cotizacion_personalizada')">
-          <div class="flex items-center">
-            <div class="w-8 h-8 mr-3 flex items-center justify-center bg-gray-100 rounded text-lg">📞</div>
-            <div>
-              <h4 class="text-sm font-medium text-gray-900">Cotización personalizada</h4>
-              <p class="text-xs text-gray-500">Te contactamos para cotizar</p>
-              <p class="text-xs text-blue-600 mt-1">
-                📱 WhatsApp: +54 9 11 1234-5678
-              </p>
-            </div>
-          </div>
-          <span class="text-sm font-medium text-blue-600">A cotizar</span>
-        </div>
       </div>
       
-      <!-- Botón confirmar transportista -->
-      <div v-if="selectedCarrier" class="text-center pt-4">
-        <button @click="confirmCarrierSelection" 
-                class="px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors">
-          Confirmar {{ getCarrierDisplayName(selectedCarrier) }}
-        </button>
-      </div>
     </div>
 
     <!-- INFORMACIÓN DE RETIRO LOCAL -->
@@ -316,29 +333,38 @@
     </div>
 
     <!-- BOTÓN CONTINUAR AL PAGO -->
-    <div v-if="isDeliveryInfoComplete" class="bg-white shadow rounded-lg p-6">
-      <div class="text-center">
-        <div class="mb-4">
-          <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-3">
-            <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
+    <Transition
+      enter-active-class="transition-all duration-500 ease-out"
+      enter-from-class="opacity-0 transform translate-y-4 scale-95"
+      enter-to-class="opacity-100 transform translate-y-0 scale-100"
+      leave-active-class="transition-all duration-300 ease-in"
+      leave-from-class="opacity-100 transform translate-y-0 scale-100"
+      leave-to-class="opacity-0 transform translate-y-4 scale-95"
+    >
+      <div v-if="isDeliveryInfoComplete" class="bg-white shadow rounded-lg p-6">
+        <div class="text-center">
+          <div class="mb-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-3 animate-bounce-once">
+              <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Información de entrega completa</h3>
+            <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el método de pago</p>
           </div>
-          <h3 class="font-heading text-lg font-medium text-gray-900 mb-2">Información de entrega completa</h3>
-          <p class="font-body text-sm text-gray-600 mb-4">Ya puedes continuar con el método de pago</p>
+          <button
+            type="button"
+            @click="$emit('continue')"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <span class="text-white">Continuar al pago</span>
+            <svg class="ml-2 -mr-1 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
         </div>
-        <button
-          type="button"
-          @click="$emit('continue')"
-          class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
-        >
-          <span class="text-white">Continuar al pago</span>
-          <svg class="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </button>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -360,6 +386,8 @@ function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
 interface Props {
   selectedDeliveryMethod: string
   address: string
+  streetNumber: string
+  fullAddress: string
   city: string
   postalCode: string
   province: string
@@ -368,15 +396,24 @@ interface Props {
   deliveryNotes: string
   preferredDeliveryTime: string
   totalWeightKg: number
+  // Nuevos campos siguiendo patrón Bohme
+  firstName: string
+  lastName: string
+  phone: string
+  street: string
+  apartment: string
+  neighborhood: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   selectedDeliveryMethod: '',
   address: '',
+  streetNumber: '',
+  fullAddress: '',
   city: '',
   postalCode: '',
   province: '',
-  country: 'Argentina',
+  country: 'AR',
   addressReference: '',
   deliveryNotes: '',
   preferredDeliveryTime: 'cualquiera',
@@ -394,6 +431,8 @@ interface ShippingOption {
 const emit = defineEmits<{
   'update:selectedDeliveryMethod': [value: string]
   'update:address': [value: string]
+  'update:streetNumber': [value: string]
+  'update:fullAddress': [value: string]
   'update:city': [value: string]
   'update:postalCode': [value: string]
   'update:province': [value: string]
@@ -401,6 +440,12 @@ const emit = defineEmits<{
   'update:addressReference': [value: string]
   'update:deliveryNotes': [value: string]
   'update:preferredDeliveryTime': [value: string]
+  'update:firstName': [value: string]
+  'update:lastName': [value: string]
+  'update:phone': [value: string]
+  'update:street': [value: string]
+  'update:apartment': [value: string]
+  'update:neighborhood': [value: string]
   'delivery-method-changed': [data: { method: string; cost: number }]
   'continue': []
 }>()
@@ -417,6 +462,7 @@ const showDeliveryTypeSelection = ref(true)             // Paso 1: elegir tipo
 const showAddressForm = ref(false)                      // Paso 2: datos de contacto
 const showCarrierSelection = ref(false)                 // Paso 3: elegir transportista
 const addressCompleted = ref(false)                     // Si completó datos de contacto
+const showPostalCodeEdit = ref(false)                   // Modal para editar código postal
 
 // Fallback delivery costs
 const fallbackDeliveryCosts = {
@@ -436,7 +482,7 @@ const deliveryCosts = computed(() => {
       const carrierMapping: Record<string, string> = {
         'oca': 'envio_oca',
         'andreani': 'envio_andreani', 
-        'correo_argentino': 'envio_correo'
+        'correoArgentino': 'envio_correo'
       }
       const frontendMethod = carrierMapping[option.carrier] || option.carrier
       costs[frontendMethod] = option.price
@@ -449,27 +495,56 @@ const deliveryCosts = computed(() => {
 
 // Check if delivery info is complete
 const isDeliveryInfoComplete = computed(() => {
+  console.log('🔍 Checking isDeliveryInfoComplete:', {
+    deliveryType: deliveryType.value,
+    addressCompleted: addressCompleted.value,
+    selectedCarrier: selectedCarrier.value,
+    firstName: props.firstName,
+    lastName: props.lastName,
+    phone: props.phone,
+    street: props.street,
+    city: props.city,
+    postalCode: props.postalCode
+  })
+  
   // For retiro local, only need delivery type selected
-  if (deliveryType.value === 'retiro_local') return true
+  if (deliveryType.value === 'retiro_local') {
+    console.log('✅ Retiro local selected - complete!')
+    return true
+  }
   
   // For envio domicilio, need address completed AND carrier selected
   if (deliveryType.value === 'envio_domicilio') {
-    return addressCompleted.value && selectedCarrier.value !== ''
+    const isComplete = addressCompleted.value && selectedCarrier.value !== ''
+    console.log('📦 Envio domicilio check:', { addressCompleted: addressCompleted.value, selectedCarrier: selectedCarrier.value, isComplete })
+    return isComplete
   }
   
+  console.log('❌ No delivery type selected')
   return false
 })
 
 // Validar si la dirección está completa
 const isAddressValid = computed(() => {
-  return props.address.trim() && 
+  const isValid = props.street.trim() && 
          props.city.trim() && 
          props.postalCode.trim()
+  
+  console.log('🏠 Address validation:', {
+    street: props.street,
+    city: props.city,
+    postalCode: props.postalCode,
+    isValid
+  })
+  
+  return isValid
 })
 
 // Nuevos métodos para el flujo
 const selectDeliveryType = (type: string) => {
   deliveryType.value = type
+  // Avanzar automáticamente al seleccionar tipo
+  confirmDeliveryType()
 }
 
 const confirmDeliveryType = () => {
@@ -487,6 +562,8 @@ const confirmDeliveryType = () => {
 
 const selectCarrier = (carrier: string) => {
   selectedCarrier.value = carrier
+  // Confirmar automáticamente al seleccionar transportista
+  confirmCarrierSelection()
 }
 
 const confirmCarrierSelection = () => {
@@ -502,22 +579,36 @@ const getCarrierDisplayName = (carrier: string): string => {
     'envio_andreani': 'Andreani',
     'envio_correo': 'Correo Argentino',
     'envio_oca': 'OCA',
-    'cotizacion_personalizada': 'Cotización Personalizada'
   }
   return names[carrier] || carrier
 }
 
 // Completar dirección y mostrar transportistas
 const completeAddressAndShowCarriers = () => {
+  console.log('🔄 Attempting to complete address and show carriers')
+  console.log('📋 Current form state:', {
+    firstName: props.firstName,
+    lastName: props.lastName,
+    phone: props.phone,
+    street: props.street,
+    city: props.city,
+    postalCode: props.postalCode,
+    isAddressValid: isAddressValid.value
+  })
+  
   if (isAddressValid.value) {
+    console.log('✅ Address is valid, proceeding to carrier selection')
     addressCompleted.value = true
     showAddressForm.value = false
     showCarrierSelection.value = true
     
     // Cargar cotizaciones si hay código postal
     if (props.postalCode && props.postalCode.trim().length >= 4) {
+      console.log('📞 Loading shipping quotes for postal code:', props.postalCode)
       loadShippingQuotes()
     }
+  } else {
+    console.log('❌ Address is not valid, cannot proceed')
   }
 }
 
@@ -549,21 +640,31 @@ const loadShippingQuotes = async () => {
       province: props.province || undefined
     })
     
-    if (response.success && response.quotes) {
-      shippingOptions.value = response.quotes.map(quote => ({
+    if (response.success && response.options) {
+      shippingOptions.value = response.options.map(quote => ({
         carrier: quote.carrier,
-        service: quote.service,
+        service: quote.service_type || quote.service,
         price: quote.price,
         estimatedDays: quote.estimated_days,
-        description: quote.description
+        description: quote.estimated_delivery_text || quote.description
       }))
       console.log('Shipping quotes loaded:', shippingOptions.value)
+      
+      // Solo mostrar error si hay problemas reales, no por precios estimados normales
+      if (response.message && !response.api_available) {
+        quotesError.value = response.message
+      }
     } else {
       throw new Error(response.message || 'Error al obtener cotizaciones')
     }
   } catch (error: any) {
     console.error('Error loading shipping quotes:', error)
-    quotesError.value = error.message || 'Error al cargar cotizaciones de envío'
+    // Mejorar el mensaje de error para ser más claro
+    if (error.message?.includes('precios estimados')) {
+      quotesError.value = 'Servicio de cotización temporalmente no disponible. Mostrando precios estimados.'
+    } else {
+      quotesError.value = 'Servicio de cotización no disponible. Usando precios estimados.'
+    }
   } finally {
     isLoadingQuotes.value = false
   }
@@ -579,6 +680,32 @@ watch(() => [props.postalCode, props.totalWeightKg], () => {
   }
 }, { immediate: false })
 
+// Función para manejar cambios en código postal
+const handlePostalCodeChange = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value
+  emit('update:postalCode', value)
+  
+  // Auto-completar ciudad y provincia basado en código postal argentino
+  if (value.length >= 4) {
+    // Lógica básica para algunas ciudades principales
+    const postalCodeMap: Record<string, { city: string; province: string }> = {
+      '1000': { city: 'Buenos Aires', province: 'Ciudad Autónoma de Buenos Aires' },
+      '1001': { city: 'Buenos Aires', province: 'Ciudad Autónoma de Buenos Aires' },
+      '1804': { city: 'Ezeiza', province: 'Buenos Aires' },
+      '1759': { city: 'González Catán', province: 'Buenos Aires' },
+      '1900': { city: 'La Plata', province: 'Buenos Aires' },
+      '2000': { city: 'Rosario', province: 'Santa Fe' },
+      '5000': { city: 'Córdoba', province: 'Córdoba' },
+    }
+    
+    const location = postalCodeMap[value]
+    if (location) {
+      emit('update:city', location.city)
+      emit('update:province', location.province)
+    }
+  }
+}
+
 // Load quotes on mount if postal code is available
 onMounted(() => {
   if (props.postalCode) {
@@ -589,6 +716,7 @@ onMounted(() => {
   const cost = (deliveryCosts.value as Record<string, number>)[props.selectedDeliveryMethod] || 0
   emit('delivery-method-changed', { method: props.selectedDeliveryMethod, cost })
 })
+
 </script>
 
 <style scoped>
@@ -598,5 +726,24 @@ onMounted(() => {
 
 .provider-option-compact:hover {
   @apply bg-gray-50 border-gray-300;
+}
+
+@keyframes bounce-once {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0,-8px,0);
+  }
+  70% {
+    transform: translate3d(0,-4px,0);
+  }
+  90% {
+    transform: translate3d(0,-2px,0);
+  }
+}
+
+.animate-bounce-once {
+  animation: bounce-once 1s ease-out;
 }
 </style>
