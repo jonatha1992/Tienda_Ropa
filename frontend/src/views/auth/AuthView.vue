@@ -38,7 +38,7 @@
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-                        Te redirigiremos a Google para autenticarte (sin popup)
+                        Se abrirá una ventana popup para autenticarte con Google
                     </p>
                 </div>
 
@@ -201,7 +201,7 @@ const signInWithGoogle = async () => {
     try {
         loading.value = true
         error.value = ''
-        console.log('🚀 Iniciando login con Google...')
+        console.log('🚀 Iniciando login con Google (popup)...')
         
         const provider = new GoogleAuthProvider()
         
@@ -210,25 +210,12 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        // Detectar entorno y usar método apropiado
-        const hostname = window.location.hostname
-        console.log('🔧 Hostname detectado:', hostname)
-        console.log('🔧 Firebase auth domain:', auth.config.authDomain)
-        console.log('🔧 Firebase project ID:', auth.config.projectId)
-        
-        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('test')) {
-            console.log('🌐 Entorno local/test detectado - usando popup (más confiable)...')
-            console.log('🔧 Intentando abrir popup...')
-            const result = await signInWithPopup(auth, provider)
-            console.log('✅ Login exitoso (popup):', result.user.email)
-            console.log('✅ User UID:', result.user.uid)
-            console.log('✅ Access token:', await result.user.getIdToken())
-            loading.value = false
-        } else {
-            console.log('🌐 Entorno de producción detectado - usando redirect...')
-            await signInWithRedirect(auth, provider)
-            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
-        }
+        console.log('🔧 Intentando abrir popup...')
+        const result = await signInWithPopup(auth, provider)
+        console.log('✅ Login exitoso (popup):', result.user.email)
+        console.log('✅ User UID:', result.user.uid)
+        console.log('✅ Access token:', await result.user.getIdToken())
+        loading.value = false
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
