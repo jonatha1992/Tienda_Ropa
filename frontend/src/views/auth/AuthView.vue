@@ -214,11 +214,20 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('🌐 Redirigiendo a Google (sin popup)...')
+        // Detectar entorno y usar método apropiado
+        const hostname = window.location.hostname
+        console.log('🔧 Hostname detectado:', hostname)
         
-        // Usar directamente redirect (sin intentar popup)
-        await signInWithRedirect(auth, provider)
-        // El resultado se manejará en onMounted() con getRedirectResult()
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            console.log('🌐 Entorno local detectado - usando popup...')
+            const result = await signInWithPopup(auth, provider)
+            console.log('✅ Login exitoso (popup):', result.user.email)
+            loading.value = false
+        } else {
+            console.log('🌐 Entorno remoto (test/producción) detectado - usando redirect...')
+            await signInWithRedirect(auth, provider)
+            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
+        }
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
