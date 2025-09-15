@@ -38,7 +38,7 @@
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-Te redirigiremos a Google para autenticarte
+                        Se abrirá una ventana popup para autenticarte con Google
                     </p>
                 </div>
 
@@ -198,46 +198,47 @@ const toggleMode = () => {
 }
 
 const signInWithGoogle = async () => {
-    console.log('🚀 Iniciando login con Google (redirect)...')
-    console.log('🔧 Auth object:', auth)
-    console.log('🔧 Auth config:', auth?.config || 'No config')
-    loading.value = true
-    error.value = ''
-
     try {
+        loading.value = true
+        error.value = ''
+        console.log('🚀 Iniciando login con Google (popup)...')
+        
         const provider = new GoogleAuthProvider()
-        provider.addScope('email')
-        provider.addScope('profile')
-
+        
         // Agregar parámetros adicionales para mejor experiencia
         provider.setCustomParameters({
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('🔧 Provider configurado:', provider)
-        // Detectar entorno para elegir método de autenticación
-        const hostname = window.location.hostname
-        console.log('🔧 Hostname detectado:', hostname)
-        
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            console.log('🌐 Entorno local detectado - usando popup...')
-            const result = await signInWithPopup(auth, provider)
-            console.log('✅ Login exitoso (popup):', result.user.email)
-            loading.value = false
-        } else {
-            console.log('🌐 Entorno remoto detectado - usando redirect...')
-            await signInWithRedirect(auth, provider)
-            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
-            // El resultado se manejará en onMounted() con getRedirectResult()
-        }
+        console.log('🔧 Intentando abrir popup...')
+        const result = await signInWithPopup(auth, provider)
+        console.log('✅ Login exitoso (popup):', result.user.email)
+        console.log('✅ User UID:', result.user.uid)
+        console.log('✅ Access token:', await result.user.getIdToken())
+        loading.value = false
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
         console.error('🔴 Error code:', err.code)
         console.error('🔴 Error message:', err.message)
-        console.error('🔴 Error stack:', err.stack)
+        console.error('🔴 Error details:', err)
+        if (err.customData) {
+            console.error('🔴 Error customData:', err.customData)
+        }
         loading.value = false
-        error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesión con Google'
+        
+        // Mensajes de error más específicos
+        if (err.code === 'auth/unauthorized-domain') {
+            error.value = 'Dominio no autorizado en Firebase Console'
+        } else if (err.code === 'auth/popup-blocked') {
+            error.value = 'Popup bloqueado. Permite popups para este sitio'
+        } else if (err.code === 'auth/popup-closed-by-user') {
+            error.value = 'Popup cerrado por el usuario'
+        } else if (err.code === 'auth/cancelled-popup-request') {
+            error.value = 'Autenticación cancelada'
+        } else {
+            error.value = `Error: ${err.message} (${err.code})`
+        }
     }
 }
 
@@ -255,31 +256,31 @@ const handleSubmit = async () => {
             console.log('Registro exitoso:', result.user.email)
         }
 
-        // El store detectarÃ¡ automÃ¡ticamente el cambio y redirigirÃ¡
+        // El store detectará automáticamente el cambio y redirigirá
         // No necesitamos redirigir manualmente aquí
         loading.value = false
     } catch (err: any) {
         console.error('Error auth:', err)
-        error.value = getErrorMessage(err.code) || err.message || 'Error de autenticacin'
+        error.value = getErrorMessage(err.code) || err.message || 'Error de autenticación'
         loading.value = false
     }
 }
 
-// Funcin para traducir cdigos de error de Firebase
+// Función para traducir códigos de error de Firebase
 const getErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
         case 'auth/user-not-found':
             return 'Usuario no encontrado'
         case 'auth/wrong-password':
-            return 'ContraseÃ±a incorrecta'
+            return 'Contraseña incorrecta'
         case 'auth/email-already-in-use':
-            return 'El email ya estÃ¡ en uso'
+            return 'El email ya está en uso'
         case 'auth/weak-password':
-            return 'La contraseÃ±a es muy dÃ©bil'
+            return 'La contraseña es muy débil'
         case 'auth/invalid-email':
-            return 'Email invÃ¡lido'
+            return 'Email inválido'
         case 'auth/popup-blocked':
-            return 'El navegador bloque el popup. Intenta permitir popups para este sitio.'
+            return 'El navegador bloqueó el popup. Intenta permitir popups para este sitio.'
         default:
             return ''
     }
