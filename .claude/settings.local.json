@@ -13,7 +13,8 @@
       "Bash(vue-tsc --noEmit)",
       "Bash(npm ls:*)",
       "Bash(npm run test:*)",
-      "Bash(npm run build:test:*)"
+      "Bash(npm run build:test:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": [],

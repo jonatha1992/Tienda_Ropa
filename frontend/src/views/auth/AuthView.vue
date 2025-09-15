@@ -33,12 +33,12 @@
                         <path fill="currentColor"
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    {{ loading ? 'Redirigiendo a Google...' : (isLogin ? 'Continuar con Google' : 'Registrarse con Google') }}
+                    {{ loading ? 'Abriendo popup...' : (isLogin ? 'Continuar con Google' : 'Registrarse con Google') }}
                 </button>
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-                        Te redirigiremos a Google para autenticarte (sin popup)
+Se abrirá una ventana popup para autenticarte con Google
                     </p>
                 </div>
 
@@ -115,38 +115,12 @@ watch(() => authStore.isAuthenticated, (isAuth) => {
     }
 }, { immediate: true })
 
-// Verificar si hay resultado de redirect al cargar el componente
-onMounted(async () => {
-    console.log(' Verificando resultado de redirect...')
+// Ya no necesitamos verificar redirect result con popup
+onMounted(() => {
+    console.log('📱 AuthView cargado - usando autenticación con popup')
     console.log(' Current user en firebase:', auth.currentUser)
     console.log(' Auth store user:', authStore.firebaseUser)
     console.log(' Auth store authenticated:', authStore.isAuthenticated)
-
-    try {
-        const result = await getRedirectResult(auth)
-        if (result) {
-            // Usuario autenticado exitosamente después del redirect
-            console.log('Login con Google exitoso (redirect):', result.user.email)
-            console.log('✅ Token obtenido, el store debería actualizar automáticamente...')
-            // No redirigir manualmente aquí, el watch lo hará
-        } else {
-            console.log('🔍 No hay resultado de redirect pendiente')
-        }
-    } catch (err: any) {
-        console.error('🔴 Error procesando redirect result:', err)
-        loading.value = false
-
-        // Mensajes de error más específicos
-        if (err.code === 'auth/popup-blocked') {
-            error.value = 'El navegador bloqueó la ventana de autenticación.'
-        } else if (err.code === 'auth/cancelled-popup-request') {
-            error.value = 'Autenticación cancelada.'
-        } else if (err.code === 'auth/network-request-failed') {
-            error.value = 'Error de conexión. Verifica tu internet.'
-        } else {
-            error.value = `Error de autenticación: ${err.message}`
-        }
-    }
 })
 
 const toggleMode = () => {
@@ -155,7 +129,7 @@ const toggleMode = () => {
 }
 
 const signInWithGoogle = async () => {
-    console.log(' Iniciando login con Google...')
+    console.log('🚀 Iniciando login con Google...')
     loading.value = true
     error.value = ''
 
@@ -169,11 +143,14 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('🌐 Redirigiendo a Google (sin popup)...')
+        console.log('🪟 Abriendo popup de Google...')
         
-        // Usar directamente redirect (sin intentar popup)
-        await signInWithRedirect(auth, provider)
-        // El resultado se manejará en onMounted() con getRedirectResult()
+        // Usar popup en lugar de redirect
+        const result = await signInWithPopup(auth, provider)
+        console.log('✅ Login exitoso:', result.user.email)
+        
+        // El store detectará automáticamente el cambio y redirigirá
+        loading.value = false
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
