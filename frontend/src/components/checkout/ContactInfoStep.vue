@@ -68,7 +68,12 @@
           @update:country-code="$emit('update:phoneCountryCode', $event)"
           input-id="phone"
           required
+          :class="{ 'border-red-300': phone.trim() && !isValidPhone }"
         />
+        <!-- Error message for invalid phone -->
+        <p v-if="phone.trim() && !isValidPhone" class="mt-1 text-sm text-red-600">
+          Formato de teléfono inválido para {{ phoneCountryCode }}
+        </p>
       </div>
     </div>
 
@@ -124,10 +129,36 @@ const emit = defineEmits<{
   'continue': []
 }>()
 
+// Validación de formato de teléfono
+const isValidPhone = computed(() => {
+  if (!props.phone.trim()) return false
+  
+  // Remover espacios y caracteres especiales
+  const cleanPhone = props.phone.replace(/[\s\-\(\)]/g, '')
+  
+  // Validar según el país
+  const phonePatterns: Record<string, RegExp> = {
+    'AR': /^[0-9]{8,10}$/, // Argentina: 8-10 dígitos
+    'UY': /^[0-9]{8,9}$/,  // Uruguay: 8-9 dígitos  
+    'CL': /^[0-9]{8,9}$/,  // Chile: 8-9 dígitos
+    'BR': /^[0-9]{10,11}$/, // Brasil: 10-11 dígitos
+    'PY': /^[0-9]{8,9}$/,  // Paraguay: 8-9 dígitos
+    'BO': /^[0-9]{8}$/,    // Bolivia: 8 dígitos
+    'PE': /^[0-9]{9}$/,    // Perú: 9 dígitos
+    'EC': /^[0-9]{8,9}$/,  // Ecuador: 8-9 dígitos
+    'CO': /^[0-9]{10}$/,   // Colombia: 10 dígitos
+    'VE': /^[0-9]{10,11}$/ // Venezuela: 10-11 dígitos
+  }
+  
+  const pattern = phonePatterns[props.phoneCountryCode] || /^[0-9]{8,11}$/
+  return pattern.test(cleanPhone)
+})
+
 const isContactInfoComplete = computed(() => {
   return props.firstName.trim() && 
          props.lastName.trim() && 
          props.email.trim() && 
-         props.phone.trim()
+         props.phone.trim() &&
+         isValidPhone.value
 })
 </script>

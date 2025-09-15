@@ -22,7 +22,7 @@ Archivos sugeridos (solo locales, nunca subir secretos reales):
 """
 
 # Determinar entorno temprano (valores soportados: dev, test, pro)
-RAW_ENV = os.getenv("ENVIRONMENT", "test").lower()
+RAW_ENV = os.getenv("ENVIRONMENT", "dev").lower()
 ENV_FILE_MAP = {
     "dev": ".env.dev",
     "test": ".env.test",
@@ -139,6 +139,16 @@ class Settings(BaseSettings):
 
         # Default origins based on environment
         origins = [self.FRONTEND_URL]
+
+        # Add localhost variants for development
+        if self.ENVIRONMENT in ("dev", "development", "test"):
+            localhost_origins = [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            ]
+            for origin in localhost_origins:
+                if origin not in origins:
+                    origins.append(origin)
 
         # Always add common development and production origins
         common_origins = [

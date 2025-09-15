@@ -12,6 +12,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_ID
 };
 
+// Debug logs removidos - Firebase configurado correctamente
+
 let auth: any;
 let storage: any;
 

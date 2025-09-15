@@ -1,4 +1,4 @@
-﻿import { ref, readonly } from 'vue'
+import { ref, readonly } from 'vue'
 
 export interface AddressSuggestion {
   place_id: number
@@ -39,7 +39,7 @@ export function useAddressAutocomplete() {
   let lastRequestTime = 0
   const MIN_REQUEST_INTERVAL = 1000
 
-  const searchAddresses = async (query: string, countryCode: string = 'ar'): Promise<AddressSuggestion[]> => {
+  const searchAddresses = async (query: string, countryCode: string = 'AR'): Promise<AddressSuggestion[]> => {
     if (query.length < 3) {
       suggestions.value = []
       return []
@@ -56,7 +56,7 @@ export function useAddressAutocomplete() {
     error.value = null
 
     try {
-      const countryCodes = countryCode === 'AR' ? 'ar' : countryCode === 'UY' ? 'uy' : countryCode === 'CL' ? 'cl' : 'ar,uy,cl'
+      const countryCodes = countryCode === 'AR' ? 'ar' : countryCode === 'UY' ? 'uy' : countryCode === 'CL' ? 'cl' : 'ar'
 
       const url = new URL('https://nominatim.openstreetmap.org/search')
       url.searchParams.set('q', query)

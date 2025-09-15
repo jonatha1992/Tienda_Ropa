@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="relative">
     <label :for="inputId" class="font-body block text-sm font-medium text-body-text">
       {{ label }}
@@ -30,8 +30,21 @@
       <!-- Suggestions dropdown -->
       <div 
         v-if="showSuggestions && suggestions.length > 0"
-        class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
+        class="absolute z-[9999] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
       >
+        <!-- Close button -->
+        <div class="flex justify-end p-2 border-b border-gray-100">
+          <button
+            @mousedown="closeSuggestions"
+            class="text-gray-400 hover:text-gray-600 transition-colors"
+            type="button"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
         <div
           v-for="(suggestion, index) in suggestions"
           :key="suggestion.place_id"
@@ -51,7 +64,7 @@
       <!-- No results message -->
       <div 
         v-if="showSuggestions && !loading && searchQuery.length >= 3 && suggestions.length === 0"
-        class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
+        class="absolute z-[9999] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
       >
         <div class="px-4 py-3 text-sm font-body text-gray-500">
           No se encontraron direcciones. Intenta con más detalles.
@@ -195,6 +208,12 @@ const selectSuggestion = (suggestion: AddressSuggestion) => {
   nextTick(() => {
     inputRef.value?.focus()
   })
+}
+
+const closeSuggestions = () => {
+  showSuggestions.value = false
+  selectedIndex.value = -1
+  clearSuggestions()
 }
 
 const formatAddressMain = (suggestion: AddressSuggestion): string => {

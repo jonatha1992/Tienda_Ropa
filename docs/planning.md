@@ -10,6 +10,17 @@
 
 ### Frontend
 
+- [ ] **Checkout Simplificado (Patrón Bohme Clothes):**
+    - [x] Eliminar estado de loading innecesario de cotización de envíos
+    - [x] Reducir espaciado y padding del formulario de dirección
+    - [x] Ajustar ancho del input de código postal para 4-6 caracteres
+    - [x] Rediseñar formulario siguiendo patrón Bohme: Nombre, Apellido, Teléfono
+    - [x] Separar campos de dirección: Calle, Número, Departamento, Barrio, Ciudad
+    - [x] Implementar modal para editar código postal con autocompletado de ciudad
+    - [ ] **PENDIENTE**: Actualizar variables reactivas en CheckoutView para nuevos campos
+    - [ ] **PENDIENTE**: Corregir errores de TypeScript en props y emits
+    - [ ] **PENDIENTE**: Simplificar flujo a 3 pasos: Carrito → Entrega → Pago
+
 - [x] **Stock:**
     - [x] Mostrar etiqueta "Sin stock" superpuesta en la imagen del producto.
     - [x] Deshabilitar el botón de compra para productos sin stock.
