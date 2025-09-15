@@ -38,7 +38,7 @@
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-Te redirigiremos a Google para autenticarte
+                        Te redirigiremos a Google para autenticarte (sin popup)
                     </p>
                 </div>
 
@@ -214,22 +214,11 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('🔧 Provider configurado:', provider)
-        // Detectar entorno para elegir método de autenticación
-        const hostname = window.location.hostname
-        console.log('🔧 Hostname detectado:', hostname)
+        console.log('🌐 Redirigiendo a Google (sin popup)...')
         
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            console.log('🌐 Entorno local detectado - usando popup...')
-            const result = await signInWithPopup(auth, provider)
-            console.log('✅ Login exitoso (popup):', result.user.email)
-            loading.value = false
-        } else {
-            console.log('🌐 Entorno remoto detectado - usando redirect...')
-            await signInWithRedirect(auth, provider)
-            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
-            // El resultado se manejará en onMounted() con getRedirectResult()
-        }
+        // Usar directamente redirect (sin intentar popup)
+        await signInWithRedirect(auth, provider)
+        // El resultado se manejará en onMounted() con getRedirectResult()
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)

@@ -1,25 +1,24 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(dir:*)",
-      "Bash(python:*)",
-      "Bash(alembic current:*)",
-      "Bash(source:*)",
-      "Bash(npm run dev:*)",
-      "Bash(npx vue-tsc:*)",
-      "Bash(node:*)",
-      "mcp__sequential-thinking__sequentialthinking",
-      "Bash(pip install:*)",
-      "Bash(vue-tsc --noEmit)",
-      "Bash(npm ls:*)",
-      "Bash(npm run test:*)",
-      "Bash(npm run build:test:*)",
-      "Bash(curl:*)"
-    ],
-    "deny": [],
-    "ask": [],
-    "additionalDirectories": [
-      "C:\\c\\Repositorio\\mvintage"
-    ]
-  }
+    "permissions": {
+        "allow": [
+            "Bash(dir:*)",
+            "Bash(python:*)",
+            "Bash(alembic current:*)",
+            "Bash(source:*)",
+            "Bash(npm run dev:*)",
+            "Bash(npx vue-tsc:*)",
+            "Bash(node:*)",
+            "mcp__sequential-thinking__sequentialthinking",
+            "Bash(pip install:*)",
+            "Bash(vue-tsc --noEmit)",
+            "Bash(npm ls:*)",
+            "Bash(npm run test:*)",
+            "Bash(npm run build:test:*)"
+        ],
+        "deny": [],
+        "ask": [],
+        "additionalDirectories": [
+            "C:\\c\\Repositorio\\mvintage"
+        ]
+    }
 }
