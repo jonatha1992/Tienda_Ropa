@@ -215,22 +215,27 @@ const signInWithGoogle = async () => {
         })
 
         console.log('🔧 Provider configurado:', provider)
-        // Detectar si estamos en desarrollo o producción
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        // Detectar entorno y usar popup siempre (más confiable)
+        const hostname = window.location.hostname
+        console.log('🔧 Hostname detectado:', hostname)
         
-        if (isLocalhost) {
-            console.log('🌐 Entorno local detectado - usando popup...')
-            // POPUP para desarrollo local (evita errores de Permissions API)
-            const result = await signInWithPopup(auth, provider)
-            console.log('✅ Login exitoso (popup):', result.user.email)
-            loading.value = false
-        } else {
-            console.log('🌐 Entorno de producción detectado - usando redirect...')
-            // REDIRECT para producción (mejor UX en móviles)
-            await signInWithRedirect(auth, provider)
-            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
-            // El resultado se manejará en onMounted() con getRedirectResult()
-        }
+        // Usar popup en todos los entornos por ahora (evita problemas de redirect)
+        console.log('🌐 Usando popup (más confiable en todos los entornos)...')
+        const result = await signInWithPopup(auth, provider)
+        console.log('✅ Login exitoso (popup):', result.user.email)
+        loading.value = false
+        
+        // REDIRECT VERSION (comentado hasta resolver problemas de configuración)
+        // if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        //     console.log('🌐 Entorno local detectado - usando popup...')
+        //     const result = await signInWithPopup(auth, provider)
+        //     console.log('✅ Login exitoso (popup):', result.user.email)
+        //     loading.value = false
+        // } else {
+        //     console.log('🌐 Entorno remoto detectado - usando redirect...')
+        //     await signInWithRedirect(auth, provider)
+        //     console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
+        // }
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
