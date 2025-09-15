@@ -33,12 +33,12 @@
                         <path fill="currentColor"
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    {{ loading ? 'Abriendo popup...' : (isLogin ? 'Continuar con Google' : 'Registrarse con Google') }}
+                    {{ loading ? 'Redirigiendo a Google...' : (isLogin ? 'Continuar con Google' : 'Registrarse con Google') }}
                 </button>
 
                 <div v-if="!loading" class="text-center">
                     <p class="text-xs font-body text-body-text">
-Se abrirá una ventana popup para autenticarte con Google
+Te redirigiremos a Google para autenticarte
                     </p>
                 </div>
 
@@ -115,12 +115,81 @@ watch(() => authStore.isAuthenticated, (isAuth) => {
     }
 }, { immediate: true })
 
-// Ya no necesitamos verificar redirect result con popup
-onMounted(() => {
-    console.log('📱 AuthView cargado - usando autenticación con popup')
+// Verificar si hay resultado de redirect al cargar el componente
+onMounted(async () => {
+    console.log('🔄 Verificando resultado de redirect...')
+    console.log('🔧 URL actual al montar:', window.location.href)
+    console.log('🔧 URL params:', new URLSearchParams(window.location.search).toString())
     console.log(' Current user en firebase:', auth.currentUser)
     console.log(' Auth store user:', authStore.firebaseUser)
     console.log(' Auth store authenticated:', authStore.isAuthenticated)
+
+    try {
+        // Verificar el estado actual de auth
+        console.log('🔧 Estado de auth antes de getRedirectResult:', {
+            currentUser: auth.currentUser,
+            authDomain: auth.app.options.authDomain,
+            projectId: auth.app.options.projectId
+        })
+        
+        // Esperar un momento para asegurar que Firebase esté completamente inicializado
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
+        console.log('📡 Ejecutando getRedirectResult...')
+        const result = await getRedirectResult(auth)
+        console.log('📡 Resultado de getRedirectResult:', result)
+        
+        if (result && result.user) {
+            console.log('✅ Usuario encontrado en redirect result:', result.user.email)
+        } else {
+            console.log('🔍 No hay resultado de redirect o usuario es null')
+            console.log('🔧 Intentando verificar si hay usuario persistido...')
+            
+            // Verificar si hay un usuario ya autenticado
+            if (auth.currentUser) {
+                console.log('✅ Usuario ya autenticado encontrado:', auth.currentUser.email)
+            } else {
+                console.log('❌ No hay usuario autenticado')
+            }
+        }
+        
+        if (result) {
+            // Usuario autenticado exitosamente después del redirect
+            console.log('✅ Login con Google exitoso (redirect):', result.user.email)
+            console.log('📧 Email:', result.user.email)
+            console.log('🆔 UID:', result.user.uid)
+            console.log('✅ Token obtenido, el store debería actualizar automáticamente...')
+            // No redirigir manualmente aquí, el watch lo hará
+        } else {
+            console.log('🔍 No hay resultado de redirect pendiente')
+            console.log('🔧 Verificando si hay usuario actual:', auth.currentUser)
+        }
+    } catch (err: any) {
+        console.error('🔴 Error procesando redirect result:', err)
+        console.error('🔴 Error code:', err.code)
+        console.error('🔴 Error message:', err.message)
+        console.error('🔴 Error details:', err)
+        loading.value = false
+
+        // Mensajes de error más específicos
+        if (err.code === 'auth/unauthorized-domain') {
+            error.value = 'Dominio no autorizado. Verifica configuración Firebase.'
+        } else if (err.code === 'auth/operation-not-allowed') {
+            error.value = 'Método de autenticación no habilitado.'
+        } else if (err.code === 'auth/popup-blocked') {
+            error.value = 'El navegador bloqueó la ventana de autenticación.'
+        } else if (err.code === 'auth/cancelled-popup-request') {
+            error.value = 'Autenticación cancelada.'
+        } else if (err.code === 'auth/network-request-failed') {
+            error.value = 'Error de conexión. Verifica tu internet.'
+        } else if (err.code === 'auth/redirect-cancelled-by-user') {
+            error.value = 'Autenticación cancelada por el usuario.'
+        } else if (err.code === 'auth/redirect-operation-pending') {
+            error.value = 'Ya hay una operación de redirect pendiente.'
+        } else {
+            error.value = `Error de autenticación: ${err.message} (${err.code})`
+        }
+    }
 })
 
 const toggleMode = () => {
@@ -129,7 +198,9 @@ const toggleMode = () => {
 }
 
 const signInWithGoogle = async () => {
-    console.log('🚀 Iniciando login con Google...')
+    console.log('🚀 Iniciando login con Google (redirect)...')
+    console.log('🔧 Auth object:', auth)
+    console.log('🔧 Auth config:', auth?.config || 'No config')
     loading.value = true
     error.value = ''
 
@@ -143,17 +214,29 @@ const signInWithGoogle = async () => {
             prompt: 'select_account' // Permite seleccionar cuenta si hay multiples
         })
 
-        console.log('🪟 Abriendo popup de Google...')
+        console.log('🔧 Provider configurado:', provider)
+        // Detectar si estamos en desarrollo o producción
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         
-        // Usar popup en lugar de redirect
-        const result = await signInWithPopup(auth, provider)
-        console.log('✅ Login exitoso:', result.user.email)
-        
-        // El store detectará automáticamente el cambio y redirigirá
-        loading.value = false
+        if (isLocalhost) {
+            console.log('🌐 Entorno local detectado - usando popup...')
+            // POPUP para desarrollo local (evita errores de Permissions API)
+            const result = await signInWithPopup(auth, provider)
+            console.log('✅ Login exitoso (popup):', result.user.email)
+            loading.value = false
+        } else {
+            console.log('🌐 Entorno de producción detectado - usando redirect...')
+            // REDIRECT para producción (mejor UX en móviles)
+            await signInWithRedirect(auth, provider)
+            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
+            // El resultado se manejará en onMounted() con getRedirectResult()
+        }
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
+        console.error('🔴 Error code:', err.code)
+        console.error('🔴 Error message:', err.message)
+        console.error('🔴 Error stack:', err.stack)
         loading.value = false
         error.value = getErrorMessage(err.code) || err.message || 'Error al iniciar sesión con Google'
     }

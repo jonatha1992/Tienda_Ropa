@@ -33,6 +33,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    strictPort: true, // Fuerza el uso del puerto 5173
     open: true,
     fs: {
       strict: true,
