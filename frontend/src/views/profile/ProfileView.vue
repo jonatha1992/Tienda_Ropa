@@ -207,7 +207,6 @@ const handleSubmit = async () => {
     // await authStore.fetchBackendUser() // Refrescar datos del usuario
     
   } catch (error) {
-    console.error('Error updating profile:', error)
     toast.error('Error al actualizar el perfil')
   } finally {
     loading.value = false
@@ -221,7 +220,6 @@ const handleLogout = async () => {
     toast.success('Sesión cerrada correctamente')
     router.push('/auth')
   } catch (error) {
-    console.error('Error during logout:', error)
     toast.error('Error al cerrar sesión')
   }
 }

@@ -142,10 +142,7 @@ onMounted(async () => {
           //   total_amount: orderDetails.value.total,
           //   payment_method: orderDetails.value.payment_method === 'mercadopago' ? 'MercadoPago' : orderDetails.value.payment_method
           // });
-          console.log('Email confirmation temporarily disabled - needs proper parameters');
-          console.log('✔ Email de confirmación enviado');
         } catch (emailError) {
-          console.error('✖ Error enviando email de confirmación:', emailError);
           // No mostrar error al usuario, el email es opcional
         }
       }
@@ -154,7 +151,6 @@ onMounted(async () => {
     }
     
   } catch (error) {
-    console.error('Error en PaymentSuccessView:', error);
     toast.error('Error obteniendo detalles del pedido');
   }
 });

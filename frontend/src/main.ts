@@ -54,10 +54,8 @@ if (typeof window !== 'undefined') {
   // Import and initialize cart store before app mount
   import('./store/cart').then(({ useCartStore }) => {
     const cartStore = useCartStore()
-    console.log('🛒 Initializing cart store...')
     cartStore.initializeCart()
-    console.log('🛒 Cart initialized with', cartStore.items.length, 'items')
-  }).catch(console.error)
+  }).catch(() => {})
 }
 
 // Mount app after cart initialization is started

@@ -120,7 +120,6 @@ const imageToShow = computed(() => {
 
 // Handle image load errors
 const handleImageError = () => {
-  console.warn(`Failed to load image for product: ${props.product.name}`);
   imageError.value = true;
 };
 
@@ -143,7 +142,6 @@ const isOutOfStock = computed(() => {
 
 // Quick add function (placeholder)
 const quickAdd = () => {
-  console.log('Quick add clicked for:', props.product.name);
   // TODO: Implementar lógica de quick add
 };
 </script>

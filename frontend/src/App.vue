@@ -51,7 +51,6 @@ onMounted(async () => {
       200
     )
   } catch (error) {
-    console.error('Error en inicialización de auth:', error)
     // La aplicación puede funcionar sin auth, no es crítico
   }
 })

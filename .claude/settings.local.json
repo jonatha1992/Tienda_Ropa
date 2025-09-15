@@ -14,7 +14,11 @@
       "Bash(npm ls:*)",
       "Bash(npm run test:*)",
       "Bash(npm run build:test:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "mcp__filesystem__list_directory",
+      "Bash(sed:*)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": [],

@@ -255,7 +255,6 @@ onMounted(() => {
       // Clear stored data to prevent reuse
       localStorage.removeItem('cash_order');
     } catch (error) {
-      console.error('Error parsing cash order data:', error);
       toast.error('Error cargando datos de entrega');
       router.push('/');
     }

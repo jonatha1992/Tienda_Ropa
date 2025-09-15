@@ -93,14 +93,12 @@ const loadProducts = async () => {
     const response = await productsApi.getProducts();
     allProducts.value = response.products;
   } catch (error) {
-    console.error('Error fetching products:', error);
   }
 };
 
 // Watchers
 watch(() => route.query.category, (newCategory, oldCategory) => {
   if (newCategory !== oldCategory) {
-    console.log(`Filtering by category: ${newCategory}`);
     // Reset pagination when category changes
     currentPage.value = 1;
   }

@@ -978,41 +978,16 @@ const previewProduct = computed((): GlobalProduct => {
 // === LÃ“GICA DE DATOS MAESTROS ===
 async function loadMasterData() {
   try {
-    console.log('Cargando datos maestros...');
-    console.log('URL base API:', config.backendUrl);
-    
     // Cargar colores, categorías y talles usando la nueva API
-    console.log('Cargando colores...');
     const colors = await masterDataApi.getColors();
-    console.log('Colores recibidos:', colors);
-    
-    console.log('Cargando categorías...');
     const categories = await masterDataApi.getCategories();
-    console.log('Categorías recibidas:', categories);
-    
-    console.log('Cargando talles...');
     const sizes = await masterDataApi.getSizes();
-    console.log('Talles recibidos:', sizes);
-    
+
     availableColors.value = colors;
     availableCategories.value = categories;
     availableSizes.value = sizes;
     
-    console.log('Datos maestros cargados:', {
-      colores: availableColors.value.length,
-      categorias: availableCategories.value.length,
-      talles: availableSizes.value.length
-    });
-    
-    // Debug: Verificar que los arrays reactivos se actualicen
-    console.log(' Arrays reactivos actualizados:', {
-      availableColors: availableColors.value,
-      availableCategories: availableCategories.value,
-      availableSizes: availableSizes.value
-    });
-    
   } catch (error) {
-    console.error('Error cargando datos maestros:', error);
     toast.error('Error cargando datos de colores, categorías y talles');
   }
 }
@@ -1020,44 +995,34 @@ async function loadMasterData() {
 // --- Lógica de la API ---
 async function fetchProducts() {
   if (import.meta.env.VITEST) return;
-  console.log('Obteniendo productos...');
 
   if (!authStore.token) {
-    console.warn('No hay token de autenticación');
     return;
   }
 
   // Debug: verificar estado de autenticación
   try {
-    console.log(' Verificando estado de autenticación...');
     const debugResponse = await usersApi.getUserDebugInfo();
-    console.log(' Debug info:', debugResponse);
-    
+
     const hasPermissions = debugResponse.has_admin_role || debugResponse.has_manager_role;
-    console.log(`Usuario tiene permisos necesarios: ${hasPermissions}`);
-    
+
     if (!hasPermissions) {
       toast.error('No tienes permisos para gestionar productos. Contacta al administrador.');
       return;
     }
   } catch (debugError) {
-    console.error('Error verificando autenticación:', debugError);
   }
 
   try {
     const { products: fetchedProducts } = await productsApi.getProducts();
     // Convertir Product[] a AdminProduct[] para compatibilidad temporal
     products.value = fetchedProducts as any[];
-    console.log('Productos obtenidos:', fetchedProducts);
   } catch (error) {
-    console.error('Error al obtener productos:', error);
     toast.error('Error al cargar productos. Verifica que el backend estÃ© funcionando.');
   }
 }
 
 async function saveProduct() {
-  console.log(' Guardando producto...', product.value);
-  
   showLoading(
     editing.value ? 'Actualizando producto...' : 'Agregando producto...',
     'Por favor espera mientras procesamos tu solicitud'
@@ -1071,12 +1036,9 @@ async function saveProduct() {
 
   // Debug: verificar permisos antes de guardar
   try {
-    console.log(' Verificando permisos antes de guardar...');
     const debugResponse = await usersApi.getUserDebugInfo();
-    console.log(' Debug info al guardar:', debugResponse);
-    
+
     const hasPermissions = debugResponse.has_admin_role || debugResponse.has_manager_role;
-    console.log(`Usuario tiene permisos para guardar: ${hasPermissions}`);
     
     if (!hasPermissions) {
       toast.error('No tienes permisos para gestionar productos. Tu cuenta necesita rol de Admin o Manager.');
@@ -1084,7 +1046,6 @@ async function saveProduct() {
       return;
     }
   } catch (debugError) {
-    console.error('Error verificando permisos:', debugError);
     toast.error('Error verificando permisos. Verifica tu autenticación.');
     hideLoading();
     return;
@@ -1128,10 +1089,8 @@ async function saveProduct() {
     
     // Subir nuevas imágenes a Firebase Storage si hay archivos seleccionados
     if (selectedFiles.value.length > 0) {
-      console.log('🔼 Subiendo nuevas imágenes a Firebase Storage...');
       const newImageUrls = await uploadImages();
       finalImageUrls.push(...newImageUrls);
-      console.log('Nuevas imágenes subidas:', newImageUrls);
     }
     
     // Asignar todas las imágenes al producto
@@ -1139,8 +1098,7 @@ async function saveProduct() {
 
     const editingProduct = editing.value ? products.value.find(p => p.name === product.value.name) : null;
 
-    console.log(`${editing.value ? 'PUT' : 'POST'} request for product:`, product.value);
-    console.log(' Payload:', product.value);
+    // Preparar request para enviar al backend
 
     let savedProduct;
     if (editing.value && editingProduct?.id) {
@@ -1151,13 +1109,10 @@ async function saveProduct() {
       savedProduct = await productsApi.createProduct(product.value as any);
     }
 
-    console.log('Producto guardado:', savedProduct);
-
     await fetchProducts();
     resetForm();
     toast.success(` Producto ${editing.value ? 'actualizado' : 'creado'} exitosamente!`);
   } catch (error) {
-    console.error('Error al guardar producto:', error);
     toast.error(`Error al ${editing.value ? 'actualizar' : 'crear'} producto: ${error instanceof Error ? error.message : 'Error desconocido'}`);
   } finally {
     hideLoading();
@@ -1172,15 +1127,13 @@ async function deleteProduct(id?: number) {
     return;
   }
 
-  console.log('ðŸ—‘ï¸ Eliminando producto ID:', id);
 
   try {
     await productsApi.deleteProduct(id);
-    console.log('Producto eliminado');
+    // Producto eliminado exitosamente
     await fetchProducts();
     toast.success(' Producto eliminado exitosamente!');
   } catch (error: any) {
-    console.error('Error al eliminar producto:', error);
     const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
     toast.error(`${errorMessage}`);
   }
@@ -1225,8 +1178,6 @@ function removeNewImage(index: number) {
 }
 
 async function compressToWebP(file: File): Promise<File> {
-  console.log('Comprimiendo imagen a WebP:', file.name);
-  
   const options = {
     maxSizeMB: 1,                    // Maximo 1MB
     useWebWorker: true,              // Usar Web Worker para no bloquear UI
@@ -1234,23 +1185,16 @@ async function compressToWebP(file: File): Promise<File> {
     initialQuality: 0.85,            // Calidad inicial 85%
     maxWidthOrHeight: 1920,          // Redimensionar si es muy grande
   };
-  
+
   try {
     const compressedFile = await imageCompression(file, options);
-    console.log('Imagen comprimida:', {
-      original: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
-      compressed: `${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`,
-      reduction: `${(((file.size - compressedFile.size) / file.size) * 100).toFixed(1)}%`
-    });
     return compressedFile;
   } catch (error) {
-    console.error('Error comprimiendo imagen:', error);
     throw error;
   }
 }
 
 async function uploadImages(): Promise<string[]> {
-  console.log(' Subiendo y comprimiendo', selectedFiles.value.length, 'archivos...');
 
   try {
     const uploadPromises = selectedFiles.value.map(async (file, index) => {
@@ -1262,19 +1206,15 @@ async function uploadImages(): Promise<string[]> {
       const fileName = `${Date.now()}_${originalName}.webp`;
       const fileRef = storageRef(storage, `products/${fileName}`);
 
-      console.log(` Subiendo archivo ${index + 1}:`, fileName);
       const snapshot = await uploadBytes(fileRef, compressedFile);
       const downloadURL = await getDownloadURL(snapshot.ref);
-      console.log(`Archivo ${index + 1} subido:`, downloadURL);
 
       return downloadURL;
     });
 
     const imageUrls = await Promise.all(uploadPromises);
-    console.log(' Todas las imágenes comprimidas y subidas exitosamente:', imageUrls);
     return imageUrls;
   } catch (error) {
-    console.error('Error al subir imágenes:', error);
     throw new Error(`Error al subir imágenes: ${error instanceof Error ? error.message : 'Error desconocido'}`);
   }
 }
@@ -1421,10 +1361,6 @@ function handleCancel() {
 }
 
 onMounted(async () => {
-  console.log('Componente montado, iniciando carga de datos...');
-  console.log('Usuario Firebase:', authStore.firebaseUser);
-  console.log('Token disponible:', !!authStore.token);
-  
   await loadMasterData();
   await fetchProducts();
 });

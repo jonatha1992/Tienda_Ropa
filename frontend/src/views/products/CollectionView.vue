@@ -364,7 +364,6 @@ const loadProducts = async () => {
     const response = await productsApi.getProducts()
     allProducts.value = response.products
   } catch (error) {
-    console.error('Error fetching products:', error)
   }
 }
 
@@ -372,11 +371,9 @@ const loadCategories = async () => {
   try {
     categories.value = await masterDataApi.getCategoriesWithStock()
   } catch (error) {
-    console.error('Error loading categories:', error)
     try {
       categories.value = await masterDataApi.getCategories()
     } catch (fallbackError) {
-      console.error('Error loading categories (fallback):', fallbackError)
     }
   }
 }
