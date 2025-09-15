@@ -215,27 +215,21 @@ const signInWithGoogle = async () => {
         })
 
         console.log('🔧 Provider configurado:', provider)
-        // Detectar entorno y usar popup siempre (más confiable)
+        // Detectar entorno para elegir método de autenticación
         const hostname = window.location.hostname
         console.log('🔧 Hostname detectado:', hostname)
         
-        // Usar popup en todos los entornos por ahora (evita problemas de redirect)
-        console.log('🌐 Usando popup (más confiable en todos los entornos)...')
-        const result = await signInWithPopup(auth, provider)
-        console.log('✅ Login exitoso (popup):', result.user.email)
-        loading.value = false
-        
-        // REDIRECT VERSION (comentado hasta resolver problemas de configuración)
-        // if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        //     console.log('🌐 Entorno local detectado - usando popup...')
-        //     const result = await signInWithPopup(auth, provider)
-        //     console.log('✅ Login exitoso (popup):', result.user.email)
-        //     loading.value = false
-        // } else {
-        //     console.log('🌐 Entorno remoto detectado - usando redirect...')
-        //     await signInWithRedirect(auth, provider)
-        //     console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
-        // }
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            console.log('🌐 Entorno local detectado - usando popup...')
+            const result = await signInWithPopup(auth, provider)
+            console.log('✅ Login exitoso (popup):', result.user.email)
+            loading.value = false
+        } else {
+            console.log('🌐 Entorno remoto detectado - usando redirect...')
+            await signInWithRedirect(auth, provider)
+            console.log('✅ signInWithRedirect ejecutado, esperando redirect...')
+            // El resultado se manejará en onMounted() con getRedirectResult()
+        }
 
     } catch (err: any) {
         console.error('🔴 Error login Google:', err)
