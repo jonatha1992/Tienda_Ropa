@@ -496,17 +496,6 @@ const deliveryCosts = computed(() => {
 
 // Check if delivery info is complete
 const isDeliveryInfoComplete = computed(() => {
-    deliveryType: deliveryType.value,
-    addressCompleted: addressCompleted.value,
-    selectedCarrier: selectedCarrier.value,
-    firstName: props.firstName,
-    lastName: props.lastName,
-    phone: props.phone,
-    street: props.street,
-    city: props.city,
-    postalCode: props.postalCode
-  })
-  
   // For retiro local, only need delivery type selected
   if (deliveryType.value === 'retiro_local') {
     return true
@@ -526,12 +515,6 @@ const isAddressValid = computed(() => {
   const isValid = props.street.trim() && 
          props.city.trim() && 
          props.postalCode.trim()
-  
-    street: props.street,
-    city: props.city,
-    postalCode: props.postalCode,
-    isValid
-  })
   
   return isValid
 })
@@ -581,15 +564,6 @@ const getCarrierDisplayName = (carrier: string): string => {
 
 // Completar dirección y mostrar transportistas
 const completeAddressAndShowCarriers = () => {
-    firstName: props.firstName,
-    lastName: props.lastName,
-    phone: props.phone,
-    street: props.street,
-    city: props.city,
-    postalCode: props.postalCode,
-    isAddressValid: isAddressValid.value
-  })
-  
   if (isAddressValid.value) {
     addressCompleted.value = true
     showAddressForm.value = false
@@ -599,7 +573,6 @@ const completeAddressAndShowCarriers = () => {
     if (props.postalCode && props.postalCode.trim().length >= 4) {
       loadShippingQuotes()
     }
-  } else {
   }
 }
 

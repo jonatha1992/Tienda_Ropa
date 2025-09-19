@@ -156,13 +156,13 @@ export const authApi = {
 
   // Get current user info
   async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get('/auth/me');
+    const response = await apiClient.get('/users/me');
     return response.data;
   },
 
   // Update current user
   async updateCurrentUser(updates: Partial<UserUpdateData>): Promise<User> {
-    const response = await apiClient.patch('/auth/me', updates);
+    const response = await apiClient.patch('/users/me', updates);
     return response.data;
   },
 
