@@ -14,11 +14,11 @@
       "Bash(npm ls:*)",
       "Bash(npm run test:*)",
       "Bash(npm run build:test:*)",
-      "Bash(curl:*)",
-      "Bash(find:*)",
-      "mcp__filesystem__list_directory",
-      "Bash(sed:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(git checkout:*)",
+      "mcp__git__git_commit",
+      "mcp__git__git_add",
+      "mcp__git__git_status",
+      "mcp__git__git_diff_staged"
     ],
     "deny": [],
     "ask": [],
