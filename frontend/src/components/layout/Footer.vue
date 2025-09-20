@@ -3,7 +3,7 @@
     <div class="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 gap-8 md:grid-cols-4 lg:gap-12">
         <!-- Company Info -->
-        <div class="col-span-1 md:col-span-2">
+        <div class="col-span-1 md:col-span-2 footer-section fade-in-up">
           <div class="flex items-center mb-6 space-x-3">
             <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-8 h-8" />
             <h3 class="text-2xl font-light tracking-wider text-white font-heading">M-VINTAGE</h3>
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Shop Links -->
-        <div>
+        <div class="footer-section fade-in-up stagger-1">
           <h4 class="mb-4 text-sm font-medium tracking-wide text-white uppercase font-body">Tienda</h4>
           <ul class="space-y-3">
             <li><router-link to="/shop" class="text-sm text-gray-300 transition-colors duration-200 font-body hover:text-white">Nueva Colección</router-link></li>
@@ -85,7 +85,7 @@
         </div>
 
         <!-- Customer Service -->
-        <div>
+        <div class="footer-section fade-in-up stagger-2">
           <h4 class="mb-4 text-sm font-medium tracking-wide text-white uppercase font-body">Ayuda</h4>
           <ul class="space-y-3">
             <li><router-link to="/contact" class="text-sm text-gray-300 transition-colors duration-200 font-body hover:text-white">Contacto</router-link></li>

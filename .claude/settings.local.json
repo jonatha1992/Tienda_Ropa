@@ -20,7 +20,8 @@
       "mcp__git__git_status",
       "mcp__git__git_diff_staged",
       "mcp__git__git_diff_unstaged",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "mcp__fetch__fetch"
     ],
     "deny": [],
     "ask": [],

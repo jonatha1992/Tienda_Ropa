@@ -3,10 +3,10 @@
     <div class="px-4 py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
       <!-- Section Header -->
       <div class="mb-16 text-center">
-        <h2 class="mb-4 text-3xl font-light tracking-wide text-gray-900 font-heading md:text-4xl">
+        <h2 class="mb-4 text-3xl font-light tracking-wide text-gray-900 font-heading md:text-4xl fade-in-up">
           {{ title }}
         </h2>
-        <div class="w-24 h-0.5 bg-gray-900 mx-auto"></div>
+        <div class="w-24 h-0.5 bg-gray-900 mx-auto fade-in-up stagger-1"></div>
       </div>
 
       <!-- Product Grid -->

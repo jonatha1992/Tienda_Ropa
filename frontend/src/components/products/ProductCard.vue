@@ -1,6 +1,6 @@
 ﻿<template>
   <router-link :to="`/product/${product.id}/${product.name}`" class="block h-full">
-    <div class="flex flex-col h-full overflow-hidden transition-all duration-200 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:border-gray-300 group">
+    <div class="flex flex-col h-full overflow-hidden transition-all duration-200 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:border-gray-300 group product-card card-hover">
       <!-- Imagen del producto -->
       <div class="relative overflow-hidden aspect-square bg-gray-50">
         <!-- Imagen principal -->

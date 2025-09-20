@@ -208,8 +208,6 @@ const handleSubmit = async () => {
     toast.success('Perfil actualizado correctamente')
     
   } catch (error: any) {
-    console.error('Error al actualizar el perfil:', error)
-    
     // Manejar diferentes tipos de errores
     if (error.response?.status === 401) {
       toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.')

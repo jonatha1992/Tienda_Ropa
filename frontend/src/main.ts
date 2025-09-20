@@ -5,6 +5,7 @@ import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import './style.css'
 import './styles/admin-buttons.css'
+import './styles/scroll-animations.css'
 import App from './App.vue'
 import router from './router'
 
