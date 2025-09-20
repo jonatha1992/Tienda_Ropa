@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="app-container" :class="{ 'app-loaded': appLoaded }">
     <Navbar />
     <router-view />
-    <Footer v-if="!$route.path.includes('/checkout')" />
+    <Footer v-if="!$route.path.includes('/checkout')" class="footer-transition" :class="{ 'footer-visible': showFooter }" />
     <!-- Progress Bar Global para navegación -->
-    <ProgressBar 
-      :progress="progress" 
+    <ProgressBar
+      :progress="progress"
       :is-visible="isVisible"
     />
 
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useAuthStore } from './store/auth'
 import { useLoading } from './composables/useLoading'
 import Navbar from './components/layout/Navbar.vue'
@@ -41,17 +41,66 @@ const authStore = useAuthStore()
 const { isLoading, loadingMessage, loadingSubmessage, showSmartLoading } = useLoading()
 const { progress, isVisible } = globalProgressBar
 
+// Estado para controlar la animación de carga
+const appLoaded = ref(false)
+// Estado para controlar la visibilidad del footer
+const showFooter = ref(false)
+
+// Función para manejar el scroll
+const handleScroll = () => {
+  const scrollHeight = document.documentElement.scrollHeight
+  const scrollTop = window.scrollY
+  const clientHeight = window.innerHeight
+
+  // Mostrar footer cuando esté cerca del final de la página (80% del contenido)
+  const scrollPercentage = (scrollTop + clientHeight) / scrollHeight
+  showFooter.value = scrollPercentage > 0.8
+}
+
 onMounted(async () => {
-  // Inicialización optimizada con loading inteligente
+  // Inicialización con transición suave
   try {
-    // Solo mostrar loading si la inicialización tarda más de 200ms
-    await showSmartLoading(
-      authStore.initAuth(), 
-      'Inicializando aplicación...', 
-      200
-    )
+    await authStore.initAuth()
   } catch (error) {
     // La aplicación puede funcionar sin auth, no es crítico
+  } finally {
+    // Pequeño delay para suavizar la transición
+    setTimeout(() => {
+      appLoaded.value = true
+    }, 100)
   }
+
+  // Agregar listener de scroll
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  // Limpiar listener de scroll
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
+
+<style scoped>
+.app-container {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.app-container.app-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animación del footer con scroll */
+.footer-transition {
+  transform: translateY(30px);
+  opacity: 0.7;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+.footer-transition.footer-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+</style>

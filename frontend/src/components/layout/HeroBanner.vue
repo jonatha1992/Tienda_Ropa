@@ -32,12 +32,12 @@
           Estilo que perdura en el tiempo
         </p>
         <div class="space-y-4">
-          <button class="mr-4 btn-minimal btn-light font-body">
+          <router-link to="/shop" class="mr-4 btn-minimal btn-light font-body">
             Ver Colección
-          </button>
-          <button class="btn-minimal btn-dark font-body">
+          </router-link>
+          <router-link to="/shop" class="btn-minimal btn-dark font-body">
             Nuevos Arribos
-          </button>
+          </router-link>
         </div>
       </div>
     </div>
