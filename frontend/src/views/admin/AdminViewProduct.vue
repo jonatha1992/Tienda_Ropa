@@ -714,7 +714,8 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal.vue';
 import ProductCard from '../../components/products/ProductCard.vue';
 import { useAuthStore } from '../../store/auth';
 import { useLoading } from '../../composables/useLoading';
-import { masterDataApi, productsApi, usersApi, config } from '../../config/index';
+import { useProducts } from '../../store/products';
+import { masterDataApi, usersApi, config } from '../../config/index';
 import type { Color, Category, Size, Product } from '../../types/products/product.types';
 import type { Product as GlobalProduct } from '../../types/products/product.types';
 import type { AdminProduct, AdminProductVariant, AdminProductImage, AdminProductCreate } from '../../types/products/admin.types';
@@ -722,6 +723,7 @@ import type { AdminProduct, AdminProductVariant, AdminProductImage, AdminProduct
 const toast = useToast();
 const authStore = useAuthStore();
 const { showLoading, hideLoading } = useLoading();
+const { products: storeProducts, fetchProducts: fetchProductsFromStore, addProduct, updateProduct, deleteProduct, invalidateCache } = useProducts();
 
 // === INTERFACES MOVED TO TYPES FOLDER ===
 
@@ -1014,7 +1016,8 @@ async function fetchProducts() {
   }
 
   try {
-    const { products: fetchedProducts } = await productsApi.getProducts();
+    // Usar el store para obtener productos
+    const fetchedProducts = await fetchProductsFromStore();
     // Convertir Product[] a AdminProduct[] para compatibilidad temporal
     products.value = fetchedProducts as any[];
   } catch (error) {
@@ -1102,14 +1105,15 @@ async function saveProduct() {
 
     let savedProduct;
     if (editing.value && editingProduct?.id) {
-      // Conversión temporal para compatibilidad de tipos
-      savedProduct = await productsApi.updateProduct(editingProduct.id, product.value as any);
+      // Usar store para actualizar producto
+      savedProduct = await updateProduct(editingProduct.id, product.value as any);
     } else {
-      // Conversión temporal para compatibilidad de tipos
-      savedProduct = await productsApi.createProduct(product.value as any);
+      // Usar store para crear producto
+      savedProduct = await addProduct(product.value as any);
     }
 
-    await fetchProducts();
+    // El store ya actualiza automáticamente la cache
+    products.value = storeProducts.value as any[];
     resetForm();
     toast.success(` Producto ${editing.value ? 'actualizado' : 'creado'} exitosamente!`);
   } catch (error) {
@@ -1119,20 +1123,20 @@ async function saveProduct() {
   }
 }
 
-async function deleteProduct(id?: number) {
+async function deleteProductById(id?: number) {
   if (!id) return;
 
   if (!authStore.token) {
-    toast.error('No estás autenticado. Por favor inicia sesin.');
+    toast.error('No estás autenticado. Por favor inicia sesión.');
     return;
   }
 
-
   try {
-    await productsApi.deleteProduct(id);
-    // Producto eliminado exitosamente
-    await fetchProducts();
-    toast.success(' Producto eliminado exitosamente!');
+    // Usar store para eliminar producto
+    await deleteProduct(id);
+    // El store ya actualiza automáticamente la cache
+    products.value = storeProducts.value as any[];
+    toast.success('Producto eliminado exitosamente!');
   } catch (error: any) {
     const errorMessage = error.response?.data?.detail || 'Error al eliminar producto';
     toast.error(`${errorMessage}`);
@@ -1345,7 +1349,7 @@ function confirmSave() {
 function confirmDelete(id: number) {
   modalTitle.value = 'Confirmar Eliminación';
   modalMessage.value = '¿Estás seguro de que deseas eliminar este producto?';
-  confirmAction.value = () => deleteProduct(id);
+  confirmAction.value = () => deleteProductById(id);
   showModal.value = true;
 }
 

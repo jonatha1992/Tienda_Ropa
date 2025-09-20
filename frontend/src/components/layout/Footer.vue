@@ -6,7 +6,7 @@
         <div class="col-span-1 md:col-span-2 footer-section fade-in-up">
           <div class="flex items-center mb-6 space-x-3">
             <img src="/imagen-portada.svg" alt="M-VINTAGE Logo" class="w-8 h-8" />
-            <h3 class="text-2xl font-light tracking-wider text-white font-heading">M-VINTAGE</h3>
+            <h3 class="text-2xl font-light tracking-wider text-white font-heading">MATILDA VINTAGE</h3>
           </div>
           <p class="max-w-md mb-4 font-light leading-relaxed text-gray-300 font-body">
             Estilo que perdura en el tiempo. Encuentra las mejores prendas vintage y contemporáneas 

@@ -28,6 +28,7 @@
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './store/auth'
+import { useProductsStore } from './store/products'
 import { useLoading } from './composables/useLoading'
 import { useScrollAnimation } from './composables/useScrollAnimation'
 import Navbar from './components/layout/Navbar.vue'
@@ -41,6 +42,7 @@ import { globalProgressBar } from './composables/useProgressBar'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const productsStore = useProductsStore()
 const { isLoading, loadingMessage, loadingSubmessage } = useLoading()
 const { progress, isVisible } = globalProgressBar
 const { addElements } = useScrollAnimation()
@@ -75,6 +77,10 @@ onMounted(async () => {
   // Inicialización con transición suave
   try {
     await authStore.initAuth()
+    // Initialize products store globally
+    console.log('🚀 App.vue - Initializing products store...')
+    await productsStore.initialize()
+    console.log('✅ App.vue - Products store initialized')
   } catch (error) {
     // La aplicación puede funcionar sin auth, no es crítico
     console.warn('Auth initialization failed:', error)

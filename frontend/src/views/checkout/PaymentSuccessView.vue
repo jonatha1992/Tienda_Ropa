@@ -91,11 +91,13 @@ import { useRoute } from 'vue-router';
 import { paymentsApi } from '../../config/api';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store/cart';
+import { useProducts } from '../../store/products';
 import { emailService } from '../../services/emailVerificationService';
 
 const route = useRoute();
 const toast = useToast();
 const cartStore = useCartStore();
+const { invalidateCache } = useProducts();
 const orderDetails = ref<any>(null);
 const pendingOrderData = ref<any>(null);
 
@@ -114,7 +116,11 @@ onMounted(async () => {
   try {
     // Clear cart immediately on successful payment
     cartStore.clearCart();
-    
+
+    // Invalidate products cache after successful purchase
+    // This ensures fresh stock data is fetched next time
+    invalidateCache();
+
     // Get order data from localStorage (stored during checkout)
     const storedOrderData = localStorage.getItem('pending_order');
     if (storedOrderData) {
