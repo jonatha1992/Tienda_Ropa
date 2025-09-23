@@ -33,7 +33,10 @@
       "mcp__playwright__browser_wait_for",
       "mcp__playwright__browser_press_key",
       "mcp__playwright__browser_evaluate",
-      "mcp__git__git_log"
+      "mcp__git__git_log",
+      "mcp__memory__read_graph",
+      "mcp__filesystem__create_directory",
+      "mcp__filesystem__write_file"
     ],
     "deny": [],
     "ask": [],
