@@ -1,6 +1,6 @@
-# M-Vintage - Tienda de Ropa Online
+# Matilda-Vintage - Tienda de Ropa Online
 
-**M-Vintage** es una aplicación completa de e-commerce especializada en ropa vintage, que combina un sistema robusto de gestión de productos con una experiencia de compra moderna y fluida.
+**Matilda-Vintage** es una aplicación completa de e-commerce especializada en ropa vintage, que combina un sistema robusto de gestión de productos con una experiencia de compra moderna y fluida.
 
 ## ✨ Características Principales
 
